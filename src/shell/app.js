@@ -145,8 +145,10 @@ function buildStrip(s) {
   el.setAttribute('aria-labelledby', 'h-' + s.id);
   const faders = Object.entries(s.params).map(([k, d]) => {
     const fid = 'p-' + s.id + '-' + k;
-    return '<div class="fader"><label for="' + esc(fid) + '">' + esc(k) + '</label>' +
-      '<input type="range" id="' + esc(fid) + '" data-k="' + esc(k) + '" min="' + d.min + '" max="' + d.max +
+    // the parameter's description (catalog field `desc`) as a hover hint on the label and fader
+    const tip = d.desc ? ' title="' + esc(d.desc) + '"' : '';
+    return '<div class="fader"><label for="' + esc(fid) + '"' + tip + '>' + esc(k) + '</label>' +
+      '<input type="range" id="' + esc(fid) + '"' + tip + ' data-k="' + esc(k) + '" min="' + d.min + '" max="' + d.max +
       '" step="' + stepOf(d) + '" value="' + d.def + '">' +
       '<output for="' + esc(fid) + '"></output></div>';
   }).join('');
@@ -569,7 +571,7 @@ function wire() {
 function boot() {
   const grid = qs('#sounds');
   for (const s of SOUNDS) grid.appendChild(buildStrip(s).el);
-  qs('#foot-count').textContent = '0.1, ' + SOUNDS.length + ' sounds';
+  qs('#foot-count').textContent = VERSION + ', ' + SOUNDS.length + ' sounds';
   buildCats();
   buildThemes();
   wire();
@@ -592,7 +594,7 @@ function boot() {
 
 // The page's programmatic face, used by the gates (and handy in the console).
 window.Timbre = Object.freeze({
-  version: '0.1.0',
+  version: VERSION,
   T, sounds: SOUNDS, themes: THEMES, preroll: PREROLL, sampleRate: SAMPLE_RATE,
   paramsFor: (id, over) => paramsFor(byId.get(id), over),
   render: (id, over, seedValue) => renderSound(byId.get(id), over, seedValue),

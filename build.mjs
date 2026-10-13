@@ -265,7 +265,9 @@ export function validateAll(soundEntries, themeEntries, kit = T) {
     if (tids.has(id)) errors.push(`${e.file}: duplicate theme id "${id}"`);
     tids.add(id);
   }
-  const themes = themeEntries.map((e) => Object.assign({ file: e.file }, e.def)).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  // the default theme leads (the gallery opens on the first one); the rest by id
+  const themes = themeEntries.map((e) => Object.assign({ file: e.file }, e.def))
+    .sort((a, b) => (b.id === DEFAULT_THEME) - (a.id === DEFAULT_THEME) || String(a.id).localeCompare(String(b.id)));
   return { errors, sounds, themes };
 }
 
@@ -275,6 +277,8 @@ const themeMeta = (th) => ({ id: th.id, name: th.name, desc: th.desc, moments: t
 
 /** The catalog schema. 2 added version, copy, levels, vocabulary, family, moments, fingerprint and param desc and role. */
 export const SCHEMA = 2;
+/** The theme the gallery opens on (listed first; the others follow by id). */
+export const DEFAULT_THEME = 'soft-ui';
 
 /** The repository version (package.json), carried by the catalog. */
 export function version() {
@@ -392,6 +396,8 @@ export function buildHtml(sounds, themes, kit = T) {
     'const SOUNDS = [\n' + sounds.map(soundJs).join(',\n') + '\n];',
     '// ---- themes (src/themes) ----',
     'const THEMES = ' + JSON.stringify(themes.map(themeMeta), null, 1) + ';',
+    '// ---- version (package.json) ----',
+    'const VERSION = ' + JSON.stringify(version()) + ';',
     '// ---- runtime (src/core) ----',
     ['render.js', 'wav.js', 'copy.js'].map((f) => moduleText('src/core/' + f)).join('\n'),
     '// ---- gallery (src/shell/app.js) ----',
