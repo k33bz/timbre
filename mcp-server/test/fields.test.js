@@ -31,7 +31,7 @@ test('the moment vocabulary is the shared one: same keys, same order, derived fi
   assert.deepEqual(Object.keys(MOMENTS), Object.keys(SHARED));
   assert.ok(MOMENTS.click.tagStems && !SHARED.click.tagStems, 'derived fields stay out of the shared objects');
   assert.ok(Object.keys(FAMILIES).length >= 8);
-  assert.deepEqual(Object.keys(ROLES).sort(), ['chip', 'go', 'on', 'open']);
+  assert.deepEqual(Object.keys(ROLES).sort(), ['chip', 'go', 'on', 'open', 'pass', 'tick', 'up']);
 });
 
 test('catalog: family, moments, param desc and role, levels, fingerprint and the Copy contract are read', (t) => {
@@ -150,7 +150,7 @@ test('tools: family filter, family and moments in results, param desc and role, 
   assert.equal(info.version, '9.9.9');
   assert.deepEqual(info.copyContract.masterChain, { gain: 0.55 });
   assert.equal(info.families.soft, 1);
-  assert.deepEqual(Object.keys(info.parameterRoles).sort(), ['chip', 'go', 'on', 'open']);
+  assert.deepEqual(Object.keys(info.parameterRoles).sort(), ['chip', 'go', 'on', 'open', 'pass', 'tick', 'up']);
   const fam = (await call(srv, 'search_sounds', { family: 'paper' })).data;
   assert.deepEqual(fam.items.map((x) => x.id), ['cards-flick']);
   assert.deepEqual(fam.items[0].moments, ['card-draw']);

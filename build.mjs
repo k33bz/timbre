@@ -11,6 +11,8 @@
 //     src/vocabulary.js, which the MCP server reads too
 //   * params: each { min, max, def } (plus optional unit, step, desc, role) with min < max and def
 //     in range
+//   * a sound tagged loop-cell (one short cell a host re-triggers on an interval) names that
+//     interval in its desc
 //   * play uses only T.*: it is compiled in an isolated VM context (no window, no document, and
 //     Math.random throws) and run against a mock WebAudio graph at the defaults, at every min, at
 //     every max and at random settings. That catches globals, unknown helpers, invalid automation
@@ -27,7 +29,7 @@ import { MOMENTS, FAMILIES, ROLES } from './src/vocabulary.js';
 import { MockContext } from './gates/lib/mockaudio.mjs';
 
 export const ROOT = path.dirname(fileURLToPath(import.meta.url));
-export const CATEGORIES = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music', 'voice'];
+export const CATEGORIES = ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'ambience', 'music', 'voice'];
 const SOUND_KEYS = ['id', 'name', 'category', 'tags', 'desc', 'dur', 'params', 'play'];
 const OPTIONAL_KEYS = ['family', 'moments'];
 const PARAM_KEYS = ['min', 'max', 'def', 'unit', 'step', 'desc', 'role', 'choices'];
@@ -36,6 +38,9 @@ const DASH = new RegExp('[' + String.fromCharCode(0x2013, 0x2014) + ']');
 const THEME_KEYS = ['id', 'name', 'desc', 'moments'];
 const KEBAB = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const PARAM_NAME = /^[a-z][a-zA-Z0-9]*$/;
+// a loop cell's desc names its re-trigger interval: "every 1.2 s", "every 900 ms"
+const LOOP_CELL = 'loop-cell';
+const INTERVAL = /\d(\.\d+)?\s*(ms|s)\b/;
 // Identifiers a play() may not touch (checked on the source with comments and strings removed).
 const FORBIDDEN = ['Date', 'performance', 'window', 'document', 'globalThis', 'self', 'navigator', 'fetch',
   'XMLHttpRequest', 'require', 'import', 'eval', 'Function', 'setTimeout', 'setInterval', 'requestAnimationFrame',
@@ -143,6 +148,7 @@ export function validateSound(entry, kit = T) {
     else {
       for (const tg of s.tags) if (typeof tg !== 'string' || !KEBAB.test(tg)) E(`tag "${tg}" must be a lowercase kebab-case string`);
       if (new Set(s.tags).size !== s.tags.length) E('tags must be unique');
+      if (s.tags.includes(LOOP_CELL) && typeof s.desc === 'string' && !INTERVAL.test(s.desc)) E(`a ${LOOP_CELL} sound names its re-trigger interval in desc (for example "re-trigger every 1.2 s")`);
     }
   }
   if (s.dur != null && !(typeof s.dur === 'number' && s.dur > 0 && s.dur <= 10)) E('dur must be a number of seconds in (0, 10]');

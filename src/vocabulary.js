@@ -14,12 +14,18 @@
  *   tags        words a catalog tag or name would carry (the strong signal); hyphenated entries
  *               ("level-up") match a whole tag
  *   terms       other words and phrases that mean this moment in an app description
- *   categories  categories that fit, best first
+ *   categories  categories that fit, best first (a moment of a newer category also lists an older
+ *               one, so suggestions have somewhere to look while the new category is still empty)
  *   avoid       tags that rule a sound out for this moment
  *   maxDur/minDur  soft length bounds in seconds (a frequent moment wants a short sound)
  *   loud        preferred loudness bands, best first
  *   hints       parameter values to set when the sound has a parameter with that role (ROLES) or,
  *               failing that, that name (the direction of a toggle: on; of a drawer or modal: open)
+ * A moment that names both directions of a switch (record, auth, presence, link, verdict, card-tap,
+ * transform) hints the first one; the host plays the other by passing the switch's value. debuff
+ * sets no tick hint: a hint falls back to a parameter of that name, and notify-calendar's tick is an
+ * amount. loading and thinking want a loop cell: a short sound tagged loop-cell that the host
+ * re-triggers on an interval (docs/DESIGN.md).
  */
 export const MOMENTS = {
   // ---- interface
@@ -108,6 +114,36 @@ export const MOMENTS = {
     tags: ['refresh', 'reload', 'sync', 'cycle', 'backup'], terms: ['pull to refresh', 'update', 'loading'],
     categories: ['notify', 'ui'], avoid: ['error'], maxDur: 1.2, loud: ['quiet', 'medium'],
   },
+  select: {
+    about: 'The selection moves to another tab, segment, pill or option. A sound for it may take a pos parameter (0 to 1): where the selection lands.',
+    tags: ['select', 'tab', 'segment', 'pill', 'selection', 'option'], terms: ['tab switch', 'tabs', 'segmented control', 'radio', 'choose option', 'selected'],
+    categories: ['ui'], avoid: ['error'], maxDur: 0.4, loud: ['quiet'],
+  },
+  step: {
+    about: 'A stepper or wizard advances to its next step. A sound for it may take a step parameter: which step it reached.',
+    tags: ['step', 'stepper', 'milestone', 'advance', 'checkpoint'], terms: ['stepper', 'onboarding', 'milestone', 'checkout step', 'progress stepper', 'setup wizard', 'next step'],
+    categories: ['ui', 'notify', 'game'], avoid: ['error', 'footstep', 'walk', 'land'], maxDur: 0.8, loud: ['quiet'],
+  },
+  record: {
+    about: 'Recording starts or stops: a sound for it carries an on switch, 1 starts, 0 stops.',
+    tags: ['record', 'recording', 'rec', 'mic', 'microphone', 'blip', 'beep'], terms: ['start recording', 'stop recording', 'voice memo', 'screen recording', 'recorder'],
+    categories: ['ui', 'notify', 'scifi'], avoid: ['error'], maxDur: 1.0, loud: ['quiet', 'medium'], hints: { on: 1 },
+  },
+  reveal: {
+    about: 'Content is uncovered: a wipe, an iris, a shutter, a curtain.',
+    tags: ['reveal', 'wipe', 'iris', 'shutter', 'curtain', 'uncover', 'unfold'], terms: ['unveil', 'uncover', 'curtain', 'iris', 'shutter', 'spoiler'],
+    categories: ['ui', 'fx', 'magic'], avoid: ['error'], maxDur: 1.2, loud: ['quiet', 'medium'],
+  },
+  stamp: {
+    about: 'A rubber stamp lands: approved, paid, verified, a label slapped on.',
+    tags: ['stamp', 'rubber-stamp', 'thump', 'seal', 'slap'], terms: ['rubber stamp', 'stamped', 'seal of approval', 'verified'],
+    categories: ['ui', 'notify', 'game'], avoid: [], maxDur: 0.8, loud: ['medium', 'quiet'],
+  },
+  auth: {
+    about: 'A sign in or out, a lock or unlock: a sound for it carries an on switch, 1 signs in or unlocks, 0 signs out or locks.',
+    tags: ['auth', 'login', 'logout', 'lock', 'unlock', 'padlock', 'vault'], terms: ['sign in', 'sign out', 'log in', 'log out', 'authenticate', 'password', 'passcode', 'unlocked', 'locked'],
+    categories: ['ui', 'notify', 'game'], avoid: [], maxDur: 1.2, loud: ['quiet', 'medium'], hints: { on: 1 },
+  },
   // ---- feedback
   success: {
     about: 'An action finished well: saved, sent, paid, completed.',
@@ -153,6 +189,118 @@ export const MOMENTS = {
     about: 'A milestone, badge or reward is earned.',
     tags: ['achievement', 'unlock', 'reward', 'trophy', 'level-up', 'fanfare', 'win', 'bonus'], terms: ['badge', 'unlocked', 'streak', 'milestone', 'celebrate'],
     categories: ['notify', 'magic', 'game'], avoid: ['error', 'fail'], minDur: 0.3, maxDur: 3.0, loud: ['medium', 'loud'],
+  },
+  dismiss: {
+    about: 'A notification, toast or chip is dismissed or swiped away.',
+    tags: ['dismiss', 'toast', 'snackbar', 'swipe-away', 'clear'], terms: ['swipe away', 'close toast', 'clear notification', 'dismissed', 'mark as read'],
+    categories: ['notify', 'ui'], avoid: ['error'], maxDur: 0.6, loud: ['quiet'],
+  },
+  critical: {
+    about: 'A critical alert, a severity above error: an incident, a breach, an outage.',
+    tags: ['critical', 'severe', 'incident', 'emergency', 'alarm', 'urgent'], terms: ['incident', 'breach', 'outage', 'emergency', 'severity', 'pager'],
+    categories: ['notify', 'scifi'], avoid: ['success', 'positive'], maxDur: 1.5, loud: ['loud', 'medium'],
+  },
+  presence: {
+    about: 'Someone comes online or goes offline: a sound for it carries an on switch, 1 online, 0 offline.',
+    tags: ['presence', 'online', 'offline', 'status', 'available', 'ding-dong'], terms: ['online', 'came online', 'went offline', 'available', 'status change'],
+    categories: ['notify', 'ui'], avoid: ['error', 'speech'], maxDur: 0.8, loud: ['quiet'], hints: { on: 1 },
+  },
+  purchase: {
+    about: 'A payment or purchase completes: a cash register, a checkout, a tip.',
+    tags: ['purchase', 'cash-register', 'payment', 'buy', 'cha-ching', 'money'], terms: ['payment', 'checkout', 'order placed', 'paid', 'buy', 'cash register', 'transaction'],
+    categories: ['notify', 'game', 'ui'], avoid: ['error', 'fail'], maxDur: 1.5, loud: ['medium', 'quiet'],
+  },
+  // ---- data: loaders, counters, charts, maps and diagrams
+  loading: {
+    about: 'Something loads or waits with no known end: a spinner, dots, a skeleton. A sound for it is a loop cell (tag loop-cell), re-triggered on an interval while the wait lasts.',
+    tags: ['loading', 'loader', 'spinner', 'busy', 'pending', 'loop-cell'], terms: ['spinner', 'waiting', 'please wait', 'fetching', 'buffering', 'skeleton'],
+    categories: ['data', 'notify', 'ui', 'scifi'], avoid: ['error', 'fail'], maxDur: 1.5, loud: ['quiet'],
+  },
+  progress: {
+    about: 'A determinate step of progress: a bar or ring advances. A sound for it may take a pos parameter (0 to 1) and be played on each update.',
+    tags: ['progress', 'fill', 'percent', 'meter', 'bar'], terms: ['progress bar', 'percent', 'percentage', 'uploading', 'downloading', 'installing'],
+    categories: ['data', 'ui', 'notify'], avoid: ['error'], maxDur: 0.6, loud: ['quiet'],
+  },
+  'load-complete': {
+    about: 'A wait resolves: a spinner turns into a check, a skeleton into content.',
+    tags: ['loaded', 'resolve', 'complete', 'sync', 'skeleton'], terms: ['finished loading', 'done loading', 'content ready', 'resolved'],
+    categories: ['data', 'notify', 'ui'], avoid: ['error', 'fail'], maxDur: 1.0, loud: ['quiet', 'medium'],
+  },
+  'data-tick': {
+    about: 'A counter, odometer or ticker steps by one value.',
+    tags: ['counter', 'tick', 'odometer', 'ticker', 'increment', 'digit'], terms: ['counter', 'odometer', 'ticker', 'stock ticker', 'flip clock', 'nixie'],
+    categories: ['data', 'battle', 'ui', 'cards'], avoid: ['error'], maxDur: 0.2, loud: ['quiet'],
+  },
+  'count-up': {
+    about: 'A number rolls up to its value: a KPI, a total, an odometer run.',
+    tags: ['count-up', 'count', 'tally', 'total', 'odometer'], terms: ['count up', 'counting', 'tally', 'running total', 'big number', 'kpi'],
+    categories: ['data', 'game', 'ui'], avoid: ['error', 'dice'], maxDur: 2.0, loud: ['quiet', 'medium'],
+  },
+  'chart-reveal': {
+    about: 'A chart draws in: bars rise, a line traces, areas fill.',
+    tags: ['chart', 'graph', 'bars', 'plot', 'draw-in', 'bloom'], terms: ['bar chart', 'line chart', 'pie chart', 'graph', 'plot', 'visualization', 'draw in', 'analytics'],
+    categories: ['data', 'ui', 'magic'], avoid: ['error'], maxDur: 2.0, loud: ['quiet', 'medium'],
+  },
+  threshold: {
+    about: 'A meter or gauge crosses into amber or red, or back: a limit, an SLO, a quota.',
+    tags: ['threshold', 'gauge', 'meter', 'limit', 'caution'], terms: ['crosses threshold', 'over limit', 'quota', 'slo', 'red zone', 'gauge'],
+    categories: ['data', 'notify'], avoid: [], maxDur: 1.0, loud: ['quiet', 'medium'],
+  },
+  sort: {
+    about: 'Rows or items reorder: a table sorts, a leaderboard swaps places.',
+    tags: ['sort', 'reorder', 'swap', 'rank', 'leaderboard'], terms: ['sorting', 'reorder', 'sorted', 'leaderboard', 'rerank'],
+    categories: ['data', 'ui', 'cards'], avoid: ['error'], maxDur: 1.0, loud: ['quiet'],
+  },
+  beacon: {
+    about: 'One beacon or sonar pulse: you are here, an accuracy ring, an outage ripple.',
+    tags: ['beacon', 'sonar', 'pulse', 'ripple', 'locate'], terms: ['you are here', 'sonar ping', 'locator', 'geolocation', 'ripple'],
+    categories: ['data', 'scifi', 'notify'], avoid: ['error'], maxDur: 1.5, loud: ['quiet', 'medium'],
+  },
+  'pin-drop': {
+    about: 'A map pin or marker drops onto its spot.',
+    tags: ['pin', 'marker', 'map', 'location', 'drop-pin'], terms: ['map pin', 'drop a pin', 'marker', 'map marker', 'location'],
+    categories: ['data', 'ui'], avoid: ['error'], maxDur: 0.6, loud: ['quiet', 'medium'],
+  },
+  route: {
+    about: 'A dot or vehicle travels a route on a map, hop by hop to its arrival.',
+    tags: ['route', 'path', 'waypoint', 'trace', 'journey', 'dash'], terms: ['directions', 'delivery tracking', 'flight path', 'waypoints'],
+    categories: ['data', 'game', 'ui'], avoid: ['error'], maxDur: 3.0, loud: ['quiet', 'medium'],
+  },
+  packet: {
+    about: 'A packet hops along a wire or link between nodes in a diagram.',
+    tags: ['packet', 'data', 'hop', 'network', 'request', 'node'], terms: ['network', 'data flow', 'api call', 'traffic', 'message bus'],
+    categories: ['data', 'scifi'], avoid: ['error'], maxDur: 1.0, loud: ['quiet'],
+  },
+  link: {
+    about: 'A connection is made or dropped: a socket, a peering, a VPN. A sound for it carries an on switch, 1 connects, 0 disconnects.',
+    tags: ['link', 'connect', 'disconnect', 'connection', 'socket', 'blip'], terms: ['connected', 'disconnected', 'reconnect', 'websocket', 'vpn', 'pairing', 'bluetooth', 'handshake', 'link up', 'link down'],
+    categories: ['data', 'notify', 'scifi'], avoid: ['card'], maxDur: 1.0, loud: ['quiet', 'medium'], hints: { on: 1 },
+  },
+  failover: {
+    about: 'The active node fails and a standby takes over.',
+    tags: ['failover', 'standby', 'takeover', 'backup', 'switchover', 'recovery'], terms: ['fail over', 'high availability', 'disaster recovery', 'redundancy', 'outage'],
+    categories: ['data', 'notify', 'scifi'], avoid: [], maxDur: 2.0, loud: ['medium', 'quiet'],
+  },
+  // ---- AI and agents
+  thinking: {
+    about: 'An AI or agent is working or thinking. A sound for it is a loop cell (tag loop-cell), re-triggered on an interval while it works.',
+    tags: ['thinking', 'processing', 'working', 'reasoning', 'pulse', 'hum', 'loop-cell'], terms: ['ai', 'agent', 'llm', 'assistant', 'chatbot', 'generating', 'typing indicator'],
+    categories: ['ai', 'scifi', 'ambience', 'data'], avoid: ['error', 'fail'], maxDur: 2.0, loud: ['quiet'],
+  },
+  'stream-token': {
+    about: 'Machine text streams in token by token (not a person typing).',
+    tags: ['token', 'tokens', 'stream', 'streaming', 'generate', 'output'], terms: ['streaming reply', 'token stream', 'llm output', 'generating text'],
+    categories: ['ai', 'scifi', 'data'], avoid: ['keyboard', 'keypress'], maxDur: 1.0, loud: ['quiet'],
+  },
+  'tool-call': {
+    about: 'An agent calls a tool or function and the result comes back.',
+    tags: ['tool', 'tool-call', 'function', 'invoke', 'result', 'terminal'], terms: ['function call', 'tool use', 'api call', 'agent tool', 'mcp'],
+    categories: ['ai', 'data', 'scifi'], avoid: ['phone', 'telephone', 'ringtone'], maxDur: 1.5, loud: ['quiet', 'medium'],
+  },
+  verdict: {
+    about: 'A check passes or blocks: a guardrail, a field validation, a review. A sound for it carries a pass switch, 1 allows, 0 blocks.',
+    tags: ['verdict', 'valid', 'invalid', 'pass', 'block', 'guardrail', 'validation'], terms: ['validation', 'validate', 'guardrail', 'moderation', 'allowed', 'field check', 'input check'],
+    categories: ['ai', 'ui', 'notify'], avoid: [], maxDur: 0.8, loud: ['quiet', 'medium'], hints: { pass: 1 },
   },
   // ---- games
   hit: {
@@ -230,6 +378,11 @@ export const MOMENTS = {
     tags: ['countdown', 'beep', 'ready', 'go', 'race', 'start'], terms: ['three two one', 'get ready', 'on your marks'],
     categories: ['game', 'notify'], avoid: ['error'], maxDur: 0.6, loud: ['medium'],
   },
+  'level-down': {
+    about: 'A demotion, the mirror of level-up: a rank drops, a streak is lost, a level is taken away.',
+    tags: ['level-down', 'demote', 'rank-down', 'streak-lost', 'defeat', 'sad', 'lose'], terms: ['level down', 'rank down', 'demoted', 'demotion', 'lost streak', 'downgrade'],
+    categories: ['game', 'music', 'notify'], avoid: ['level-up', 'win', 'success'], minDur: 0.3, maxDur: 3.0, loud: ['medium', 'quiet'],
+  },
   // ---- cards and tabletop
   'card-draw': {
     about: 'A card is drawn, dealt or flicked.',
@@ -250,6 +403,42 @@ export const MOMENTS = {
     about: 'Dice are shaken and rolled.',
     tags: ['dice', 'roll', 'shake', 'rattle', 'craps', 'cup'], terms: ['roll the dice', 'throw dice'],
     categories: ['cards'], avoid: [], maxDur: 2.0, loud: ['quiet', 'medium'],
+  },
+  // ---- card duels and creature battles (cards, duel, battle)
+  'card-tap': {
+    about: 'A card turns sideways to act or pay (tap, exert) or stands up again: a sound for it carries an on switch, 1 taps, 0 untaps or readies.',
+    tags: ['exert', 'untap', 'rotate', 'sideways', 'card'], terms: ['exert', 'exerted', 'untap', 'turn sideways', 'ready step'],
+    categories: ['cards', 'duel', 'battle'], avoid: [], maxDur: 0.5, loud: ['quiet', 'medium'], hints: { on: 1 },
+  },
+  resource: {
+    about: 'A resource is added: mana, ink, an energy attached.',
+    tags: ['resource', 'mana', 'ink', 'energy', 'attach', 'inkwell'], terms: ['mana', 'ink', 'energy', 'attach energy', 'land drop', 'inkwell'],
+    categories: ['duel', 'battle', 'cards', 'game'], avoid: ['error'], maxDur: 1.0, loud: ['quiet', 'medium'],
+  },
+  score: {
+    about: 'Points are scored: lore, prizes, victory points.',
+    tags: ['score', 'points', 'lore', 'prize', 'victory-points', 'tally'], terms: ['points', 'lore', 'prize card', 'victory points', 'scored'],
+    categories: ['duel', 'battle', 'game', 'cards'], avoid: ['error', 'fail'], maxDur: 1.5, loud: ['medium', 'quiet'],
+  },
+  ability: {
+    about: 'A creature or card ability activates: a triggered, passive or once per turn power.',
+    tags: ['ability', 'activate', 'trigger', 'passive', 'skill', 'charge'], terms: ['special ability', 'activate ability', 'triggered', 'once per turn', 'skill'],
+    categories: ['battle', 'duel', 'magic', 'game'], avoid: ['error'], maxDur: 1.5, loud: ['medium', 'quiet'],
+  },
+  debuff: {
+    about: 'A status condition or debuff lands (poison, burn, sleep, paralysis, confusion) or ticks at the turn checkup: a sound for it may carry a tick switch, 0 the application, 1 the recurring tick.',
+    tags: ['debuff', 'status', 'poison', 'burn', 'sleep', 'paralysis', 'confusion', 'curse'], terms: ['status condition', 'poisoned', 'burned', 'asleep', 'paralyzed', 'confused', 'weakened'],
+    categories: ['battle', 'game', 'magic'], avoid: ['heal'], maxDur: 2.0, loud: ['medium', 'quiet'],
+  },
+  crit: {
+    about: 'A critical or super effective hit: a weakness doubles the damage.',
+    tags: ['crit', 'critical-hit', 'weakness', 'super-effective', 'bonus-damage'], terms: ['critical hit', 'super effective', 'weakness', 'double damage'],
+    categories: ['battle', 'game'], avoid: ['soft'], maxDur: 1.2, loud: ['loud', 'medium'],
+  },
+  knockout: {
+    about: 'A creature or character is knocked out: heavier than a hit, the end of one fighter.',
+    tags: ['knockout', 'ko', 'faint', 'heavy', 'fallen'], terms: ['fainted', 'faints', 'banished', 'final blow', 'defeated creature'],
+    categories: ['battle', 'game'], avoid: ['heal'], minDur: 0.3, maxDur: 2.0, loud: ['loud', 'medium'],
   },
   // ---- magic and sci-fi
   sparkle: {
@@ -301,6 +490,22 @@ export const MOMENTS = {
     about: 'A sting for a scare, a twist or a mystery.',
     tags: ['scare', 'spooky', 'eerie', 'suspense', 'mystery', 'stinger', 'sting', 'clue'], terms: ['jump scare', 'horror', 'creepy', 'twist', 'dread'],
     categories: ['music'], avoid: ['cheerful', 'win'], minDur: 0.5, maxDur: 6, loud: ['medium'],
+  },
+  // ---- screen effects
+  transform: {
+    about: 'Something morphs, evolves or devolves: a sound for it carries an up switch, 1 evolves or grows, 0 devolves or shrinks.',
+    tags: ['transform', 'morph', 'evolve', 'devolve', 'shapeshift', 'mutate', 'alchemy'], terms: ['morph', 'evolution', 'devolve', 'transformation', 'shape shift'],
+    categories: ['fx', 'battle', 'magic', 'game'], avoid: ['error'], maxDur: 3.0, loud: ['medium', 'quiet'], hints: { up: 1 },
+  },
+  glitch: {
+    about: 'A digital glitch or corruption burst: an RGB split, a datamosh, a VHS tear.',
+    tags: ['glitch', 'corrupt', 'stutter', 'bitcrush', 'vhs', 'static'], terms: ['glitchy', 'corruption', 'datamosh', 'signal tear', 'crt', 'distortion'],
+    categories: ['fx', 'scifi'], avoid: [], maxDur: 1.0, loud: ['medium', 'quiet'],
+  },
+  'neon-on': {
+    about: 'A neon tube or a bad bulb strikes, flickers and settles into its hum.',
+    tags: ['neon', 'flicker', 'tube', 'bulb', 'sign', 'hum'], terms: ['neon sign', 'light flicker', 'fluorescent', 'bad bulb'],
+    categories: ['fx', 'scifi', 'ambience'], avoid: [], maxDur: 2.0, loud: ['quiet', 'medium'],
   },
   // ---- voices
   announce: {
@@ -356,4 +561,7 @@ export const ROLES = {
   open: 'Switch: 1 plays opening (expand, show, slide in), 0 closing',
   chip: 'Switch: 1 swaps in an 8-bit square-wave voicing, 0 keeps the softer voice',
   go: 'Switch: 1 plays the longer, higher go cue that ends a countdown, 0 a count beat',
+  up: 'Switch: 1 plays the rising direction (increase, rise, evolve), 0 the falling one (decrease, fall, devolve)',
+  pass: 'Switch: 1 plays the pass verdict (allow, valid), 0 the block (deny, invalid)',
+  tick: 'Switch: 1 plays the recurring per-turn tick (a checkup, an upkeep), 0 the first application',
 };

@@ -2,8 +2,8 @@
 // the runtime (renderSound, measure, paramsFor, encodeWav, wavChannels, buildCopy), SOUNDS and
 // THEMES. Top-level names here must not reuse those.
 
-const CAT_NAMES = { ui: 'UI', notify: 'Notify', game: 'Game', cards: 'Cards', magic: 'Magic', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music', voice: 'Voice' };
-const CAT_ORDER = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music', 'voice'];
+const CAT_NAMES = { ui: 'UI', notify: 'Notify', data: 'Data', ai: 'AI', game: 'Game', battle: 'Battle', cards: 'Cards', duel: 'Ink Duel', magic: 'Magic', fx: 'FX', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music', voice: 'Voice' };
+const CAT_ORDER = ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'ambience', 'music', 'voice'];
 const SCOPE_TOP = -6;     // dBFS at the scope's top edge (the master ceiling)
 const SCOPE_FLOOR = -54;  // dBFS at the center line
 const HOUSE_MAX = -12;    // the dashed reference line, and the peak LED's red threshold

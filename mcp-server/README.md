@@ -165,6 +165,9 @@ pasted Copy function uses, so mixing a kit and a pasted Copy on one context stil
 
 A moment can also set a parameter: `toggle-on` and `toggle-off` set a sound's `on` switch,
 `open` and `close` set its `open` switch, and the `retro` mood turns a sound's `chip` switch on.
+A moment that names both directions starts on the first (`link`, `presence`, `record`, `auth` and
+`card-tap` set `on` to 1, `verdict` sets `pass` to 1, `transform` sets `up` to 1); pass the other
+value to `play(moment, opts)` for the reverse.
 These are parameter roles: the switch is found by its `role` in the catalog, whatever it is called,
 and by its name only in a catalog without roles. A mood also lifts the sounds of its family (calm:
 soft; glassy: glass; retro: chip; ...) the way it lifts sounds carrying its tags.

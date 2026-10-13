@@ -19,7 +19,8 @@ ready. Read `docs/DESIGN.md` for the why.
 export default {
   id: 'game-laser-zap',                 // kebab-case, unique, starts with its category
   name: 'Laser Zap',                    // 1 to 40 characters, Title Case
-  category: 'game',                     // ui, notify, game, cards, magic, scifi, ambience, music, voice
+  category: 'game',                     // ui, notify, data, ai, game, battle, cards, duel, magic, fx,
+                                        // scifi, ambience, music, voice
   tags: ['laser', 'zap', 'shoot'],      // lowercase kebab-case words people would search for
   desc: 'A bright falling zap for a shot fired.',  // 10 to 200 characters, one or two sentences
   dur: 0.4,                             // seconds, tail included, at ANY parameter values
@@ -64,6 +65,10 @@ Rules the build checks:
   default exponential decay is far below -60 dBFS in its last milliseconds and gets away without
   it, but the margin costs nothing.
 - Never `seed` as a parameter name (Copy uses `p.seed`).
+- A sound tagged `loop-cell` is one short cell a host re-triggers on an interval (a loader, an agent
+  thinking, a live feed): it falls to silence inside `dur`, and its `desc` names the interval
+  ("re-trigger every 1.2 s"). The build checks the desc names a time. See DESIGN.md, "Loop cells
+  and silence"; decorative animations (glow, foil, static diagrams) get no sound.
 
 Style: no em dashes anywhere (names, descriptions, comments). Comment the one or two decisions a
 reader would question (why a peak is higher, why a filter is narrow).
@@ -76,9 +81,10 @@ reader would question (why a peak is higher, why a filter is narrow).
   those. For a 0/1 switch say what 1 does and what 0 does.
 - A 0/1 switch that means one of the shared roles carries `role` (`src/vocabulary.js`): `on` (1 the
   on direction, 0 off), `open` (1 opening, 0 closing), `chip` (1 an 8-bit square voicing), `go` (1
-  the go cue of a countdown). Tools set a switch by its role (build_kit turns toggle-off into
-  `on: 0`), so use the role whatever you name the parameter. The build checks a role sits on a
-  switch (`min: 0, max: 1, step: 1`, no unit).
+  the go cue of a countdown), `up` (1 rising or increasing, 0 falling), `pass` (1 allow or valid, 0
+  block or invalid), `tick` (1 the recurring per-turn tick, 0 the first application). Tools set a
+  switch by its role (build_kit turns toggle-off into `on: 0`), so use the role whatever you name
+  the parameter. The build checks a role sits on a switch (`min: 0, max: 1, step: 1`, no unit).
 - Short camelCase names that read on a slider: `pitch`, `tone`, `bright`, `gap`, `ring`, `speed`,
   `length`, `weight`, `space`, `rough`, `notes`, `count`.
 - Units: `Hz` (shows as Hz or kHz), `s` (shows as ms below one second), `st` (semitones), `x` (a

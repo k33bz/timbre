@@ -41,6 +41,11 @@
   --cat-ambience: #3b8436;
   --cat-music: #8a6a12;
   --cat-voice: #a8501c;
+  --cat-data: #56697d;
+  --cat-ai: #8a45b5;
+  --cat-fx: #6b8a14;
+  --cat-battle: #b4344f;
+  --cat-duel: #3d55b5;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -80,6 +85,11 @@
     --cat-ambience: #7ccf6e;
     --cat-music: #d8b44a;
     --cat-voice: #ff9a5c;
+    --cat-data: #a7b9cc;
+    --cat-ai: #c98cff;
+    --cat-fx: #b5d64c;
+    --cat-battle: #ff7091;
+    --cat-duel: #8c9cff;
     color-scheme: dark;
   }
 }
@@ -119,6 +129,11 @@
   --cat-ambience: #7ccf6e;
   --cat-music: #d8b44a;
   --cat-voice: #ff9a5c;
+  --cat-data: #a7b9cc;
+  --cat-ai: #c98cff;
+  --cat-fx: #b5d64c;
+  --cat-battle: #ff7091;
+  --cat-duel: #8c9cff;
   color-scheme: dark;
 }
 

@@ -6,7 +6,7 @@ import vm from 'node:vm';
 import { T } from '../src/core/t.js';
 import { build, loadDir, validateAll, validateSound, validateTheme, buildManifest, buildIndex, buildHtml, ROOT, SCHEMA, fingerprint, levelsFor, writeAtomic } from '../build.mjs';
 import { levelEntry, updateLevels, steady } from './check_levels.mjs';
-import { MOMENTS, FAMILIES } from '../src/vocabulary.js';
+import { MOMENTS, FAMILIES, ROLES } from '../src/vocabulary.js';
 import { PREROLL, MASTER_CHAIN } from '../src/core/render.js';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -199,6 +199,22 @@ test('choices name the values of a stepped parameter, 0 to n - 1', () => {
   assert.deepEqual(check(f, 'src/sounds/voice/voice-test-line.js'), [], 'voice is a category');
 });
 
+test('the gap-fill categories, roles and the loop-cell convention', () => {
+  for (const c of ['data', 'ai', 'fx', 'battle', 'duel']) {
+    const s = good(); s.category = c; s.id = c + '-test-blip';
+    assert.deepEqual(check(s, `src/sounds/${c}/${c}-test-blip.js`), [], `${c} is a category`);
+  }
+  for (const r of ['up', 'pass', 'tick']) {
+    const s = good(); s.params.dir = { min: 0, max: 1, def: 1, step: 1, role: r };
+    assert.deepEqual(check(s), [], `${r} is a role`);
+  }
+  const a = good(); a.tags = ['loading', 'loop-cell']; a.desc = 'A soft pulse for a loader, played again and again.';
+  expectError(a, /loop-cell sound names its re-trigger interval in desc/);
+  const b = good(); b.tags = ['loading', 'loop-cell']; b.desc = 'A soft pulse for a loader: re-trigger every 1.2 s.';
+  assert.deepEqual(check(b), []);
+  for (const m of ['loading', 'thinking']) assert.ok(MOMENTS[m].tags.includes('loop-cell'), `${m} asks for a loop cell`);
+});
+
 test('every voice sound speaks or babbles a fixed line and names its voices', async () => {
   const { sounds } = await build();
   const voices = sounds.filter((s) => s.category === 'voice');
@@ -216,6 +232,9 @@ test('every real sound declares a family and describes its parameters', async ()
   for (const s of sounds) for (const [k, d] of Object.entries(s.params)) assert.ok(typeof d.desc === 'string', `${s.id}.${k} has no desc`);
   // the 0/1 switches the MCP server sets by role carry one
   for (const s of sounds) for (const k of ['on', 'open', 'chip', 'go']) if (s.params[k]) assert.equal(s.params[k].role, k, `${s.id}.${k}`);
+  // and so does any other switch named after a role (notify-calendar's tick is an amount, not a switch)
+  const isSwitch = (d) => d.step === 1 && d.min === 0 && d.max === 1 && !d.unit;
+  for (const s of sounds) for (const k of Object.keys(ROLES)) if (s.params[k] && isSwitch(s.params[k])) assert.equal(s.params[k].role, k, `${s.id}.${k}`);
 });
 
 test('theme moments come from the vocabulary', async () => {

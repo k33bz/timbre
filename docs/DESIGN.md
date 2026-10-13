@@ -40,7 +40,8 @@ mcp-server/      zero-dependency MCP server over the catalog
 export default {
   id: 'ui-click-soft',            // kebab-case, unique, category prefix
   name: 'Soft Click',
-  category: 'ui',                 // ui, notify, game, cards, magic, scifi, ambience, music, voice
+  category: 'ui',                 // ui, notify, data, ai, game, battle, cards, duel, magic, fx,
+                                  // scifi, ambience, music, voice
   tags: ['click', 'button', 'tap'],
   desc: 'A short muted tick for button presses.',
   dur: 0.08,                      // seconds the render needs, tail included, at ANY parameter values
@@ -70,6 +71,28 @@ set: for example Soft UI, 8-bit, Arcade, Sci-fi, Glass, Wood.
 families and the parameter roles. The build validates sounds and themes against it and the MCP
 server imports it, so a theme's moment, a sound's `moments` and a suggestion's moment are always
 the same names. A new name is added there once.
+
+Categories are the other shared list, in gallery order: ui, notify, data, ai, game, battle, cards,
+duel, magic, fx, scifi, ambience, music, voice. `battle` is generic creature-battle card game moments
+(elements, status conditions, knockouts); `duel`, labelled Ink Duel, is a fan-made, unbranded family
+of ink-and-lore card game mechanics. A category is listed in `build.mjs` (CATEGORIES), the gallery
+(`src/shell/app.js`: label and order; `src/shell/style.css`: a color per theme), and the MCP server
+(`mcp-server/lib/catalog.js`, and the labels in `mcp-server/tools/index.js`). A category with no
+sounds yet is left out of the manifest's category list and the gallery's filters, and the MCP
+server's `info` shows it with a count of zero. Each moment of a newer category also lists an older
+one (`thinking`: ai, then scifi), so suggestions have a fallback until its sounds land.
+
+## Loop cells and silence
+Every sound is a one-shot with a fixed `dur`. A wait with no fixed end (a loader, an agent thinking,
+a live data feed) is served by a loop cell: one short cell, tagged `loop-cell`, that the host
+re-triggers on an interval for as long as the wait lasts. The cell falls to silence inside its
+`dur`, so back-to-back plays never pile up, and its `desc` names the interval it is made for
+("re-trigger every 1.2 s"; the build checks a time is named). The `loading` and `thinking` moments
+ask for loop cells.
+
+Purely decorative animations stay silent by design: decorative glow, borders and gradient text,
+foil and holo shimmer, and static diagrams (nodes, boundaries, org charts). Timbre makes no sounds
+for them, and a gallery that pairs sounds with animations leaves them unpaired.
 
 ## The catalog
 `catalog/manifest.json` (schema 2) carries every sound's fields, play source, helper list and a
@@ -178,3 +201,19 @@ channel) and Copy pass two channels through; Save WAV writes one channel when bo
   side with the base bundle in the browser, at its defaults and at a random setting, matched sample
   for sample (92 renders) or within the engine's own run-to-run noise (176 renders, at most 7.3e-6,
   the same as the base bundle against itself).
+- 2026-10-13, gap-fill vocabulary: five categories, `data`, `ai`, `fx`, `battle` and `duel`
+  (labelled Ink Duel), in the gallery order under "One vocabulary" and empty until their sounds
+  land; 39 moments (loaders, progress and counters, charts, maps and diagram packets, AI work,
+  dismissal and severity, interface controls, screen effects, creature battles and card duels,
+  among them `card-tap`, `resource` and `score`); and three roles, `up`, `pass` and `tick`. Two
+  names differ from the plan: `ping` became `beacon` and `tap` became `card-tap`, because ping and
+  tap already name notification and press sounds (tags of `notify`, `coin` and `click`), and a
+  moment named after either would take the word over ("gentle tap feedback" read as a card tap).
+  A moment that names both directions of a switch hints the first (`link`, `presence`, `record`,
+  `auth` and `card-tap` set on 1, `verdict` pass 1, `transform` up 1); `debuff` sets no tick hint,
+  because a hint falls back to a parameter of that name and notify-calendar's `tick` is an amount.
+  Added "Loop cells and silence": the `loop-cell` tag, its interval named in `desc` (the build
+  checks it) and the silence policy for decorative animations. With today's catalog the MCP server
+  picks a sound inside each new moment's own categories (the real-catalog test holds all 98 moments
+  to that), and it reads the tested descriptions as before. No sound changed: the manifest's
+  sounds, helpers and levels are identical to the base; only its vocabulary grew.

@@ -22,7 +22,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const DEFAULT_CATALOG_DIR = path.resolve(HERE, '..', '..', 'catalog');
 
 /** Every category the build knows (build.mjs, CATEGORIES), in gallery order. */
-export const CATEGORIES = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music', 'voice'];
+export const CATEGORIES = ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'ambience', 'music', 'voice'];
 
 export class CatalogError extends Error {
   constructor(message, code = 'catalog_unavailable') {

@@ -13,7 +13,7 @@ import { MOMENTS, MOODS, FAMILIES, ROLES } from '../lib/moments.js';
 import { resolveKit, buildKitModule, checkParams } from '../lib/kit.js';
 import { SERVER_NAME, SERVER_VERSION } from '../lib/meta.js';
 
-const CATEGORY_LABELS = { ui: 'UI', notify: 'Notify', game: 'Game', cards: 'Cards', magic: 'Magic', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music', voice: 'Voice' };
+const CATEGORY_LABELS = { ui: 'UI', notify: 'Notify', data: 'Data', ai: 'AI', game: 'Game', battle: 'Battle', cards: 'Cards', duel: 'Ink Duel', magic: 'Magic', fx: 'FX', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music', voice: 'Voice' };
 
 const round = (v, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
 

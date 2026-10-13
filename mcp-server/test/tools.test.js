@@ -45,7 +45,7 @@ test('info: the version, the categories (empty ones too), themes, moments and th
   assert.equal(d.catalog.sounds, 18);
   assert.equal(d.catalog.themes, 2);
   assert.equal(d.catalog.mode, 'manifest');
-  assert.deepEqual(d.categories.map((c) => c.category), ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music', 'voice']);
+  assert.deepEqual(d.categories.map((c) => c.category), ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'ambience', 'music', 'voice']);
   assert.equal(d.categories.reduce((n, c) => n + c.count, 0), 18);
   assert.deepEqual(d.themes.map((x) => x.id).sort(), ['arcade', 'soft-ui']);
   assert.ok(d.themes.find((x) => x.id === 'soft-ui').moments.includes('toggle-on'));
@@ -80,7 +80,7 @@ test('info works with no catalog, and says what is wrong', async () => {
   assert.equal(r.isError, false);
   assert.match(r.data.catalog.error, /No Timbre catalog/);
   assert.equal(r.data.catalog.sounds, 0);
-  assert.equal(r.data.categories.length, 9);
+  assert.equal(r.data.categories.length, 14);
 });
 
 test('every other tool says plainly when there is no catalog', async () => {
@@ -147,7 +147,7 @@ test('search_sounds: bad arguments are errors the agent can fix', async (t) => {
   for (const [args, code, re] of [
     [{ limit: 0 }, 'invalid_arguments', /limit must be at least 1/],
     [{ limit: 500 }, 'invalid_arguments', /limit must be at most 50/],
-    [{ category: 'weather' }, 'bad_category', /Unknown category "weather"\. Categories: ui, notify, game/],
+    [{ category: 'weather' }, 'bad_category', /Unknown category "weather"\. Categories: ui, notify, data, ai, game/],
     [{ loudness: 'deafening' }, 'invalid_arguments', /loudness does not match/],
     [{ max_duration: 'long' }, 'invalid_arguments', /max_duration must be a number/],
     [{ qeury: 'typo' }, 'invalid_arguments', /unknown argument "qeury"; allowed: query, category/],
