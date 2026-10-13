@@ -993,14 +993,14 @@
    "end": 0.615
   },
   "scifi-facility-klaxon": {
-   "fingerprint": "6a8665becc27",
-   "peak": -14.1,
-   "rms": -28,
-   "worstPeak": -13.4,
-   "worstRms": -26,
-   "lowestPeak": -17.1,
-   "pre": -18.2,
-   "end": 3.418
+   "fingerprint": "65ccaed2d37e",
+   "peak": -15.8,
+   "rms": -25.9,
+   "worstPeak": -14.3,
+   "worstRms": -23.9,
+   "lowestPeak": -17.4,
+   "pre": -19.3,
+   "end": 3.87
   },
   "scifi-hologram-flicker": {
    "fingerprint": "b400831ec9d7",

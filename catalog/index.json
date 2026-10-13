@@ -2163,10 +2163,11 @@
         "lockdown",
         "breach",
         "warning",
-        "dystopian"
+        "dystopian",
+        "buzzer"
       ],
-      "desc": "A raspy industrial alarm horn: buzzing blasts that swoop up into pitch and ring out in a concrete hall. For lockdowns, breaches and red alerts.",
-      "dur": 7,
+      "desc": "A sustained, growling industrial alarm horn: a steady buzzing tone with a mechanical rattle and a slow swell, ringing in a concrete hall. For lockdowns, breaches and red alerts.",
+      "dur": 8.2,
       "family": "synthetic",
       "moments": [
         "warning",

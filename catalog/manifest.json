@@ -7857,10 +7857,11 @@
         "lockdown",
         "breach",
         "warning",
-        "dystopian"
+        "dystopian",
+        "buzzer"
       ],
-      "desc": "A raspy industrial alarm horn: buzzing blasts that swoop up into pitch and ring out in a concrete hall. For lockdowns, breaches and red alerts.",
-      "dur": 7,
+      "desc": "A sustained, growling industrial alarm horn: a steady buzzing tone with a mechanical rattle and a slow swell, ringing in a concrete hall. For lockdowns, breaches and red alerts.",
+      "dur": 8.2,
       "family": "synthetic",
       "moments": [
         "warning",
@@ -7868,67 +7869,73 @@
       ],
       "params": {
         "pitch": {
-          "min": 180,
-          "max": 420,
-          "def": 290,
+          "min": 280,
+          "max": 560,
+          "def": 415,
           "unit": "Hz",
-          "desc": "Horn note each blast swoops up into: low a heavy facility horn, high a thinner buzzer"
-        },
-        "pulses": {
-          "min": 1,
-          "max": 4,
-          "def": 3,
-          "step": 1,
-          "desc": "How many blasts sound"
+          "desc": "Horn note; the rattle always runs at a quarter of it"
         },
         "length": {
-          "min": 0.3,
-          "max": 0.9,
-          "def": 0.55,
+          "min": 1.5,
+          "max": 6,
+          "def": 3,
           "unit": "s",
-          "desc": "Length of each blast; the breath between blasts stays the same"
+          "desc": "How long the horn sounds before it cuts off and the hall rings out"
         },
         "rasp": {
           "min": 0,
           "max": 1,
           "def": 0.6,
-          "desc": "Mechanical buzz and distortion: 0 a clean horn, 1 a ragged, rattling one"
+          "desc": "Growl: the rattle depth, the noise rasp and the drive, from a clean horn to a ragged one"
+        },
+        "swell": {
+          "min": 0,
+          "max": 1,
+          "def": 0.5,
+          "desc": "Depth of the slow swell, where the top end dips and returns about every two seconds"
         },
         "space": {
           "min": 0,
           "max": 1,
-          "def": 0.5,
-          "desc": "How much of the concrete hall rings after each blast"
+          "def": 0.4,
+          "desc": "How much of the concrete hall rings around and after the horn"
         }
       },
       "file": "src/sounds/scifi/scifi-facility-klaxon.js",
-      "play": "function (T, out, t, p) {\n  const room = T.reverb(out, t, { time: 1.8, mix: 0.12 + 0.38 * p.space, tone: 0.35, pre: 0.02 });\n  // the horn's nasal honk, then a lowpass so the drive's fizz stays out of the top end\n  const honk = T.filter(room, t, { type: 'peaking', f: 1150, q: 1.3, db: 6 });\n  const lp = T.filter(honk, t, { type: 'lowpass', f: 3200, q: 0.6 });\n  // ref sets the horn's loudness: the drive never passes more than about this, whatever the rasp\n  const rasp = T.drive(lp, t, { amount: 0.35 + 0.55 * p.rasp, ref: 0.045 });\n  const hp = T.filter(rasp, t, { type: 'highpass', f: 70, q: 0.7 });\n  const n = Math.round(p.pulses), gap = 0.3;\n  const rattle = { rate: 46, depth: 0.15 + 0.5 * p.rasp };\n  for (let k = 0; k < n; k++) {\n    const at = t + k * (p.length + gap);\n    // the swoop: up from about a minor third below over the first third, then a slight sag\n    const env = { dur: p.length, a: 0.025, d: 0.06, s: 0.9, r: 0.07, glide: p.length * 0.35 };\n    for (const det of [-9, 9]) {\n      T.osc(hp, at, { ...env, type: 'sawtooth', f: p.pitch * 0.82, to: p.pitch, detune: det, peak: 0.05, trem: rattle });\n    }\n    T.osc(hp, at, { ...env, type: 'square', f: p.pitch * 0.41, to: p.pitch * 0.5, peak: 0.035, trem: rattle });\n  }\n}",
+      "play": "function (T, out, t, p) {\n  const L = p.length, rattle = p.pitch / 4;\n  const room = T.reverb(out, t, { time: 1.6, mix: 0.08 + 0.32 * p.space, tone: 0.4, pre: 0.015 });\n  const hp = T.filter(room, t, { type: 'highpass', f: 90, q: 0.7 });\n  // the slow swell: brightness and level breathe together, about 0.5 Hz\n  const swellGain = T.gain(hp, 1);\n  T.lfo(swellGain, t, { param: 'gain', rate: 0.48, depth: 0.22 * p.swell, dur: L, a: 0.4 });\n  const lp = T.filter(swellGain, t, { type: 'lowpass', f: 3000, q: 0.6 });\n  T.lfo(lp, t, { param: 'frequency', rate: 0.48, depth: 1500 * p.swell, dur: L, a: 0.4 });\n  const presence = T.filter(lp, t, { type: 'peaking', f: 3300, q: 1.2, db: 4 });\n  // ref sets the horn's loudness: the drive never passes more than about this, whatever the rasp\n  const grit = T.drive(presence, t, { amount: 0.3 + 0.5 * p.rasp, ref: 0.05 });\n  const env = { dur: L, a: 0.05, d: 0.08, s: 0.95, r: 0.12 };\n  const buzz = { rate: rattle, depth: 0.12 + 0.45 * p.rasp };\n  // the horn: a strong sine on the note (the fundamental dominates a real horn), a saw and a\n  // square for the harmonics, all rattled at f/4. The saw and square sit 2 cents apart, so\n  // their slow beat (about 0.5 Hz at 415 Hz) adds to the swell instead of pulsing on its own\n  T.osc(grit, t, { ...env, type: 'sine', f: p.pitch, peak: 0.07, trem: buzz });\n  T.osc(grit, t, { ...env, type: 'sawtooth', f: p.pitch, detune: -1, peak: 0.03, trem: buzz });\n  T.osc(grit, t, { ...env, type: 'square', f: p.pitch, detune: 1, peak: 0.014, trem: buzz });\n  // the rasp: band-passed noise, rattled by the same buzz so it growls with the tone\n  const raspGain = T.gain(grit, 1);\n  T.lfo(raspGain, t, { param: 'gain', rate: rattle, depth: 0.5 + 0.4 * p.rasp, dur: L });\n  T.noise(raspGain, t, { ...env, filter: 'bandpass', f: 2400, q: 0.45, peak: 0.012 + 0.05 * p.rasp });\n}",
       "uses": [
         "reverb",
         "filter",
+        "gain",
+        "lfo",
         "drive",
-        "osc"
+        "osc",
+        "noise"
       ],
       "helpers": [
         "rand",
         "reverb",
         "glide",
         "filter",
+        "gain",
+        "lfo",
         "drive",
         "env",
         "osc",
+        "noiseBuffer",
+        "noise",
         "seed",
         "master"
       ],
-      "fingerprint": "6a8665becc27",
+      "fingerprint": "65ccaed2d37e",
       "levels": {
-        "peak": -14.1,
-        "rms": -28,
-        "worstPeak": -13.4,
-        "worstRms": -26,
-        "lowestPeak": -17.1,
-        "pre": -18.2,
-        "end": 3.418
+        "peak": -15.8,
+        "rms": -25.9,
+        "worstPeak": -14.3,
+        "worstRms": -23.9,
+        "lowestPeak": -17.4,
+        "pre": -19.3,
+        "end": 3.87
       }
     },
     {
