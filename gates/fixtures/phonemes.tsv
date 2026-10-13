@@ -1,0 +1,116 @@
+# text	phonemes (what phonemize produces)	note (known mispronunciations: what it should be)
+Warning.	W AO1 R N IH0 NG .
+Access denied.	AE1 K S EH2 S / D IH0 N AY1 D .
+Access granted.	AE1 K S EH2 S / G R AE1 N T IH0 D .
+System online.	S IH1 S T AX0 M / AA1 N L AY2 N .
+Level complete.	L EH1 V AX0 L / K AX0 M P L IY1 T .
+Game over.	G EY1 M / OW1 V ER0 .
+Ready... go!	R EH1 D IY0 ... G OW1 !
+Mission complete.	M IH1 SH AX0 N / K AX0 M P L IY1 T .
+Containment breach. Evacuate the facility.	K AX0 N T EY1 N M AX0 N T / B R IY1 CH . IH0 V AE1 K Y UW0 EY2 T / DH AX0 / F AX0 S IH1 L AX0 T IY0 .
+Three, two, one.	TH R IY1 , T UW1 , W AH1 N .
+Beep boop. Processing request.	B IY1 P / B UW1 P . P R AA1 S EH0 S IH0 NG / R IH0 K W EH1 S T .
+Affirmative. Command accepted.	AX0 F ER1 M AX0 T IH0 V . K AX0 M AE1 N D / AE0 K S EH1 P T IH0 D .
+Greetings, user. Loading program. Please wait.	G R IY1 T IH0 NG Z , Y UW1 Z ER0 . L OW1 D IH0 NG / P R OW1 G R AE2 M . P L IY1 Z / W EY1 T .
+Behind you...	B IH0 HH AY1 N D / Y UW1 ...
+Is the system online?	IH0 Z / DH AX0 / S IH1 S T AX0 M / AA1 N L AY2 N ?	"is" unstressed at the start of a question, which a speaker would stress
+The quick brown fox jumps over the lazy dog.	DH AX0 / K W IH1 K / B R AW1 N / F AA1 K S / JH AH1 M P S / OW1 V ER0 / DH AX0 / L EY1 Z IY0 / D AA1 G .
+Welcome back, commander. All systems nominal.	W EH1 L K AX0 M / B AE1 K , K AX0 M AE1 N D ER0 . AO1 L / S IH1 S T AX0 M Z / N AA1 M IH0 N AX0 L .
+Warning: core temperature critical!	W AO1 R N IH0 NG : K AO1 R / T EH1 M P R AX0 CH ER0 / K R IH1 T IH0 K AX0 L !
+Shields at 42%, captain.	SH IY1 L D Z / AE0 T / F AO1 R T IY0 / T UW1 / P ER0 S EH1 N T , K AE1 P T AX0 N .
+It's 3.5 meters away, isn't it?	IH1 T S / TH R IY1 / P OY1 N T / F AY1 V / M IY1 T ER0 Z / AX0 W EY1 , IH1 Z AX0 N T / IH0 T ?
+Press [S T AA1 R T] to begin.	P R EH1 S / S T AA1 R T / T UW0 / B IH0 G IH1 N .
+TV, PC and HQ.	T IY1 / V IY1 , P IY1 / S IY1 / AE0 N D / EY1 CH / K Y UW1 .
+1st place, 2nd place, 3rd place.	F ER1 S T / P L EY1 S , S EH1 K AX0 N D / P L EY1 S , TH ER1 D / P L EY1 S .
+-7 degrees and 1,000,000 points	M AY1 N AX0 S / S EH1 V AX0 N / D EH0 G R IY1 Z / AE0 N D / W AH1 N / M IH1 L Y AX0 N / P OY1 N T S	"degrees": the prefix as EH0, usually IH0
+about	AX0 B AW1 T
+action	AE1 K SH AX0 N
+again	AX0 G EH1 N
+alarm	AX0 L AA1 R M
+animal	AE1 N IH0 M AX0 L	unstressed IH0 where most speakers say a schwa (AH0); the engine reduces unstressed vowels toward one anyway
+apple	AE1 P AX0 L
+attack	AX0 T AE1 K
+battle	B AE1 T AX0 L
+beautiful	B Y UW1 T AX0 F AX0 L
+better	B EH1 T ER0
+bird	B ER1 D
+bright	B R AY1 T
+castle	K AE1 S AX0 L
+change	CH EY1 N JH
+city	S IH1 T IY0
+color	K AH1 L ER0
+country	K AH1 N T R IY0
+dragon	D R AE1 G AX0 N
+during	D UH1 R IH0 NG
+early	ER1 L IY0
+edge	EH1 JH
+enemy	EH1 N AX0 M IY0
+energy	EH1 N ER0 JH IY0
+escape	IH0 S K EY1 P
+example	IH0 G Z AE1 M P AX0 L
+family	F AE1 M IH0 L IY0	unstressed IH0 for a schwa, as in animal
+father	F AA1 DH ER0
+fire	F AY1 R	AY1 R; often said AY1 ER0
+follow	F AA1 L OW2	OW2: a final long vowel gets a secondary stress (CMUdict has OW0)
+food	F UW1 D
+foot	F UH1 T
+forest	F AO1 R EH0 S T	unstressed EH0 for a schwa (reduced toward one by the engine)
+garden	G AA1 R D EH0 N	unstressed EH0 for a schwa
+great	G R EY1 T
+ground	G R AW1 N D
+half	HH AE1 F
+happy	HH AE1 P IY0
+health	HH EH1 L TH
+hero	HH IH1 R OW0
+house	HH AW1 S
+idea	AY0 D IY1 AX0
+island	AY1 L AX0 N D
+jump	JH AH1 M P
+knight	N AY1 T
+laugh	L AE1 F
+listen	L IH1 S AX0 N
+lose	L UW1 Z
+lost	L AO1 S T
+magic	M AE1 JH IH0 K
+match	M AE1 CH
+middle	M IH1 D AX0 L
+minute	M IH1 N AX0 T
+monster	M AA1 N S T ER0
+mountain	M AW1 N T AX0 N
+music	M Y UW1 Z IH0 K
+nation	N EY1 SH AX0 N
+nature	N EY1 CH ER0
+night	N AY1 T
+ocean	OW1 SH AX0 N
+open	OW1 P EH0 N	unstressed EH0 for a schwa
+orange	AO1 R AX0 N JH
+people	P IY1 P AX0 L
+piece	P IY1 S
+planet	P L AE1 N AX0 T
+potion	P OW1 SH AX0 N
+problem	P R AA1 B L AX0 M
+question	K W EH1 S CH AX0 N
+quiet	K W AY1 EH0 T	unstressed EH0 for a schwa
+remember	R IY0 M EH1 M B ER0	the prefix as IY0, usually IH0
+river	R IH1 V ER0
+search	S ER1 CH
+secret	S IY1 K R AX0 T
+shadow	SH AE1 D OW2	OW2 for OW0, as in follow
+station	S T EY1 SH AX0 N
+sure	SH UH1 R
+sword	S AO1 R D
+table	T EY1 B AX0 L
+together	T AX0 G EH1 DH ER0
+treasure	T R EH1 ZH ER0
+water	W AO1 T ER0
+weather	W EH1 DH ER0
+whole	HH OW1 L
+wind	W IH1 N D
+window	W IH1 N D OW0
+wizard	W IH1 Z ER0 D
+wolf	W UH1 L F
+world	W ER1 L D
+write	R AY1 T
+wrong	R AO1 NG
+yellow	Y EH1 L OW2	OW2 for OW0, as in follow
+young	Y AH1 NG

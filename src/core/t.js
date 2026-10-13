@@ -7,7 +7,9 @@ import * as voices from './voices.js';
 import * as effects from './effects.js';
 import * as mastering from './master.js';
 import * as music from './music.js';
+import * as phonetics from './phonetics.js';
+import * as speech from './speech.js';
 
-export const HELPER_MODULES = ['random.js', 'envelope.js', 'voices.js', 'effects.js', 'master.js', 'music.js'];
+export const HELPER_MODULES = ['random.js', 'envelope.js', 'voices.js', 'effects.js', 'master.js', 'music.js', 'phonetics.js', 'speech.js'];
 
-export const T = Object.freeze({ ...random, ...envelope, ...voices, ...effects, ...mastering, ...music });
+export const T = Object.freeze({ ...random, ...envelope, ...voices, ...effects, ...mastering, ...music, ...phonetics, ...speech });
