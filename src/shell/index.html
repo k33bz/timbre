@@ -52,6 +52,29 @@
     </div>
     <div class="pads" id="moments" role="group" aria-label="App moments: press one to hear it"></div>
   </section>
+  <section class="rack speak" id="speak" aria-labelledby="speak-h">
+    <div class="rack-head">
+      <h2 id="speak-h">Speak</h2>
+      <div class="seg" role="radiogroup" aria-label="Speech or babble">
+        <label><input type="radio" name="sp-mode" value="speak" checked><span>Speech</span></label>
+        <label><input type="radio" name="sp-mode" value="babble"><span>Babble</span></label>
+      </div>
+      <select id="sp-voice" aria-label="Voice"></select>
+      <p class="rack-desc" id="sp-desc"></p>
+    </div>
+    <div class="sp-body">
+      <div class="sp-main">
+        <label class="sp-label" for="sp-text">Line <span>Ctrl+Enter plays. [W EY1 T] spells a word in ARPAbet.</span></label>
+        <textarea id="sp-text" rows="3" maxlength="300" spellcheck="false" autocomplete="off">Access granted. Welcome back, commander.</textarea>
+        <p class="sp-ph" id="sp-ph"></p>
+      </div>
+      <div class="sp-side">
+        <div class="scope" data-state="idle"><canvas aria-hidden="true"></canvas><span class="scope-ref" aria-hidden="true">-12</span><span class="scope-msg">rendering</span></div>
+        <div class="params" id="sp-params" role="group" aria-label="Voice controls"></div>
+        <div class="transport" id="sp-transport"></div>
+      </div>
+    </div>
+  </section>
   <div class="grid-head">
     <h2 id="sounds-h">Sounds <span class="count" id="count"></span></h2>
     <p class="hint">Waveforms are rendered offline through the master chain. Level scale in dBFS; the dashed line is the house ceiling, -12.</p>

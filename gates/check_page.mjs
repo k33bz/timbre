@@ -9,8 +9,11 @@
 //   * the color theme switches (dark to light) and repaints
 //   * Vary draws a new seed; Save WAV downloads a RIFF file; Copy copies or offers the code
 //   * at phone width (375 px) nothing scrolls sideways
+//   * the Speak rack: a typed line shows its phonemes and renders, plays by a click and by Ctrl+Enter,
+//     a fader moves by keyboard, babble mode swaps the voices, Copy and Save WAV work
 // Screenshots (gates/out): page-dark.png and page-light.png (full page, 1280 wide),
-// page-phone.png (375 wide, top of the page, light) and page-phone-dark.png (a card, dark)
+// page-phone.png (375 wide, top of the page, light), page-phone-speak.png (the Speak rack) and
+// page-phone-dark.png (a card, dark)
 //   node gates/check_page.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -144,6 +147,53 @@ async function main() {
       copy.dialog ? 'dialog (clipboard blocked)' : copy.toast);
     if (copy.dialog) await b.eval(`document.querySelector('#code').close()`);
 
+    // the Speak rack: a typed line shows its phonemes and renders; Play by a click and by
+    // Ctrl+Enter; a fader moves by keyboard; babble mode swaps the voices; Copy and Save WAV work
+    await b.eval(`document.querySelector('#speak').scrollIntoView({ block: 'center' }); document.querySelector('#sp-text').focus(); document.querySelector('#sp-text').select()`);
+    await b.type('System online.');
+    const spPh = await waitFor(b, `document.querySelector('#sp-ph').textContent === 'S IH1 S T AX0 M / AA1 N L AY2 N .'`, 3000);
+    const spDrawn = await waitFor(b, `document.querySelector('#speak').dataset.rendered === '1' && /^-\\d+\\.\\d$/.test(document.querySelector('#speak [data-k="peak"] span').textContent)`, 10000);
+    const spInk = await b.eval(`(() => { const cv = document.querySelector('#speak canvas'); const px = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data; let n = 0; for (let i = 3; i < px.length; i += 4) if (px[i] > 0) n++; return n; })()`);
+    ok('Speak shows the phonemes and renders the line', spPh && spDrawn && spInk > 200,
+      `${await b.eval(`document.querySelector('#sp-ph').textContent`)}; peak ${await b.eval(`document.querySelector('#speak [data-k="peak"] span').textContent`)}, ink ${spInk}`);
+    const sp0 = (await b.eval('Timbre.stats()')).plays;
+    await b.click('#sp-play');
+    await sleep(100);
+    await b.eval(`document.querySelector('#sp-text').focus()`);
+    await b.send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, modifiers: 2 });
+    await b.send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, modifiers: 2 });
+    await sleep(100);
+    const sp1 = (await b.eval('Timbre.stats()')).plays;
+    ok('Speak plays by a click and by Ctrl+Enter', sp1 === sp0 + 2 && (await b.eval(`document.querySelector('#sp-text').value`)) === 'System online.', `plays ${sp0} -> ${sp1}`);
+    const pv = await b.eval(`document.querySelector('#sp-p-pitch').value`);
+    await b.eval(`document.querySelector('#sp-p-pitch').focus()`);
+    for (let i = 0; i < 3; i++) await b.key('ArrowRight');
+    const pv2 = await b.eval(`({ v: document.querySelector('#sp-p-pitch').value, out: document.querySelector('#sp-p-pitch').nextElementSibling.textContent })`);
+    ok('a Speak fader moves by keyboard', Number(pv2.v) > Number(pv), `${pv} -> ${pv2.v} (${pv2.out})`);
+    await b.click('#speak input[value="babble"] + span');
+    await sleep(150);
+    const bab = await b.eval(`({ mode: document.querySelector('#speak input[value="babble"]').checked, voices: [...document.querySelectorAll('#sp-voice option')].map((o) => o.textContent),
+      faders: [...document.querySelectorAll('#sp-params input')].map((i) => i.dataset.k), ph: document.querySelector('#sp-ph').textContent })`);
+    ok('babble mode swaps the voices and the controls', bab.mode && bab.voices[0] === 'Cute' && bab.voices.length === 5 &&
+      bab.faders.join() === 'pitch,speed,spread' && /^Babble/.test(bab.ph), `${bab.voices.join(', ')}; ${bab.faders.join(', ')}`);
+    await b.click('#sp-copy');
+    await sleep(300);
+    const spCopy = await b.eval(`({ toast: document.querySelector('#toast').textContent, dialog: document.querySelector('#code').open,
+      text: document.querySelector('#code-text').value })`);
+    ok('Speak Copy copies or shows one function', /^Copied babbleSystemOnline\(\)/.test(spCopy.toast) || (spCopy.dialog && /function babbleSystemOnline\(/.test(spCopy.text)),
+      spCopy.dialog ? 'dialog (clipboard blocked)' : spCopy.toast);
+    if (spCopy.dialog) await b.eval(`document.querySelector('#code').close()`);
+    await b.click('#sp-wav');
+    let spWav = null;
+    for (let i = 0; i < 80 && !spWav; i++) {
+      const f = fs.readdirSync(dl).find((x) => x.startsWith('babble-system-online') && x.endsWith('.wav'));
+      if (f) { const buf = fs.readFileSync(path.join(dl, f)); if (buf.length > 44) spWav = { f, buf }; }
+      if (!spWav) await sleep(100);
+    }
+    ok('Speak saves the line as a WAV', spWav && spWav.buf.toString('latin1', 0, 4) === 'RIFF' && spWav.buf.readUInt16LE(22) === 1,
+      spWav ? `${spWav.f}, ${spWav.buf.length} bytes, mono` : 'no file');
+    await b.click('#speak input[value="speak"] + span');
+
     // color theme switch
     const bgDark = await b.eval('getComputedStyle(document.body).backgroundColor');
     await b.click('#mode');
@@ -173,6 +223,9 @@ async function main() {
     })()`);
     ok('phone width has no sideways scroll', phone.sw <= phone.vw && !phone.wide.length, `scrollWidth ${phone.sw}, viewport ${phone.vw}${phone.wide.length ? '; overflowing: ' + phone.wide.join(', ') : ''}`);
     await b.screenshot(path.join(OUT, 'page-phone.png'));
+    await b.eval(`document.querySelector('#speak').scrollIntoView({ block: 'start' })`);
+    await sleep(300);
+    await b.screenshot(path.join(OUT, 'page-phone-speak.png'));
     await b.click('#mode');
     await b.eval(`document.getElementById('s-ui-toggle-switch').scrollIntoView({ block: 'start' })`);
     await sleep(300);

@@ -2,8 +2,8 @@
 // the runtime (renderSound, measure, paramsFor, encodeWav, wavChannels, buildCopy), SOUNDS and
 // THEMES. Top-level names here must not reuse those.
 
-const CAT_NAMES = { ui: 'UI', notify: 'Notify', game: 'Game', cards: 'Cards', magic: 'Magic', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music' };
-const CAT_ORDER = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music'];
+const CAT_NAMES = { ui: 'UI', notify: 'Notify', game: 'Game', cards: 'Cards', magic: 'Magic', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music', voice: 'Voice' };
+const CAT_ORDER = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music', 'voice'];
 const SCOPE_TOP = -6;     // dBFS at the scope's top edge (the master ceiling)
 const SCOPE_FLOOR = -54;  // dBFS at the center line
 const HOUSE_MAX = -12;    // the dashed reference line, and the peak LED's red threshold
@@ -108,6 +108,8 @@ function decimalsOf(x) {
   return i < 0 ? 0 : s.length - i - 1;
 }
 function fmtParam(d, v) {
+  // a stepped parameter that names its values (a voice) shows the name
+  if (d.choices) return d.choices[Math.max(0, Math.min(d.choices.length - 1, Math.round(v)))];
   const u = d.unit || '';
   if (d.step === 1 && d.min === 0 && d.max === 1 && !u) return v >= 0.5 ? 'on' : 'off';
   if (u === 's') return v < 1 ? Math.round(v * 1000) + ' ms' : v.toFixed(2) + ' s';
@@ -517,6 +519,154 @@ function showMoments() {
   }
 }
 
+// ---------------------------------------------------------------- speak: a typed line, spoken or babbled
+// The rack builds a sound object for the current line, so the gallery's own render, play, level and
+// WAV paths take it as they are; Copy bakes the line into one function (buildSpeechCopy).
+const sp = {
+  mode: 'speak', voice: { speak: 'announcer', babble: 'cute' }, vals: {}, seed: 1,
+  s: null, render: null, rendered: false, dirty: true, busy: false, timer: 0, playT: -1, raf: 0,
+};
+
+/** The line as speak or babble options: mode, text, voice and the rack's values, clamped. */
+function spCfg(cfg) {
+  const c = cfg || { mode: sp.mode, text: qs('#sp-text').value, voice: sp.voice[sp.mode], ...sp.vals[sp.mode] };
+  const m = c.mode === 'babble' ? 'babble' : 'speak';
+  return Object.assign({ mode: m, text: String(c.text || ''), voice: c.voice }, paramsFor({ params: SPEAK_PARAMS[m] }, c));
+}
+
+/** A sound for a line (dur from the engine's own length, tail included), named after its words. */
+function spSound(cfg) {
+  const c = spCfg(cfg);
+  const babbled = c.mode === 'babble';
+  const slug = (c.text.toLowerCase().match(/[a-z0-9]+/g) || ['line']).slice(0, 4).join('-');
+  const end = babbled ? T.babble(null, 0, c) : T.speak(null, 0, c);
+  return {
+    id: (babbled ? 'babble-' : 'say-') + slug, name: 'Speak', category: 'voice', dur: Math.ceil((end + 0.02) * 1000) / 1000, params: {},
+    play(K, out, t) { return babbled ? K.babble(out, t, c) : K.speak(out, t, c); },
+  };
+}
+
+function spBuild() {
+  sp.el = qs('#speak');
+  sp.canvas = qs('canvas', sp.el);
+  sp.scope = qs('.scope', sp.el);
+  for (const m of ['speak', 'babble']) sp.vals[m] = paramsFor({ params: SPEAK_PARAMS[m] }, null);
+  qs('#sp-transport').innerHTML =
+    '<button class="btn play" type="button" id="sp-play"><span class="on" aria-hidden="true"></span>' + ICON.play + 'Play</button>' +
+    '<span class="badge" data-k="dur" title="Length of the line, tail included"><b>DUR</b><span>--</span></span>' +
+    '<span class="badge" data-k="peak" title="Peak after the master chain, dBFS"><i class="led" aria-hidden="true"></i><b>PK</b><span>--</span></span>' +
+    '<span class="spacer"></span>' +
+    '<button class="btn ghost copy" type="button" id="sp-copy">' + ICON.copy + 'Copy</button>' +
+    '<button class="btn ghost wav" type="button" id="sp-wav">' + ICON.wav + 'WAV</button>';
+  qs('#sp-play').setAttribute('aria-label', 'Play the line');
+  qs('#sp-copy').setAttribute('aria-label', 'Copy the line as a JavaScript function');
+  qs('#sp-wav').setAttribute('aria-label', 'Save the line as a WAV file');
+  for (const r of sp.el.querySelectorAll('input[name="sp-mode"]')) {
+    r.addEventListener('change', () => { if (r.checked) { sp.mode = r.value; spMode(); } });
+  }
+  qs('#sp-voice').addEventListener('change', (e) => { sp.voice[sp.mode] = e.currentTarget.value; spDesc(); spDirty(); });
+  const ta = qs('#sp-text');
+  ta.addEventListener('input', spDirty);
+  ta.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); spPlay(); } });
+  qs('#sp-play').addEventListener('click', spPlay);
+  qs('#sp-copy').addEventListener('click', spCopy);
+  qs('#sp-wav').addEventListener('click', (e) => onWav({ s: spSound(), params: null, seed: sp.seed }, e.currentTarget));
+  spMode();
+}
+
+/** Speech or babble: the voices, the faders and the readout follow the mode. */
+function spMode() {
+  const m = sp.mode;
+  const voices = m === 'babble' ? T.babbleVoices() : T.speechVoices();
+  const sel = qs('#sp-voice');
+  sel.textContent = '';
+  for (const [id, v] of Object.entries(voices)) {
+    const o = document.createElement('option');
+    o.value = id;
+    o.textContent = v.name;
+    sel.appendChild(o);
+  }
+  sel.value = sp.voice[m];
+  const defs = SPEAK_PARAMS[m];
+  const box = qs('#sp-params');
+  box.innerHTML = Object.entries(defs).map(([k, d]) =>
+    '<div class="fader"><label for="sp-p-' + k + '" title="' + esc(d.desc) + '">' + esc(k) + '</label>' +
+    '<input type="range" id="sp-p-' + k + '" title="' + esc(d.desc) + '" data-k="' + k + '" min="' + d.min + '" max="' + d.max +
+    '" step="' + stepOf(d) + '" value="' + sp.vals[m][k] + '"><output for="sp-p-' + k + '"></output></div>').join('');
+  const fake = { s: { params: defs } };
+  for (const inp of box.querySelectorAll('input[type="range"]')) {
+    syncFader(fake, inp);
+    inp.addEventListener('input', () => { sp.vals[m][inp.dataset.k] = Number(inp.value); syncFader(fake, inp); spDirty(); });
+  }
+  spDesc();
+  spDirty();
+}
+
+function spDesc() {
+  const v = (sp.mode === 'babble' ? T.babbleVoices() : T.speechVoices())[sp.voice[sp.mode]];
+  qs('#sp-desc').textContent = v ? v.desc + '.' : '';
+}
+
+/** The line changed: show its phonemes now, re-render its waveform once typing pauses. */
+function spDirty() {
+  sp.dirty = true;
+  const c = spCfg();
+  qs('#sp-ph').textContent = c.mode === 'babble'
+    ? 'Babble: a blip per ' + (T.babbleVoices()[c.voice].per === 'syllable' ? 'syllable' : 'letter') + ', no words.'
+    : T.phonemize(c.text) || ' ';
+  clearTimeout(sp.timer);
+  sp.timer = setTimeout(spRender, 220);
+}
+
+async function spRender() {
+  if (typeof OfflineAudioContext === 'undefined') { qs('.scope-msg', sp.el).textContent = 'offline rendering is unavailable here'; return; }
+  if (sp.busy) { sp.timer = setTimeout(spRender, 120); return; }
+  sp.busy = true;
+  sp.dirty = false;
+  try {
+    const s = spSound();
+    const r = await renderSound(s, null, sp.seed);
+    if (!sp.dirty) {
+      sp.s = s;
+      sp.render = r;
+      sp.levels = measure(r);
+      sp.rendered = true;
+      sp.el.dataset.rendered = '1';
+      sp.scope.dataset.state = 'ready';
+      qs('[data-k="dur"] span', sp.el).textContent = fmtParam({ unit: 's' }, s.dur);
+      const pk = qs('[data-k="peak"]', sp.el);
+      qs('span', pk).textContent = fmtDb(sp.levels.peak);
+      qs('.led', pk).dataset.l = sp.levels.peak > HOUSE_MAX ? 'hot' : sp.levels.peak > HOUSE_MAX - 3 ? 'warn' : 'ok';
+      drawScope(sp, -1);
+    }
+  } catch (e) {
+    stats.failures++;
+    sp.scope.dataset.state = 'error';
+    qs('.scope-msg', sp.el).textContent = 'offline rendering is unavailable here';
+  } finally {
+    sp.busy = false;
+  }
+}
+
+function spPlay() {
+  const s = spSound();
+  const t = playNow(s, null, sp.seed);
+  if (t == null) return;
+  // the playhead runs over the waveform of what plays: render it first if typing outran it
+  if (!sp.render || sp.render.id !== s.id || sp.dirty || sp.s.dur !== s.dur) { clearTimeout(sp.timer); spRender(); }
+  sp.s = s;
+  sp.playT = t;
+  sp.el.classList.add('playing');
+  animatePlayhead(sp);
+}
+
+async function spCopy() {
+  const text = buildSpeechCopy(T, spCfg());
+  const fname = /^function (\w+)/m.exec(text)[1];
+  if (await copyToClipboard(text)) toast('Copied ' + fname + '(): one function, ' + (text.length / 1024).toFixed(1) + ' KB, no dependencies.');
+  else showCode(text, qs('#sp-copy'));
+}
+
 // ---------------------------------------------------------------- color theme, monitor, keys
 const darkQuery = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
 function setMode(mode, remember) {
@@ -526,6 +676,7 @@ function setMode(mode, remember) {
   qs('#mode').setAttribute('aria-label', 'Switch to ' + next + ' theme');
   qs('#mode').title = 'Switch to ' + next + ' theme';
   for (const st of strips.values()) if (st.rendered) drawScope(st, -1);
+  if (sp.rendered) drawScope(sp, -1);
 }
 
 function wire() {
@@ -563,7 +714,10 @@ function wire() {
   let resizeTimer = 0;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { for (const st of strips.values()) if (st.rendered) drawScope(st, -1); }, 120);
+    resizeTimer = setTimeout(() => {
+      for (const st of strips.values()) if (st.rendered) drawScope(st, -1);
+      if (sp.rendered) drawScope(sp, -1);
+    }, 120);
   });
 }
 
@@ -574,6 +728,7 @@ function boot() {
   qs('#foot-count').textContent = VERSION + ', ' + SOUNDS.length + ' sounds';
   buildCats();
   buildThemes();
+  spBuild();
   wire();
   applyFilter();
   const canRender = typeof OfflineAudioContext !== 'undefined';
@@ -604,6 +759,16 @@ window.Timbre = Object.freeze({
   play: (id, over, seedValue) => playNow(byId.get(id), over, seedValue),
   audio: () => actx,
   stats: () => Object.assign({}, stats),
+  // the Speak rack: a line (cfg: mode, text, voice and the SPEAK_PARAMS values) as a sound, a render, a Copy
+  speak: Object.freeze({
+    params: SPEAK_PARAMS,
+    voices: () => ({ speak: T.speechVoices(), babble: T.babbleVoices() }),
+    phonemes: (text) => T.phonemize(text),
+    sound: (cfg) => spSound(cfg),
+    render: (cfg, seedValue) => renderSound(spSound(cfg), null, seedValue),
+    wav: (cfg, seedValue) => renderSound(spSound(cfg), null, seedValue).then((r) => encodeWav(wavChannels(r), r.sr)),
+    copy: (cfg) => buildSpeechCopy(T, cfg),
+  }),
 });
 
 boot();

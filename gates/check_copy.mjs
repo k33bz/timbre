@@ -5,7 +5,9 @@
 //   3. call the pasted function on an OfflineAudioContext and render it the same way
 //   4. compare peak and RMS: they must agree within 0.5 dB
 // The Copy carries its parameter values and seed, so the pasted function is called with no options.
-//   node gates/check_copy.mjs [id-filter]
+// Then the same for five lines from the Speak rack (speech and babble): the Copy with the line baked
+// in against the gallery's render of the line, and its end time against the line's length.
+//   node gates/check_copy.mjs [id-filter]     (the filter "speak-line" runs only the lines)
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { launch, distUrl, table } from './lib/browser.mjs';
@@ -14,6 +16,14 @@ import { camel } from '../src/core/copy.js';
 
 const TOL = 0.5;
 const only = process.argv[2] || '';
+// lines for the Speak rack's Copy (filter "speak-line" runs only these)
+const LINES = [
+  { mode: 'speak', text: 'Access granted. Welcome back, commander.', voice: 'announcer', seed: 1 },
+  { mode: 'speak', text: 'Is the system online?', voice: 'retro', pitch: 3, rate: 1.2, range: 1.5, seed: 1 },
+  { mode: 'speak', text: 'Behind you...', voice: 'whisper', seed: 7 },
+  { mode: 'babble', text: 'Oh, hi there! Are you new in town?', voice: 'cute', seed: 1 },
+  { mode: 'babble', text: 'Hmph. What do you want?', voice: 'gruff', speed: 0.8, spread: 1.5, seed: 5 },
+];
 
 async function main() {
   const b = await launch();
@@ -34,6 +44,16 @@ async function main() {
         return { copy: Timbre.copy(id, p, sd), m: Timbre.measure(await Timbre.render(id, p, sd)) };
       })()`);
       Object.assign(c, { copy: g.copy, gallery: g.m });
+    }
+    // lines from the Speak rack: its Copy (the line baked in) against the gallery's render of it
+    const lineCases = only && !'speak-line'.includes(only) ? [] : LINES.map((cfg) => ({ cfg }));
+    for (const c of lineCases) {
+      const g = await b.eval(`(async () => {
+        const cfg = ${JSON.stringify(c.cfg)};
+        const s = Timbre.speak.sound(cfg);
+        return { copy: Timbre.speak.copy(cfg), dur: s.dur, m: Timbre.measure(await Timbre.speak.render(cfg, cfg.seed)) };
+      })()`);
+      Object.assign(c, { copy: g.copy, dur: g.dur, gallery: g.m });
     }
     await b.goto('about:blank');
     const clean = await b.eval(`typeof Timbre === 'undefined' && document.scripts.length === 0`);
@@ -64,6 +84,36 @@ async function main() {
       if (!pass) failed++;
       rows.push([c.s.id, c.label, c.gallery.peak.toFixed(1), r.peak.toFixed(1), c.gallery.rms.toFixed(1), r.rms.toFixed(1),
         `${dp.toFixed(2)}/${dr.toFixed(2)}`, (pass ? 'ok' : 'FAIL') + (endOk ? '' : ' (end time ' + r.endTime + ')') + ' ' + (c.copy.length / 1024).toFixed(1) + ' KB']);
+    }
+    for (const c of lineCases) {
+      const r = await b.eval(`(async () => {
+        const el = document.createElement('script');
+        el.textContent = ${JSON.stringify(c.copy)};
+        document.head.appendChild(el);
+        el.remove();
+        const fname = ${JSON.stringify(c.copy)}.match(/^function (\\w+)/m)[1];
+        const fn = window[fname];
+        if (typeof fn !== 'function') return { error: 'the pasted code did not define ' + fname + '()' };
+        const sr = ${sr}, dur = ${c.dur}, skip = Math.round(${preroll} * sr);
+        const ctx = new OfflineAudioContext(2, skip + Math.ceil((dur + 0.25) * sr), sr);
+        const end = fn(ctx, undefined, 0);
+        const buf = await ctx.startRendering();
+        const measure = (${measureSrc});
+        const m = measure({ sr, dur, post: [buf.getChannelData(0).subarray(skip), buf.getChannelData(1).subarray(skip)], pre: null });
+        m.endTime = end;
+        m.fname = fname;
+        return m;
+      })()`);
+      const label = `${c.cfg.mode} ${c.cfg.voice}`;
+      if (r.error) { rows.push(['speak-line', label, '-', '-', '-', '-', '-', 'FAIL ' + r.error]); failed++; continue; }
+      const dp = Math.abs(r.peak - c.gallery.peak);
+      const dr = Math.abs(r.rms - c.gallery.rms);
+      // the line's end: the gallery's dur is the engine's length rounded up, plus 20 ms
+      const endOk = r.endTime > preroll && r.endTime <= preroll + c.dur - 0.018 && r.endTime > preroll + c.dur - 0.0225;
+      const pass = dp <= TOL && dr <= TOL && !r.silent && endOk;
+      if (!pass) failed++;
+      rows.push(['speak-line', label, c.gallery.peak.toFixed(1), r.peak.toFixed(1), c.gallery.rms.toFixed(1), r.rms.toFixed(1),
+        `${dp.toFixed(2)}/${dr.toFixed(2)}`, (pass ? 'ok' : 'FAIL') + (endOk ? '' : ' (end time ' + r.endTime + ')') + ' ' + r.fname + ' ' + (c.copy.length / 1024).toFixed(1) + ' KB']);
     }
     if (b.errors.length) { console.error('page errors:\n  ' + b.errors.join('\n  ')); failed++; }
   } finally {

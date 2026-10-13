@@ -40,6 +40,7 @@
   --cat-scifi: #2470c2;
   --cat-ambience: #3b8436;
   --cat-music: #8a6a12;
+  --cat-voice: #a8501c;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -78,6 +79,7 @@
     --cat-scifi: #63a9ff;
     --cat-ambience: #7ccf6e;
     --cat-music: #d8b44a;
+    --cat-voice: #ff9a5c;
     color-scheme: dark;
   }
 }
@@ -116,6 +118,7 @@
   --cat-scifi: #63a9ff;
   --cat-ambience: #7ccf6e;
   --cat-music: #d8b44a;
+  --cat-voice: #ff9a5c;
   color-scheme: dark;
 }
 
@@ -256,6 +259,28 @@ main:focus { outline: none; }
 .pad:active, .pad.hit { transform: translateY(1px); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
 .pad-m { font: 700 12px/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
 .pad-s { font-size: 12px; color: var(--muted); }
+
+/* ---- speak rack: type a line, hear it spoken or babbled ---- */
+.speak { margin-top: 16px; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; }
+.seg label { position: relative; display: flex; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.seg span { display: inline-flex; align-items: center; height: 30px; padding: 0 12px; font-size: 13px; font-weight: 650; color: var(--ink-2); background: var(--panel-2); cursor: pointer; }
+.seg label + label span { border-left: 1px solid var(--line-2); }
+.seg input:checked + span { background: var(--accent-soft); color: var(--ink); box-shadow: inset 0 -2px 0 var(--accent); }
+.seg input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: -2px; }
+.sp-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: 14px 20px; }
+.sp-label { display: block; margin-bottom: 6px; font: 600 10.5px/1.4 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.sp-label span { text-transform: none; letter-spacing: 0; font-weight: 500; }
+#sp-text {
+  display: block; width: 100%; min-height: 96px; resize: vertical; padding: 10px 12px; border-radius: 8px;
+  border: 1px solid var(--line-2); background: var(--panel-2); font-size: 16px; line-height: 1.45;
+}
+.sp-ph { margin: 8px 0 0; font: 12px/1.55 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.speak .scope { margin: 0; height: 80px; }
+.speak .params { padding: 8px 0 0; border-top: 0; }
+.speak .transport { padding: 10px 0 0; }
+.speak.playing .play .on { background: var(--signal); box-shadow: 0 0 8px var(--signal); }
 
 /* ---- grid of channel strips ---- */
 .grid-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin: 26px 0 12px; }
@@ -414,6 +439,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { outline: 2px solid var(--f
   .foot { padding: 0 16px 32px; }
   .rack { padding: 12px; }
   .pads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sp-body { grid-template-columns: minmax(0, 1fr); }
   .grid-head { margin-top: 20px; }
 }
 @media (max-width: 440px) {
