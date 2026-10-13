@@ -98,7 +98,11 @@ async function main() {
     await b.eval(`document.querySelector('#q').focus(); document.querySelector('#q').select()`);
     await b.type('coin');
     const shownCoin = await b.eval(`[...document.querySelectorAll('.strip')].filter((e) => !e.hidden).map((e) => e.dataset.id)`);
-    ok('search filters cards', shownCoin.length === 1 && shownCoin[0] === 'game-coin-flip', shownCoin.join(', '));
+    // the catalog grows, so "coin" may match more than one sound (Gem Collect is tagged coin): the
+    // check is that the match is kept, unrelated cards are hidden and the list actually narrowed
+    const totalCards = await b.eval(`document.querySelectorAll('.strip').length`);
+    ok('search filters cards', shownCoin.includes('game-coin-flip') && !shownCoin.includes('ui-click-soft') &&
+      shownCoin.length > 0 && shownCoin.length < totalCards, `${shownCoin.length}/${totalCards}: ${shownCoin.join(', ')}`);
     await b.key('Escape');
     const all = await b.eval(`[...document.querySelectorAll('.strip')].filter((e) => !e.hidden).length`);
     ok('Escape clears the search', all === info.n, `${all} shown`);
