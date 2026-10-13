@@ -13,7 +13,11 @@ gallery.
 - **Sound themes** map app moments (click, toggle-on, success, error, ...) to sounds, so a whole set
   can be swapped at once. The first theme is Soft UI.
 - **Measured levels**: every sound is rendered through the same master chain (gain, a limiter, a
-  ceiling) and gated to the house range, at its defaults and at random settings.
+  ceiling) and gated to the house range, at its defaults and at random settings. The numbers are
+  kept in `catalog/levels.json` and carried in the catalog.
+- **A shared vocabulary**: every sound declares its timbre family and the app moments it is made
+  for, every parameter says what it does, and themes, the build and the MCP server use one list of
+  moment names (`src/vocabulary.js`).
 
 ## Open it
 Open `dist/timbre.html` in a browser. It works from disk, offline; nothing is fetched. Sound starts
@@ -65,9 +69,11 @@ The full contract, the helper API and the level targets are in
 ```
 node build.mjs --check          # sources valid, dist/ and catalog/ up to date
 node --test gates/*.test.mjs    # unit tests: build validation, Copy tree-shaking, core helpers, WAV
-node gates/check_levels.mjs     # every sound, 12 renders each, against the house level range
+npm test --prefix mcp-server    # the MCP server's tests
+node gates/check_levels.mjs     # every sound, 12 renders each, against the house level range; writes catalog/levels.json
 node gates/check_page.mjs       # the page: cards, Play, keyboard, filters, theme, WAV, Copy, phone width
 node gates/check_copy.mjs       # each Copy pasted into a blank page matches the gallery within 0.5 dB
+node mcp-server/scripts/check_kit.mjs   # a build_kit module renders what each Copy renders
 bash gates/run_all.sh           # all of the above, browser gates one at a time
 ```
 The browser gates need Edge or Chrome (set `TIMBRE_BROWSER` to use another Chromium-family
@@ -82,9 +88,11 @@ src/core/          synth library (T): seeded noise, envelopes, voices, effects, 
                    offline render and measurement, WAV encoder, Copy builder
 src/sounds/<category>/<id>.js   one sound per file
 src/themes/<id>.js              sound themes: moment -> sound + parameter overrides
+src/vocabulary.js  the one list of moments, families and parameter roles (build, themes, MCP server)
 src/shell/         the gallery page: index.html template, style.css, app.js
 build.mjs          validates, writes catalog/manifest.json and catalog/index.json, bundles dist/timbre.html
-catalog/           manifest.json (every field, play source, helper list, helper sources); index.json (search fields)
+catalog/           manifest.json (every field, play source, helper list, helper sources, Copy contract,
+                   vocabulary, measured levels); index.json (search fields); levels.json (the level gate)
 dist/timbre.html   the single page (generated; do not edit by hand)
 gates/             unit tests and the level, page and copy gates
 mcp-server/        MCP server over the catalog (tools, tests, smoke run); see mcp-server/README.md

@@ -59,6 +59,21 @@ export function levelEntry(renders, fp) {
 }
 
 /**
+ * A new measurement of an unchanged sound keeps the stored value of any field that moved by no more
+ * than the rounding step (0.1 dB, 1 ms for end). The engine is not bit-exact run to run (about 1e-7,
+ * measured), so a value sitting on a rounding edge would otherwise flip and dirty the catalog.
+ */
+export function steady(next, prev) {
+  if (!prev || prev.fingerprint !== next.fingerprint) return next;
+  const out = { ...next };
+  for (const [k, v] of Object.entries(next)) {
+    const tol = k === 'end' ? 0.0015 : 0.15;
+    if (typeof v === 'number' && typeof prev[k] === 'number' && Math.abs(v - prev[k]) <= tol) out[k] = prev[k];
+  }
+  return out;
+}
+
+/**
  * Merge new entries into catalog/levels.json: a run over some sounds keeps the others' entries, and
  * sounds no longer in the catalog drop out. Written only when something changed, and atomically.
  */
@@ -67,7 +82,8 @@ export function updateLevels(entries, ids, file = path.join(ROOT, LEVELS_FILE)) 
   try { old = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { old = null; }
   const sounds = {};
   for (const id of [...ids].sort()) {
-    const e = entries[id] || (old && old.sounds && old.sounds[id]);
+    const prev = old && old.sounds && old.sounds[id];
+    const e = entries[id] ? steady(entries[id], prev) : prev;
     if (e) sounds[id] = e;
   }
   const doc = {

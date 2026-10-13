@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { T } from '../src/core/t.js';
 import { build, loadDir, validateAll, validateSound, validateTheme, buildManifest, buildIndex, buildHtml, ROOT, SCHEMA, fingerprint, levelsFor, writeAtomic } from '../build.mjs';
-import { levelEntry, updateLevels } from './check_levels.mjs';
+import { levelEntry, updateLevels, steady } from './check_levels.mjs';
 import { MOMENTS, FAMILIES } from '../src/vocabulary.js';
 import { PREROLL, MASTER_CHAIN } from '../src/core/render.js';
 import fs from 'node:fs';
@@ -260,6 +260,13 @@ test('the level gate keeps catalog/levels.json merged, sorted and unchanged when
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test('a remeasured, unchanged sound keeps values that moved by one rounding step (engine noise)', () => {
+  const prev = { fingerprint: 'abc', peak: -20.1, rms: -30, end: 0.12, pre: -22 };
+  assert.deepEqual(steady({ fingerprint: 'abc', peak: -20.2, rms: -30.5, end: 0.121, pre: -22 }, prev), { fingerprint: 'abc', peak: -20.1, rms: -30.5, end: 0.12, pre: -22 });
+  assert.deepEqual(steady({ fingerprint: 'new', peak: -20.2 }, prev), { fingerprint: 'new', peak: -20.2 }, 'a changed sound takes the new numbers');
+  assert.deepEqual(steady({ fingerprint: 'abc', peak: -20.2 }, null), { fingerprint: 'abc', peak: -20.2 });
 });
 
 test('writeAtomic replaces a file whole and leaves no temporary file', () => {

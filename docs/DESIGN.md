@@ -24,11 +24,13 @@ through an MCP server.
 src/core/        synth library: voices, envelopes, effects, seeded noise, master chain
 src/sounds/<category>/<id>.js   one sound per file
 src/themes/<id>.js              sound themes: moment -> sound + parameter overrides
+src/vocabulary.js               the one list of moments, families and parameter roles
 src/shell/       gallery page template (HTML, CSS, JS)
 build.mjs        bundles core + sounds + themes + shell into dist/timbre.html,
                  and writes catalog/manifest.json + catalog/index.json
+catalog/levels.json             measured levels per sound, written by the level gate
 gates/           level test, page test, copy test (headless browser), unit tests (node --test)
-mcp-server/      zero-dependency MCP server over the catalog (later phase)
+mcp-server/      zero-dependency MCP server over the catalog
 ```
 
 ## A sound file
@@ -40,10 +42,12 @@ export default {
   tags: ['click', 'button', 'tap'],
   desc: 'A short muted tick for button presses.',
   dur: 0.08,                      // seconds the render needs, tail included, at ANY parameter values
+  family: 'soft',                 // optional: the timbre family (src/vocabulary.js)
+  moments: ['click'],             // optional: the moments it is made for (src/vocabulary.js)
   params: {                       // live controls; defaults are what the gallery and gates use
-    pitch: { min: 400, max: 2400, def: 1100, unit: 'Hz' },   // optional: unit, step
-    tone:  { min: 0, max: 1, def: 0.4 },
-  },
+    pitch: { min: 400, max: 2400, def: 1100, unit: 'Hz', desc: 'Start note of the falling blip' },
+    tone:  { min: 0, max: 1, def: 0.4, desc: 'Brightness of the noise breath: 0 muted, 1 airy' },
+  },                              // optional per param: unit, step, desc, role (a switch's meaning)
   play(T, out, t, p) {            // T = core helpers, out = destination node, t = start time,
     T.osc(out, t, { f: p.pitch, to: p.pitch * 0.73, dur: 0.035, peak: 0.042 });  // p = parameter values
   },
@@ -58,6 +62,21 @@ uses `T.rand()` for anything random (never `Math.random`). `seed` is not a param
 A theme maps app moments (`click`, `toggle-on`, `success`, `error`, `notify`, `hit`, `pickup`,
 `coin`, `level-up`...) to a sound id and parameter overrides, so the same moment can be swapped as a
 set: for example Soft UI, 8-bit, Arcade, Sci-fi, Glass, Wood.
+
+## One vocabulary
+`src/vocabulary.js` holds the moments (with the hints the MCP server ranks sounds by), the timbre
+families and the parameter roles. The build validates sounds and themes against it and the MCP
+server imports it, so a theme's moment, a sound's `moments` and a suggestion's moment are always
+the same names. A new name is added there once.
+
+## The catalog
+`catalog/manifest.json` (schema 2) carries every sound's fields, play source, helper list and a
+fingerprint (a hash of what decides its render: dur, ranges, play source, the helpers its Copy
+carries); every helper's source; the version (package.json); the Copy contract (signature, preroll,
+the master chain's settings); the vocabulary; and, per sound, the levels the level gate measured,
+taken from `catalog/levels.json` only while their fingerprint matches. `catalog/index.json` is the
+search subset. Both, and the page, are written whole (a temporary file, then a rename), so a
+reader never sees half a file.
 
 ## Master chain and warm-up
 Every sound plays through the same chain, live, offline and in Copy: gain 0.55, a
@@ -90,6 +109,12 @@ a sample above -1; a pre-limiter peak (the voices' own sum after the 0.55 gain) 
 ceiling is a guard, never the sound); DC above -50; anything above -60 after `dur`; silence or NaN.
 Because random settings are tested, every parameter range must be safe end to end.
 
+## Stereo
+Sounds are mono unless they place a voice (`T.pan`) or use the stereo reverb. `T.pan` uses a
+balance law (the near side at unity, the far side fading), so a centred voice is the mono signal
+and panning never raises a peak. The master chain, the offline render (which measures the louder
+channel) and Copy pass two channels through; Save WAV writes one channel when both are identical.
+
 ## Changes to this contract
 - 2026-10-13, foundation build: added "Master chain and warm-up" (the measured cold start would
   otherwise make every gate underestimate short sounds by up to 13 dB: a click rendered at t = 0
@@ -98,3 +123,13 @@ Because random settings are tested, every parameter range must be safe end to en
   now uses values that pass the gate (`peak: 0.5` would not), and the file rules spell out what the
   build enforces (method form, `T.rand`, reserved `seed`, `dur` covering every parameter value,
   optional `unit` and `step`).
+- 2026-10-13, phase 2 core: new helpers (pulse, tick, crackle, pan, dcblock, lfo, bus, chord,
+  jitter) and options (lp and hp on osc and noise, wave on osc, tail and fade on env, tone on
+  pluck), each a branch that runs only when asked, so every existing sound renders as before
+  (checked sample by sample in the browser and graph by graph offline). Added "One vocabulary",
+  "The catalog" and "Stereo": sounds may declare a family and moments, parameters a desc and a role,
+  themes may only use vocabulary moments, the manifest moved to schema 2 (version, Copy contract,
+  vocabulary, fingerprints, measured levels) and build outputs are written atomically. The level
+  gate keeps catalog/levels.json, and docs/ADDING_SOUNDS.md now asks for about 10 ms of dur past the
+  last envelope end (the limiter's lookahead delays the output by 8.7 ms, measured with an impulse;
+  an envelope that ends above silence failed the tail check without the margin).
