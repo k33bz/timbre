@@ -49,5 +49,7 @@ export default {
     ambience: { sound: 'ambience-space-drone', params: { length: 6, pitch: 55, tone: 0.4, shimmer: 0.4 } },
     // boot chime: a major-seventh chord on C over the A minor drones
     music: { sound: 'music-intro-logo', params: { key: 0, shine: 0.7, space: 0.5 } },
+    // the ship's computer: the announcer a semitone up, so its voice sits on A2, a little flatter
+    announce: { sound: 'voice-system-online', params: { voice: 0, pitch: 1, rate: 1, range: 0.8 } },
   },
 };

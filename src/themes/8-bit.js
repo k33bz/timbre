@@ -52,5 +52,8 @@ export default {
     explosion: { sound: 'game-explosion-soft', params: { size: 0.5, pitch: 80, soften: 0.7, crackle: 1 } },
     readout: { sound: 'scifi-terminal-blip', params: { count: 4, pitch: 1046.5, speed: 0.06, grit: 0.8 } },
     scare: { sound: 'music-alert-sting', params: { key: 0, stabs: 2, edge: 0.8 } },
+    // text-box talk: square beeps on the pentatonic scale, moved down 2.94 semitones from the voice's
+    // 620 Hz so the scale sits on C5
+    dialogue: { sound: 'voice-babble-beep', params: { pitch: -2.94, speed: 1, spread: 1 } },
   },
 };

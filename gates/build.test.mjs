@@ -183,6 +183,33 @@ test('family, moments, a parameter desc and a switch role validate against the s
   expectError(j, /desc has an en or em dash/);
 });
 
+test('choices name the values of a stepped parameter, 0 to n - 1', () => {
+  const a = good();
+  a.params.voice = { min: 0, max: 2, def: 1, step: 1, choices: ['announcer', 'deep', 'small'], desc: 'Who speaks' };
+  assert.deepEqual(check(a), []);
+  const b = good(); b.params.voice = { min: 0, max: 3, def: 1, step: 1, choices: ['announcer', 'deep', 'small'] };
+  expectError(b, /choices name the values 0 to 2, so the param needs min 0, max 2, step 1/);
+  const c = good(); c.params.voice = { min: 0, max: 1, def: 0, step: 1, choices: ['Announcer', 'deep'] };
+  expectError(c, /choices must be two or more unique kebab-case names/);
+  const d = good(); d.params.voice = { min: 0, max: 1, def: 0, step: 1, choices: ['deep', 'deep'] };
+  expectError(d, /choices must be two or more unique kebab-case names/);
+  const e = good(); e.params.voice = { min: 0, max: 1, def: 0, step: 1, unit: 'x', choices: ['a', 'b'] };
+  expectError(e, /choices name the values 0 to 1/);
+  const f = good(); f.category = 'voice'; f.id = 'voice-test-line';
+  assert.deepEqual(check(f, 'src/sounds/voice/voice-test-line.js'), [], 'voice is a category');
+});
+
+test('every voice sound speaks or babbles a fixed line and names its voices', async () => {
+  const { sounds } = await build();
+  const voices = sounds.filter((s) => s.category === 'voice');
+  assert.ok(voices.length >= 15);
+  for (const s of voices) {
+    assert.equal(s.family, 'voice', s.id);
+    assert.match(String(s.play), /T\.(speak|babble)\(/, s.id);
+    if (s.params.voice) assert.deepEqual(s.params.voice.choices, Object.keys(T.speechVoices()), `${s.id} lists the speech voices in order`);
+  }
+});
+
 test('every real sound declares a family and describes its parameters', async () => {
   const { sounds } = await build();
   for (const s of sounds) assert.ok(Object.hasOwn(FAMILIES, s.family), `${s.id} family ${s.family}`);
