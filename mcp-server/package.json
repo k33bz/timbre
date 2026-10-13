@@ -8,7 +8,8 @@
   "scripts": {
     "start": "node cli.js start",
     "test": "node --test \"test/*.test.js\"",
-    "smoke": "node scripts/smoke.js"
+    "smoke": "node scripts/smoke.js",
+    "check:kit": "node scripts/check_kit.mjs"
   },
   "engines": { "node": ">=22" },
   "keywords": ["mcp", "model-context-protocol", "timbre", "webaudio", "sound-effects"],

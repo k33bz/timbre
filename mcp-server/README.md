@@ -96,7 +96,7 @@ text and not as an escaped string.
 
 ```
 suggest_sounds { "description": "a todo app: check things off, delete, a reminder, soft and quiet" }
-   -> toggle-on: ui-checkbox ..., delete: ui-delete ..., reminder: notify-calendar ..., mood: calm
+   -> toggle-on: ui-toggle-switch ..., delete: ui-delete ..., reminder: notify-calendar ..., mood: calm
 build_kit { "moments": ["toggle-on", "delete", "reminder"], "mood": "calm" }
    -> a table of what plays for each moment and why, plus the module
 get_copy { "id": "ui-click-soft", "params": { "pitch": 900 } }
@@ -177,6 +177,13 @@ modules are executed against a strict audio mock, as ESM and as a script), every
 and the stdio framing, and the CLI. Tests that need the Timbre sources next to this package skip
 themselves when it stands alone.
 
+One optional check needs a browser: `npm run check:kit` (`scripts/check_kit.mjs`) builds a kit that
+covers every helper the catalog uses, loads it in one headless Edge or Chrome, and requires each
+moment to render the same signal as that sound's `get_copy` function in a real Web Audio engine
+(offline contexts), the context to appear only on the first play, and one master chain to be shared.
+It uses `gates/lib/browser.mjs`, so the same rules apply: one browser at a time, and on a shared
+machine run it through your browser queue (`TIMBRE_BROWSER` picks the binary).
+
 `scripts/make-levels-fixture.mjs` refreshes `test/fixtures/levels-gate.json` from a new gate report.
 
 ## Layout
@@ -191,4 +198,5 @@ lib/moments.js    the moment and mood vocabulary         lib/kit.js      resolve
 lib/levels.js     measured and estimated levels          lib/render.js   offline renderer for the estimate
 lib/mockaudio.js  recording audio mock                   lib/schema.js   argument checking
 scripts/smoke.js  the stdio smoke run                    test/           node --test suites and fixtures
+scripts/check_kit.mjs  browser check of a generated kit
 ```
