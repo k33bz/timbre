@@ -8,12 +8,14 @@ export default {
   tags: ['reminder', 'chime', 'ding-dong', 'doorbell', 'due', 'nudge', 'bell'],
   desc: 'A soft two-bell "ding-dong" with a little room around it. A polite nudge that something is due.',
   dur: 1.6,
+  family: 'soft',
+  moments: ['reminder'],
   params: {
-    pitch: { min: 440, max: 990, def: 659.25, unit: 'Hz' },
-    drop: { min: 3, max: 7, def: 4, step: 1, unit: 'st' },
-    gap: { min: 0.2, max: 0.4, def: 0.3, unit: 's' },
-    ring: { min: 0.5, max: 0.9, def: 0.7, unit: 's' },
-    space: { min: 0, max: 0.5, def: 0.2 },
+    pitch: { min: 440, max: 990, def: 659.25, unit: 'Hz', desc: 'Note of the first bell, the ding' },
+    drop: { min: 3, max: 7, def: 4, step: 1, unit: 'st', desc: 'How far the second bell, the dong, falls below the first' },
+    gap: { min: 0.2, max: 0.4, def: 0.3, unit: 's', desc: 'Time between the ding and the dong' },
+    ring: { min: 0.5, max: 0.9, def: 0.7, unit: 's', desc: 'How long each bell rings out' },
+    space: { min: 0, max: 0.5, def: 0.2, desc: 'Reverb mix around the bells, from dry to a small roomy wash' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 0.7, mix: p.space, tone: 0.5 });

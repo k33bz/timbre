@@ -7,10 +7,12 @@ export default {
   tags: ['card', 'flip', 'turn', 'reveal', 'face-up', 'show'],
   desc: 'A card turned face up: a small scrape, a crisp snap at the turn and a light landing.',
   dur: 0.32,
+  family: 'paper',
+  moments: ['card-flip'],
   params: {
-    speed: { min: 0.6, max: 1.8, def: 1, unit: 'x' },
-    snap: { min: 0, max: 1, def: 0.6 },
-    tone: { min: 0, max: 1, def: 0.4 },
+    speed: { min: 0.6, max: 1.8, def: 1, unit: 'x', desc: 'Pace of the whole gesture: low slow and drawn out, high quick' },
+    snap: { min: 0, max: 1, def: 0.6, desc: 'Strength of the paper snap at the turn: 0 faint, 1 crisp' },
+    tone: { min: 0, max: 1, def: 0.4, desc: 'Brightness of the scrape and snap: 0 dark, 1 bright' },
   },
   play(T, out, t, p) {
     const s = 1 / p.speed;

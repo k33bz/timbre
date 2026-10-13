@@ -7,11 +7,13 @@ export default {
   tags: ['room-tone', 'hum', 'electrical', 'mains', 'hvac', 'indoor', 'office', 'bed'],
   desc: 'A quiet indoor bed: electrical hum with its buzzing harmonics over a breath of ventilation hiss.',
   dur: 8,
+  family: 'mechanical',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 6, unit: 's' },
-    pitch: { min: 50, max: 120, def: 60, unit: 'Hz' },
-    buzz: { min: 0, max: 1, def: 0.4 },
-    air: { min: 0, max: 1, def: 0.5 },
+    length: { min: 3, max: 8, def: 6, unit: 's', desc: 'Total duration of the bed, fades included' },
+    pitch: { min: 50, max: 120, def: 60, unit: 'Hz', desc: 'Mains hum frequency, with a soft sine an octave above it' },
+    buzz: { min: 0, max: 1, def: 0.4, desc: 'Brightness of the sawtooth buzz: 0 dull hum, 1 bright buzzy harmonics' },
+    air: { min: 0, max: 1, def: 0.5, desc: 'Ventilation hiss: 0 none, 1 full' },
   },
   play(T, out, t, p) {
     const L = p.length;

@@ -8,10 +8,12 @@ export default {
   tags: ['whoosh', 'swoosh', 'swing', 'swipe', 'dash', 'air', 'transition'],
   desc: 'Air rushing past: a swing, a dash, or a panel sliding across the screen.',
   dur: 0.62,
+  family: 'air',
+  moments: ['transition'],
   params: {
-    length: { min: 0.15, max: 0.6, def: 0.27, unit: 's' },
-    pitch: { min: 0.5, max: 2, def: 1, unit: 'x' },
-    q: { min: 0.6, max: 3, def: 1.1 },
+    length: { min: 0.15, max: 0.6, def: 0.27, unit: 's', desc: 'How long the whoosh lasts; both sweeps stretch with it' },
+    pitch: { min: 0.5, max: 2, def: 1, unit: 'x', desc: 'Shifts both sweep bands: low a deep rush, high a thin hiss' },
+    q: { min: 0.6, max: 3, def: 1.1, desc: 'Narrowness of the sweeps: low a broad rush, high a tighter, whistly band' },
   },
   play(T, out, t, p) {
     const s = p.length / 0.27;

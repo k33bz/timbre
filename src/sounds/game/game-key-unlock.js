@@ -7,11 +7,13 @@ export default {
   tags: ['key', 'unlock', 'lock', 'door', 'chest', 'jingle', 'clunk', 'latch'],
   desc: 'A key jingles, turns and the lock gives: tiny metal ticks, a bolt clunk and a small ding.',
   dur: 0.85,
+  family: 'metal',
+  moments: ['door'],
   params: {
-    pitch: { min: 1800, max: 4200, def: 2800, unit: 'Hz' },
-    jingles: { min: 2, max: 6, def: 3, step: 1 },
-    clunk: { min: 0, max: 1, def: 0.5 },
-    ding: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 1800, max: 4200, def: 2800, unit: 'Hz', desc: 'Note of the metal jingles; the final ding sits an octave below' },
+    jingles: { min: 2, max: 6, def: 3, step: 1, desc: 'How many tiny key jingles rattle before the turn' },
+    clunk: { min: 0, max: 1, def: 0.5, desc: 'Weight of the deadbolt: a louder low thud and knock' },
+    ding: { min: 0, max: 1, def: 0.5, desc: 'Level of the small reward ding after the bolt, 0 none' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.jingles);

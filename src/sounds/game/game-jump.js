@@ -8,11 +8,13 @@ export default {
   tags: ['jump', 'hop', 'platformer', 'player', '8-bit', 'chiptune', 'retro'],
   desc: 'The classic platformer hop: a quick rising sweep. Chip is a stepped square wave; off is a soft triangle.',
   dur: 0.27,
+  family: 'chip',
+  moments: ['jump'],
   params: {
-    pitch: { min: 180, max: 600, def: 300, unit: 'Hz' },
-    rise: { min: 1.5, max: 4, def: 2.6, unit: 'x' },
-    length: { min: 0.08, max: 0.26, def: 0.16, unit: 's' },
-    chip: { min: 0, max: 1, def: 1, step: 1 },
+    pitch: { min: 180, max: 600, def: 300, unit: 'Hz', desc: 'Starting note of the upward sweep' },
+    rise: { min: 1.5, max: 4, def: 2.6, unit: 'x', desc: 'How far the sweep climbs above the start note' },
+    length: { min: 0.08, max: 0.26, def: 0.16, unit: 's', desc: 'How long the hop lasts and how slowly it sweeps' },
+    chip: { min: 0, max: 1, def: 1, step: 1, role: 'chip', desc: '1 a stepped, bitcrushed square sweep, 0 a soft triangle with a sine octave' },
   },
   play(T, out, t, p) {
     const chip = p.chip >= 0.5;

@@ -8,10 +8,12 @@ export default {
   tags: ['footstep', 'step', 'walk', 'run', 'stone', 'wood', 'floor', 'heel', 'hard'],
   desc: 'A step on wood, tile or stone: a crisp tap with a knock under it. Use Vary for a walking rhythm.',
   dur: 0.2,
+  family: 'organic',
+  moments: ['footstep'],
   params: {
-    surface: { min: 0, max: 1, def: 0.5 },
-    weight: { min: 0, max: 1, def: 0.5 },
-    pitch: { min: 0.7, max: 1.5, def: 1, unit: 'x' },
+    surface: { min: 0, max: 1, def: 0.5, desc: 'Floor material: 0 wood with a dull, lower knock, 1 stone with a bright click and ring' },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'How heavy the step is: a louder knock and a stronger low thud under it' },
+    pitch: { min: 0.7, max: 1.5, def: 1, unit: 'x', desc: 'Scales the tuning of the whole step: click, knock, thud and ring' },
   },
   play(T, out, t, p) {
     const j = T.rand(0.92, 1.08) * p.pitch;

@@ -9,10 +9,12 @@ export default {
   tags: ['scroll', 'detent', 'notch', 'wheel', 'ratchet', 'picker', 'wood'],
   desc: 'A tiny dry wooden tick for one notch of a scroll wheel or picker; raise ticks for a quick flick through several.',
   dur: 0.32,
+  family: 'wood',
+  moments: ['scroll'],
   params: {
-    ticks: { min: 1, max: 5, def: 1, step: 1 },
-    pitch: { min: 300, max: 900, def: 523, unit: 'Hz' },
-    gap: { min: 0.03, max: 0.07, def: 0.05, unit: 's' },
+    ticks: { min: 1, max: 5, def: 1, step: 1, desc: 'How many notches tick past: 1 a single notch, more for a quick flick' },
+    pitch: { min: 300, max: 900, def: 523, unit: 'Hz', desc: "Note of each tick's short ring, varied slightly per notch" },
+    gap: { min: 0.03, max: 0.07, def: 0.05, unit: 's', desc: 'Time between notches when ticks is above 1: short spins fast, long slower' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.ticks);

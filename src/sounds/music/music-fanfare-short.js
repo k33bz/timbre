@@ -8,11 +8,13 @@ export default {
   tags: ['fanfare', 'brass', 'trumpet', 'announce', 'royal', 'win', 'proud', 'stinger'],
   desc: 'Three stabs and a long chord on synth brass: an announcement or a proud arrival in two seconds.',
   dur: 2.2,
+  family: 'orchestral',
+  moments: ['victory', 'achievement', 'music'],
   params: {
-    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st' },
-    tempo: { min: 0.75, max: 1.4, def: 1, unit: 'x' },
-    brass: { min: 0, max: 1, def: 0.5 },
-    weight: { min: 0, max: 1, def: 0.5 },
+    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole fanfare' },
+    tempo: { min: 0.75, max: 1.4, def: 1, unit: 'x', desc: 'Higher plays the stabs and the final chord faster and shorter' },
+    brass: { min: 0, max: 1, def: 0.5, desc: "How far each note's filter opens: 0 a mellow horn, 1 a bright brassy blat" },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Level of the low octave root and the cymbal wash on the final chord' },
   },
   play(T, out, t, p) {
     const s = 1 / p.tempo;

@@ -8,11 +8,13 @@ export default {
   tags: ['dice', 'shake', 'rattle', 'cup', 'roll', 'craps', 'board-game'],
   desc: 'Dice shaken in a cup: bursts of hard little clacks at each stroke, swelling and fading.',
   dur: 1.0,
+  family: 'wood',
+  moments: ['dice'],
   params: {
-    shakes: { min: 2, max: 5, def: 4, step: 1 },
-    length: { min: 0.35, max: 0.95, def: 0.6, unit: 's' },
-    pitch: { min: 0.7, max: 1.5, def: 1, unit: 'x' },
-    dice: { min: 1, max: 4, def: 2, step: 1 },
+    shakes: { min: 2, max: 5, def: 4, step: 1, desc: 'Number of back-and-forth strokes' },
+    length: { min: 0.35, max: 0.95, def: 0.6, unit: 's', desc: 'Duration of the whole shake' },
+    pitch: { min: 0.7, max: 1.5, def: 1, unit: 'x', desc: 'Scales the clack, tock and rattle pitch: low chunky, high small and sharp' },
+    dice: { min: 1, max: 4, def: 2, step: 1, desc: 'How many dice: more dice, more clacks per stroke' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.shakes);

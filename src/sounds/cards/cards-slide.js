@@ -8,11 +8,13 @@ export default {
   tags: ['card', 'slide', 'push', 'drag', 'swap', 'felt', 'move'],
   desc: 'A card slid across the felt: a soft breathy glide that falls away from you or rises toward you.',
   dur: 0.52,
+  family: 'paper',
+  moments: ['drag'],
   params: {
-    length: { min: 0.1, max: 0.5, def: 0.25, unit: 's' },
-    pitch: { min: 0.6, max: 1.6, def: 1, unit: 'x' },
-    rise: { min: 0, max: 1, def: 0.2 },
-    grit: { min: 0, max: 1, def: 0.4 },
+    length: { min: 0.1, max: 0.5, def: 0.25, unit: 's', desc: 'Duration of the glide' },
+    pitch: { min: 0.6, max: 1.6, def: 1, unit: 'x', desc: 'Scales the glide and grit frequencies: low dark, high bright' },
+    rise: { min: 0, max: 1, def: 0.2, desc: 'Glide direction: 0 falls away from you, middle flat, 1 rises toward you' },
+    grit: { min: 0, max: 1, def: 0.4, desc: 'Fine gritty grains on top of the glide: 0 smooth, 1 grainy' },
   },
   play(T, out, t, p) {
     const L = p.length;

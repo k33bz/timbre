@@ -7,10 +7,12 @@ export default {
   tags: ['click', 'button', 'press', 'knock', 'tap', 'wood'],
   desc: 'A warm wooden knock for buttons: a short damped block tone with a dull knuckle thud, calm enough to repeat all day.',
   dur: 0.15,
+  family: 'wood',
+  moments: ['click'],
   params: {
-    pitch: { min: 500, max: 1600, def: 880, unit: 'Hz' },
-    ring: { min: 0, max: 1, def: 0.35 },
-    hollow: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 500, max: 1600, def: 880, unit: 'Hz', desc: 'Note of the block tone, which droops slightly as it rings' },
+    ring: { min: 0, max: 1, def: 0.35, desc: 'Decay of the block tone: 0 a dead knock, 1 a short resonant ring' },
+    hollow: { min: 0, max: 1, def: 0.4, desc: 'Level of the inharmonic overtone: 0 solid and dull, 1 hollow like a woodblock' },
   },
   play(T, out, t, p) {
     // The second overtone is what reads as hollow; the fundamental droops a little like a struck block.

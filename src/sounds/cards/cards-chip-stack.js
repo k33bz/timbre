@@ -8,10 +8,12 @@ export default {
   tags: ['chip', 'poker', 'stack', 'pile', 'bet', 'casino', 'count'],
   desc: 'Poker chips stacked one by one: uneven clay clicks climbing a little as the stack grows.',
   dur: 0.8,
+  family: 'wood',
+  moments: ['chips'],
   params: {
-    chips: { min: 2, max: 8, def: 5, step: 1 },
-    pace: { min: 0.04, max: 0.1, def: 0.065, unit: 's' },
-    pitch: { min: 1500, max: 3200, def: 2300, unit: 'Hz' },
+    chips: { min: 2, max: 8, def: 5, step: 1, desc: 'How many chips are stacked, one click each' },
+    pace: { min: 0.04, max: 0.1, def: 0.065, unit: 's', desc: 'Average time between chips, with some random unevenness' },
+    pitch: { min: 1500, max: 3200, def: 2300, unit: 'Hz', desc: 'Ring frequency of the first chip, later chips climb slightly higher' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.chips);

@@ -7,10 +7,12 @@ export default {
   tags: ['copy', 'clipboard', 'duplicate', 'confirm', 'ping', 'glass'],
   desc: 'A quick rising scoop and a bright ping to confirm a copy to the clipboard.',
   dur: 0.3,
+  family: 'glass',
+  moments: ['copy'],
   params: {
-    pitch: { min: 1200, max: 3200, def: 2093, unit: 'Hz' },
-    scoop: { min: 0.1, max: 1, def: 0.5 },
-    ring: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 1200, max: 3200, def: 2093, unit: 'Hz', desc: 'Note of the confirming bell ping' },
+    scoop: { min: 0.1, max: 1, def: 0.5, desc: 'Loudness of the rising noise scoop that leads into the ping' },
+    ring: { min: 0, max: 1, def: 0.4, desc: 'Decay of the ping: 0 a short blip, 1 a longer ring' },
   },
   play(T, out, t, p) {
     T.noise(out, t, { filter: 'bandpass', f: 1200, to: 4200, q: 1.4, dur: 0.045, a: 0.012, peak: 0.03 + 0.1 * p.scoop });

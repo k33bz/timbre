@@ -7,11 +7,13 @@ export default {
   tags: ['victory', 'win', 'jingle', '8-bit', 'chiptune', 'square', 'arcade', 'stinger'],
   desc: 'A chiptune win: a quick rising arpeggio into a held major chord. Bright, short and proud.',
   dur: 1.7,
+  family: 'chip',
+  moments: ['victory', 'level-up', 'music'],
   params: {
-    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st' },
-    tempo: { min: 0.75, max: 1.5, def: 1, unit: 'x' },
-    crunch: { min: 0, max: 1, def: 0.5 },
-    bass: { min: 0, max: 1, def: 0.6 },
+    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole jingle' },
+    tempo: { min: 0.75, max: 1.5, def: 1, unit: 'x', desc: 'Higher plays the arpeggio faster and shortens the held chord' },
+    crunch: { min: 0, max: 1, def: 0.5, desc: 'Bit-crush amount: 0 light 8-bit grit, 1 grittier and harsher' },
+    bass: { min: 0, max: 1, def: 0.6, desc: 'Level of the low triangle bass under the held chord' },
   },
   play(T, out, t, p) {
     const s = 1 / p.tempo;

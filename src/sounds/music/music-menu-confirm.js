@@ -7,11 +7,13 @@ export default {
   tags: ['menu', 'confirm', 'select', 'start', 'melody', '8-bit', 'chiptune', 'stinger'],
   desc: 'Two to four quick rising notes with an echo, for pressing Start or confirming a menu choice.',
   dur: 1.7,
+  family: 'chip',
+  moments: ['success', 'music'],
   params: {
-    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st' },
-    notes: { min: 2, max: 4, def: 3, step: 1 },
-    speed: { min: 0.7, max: 1.6, def: 1, unit: 'x' },
-    echo: { min: 0, max: 1, def: 0.5 },
+    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole melody' },
+    notes: { min: 2, max: 4, def: 3, step: 1, desc: 'How many rising notes play, always ending on the high tonic' },
+    speed: { min: 0.7, max: 1.6, def: 1, unit: 'x', desc: 'Higher plays the run faster; the final held note keeps its length' },
+    echo: { min: 0, max: 1, def: 0.5, desc: 'Level and feedback of the trailing echo: 0 dry, 1 a longer trail' },
   },
   play(T, out, t, p) {
     const n = (name) => T.note(name) * Math.pow(2, p.key / 12);

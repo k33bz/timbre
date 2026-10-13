@@ -8,10 +8,12 @@ export default {
   tags: ['bounce', 'boing', 'spring', 'rubber', 'ball', 'trampoline', 'jump-pad', 'cartoon'],
   desc: 'A rubbery boing: a quick spring up, then a wobble that settles. For jump pads, springs and balls.',
   dur: 0.66,
+  family: 'synthetic',
+  moments: ['jump'],
   params: {
-    pitch: { min: 150, max: 500, def: 260, unit: 'Hz' },
-    wobble: { min: 0, max: 1, def: 0.6 },
-    length: { min: 0.25, max: 0.6, def: 0.4, unit: 's' },
+    pitch: { min: 150, max: 500, def: 260, unit: 'Hz', desc: 'Note the boing settles on after springing up to nearly an octave above' },
+    wobble: { min: 0, max: 1, def: 0.6, desc: 'Vibrato on the settle: 0 a clean glide, 1 a wide rubbery wobble' },
+    length: { min: 0.25, max: 0.6, def: 0.4, unit: 's', desc: 'How long the boing takes to settle back down and fade' },
   },
   play(T, out, t, p) {
     T.osc(out, t, { f: p.pitch * 0.9, to: p.pitch * 1.8, glide: 0.05, dur: 0.06, peak: 0.065, a: 0.004 });

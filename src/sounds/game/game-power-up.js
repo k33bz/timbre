@@ -8,11 +8,13 @@ export default {
   tags: ['power-up', 'powerup', 'upgrade', 'level-up', 'bonus', 'boost', '8-bit', 'chiptune', 'retro'],
   desc: 'A quick rising scale that lands on a held note: you got stronger. Chip is square; off is soft triangle.',
   dur: 0.72,
+  family: 'chip',
+  moments: ['power-up', 'level-up'],
   params: {
-    pitch: { min: 200, max: 600, def: 330, unit: 'Hz' },
-    notes: { min: 4, max: 8, def: 6, step: 1 },
-    gap: { min: 0.035, max: 0.07, def: 0.05, unit: 's' },
-    chip: { min: 0, max: 1, def: 1, step: 1 },
+    pitch: { min: 200, max: 600, def: 330, unit: 'Hz', desc: 'Starting note of the rising scale run' },
+    notes: { min: 4, max: 8, def: 6, step: 1, desc: 'How many notes the run plays, the last one held' },
+    gap: { min: 0.035, max: 0.07, def: 0.05, unit: 's', desc: 'Time between notes in the run; smaller is faster' },
+    chip: { min: 0, max: 1, def: 1, step: 1, role: 'chip', desc: '1 bitcrushed square notes, 0 soft triangles with an octave and vibrato at the end' },
   },
   play(T, out, t, p) {
     const chip = p.chip >= 0.5;

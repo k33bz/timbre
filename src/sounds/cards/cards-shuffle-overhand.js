@@ -8,11 +8,13 @@ export default {
   tags: ['card', 'shuffle', 'overhand', 'paper', 'deck', 'chunks'],
   desc: 'An overhand shuffle: separate short ripples of paper as chunks drop off the deck, then a pat to square it.',
   dur: 1.31,
+  family: 'paper',
+  moments: ['shuffle'],
   params: {
-    chunks: { min: 3, max: 7, def: 5, step: 1 },
-    pace: { min: 0.1, max: 0.17, def: 0.12, unit: 's' },
-    pitch: { min: 800, max: 2400, def: 1400, unit: 'Hz' },
-    square: { min: 0, max: 1, def: 0.5 },
+    chunks: { min: 3, max: 7, def: 5, step: 1, desc: 'How many chunks are peeled off the deck' },
+    pace: { min: 0.1, max: 0.17, def: 0.12, unit: 's', desc: 'Time between chunks' },
+    pitch: { min: 800, max: 2400, def: 1400, unit: 'Hz', desc: 'Base frequency of the paper ripples: low dull, high crisp' },
+    square: { min: 0, max: 1, def: 0.5, desc: 'Closing pat that squares the deck: 0 barely there, 1 firm' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.chunks);

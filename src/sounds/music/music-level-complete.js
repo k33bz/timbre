@@ -8,11 +8,13 @@ export default {
   tags: ['level-complete', 'stage-clear', 'win', 'success', 'pluck', 'bell', 'arpeggio', 'stinger'],
   desc: 'A warm plucked arpeggio climbing into a ringing bell chord. For finishing a stage, not a whole game.',
   dur: 3.4,
+  family: 'orchestral',
+  moments: ['victory', 'level-up', 'music'],
   params: {
-    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st' },
-    tempo: { min: 0.75, max: 1.4, def: 1, unit: 'x' },
-    sparkle: { min: 0, max: 1, def: 0.6 },
-    space: { min: 0, max: 0.6, def: 0.3 },
+    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole jingle' },
+    tempo: { min: 0.75, max: 1.4, def: 1, unit: 'x', desc: 'Higher climbs the arpeggio faster and lands the chord sooner' },
+    sparkle: { min: 0, max: 1, def: 0.6, desc: 'Lifts the top bell and the airy high shimmer at the landing' },
+    space: { min: 0, max: 0.6, def: 0.3, desc: 'Reverb mix over everything, from dry to roomy' },
   },
   play(T, out, t, p) {
     const s = 1 / p.tempo;

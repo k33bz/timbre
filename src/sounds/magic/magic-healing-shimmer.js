@@ -7,11 +7,13 @@ export default {
   tags: ['heal', 'restore', 'shimmer', 'bloom', 'buff', 'blessing', 'glow'],
   desc: 'A warm chord that swells and blooms with a few falling sparkles. For healing, a blessing or a buff.',
   dur: 2.0,
+  family: 'synthetic',
+  moments: ['heal'],
   params: {
-    pitch: { min: 220, max: 880, def: 392, unit: 'Hz' },
-    swell: { min: 0.15, max: 0.6, def: 0.35, unit: 's' },
-    sparkle: { min: 0, max: 1, def: 0.5 },
-    space: { min: 0.1, max: 0.6, def: 0.4 },
+    pitch: { min: 220, max: 880, def: 392, unit: 'Hz', desc: 'Chord root; the falling sparkles are tuned above it' },
+    swell: { min: 0.15, max: 0.6, def: 0.35, unit: 's', desc: 'Chord fade-in time: short blooms fast, long swells slowly; sparkles start later too' },
+    sparkle: { min: 0, max: 1, def: 0.5, desc: 'How many sparkles fall, and how loud the airy hiss under them is' },
+    space: { min: 0.1, max: 0.6, def: 0.4, desc: 'Warm room reverb mix, from a light touch to a lush wash' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 1.4, mix: p.space, tone: 0.6 });

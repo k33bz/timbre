@@ -7,11 +7,13 @@ export default {
   tags: ['fire', 'crackle', 'campfire', 'fireplace', 'flame', 'wood', 'cozy', 'bed'],
   desc: 'A hearth or campfire: a soft roar of flame with random snaps, pops and the odd log settling.',
   dur: 8,
+  family: 'organic',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 6, unit: 's' },
-    crackle: { min: 0, max: 1, def: 0.5 },
-    roar: { min: 0, max: 1, def: 0.4 },
-    tone: { min: 0, max: 1, def: 0.5 },
+    length: { min: 3, max: 8, def: 6, unit: 's', desc: 'Total duration of the bed, fades included' },
+    crackle: { min: 0, max: 1, def: 0.5, desc: 'Density of snaps and pops, and how often a log settles' },
+    roar: { min: 0, max: 1, def: 0.4, desc: 'Level of the flame roar and its flicker swells: 0 nearly silent, 1 full' },
+    tone: { min: 0, max: 1, def: 0.5, desc: 'Crackle brightness: 0 dull and woody, 1 bright and sharp' },
   },
   play(T, out, t, p) {
     const L = p.length;

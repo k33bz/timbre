@@ -7,11 +7,13 @@ export default {
   tags: ['coin', 'flip', 'toss', 'spin', 'money', 'ping'],
   desc: 'A coin spun into the air: rising ticks as it turns, then a bright ping when it lands.',
   dur: 1.5,
+  family: 'metal',
+  moments: ['coin'],
   params: {
-    spins: { min: 3, max: 8, def: 6, step: 1 },
-    spin: { min: 0.05, max: 0.1, def: 0.075, unit: 's' },
-    pitch: { min: 900, max: 2600, def: 1568, unit: 'Hz' },
-    ring: { min: 0.15, max: 0.6, def: 0.42, unit: 's' },
+    spins: { min: 3, max: 8, def: 6, step: 1, desc: 'How many rising ticks play while the coin turns before it lands' },
+    spin: { min: 0.05, max: 0.1, def: 0.075, unit: 's', desc: 'Time between spin ticks; longer also delays the landing ping' },
+    pitch: { min: 900, max: 2600, def: 1568, unit: 'Hz', desc: 'Note of the landing ping; the spin ticks follow it, lower down' },
+    ring: { min: 0.15, max: 0.6, def: 0.42, unit: 's', desc: 'How long the landing ping rings out' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.spins);

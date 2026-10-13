@@ -7,11 +7,13 @@ export default {
   tags: ['sync', 'done', 'complete', 'refresh', 'backup', 'success', 'cycle'],
   desc: 'A quick back-and-forth of two notes that settles on the octave. Everything is in step again.',
   dur: 1.1,
+  family: 'soft',
+  moments: ['refresh', 'success'],
   params: {
-    pitch: { min: 330, max: 700, def: 523.25, unit: 'Hz' },
-    cycles: { min: 1, max: 3, def: 2, step: 1 },
-    speed: { min: 0.06, max: 0.12, def: 0.08, unit: 's' },
-    shimmer: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 330, max: 700, def: 523.25, unit: 'Hz', desc: 'Root of the back-and-forth; it swaps with the fifth and lands an octave up' },
+    cycles: { min: 1, max: 3, def: 2, step: 1, desc: 'Number of root-fifth back-and-forth pairs before the landing note' },
+    speed: { min: 0.06, max: 0.12, def: 0.08, unit: 's', desc: 'Time per quick note: low a fast flutter, high a slower swap' },
+    shimmer: { min: 0, max: 1, def: 0.4, desc: 'Level of the high sine on the landing note, 0 removes it' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.cycles) * 2;

@@ -7,11 +7,13 @@ export default {
   tags: ['hammer', 'hit', 'impact', 'metal', 'clank', 'anvil', 'smash'],
   desc: 'A hammer swung and landing on metal: air, then a clank with a thump under it.',
   dur: 0.95,
+  family: 'metal',
+  moments: ['hit'],
   params: {
-    swing: { min: 0, max: 0.5, def: 0.32, unit: 's' },
-    pitch: { min: 250, max: 1200, def: 560, unit: 'Hz' },
-    weight: { min: 0, max: 1, def: 0.5 },
-    ring: { min: 0.06, max: 0.4, def: 0.12, unit: 's' },
+    swing: { min: 0, max: 0.5, def: 0.32, unit: 's', desc: 'Length of the rising air before impact; near zero it hits at once' },
+    pitch: { min: 250, max: 1200, def: 560, unit: 'Hz', desc: 'Note of the metal clank and its falling ring' },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Low body thump at contact: 0 a thin clank, 1 a heavy hit' },
+    ring: { min: 0.06, max: 0.4, def: 0.12, unit: 's', desc: 'How long the metal clank rings out' },
   },
   play(T, out, t, p) {
     const h = t + p.swing;

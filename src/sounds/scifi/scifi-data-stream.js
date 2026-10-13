@@ -7,12 +7,14 @@ export default {
   tags: ['data', 'stream', 'transfer', 'download', 'digital', 'packets', 'chatter'],
   desc: 'A rapid patter of tiny bitcrushed ticks and chirps, like data pouring through a channel.',
   dur: 1.1,
+  family: 'synthetic',
+  moments: ['readout'],
   params: {
-    ticks: { min: 10, max: 40, def: 22, step: 1 },
-    length: { min: 0.3, max: 1.0, def: 0.6, unit: 's' },
-    pitch: { min: 600, max: 3000, def: 1600, unit: 'Hz' },
-    spread: { min: 0, max: 1, def: 0.6 },
-    grit: { min: 0, max: 1, def: 0.5 },
+    ticks: { min: 10, max: 40, def: 22, step: 1, desc: 'How many ticks pour through, sparse to dense' },
+    length: { min: 0.3, max: 1.0, def: 0.6, unit: 's', desc: 'Time the ticks spread over, and the length of the hiss bed' },
+    pitch: { min: 600, max: 3000, def: 1600, unit: 'Hz', desc: 'Center pitch of the ticks' },
+    spread: { min: 0, max: 1, def: 0.6, desc: 'Pitch scatter of the ticks, from one pitch to a wide random spread' },
+    grit: { min: 0, max: 1, def: 0.5, desc: 'Bitcrush depth: low cleaner, high coarser and more lo-fi' },
   },
   play(T, out, t, p) {
     const cr = T.crush(out, t, { bits: 8 - 4 * p.grit, ref: 0.1 });

@@ -7,11 +7,13 @@ export default {
   tags: ['charge', 'gather', 'channel', 'build', 'windup', 'power', 'spell'],
   desc: 'Energy gathering: a glowing swell climbs in pitch with shimmering overtones and ends in a ready ping.',
   dur: 2.1,
+  family: 'synthetic',
+  moments: ['spell', 'power-up'],
   params: {
-    length: { min: 0.5, max: 1.3, def: 0.9, unit: 's' },
-    pitch: { min: 200, max: 600, def: 330, unit: 'Hz' },
-    shimmer: { min: 0, max: 1, def: 0.5 },
-    space: { min: 0, max: 0.6, def: 0.3 },
+    length: { min: 0.5, max: 1.3, def: 0.9, unit: 's', desc: 'Climb time: how long the swell rises before the ready ping' },
+    pitch: { min: 200, max: 600, def: 330, unit: 'Hz', desc: 'Base note: the climb rises to three times it, the ping lands at six times' },
+    shimmer: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the airy high hiss rising with the swell, faint to prominent' },
+    space: { min: 0, max: 0.6, def: 0.3, desc: 'Room reverb mix, from dry to a lush wash' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 0.9, mix: p.space, tone: 0.7 });

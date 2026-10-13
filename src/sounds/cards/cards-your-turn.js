@@ -8,11 +8,13 @@ export default {
   tags: ['turn', 'your-turn', 'cue', 'notify', 'mallet', 'chime', 'game'],
   desc: 'A gentle two-note mallet cue that says it is your move, with a soft tap of a card underneath.',
   dur: 0.65,
+  family: 'orchestral',
+  moments: ['notify'],
   params: {
-    pitch: { min: 440, max: 880, def: 659, unit: 'Hz' },
-    interval: { min: 3, max: 12, def: 7, unit: 'st' },
-    bright: { min: 0, max: 1, def: 0.4 },
-    ring: { min: 0.2, max: 0.5, def: 0.3, unit: 's' },
+    pitch: { min: 440, max: 880, def: 659, unit: 'Hz', desc: 'Frequency of the first mallet note' },
+    interval: { min: 3, max: 12, def: 7, unit: 'st', desc: 'How far the second note leaps above the first, default a fifth' },
+    bright: { min: 0, max: 1, def: 0.4, desc: 'Mallet hardness: 0 soft and round, 1 brighter with more overtones' },
+    ring: { min: 0.2, max: 0.5, def: 0.3, unit: 's', desc: 'How long the notes ring, the first a little shorter' },
   },
   play(T, out, t, p) {
     const f2 = p.pitch * Math.pow(2, p.interval / 12);

@@ -8,10 +8,12 @@ export default {
   tags: ['delete', 'trash', 'remove', 'bin', 'crumple', 'discard', 'air'],
   desc: 'A short paper crumple that drops into a bin with a dull thud, for deleting or discarding an item.',
   dur: 0.27,
+  family: 'paper',
+  moments: ['delete'],
   params: {
-    crunch: { min: 2, max: 6, def: 4, step: 1 },
-    pitch: { min: 90, max: 260, def: 147, unit: 'Hz' },
-    weight: { min: 0.2, max: 1, def: 0.6 },
+    crunch: { min: 2, max: 6, def: 4, step: 1, desc: 'How many paper crackles play before the thud; more makes a longer crumple' },
+    pitch: { min: 90, max: 260, def: 147, unit: 'Hz', desc: 'Tuning of the landing thud' },
+    weight: { min: 0.2, max: 1, def: 0.6, desc: 'Loudness of the landing thud and its knock, light to heavy' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.crunch);

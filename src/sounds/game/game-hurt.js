@@ -8,11 +8,13 @@ export default {
   tags: ['hurt', 'damage', 'ouch', 'hit', 'pain', 'player', '8-bit', 'chiptune', 'retro'],
   desc: 'A falling, wobbling "ow" with a crunch on the hit, for the player taking damage. Chip is square; off is a softer saw.',
   dur: 0.32,
+  family: 'chip',
+  moments: ['damage'],
   params: {
-    pitch: { min: 150, max: 500, def: 300, unit: 'Hz' },
-    drop: { min: 0.3, max: 0.7, def: 0.5 },
-    length: { min: 0.12, max: 0.3, def: 0.2, unit: 's' },
-    chip: { min: 0, max: 1, def: 1, step: 1 },
+    pitch: { min: 150, max: 500, def: 300, unit: 'Hz', desc: 'Starting note of the falling ow' },
+    drop: { min: 0.3, max: 0.7, def: 0.5, desc: 'How far the ow falls in pitch: low a slight sag, high a deep plunge' },
+    length: { min: 0.12, max: 0.3, def: 0.2, unit: 's', desc: 'How long the ow lasts; the falling glide stretches with it' },
+    chip: { min: 0, max: 1, def: 1, step: 1, role: 'chip', desc: '1 a bitcrushed square ow, 0 a softer sawtooth through a closing lowpass' },
   },
   play(T, out, t, p) {
     const chip = p.chip >= 0.5;

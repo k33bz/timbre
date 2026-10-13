@@ -8,10 +8,12 @@ export default {
   tags: ['undo', 'revert', 'rewind', 'back', 'restore', 'soft'],
   desc: 'A short rewind flutter that falls and settles with a soft tick, for undoing the last action.',
   dur: 0.22,
+  family: 'soft',
+  moments: ['undo'],
   params: {
-    pitch: { min: 500, max: 1400, def: 784, unit: 'Hz' },
-    speed: { min: 18, max: 46, def: 30, unit: 'Hz' },
-    settle: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 500, max: 1400, def: 784, unit: 'Hz', desc: 'Start note of the falling flutter; the settle tick sits an octave below' },
+    speed: { min: 18, max: 46, def: 30, unit: 'Hz', desc: 'Flutter rate of the rewind: low a slow wobble, high a fast whir' },
+    settle: { min: 0, max: 1, def: 0.5, desc: 'Level of the soft tick where it settles: 0 faint, 1 clear' },
   },
   play(T, out, t, p) {
     T.osc(out, t, {

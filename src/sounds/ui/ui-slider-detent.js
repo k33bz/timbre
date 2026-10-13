@@ -7,10 +7,12 @@ export default {
   tags: ['slider', 'detent', 'notch', 'stop', 'tick', 'mechanical'],
   desc: 'A small pitched tick for a slider thumb crossing a notch; set pos from the thumb position and a drag climbs a scale.',
   dur: 0.04,
+  family: 'mechanical',
+  moments: ['scroll'],
   params: {
-    pitch: { min: 500, max: 1500, def: 784, unit: 'Hz' },
-    pos: { min: 0, max: 1, def: 0.4 },
-    edge: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 500, max: 1500, def: 784, unit: 'Hz', desc: 'Tick note at the bottom of the track; pos lifts it up to an octave' },
+    pos: { min: 0, max: 1, def: 0.4, desc: 'Thumb position along the track: 0 base note, 1 an octave up' },
+    edge: { min: 0, max: 1, def: 0.5, desc: 'Level of the noise click on top: 0 a soft tonal tick, 1 a sharp edge' },
   },
   play(T, out, t, p) {
     const f = p.pitch * Math.pow(2, p.pos);

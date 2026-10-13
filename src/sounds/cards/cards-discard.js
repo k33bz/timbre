@@ -8,10 +8,11 @@ export default {
   tags: ['card', 'discard', 'toss', 'pile', 'throw-away', 'muck'],
   desc: 'A card tossed onto the discard pile: a flick, a short flight and a papery landing on the stack.',
   dur: 0.23,
+  family: 'paper',
   params: {
-    toss: { min: 0, max: 1, def: 0.4 },
-    pile: { min: 0, max: 1, def: 0.5 },
-    weight: { min: 0, max: 1, def: 0.5 },
+    toss: { min: 0, max: 1, def: 0.4, desc: 'Flight before the landing: 0 dropped close, 1 tossed far with a longer whoosh' },
+    pile: { min: 0, max: 1, def: 0.5, desc: 'Cards already on the pile: more adds papery ticks and softens the thump' },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Heft of the landing thump: 0 light, 1 heavy' },
   },
   play(T, out, t, p) {
     const air = 0.03 + 0.1 * p.toss;

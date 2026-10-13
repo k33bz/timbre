@@ -7,10 +7,12 @@ export default {
   tags: ['drop', 'drag', 'place', 'land', 'drag-end', 'thud', 'wood'],
   desc: 'A soft landing thud for dropping an item on its target, with an optional small bounce as it settles.',
   dur: 0.14,
+  family: 'wood',
+  moments: ['drop'],
   params: {
-    pitch: { min: 90, max: 300, def: 196, unit: 'Hz' },
-    bounce: { min: 0, max: 1, def: 0.4 },
-    snap: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 90, max: 300, def: 196, unit: 'Hz', desc: 'Tuning of the landing thud and its bounce' },
+    bounce: { min: 0, max: 1, def: 0.4, desc: 'Level of the small second bounce: 0 none, 1 a clear settle' },
+    snap: { min: 0, max: 1, def: 0.4, desc: 'Level of the noise knock on impact: 0 soft and padded, 1 a sharper knock' },
   },
   play(T, out, t, p) {
     T.osc(out, t, { f: p.pitch * 1.5, to: p.pitch * 0.6, dur: 0.08, peak: 0.065, a: 0.003 });

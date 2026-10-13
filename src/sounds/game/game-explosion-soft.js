@@ -8,11 +8,13 @@ export default {
   tags: ['explosion', 'boom', 'blast', 'bomb', 'cartoon', 'poof', 'burst', 'detonate'],
   desc: 'A big but friendly boom: a round blast with a pop on the front and crackles after. Cartoon, not harsh.',
   dur: 1.05,
+  family: 'impact',
+  moments: ['explosion'],
   params: {
-    size: { min: 0.3, max: 0.9, def: 0.6, unit: 's' },
-    pitch: { min: 35, max: 110, def: 60, unit: 'Hz' },
-    soften: { min: 0, max: 1, def: 0.5 },
-    crackle: { min: 0, max: 1, def: 0.4 },
+    size: { min: 0.3, max: 0.9, def: 0.6, unit: 's', desc: "How long the boom's noise body and falling sub last" },
+    pitch: { min: 35, max: 110, def: 60, unit: 'Hz', desc: 'Base note of the falling sub under the blast; lower is deeper' },
+    soften: { min: 0, max: 1, def: 0.5, desc: 'Darkens the blast: 0 a brighter bang, 1 a muffled puff' },
+    crackle: { min: 0, max: 1, def: 0.4, desc: 'Loudness of the tiny crackles scattered after the boom, 0 none' },
   },
   play(T, out, t, p) {
     const L = p.size;

@@ -7,11 +7,13 @@ export default {
   tags: ['portal', 'gateway', 'dimension', 'vortex', 'summon', 'rift', 'open'],
   desc: 'A swirling gateway tears open: a resonant vortex whirls up, then a deep shimmering chord settles.',
   dur: 2.5,
+  family: 'synthetic',
+  moments: ['teleport'],
   params: {
-    size: { min: 0.5, max: 1.3, def: 0.9, unit: 's' },
-    pitch: { min: 80, max: 220, def: 110, unit: 'Hz' },
-    swirl: { min: 0, max: 1, def: 0.5 },
-    space: { min: 0, max: 0.6, def: 0.4 },
+    size: { min: 0.5, max: 1.3, def: 0.9, unit: 's', desc: 'Build time: how long the vortex whirls before the gateway opens' },
+    pitch: { min: 80, max: 220, def: 110, unit: 'Hz', desc: 'Root of the throb, the opening thump and the shimmering chord' },
+    swirl: { min: 0, max: 1, def: 0.5, desc: 'Vortex loudness, plus how fast and hard the throb pulses' },
+    space: { min: 0, max: 0.6, def: 0.4, desc: 'Big room reverb mix, from dry to cavernous' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 1.3, mix: p.space, tone: 0.6 });

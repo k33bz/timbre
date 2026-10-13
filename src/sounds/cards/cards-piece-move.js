@@ -8,10 +8,12 @@ export default {
   tags: ['board', 'piece', 'move', 'wood', 'chess', 'tok', 'pawn', 'token'],
   desc: 'A wooden piece slid a little and set down on a board with a hollow, polite tok.',
   dur: 0.26,
+  family: 'wood',
+  moments: ['drop'],
   params: {
-    pitch: { min: 300, max: 900, def: 520, unit: 'Hz' },
-    hollow: { min: 0, max: 1, def: 0.5 },
-    slide: { min: 0, max: 0.12, def: 0.04, unit: 's' },
+    pitch: { min: 300, max: 900, def: 520, unit: 'Hz', desc: 'Wood pitch of the tok, also tinting the drag and click: low big, high small' },
+    hollow: { min: 0, max: 1, def: 0.5, desc: 'Boxiness of the board: 0 dull solid tok, 1 hollow wood-block ring' },
+    slide: { min: 0, max: 0.12, def: 0.04, unit: 's', desc: 'Drag over the board before set-down, very short values skip the drag sound' },
   },
   play(T, out, t, p) {
     const at = t + p.slide;

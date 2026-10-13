@@ -7,9 +7,11 @@ export default {
   tags: ['hover', 'pointer', 'mouseover', 'tick', 'cursor', 'glass'],
   desc: 'A barely-there high tick for the pointer entering a button or row. Very quiet, meant to repeat.',
   dur: 0.03,
+  family: 'glass',
+  moments: ['hover'],
   params: {
-    pitch: { min: 1800, max: 5200, def: 3136, unit: 'Hz' },
-    air: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 1800, max: 5200, def: 3136, unit: 'Hz', desc: 'Frequency of the tick, which dips slightly as it fades' },
+    air: { min: 0, max: 1, def: 0.4, desc: 'Level of the high noise hiss over the tone: 0 mostly pure, 1 breathier' },
   },
   play(T, out, t, p) {
     T.osc(out, t, { f: p.pitch, to: p.pitch * 0.9, dur: 0.02, peak: 0.02, a: 0.002 });

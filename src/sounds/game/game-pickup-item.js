@@ -7,11 +7,13 @@ export default {
   tags: ['pickup', 'item', 'grab', 'collect', 'loot', 'blip', 'pop', 'inventory'],
   desc: 'A soft two-note blip for picking up an item. Quiet enough to repeat. Chip switches to square notes.',
   dur: 0.25,
+  family: 'soft',
+  moments: ['pickup'],
   params: {
-    pitch: { min: 500, max: 1500, def: 880, unit: 'Hz' },
-    interval: { min: 2, max: 12, def: 5, step: 1, unit: 'st' },
-    gap: { min: 0.04, max: 0.1, def: 0.06, unit: 's' },
-    chip: { min: 0, max: 1, def: 0, step: 1 },
+    pitch: { min: 500, max: 1500, def: 880, unit: 'Hz', desc: 'Note of the first blip' },
+    interval: { min: 2, max: 12, def: 5, step: 1, unit: 'st', desc: 'How far above the first blip the second one lands' },
+    gap: { min: 0.04, max: 0.1, def: 0.06, unit: 's', desc: 'Time between the two blips' },
+    chip: { min: 0, max: 1, def: 0, step: 1, role: 'chip', desc: '1 two bitcrushed square notes, 0 soft sines with a sparkle and a speck of air' },
   },
   play(T, out, t, p) {
     const chip = p.chip >= 0.5;

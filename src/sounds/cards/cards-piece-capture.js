@@ -8,10 +8,12 @@ export default {
   tags: ['board', 'piece', 'capture', 'take', 'knock', 'wood', 'chess', 'hit'],
   desc: 'One wooden piece knocking another off its square: a sharp clack, then the lost piece skittering away.',
   dur: 0.49,
+  family: 'wood',
+  moments: ['hit'],
   params: {
-    pitch: { min: 300, max: 900, def: 560, unit: 'Hz' },
-    force: { min: 0, max: 1, def: 0.6 },
-    scatter: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 300, max: 900, def: 560, unit: 'Hz', desc: 'Wood pitch of the clack and of the tocks as the piece skitters away' },
+    force: { min: 0, max: 1, def: 0.6, desc: 'How hard the strike is: louder, brighter clack and a firmer low thump' },
+    scatter: { min: 0, max: 1, def: 0.5, desc: 'How far the taken piece skitters: more tocks, spaced wider apart' },
   },
   play(T, out, t, p) {
     const hard = 0.6 + 0.4 * p.force;

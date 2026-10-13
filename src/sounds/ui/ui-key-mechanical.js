@@ -7,10 +7,12 @@ export default {
   tags: ['keypress', 'key', 'typing', 'keyboard', 'switch', 'clicky', 'mechanical'],
   desc: 'A mechanical keyboard keypress: a bright click, a bottom-out thock and a faint release tick, different every time.',
   dur: 0.11,
+  family: 'mechanical',
+  moments: ['type'],
   params: {
-    pitch: { min: 2000, max: 5000, def: 3520, unit: 'Hz' },
-    click: { min: 0, max: 1, def: 0.7 },
-    thock: { min: 0, max: 1, def: 0.6 },
+    pitch: { min: 2000, max: 5000, def: 3520, unit: 'Hz', desc: 'Tuning of the bright click leaf, varied slightly per press' },
+    click: { min: 0, max: 1, def: 0.7, desc: 'Loudness of the click leaf and release tick: 0 a linear switch, 1 clicky' },
+    thock: { min: 0, max: 1, def: 0.6, desc: 'Loudness of the bottom-out thock: 0 light, 1 heavy' },
   },
   play(T, out, t, p) {
     const v = 1 + 0.04 * T.rand(-1, 1);

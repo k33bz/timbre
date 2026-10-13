@@ -8,10 +8,12 @@ export default {
   tags: ['chip', 'poker', 'click', 'clay', 'bet', 'casino', 'tap'],
   desc: 'A single poker chip clicked down: a crisp clay tick with a short ring and a hint of felt underneath.',
   dur: 0.12,
+  family: 'wood',
+  moments: ['chips'],
   params: {
-    pitch: { min: 1600, max: 3600, def: 2500, unit: 'Hz' },
-    ring: { min: 0.02, max: 0.1, def: 0.05, unit: 's' },
-    weight: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 1600, max: 3600, def: 2500, unit: 'Hz', desc: 'Ring frequency of the clay bands: low duller chip, high crisper and brighter' },
+    ring: { min: 0.02, max: 0.1, def: 0.05, unit: 's', desc: 'How long the clay ring lasts after the tick' },
+    weight: { min: 0, max: 1, def: 0.4, desc: 'Felt thump under the click: 0 chip on chip, 1 heavy landing on felt' },
   },
   play(T, out, t, p) {
     const f = p.pitch * T.rand(0.97, 1.03);

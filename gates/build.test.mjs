@@ -183,8 +183,16 @@ test('family, moments, a parameter desc and a switch role validate against the s
   expectError(j, /desc has an en or em dash/);
 });
 
+test('every real sound declares a family and describes its parameters', async () => {
+  const { sounds } = await build();
+  for (const s of sounds) assert.ok(Object.hasOwn(FAMILIES, s.family), `${s.id} family ${s.family}`);
+  for (const s of sounds) for (const [k, d] of Object.entries(s.params)) assert.ok(typeof d.desc === 'string', `${s.id}.${k} has no desc`);
+  // the 0/1 switches the MCP server sets by role carry one
+  for (const s of sounds) for (const k of ['on', 'open', 'chip', 'go']) if (s.params[k]) assert.equal(s.params[k].role, k, `${s.id}.${k}`);
+});
+
 test('theme moments come from the vocabulary', async () => {
-  const sd = Object.assign({ file: FILE }, good());
+  const sd =Object.assign({ file: FILE }, good());
   const byId = new Map([[sd.id, sd]]);
   const th = { id: 'test-theme', name: 'Test', desc: 'A fixture theme for tests.', moments: { click: { sound: 'ui-test-blip' }, 'toggle-up': { sound: 'ui-test-blip' } } };
   const errs = validateTheme({ file: 'src/themes/test-theme.js', def: th }, byId);

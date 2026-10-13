@@ -7,10 +7,12 @@ export default {
   tags: ['menu', 'drawer', 'dropdown', 'sidebar', 'panel', 'open', 'close', 'slide', 'air'],
   desc: 'An airy slide for a menu or drawer opening (rising, soft landing) and closing (falling, latch tick); size runs from dropdown to drawer.',
   dur: 0.34,
+  family: 'air',
+  moments: ['open', 'close'],
   params: {
-    open: { min: 0, max: 1, def: 1, step: 1 },
-    size: { min: 0, max: 1, def: 0.3 },
-    tone: { min: 0, max: 1, def: 0.5 },
+    open: { min: 0, max: 1, def: 1, step: 1, role: 'open', desc: '1 plays the rising open with a soft landing, 0 the falling close with a latch tick' },
+    size: { min: 0, max: 1, def: 0.3, desc: 'Slide length, dropdown to drawer; on open also a lower, heavier landing' },
+    tone: { min: 0, max: 1, def: 0.5, desc: 'Register of the air sweep: 0 darker and lower, 1 brighter and higher' },
   },
   play(T, out, t, p) {
     const open = p.open >= 0.5;

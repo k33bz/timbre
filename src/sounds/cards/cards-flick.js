@@ -7,10 +7,12 @@ export default {
   tags: ['card', 'flick', 'paper', 'draw', 'deal', 'snap'],
   desc: 'A playing card flicked off the deck, or a short fan of them dealt one after another.',
   dur: 0.65,
+  family: 'paper',
+  moments: ['card-draw'],
   params: {
-    count: { min: 1, max: 6, def: 1, step: 1 },
-    gap: { min: 0.045, max: 0.12, def: 0.07, unit: 's' },
-    bright: { min: 0, max: 1, def: 0.3 },
+    count: { min: 1, max: 6, def: 1, step: 1, desc: 'How many cards are flicked in a row' },
+    gap: { min: 0.045, max: 0.12, def: 0.07, unit: 's', desc: 'Time between successive flicks' },
+    bright: { min: 0, max: 1, def: 0.3, desc: 'Snap brightness: 0 dull, 1 bright, each later card a touch brighter' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.count);

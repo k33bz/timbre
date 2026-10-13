@@ -7,10 +7,12 @@ export default {
   tags: ['checkpoint', 'save', 'flag', 'respawn', 'progress', 'reached', 'banner', 'chime'],
   desc: 'A soft thump and three bells fanning up that ring together: progress saved. Warmer than a success chime.',
   dur: 1.17,
+  family: 'orchestral',
+  moments: ['achievement', 'success'],
   params: {
-    pitch: { min: 262, max: 784, def: 392, unit: 'Hz' },
-    spread: { min: 0.04, max: 0.14, def: 0.08, unit: 's' },
-    ring: { min: 0.35, max: 0.85, def: 0.65, unit: 's' },
+    pitch: { min: 262, max: 784, def: 392, unit: 'Hz', desc: 'Root note of the three-bell chord of root, fifth and octave' },
+    spread: { min: 0.04, max: 0.14, def: 0.08, unit: 's', desc: 'Gap between the three bell strikes, from near-chord to a slow fan' },
+    ring: { min: 0.35, max: 0.85, def: 0.65, unit: 's', desc: 'How long each bell rings out' },
   },
   play(T, out, t, p) {
     const steps = [0, 7, 12];

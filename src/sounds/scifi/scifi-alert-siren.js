@@ -7,12 +7,14 @@ export default {
   tags: ['alert', 'siren', 'alarm', 'warning', 'caution', 'klaxon', 'notification'],
   desc: 'A gentle two-tone siren that swoops between notes: a warning that gets attention without startling.',
   dur: 2.3,
+  family: 'synthetic',
+  moments: ['warning'],
   params: {
-    pitch: { min: 350, max: 900, def: 520, unit: 'Hz' },
-    cycles: { min: 1, max: 3, def: 2, step: 1 },
-    interval: { min: 3, max: 12, def: 7, step: 1, unit: 'st' },
-    rate: { min: 0.15, max: 0.3, def: 0.22, unit: 's' },
-    tone: { min: 600, max: 4000, def: 1800, unit: 'Hz' },
+    pitch: { min: 350, max: 900, def: 520, unit: 'Hz', desc: 'Lower of the two siren notes' },
+    cycles: { min: 1, max: 3, def: 2, step: 1, desc: 'How many up-and-back siren cycles play' },
+    interval: { min: 3, max: 12, def: 7, step: 1, unit: 'st', desc: 'Gap between the two siren notes, narrow to wide' },
+    rate: { min: 0.15, max: 0.3, def: 0.22, unit: 's', desc: 'Time per swoop: short a hurried alarm, long a slow wail' },
+    tone: { min: 600, max: 4000, def: 1800, unit: 'Hz', desc: 'Lowpass cutoff: low a muffled siren, high a brighter, edgier one' },
   },
   play(T, out, t, p) {
     const echo = T.delay(out, t, { time: 0.11, fb: 0.25, mix: 0.2, tone: 2500 });

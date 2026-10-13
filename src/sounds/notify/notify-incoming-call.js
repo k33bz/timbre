@@ -8,11 +8,13 @@ export default {
   tags: ['call', 'ring', 'phone', 'incoming', 'telephone', 'trill', 'ringtone'],
   desc: 'A short bell-like phone ring: bursts of fast alternating notes with a pause between. Loops cleanly if you repeat it.',
   dur: 2.0,
+  family: 'synthetic',
+  moments: ['notify'],
   params: {
-    pitch: { min: 600, max: 1000, def: 880, unit: 'Hz' },
-    rate: { min: 8, max: 16, def: 12, unit: 'Hz' },
-    rings: { min: 1, max: 3, def: 2, step: 1 },
-    tone: { min: 1200, max: 3500, def: 2600, unit: 'Hz' },
+    pitch: { min: 600, max: 1000, def: 880, unit: 'Hz', desc: 'Lower note of the trill; the upper note is a major third above' },
+    rate: { min: 8, max: 16, def: 12, unit: 'Hz', desc: 'Speed of the note alternation: low a slow warble, high a fast trill' },
+    rings: { min: 1, max: 3, def: 2, step: 1, desc: 'Number of ring bursts' },
+    tone: { min: 1200, max: 3500, def: 2600, unit: 'Hz', desc: 'Lowpass cutoff: low is soft and muted, high rings brighter' },
   },
   play(T, out, t, p) {
     const lp = T.filter(out, t, { type: 'lowpass', f: p.tone, q: 0.7 });

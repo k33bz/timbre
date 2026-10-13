@@ -7,10 +7,12 @@ export default {
   tags: ['tooltip', 'popover', 'hint', 'pop', 'bubble', 'appear', 'glass'],
   desc: 'A tiny glassy bubble pop for a tooltip or popover appearing: a bright pip that bends up and settles.',
   dur: 0.08,
+  family: 'glass',
+  moments: ['tooltip'],
   params: {
-    pitch: { min: 800, max: 2400, def: 1318, unit: 'Hz' },
-    rise: { min: 0, max: 1, def: 0.5 },
-    shimmer: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 800, max: 2400, def: 1318, unit: 'Hz', desc: 'Start note of the pip before it bends up' },
+    rise: { min: 0, max: 1, def: 0.5, desc: 'How far the pip bends up: 0 steady, 1 nearly an octave' },
+    shimmer: { min: 0, max: 1, def: 0.5, desc: 'Starting FM glitter before it settles: 0 nearly pure, 1 bright and sparkly' },
   },
   play(T, out, t, p) {
     T.fm(out, t, {

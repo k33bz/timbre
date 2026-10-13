@@ -7,11 +7,13 @@ export default {
   tags: ['heal', 'health', 'restore', 'regen', 'recover', 'potion', 'warm', 'soft'],
   desc: 'A warm rising swell with a soft glow on top, for health restored. Gentle by design; it can repeat.',
   dur: 0.95,
+  family: 'soft',
+  moments: ['heal'],
   params: {
-    pitch: { min: 220, max: 700, def: 392, unit: 'Hz' },
-    length: { min: 0.3, max: 0.9, def: 0.6, unit: 's' },
-    rise: { min: 0, max: 7, def: 4, step: 1, unit: 'st' },
-    glow: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 220, max: 700, def: 392, unit: 'Hz', desc: 'Starting root of the rising root, fifth and octave chord' },
+    length: { min: 0.3, max: 0.9, def: 0.6, unit: 's', desc: 'How long the swell lasts; its slow bloom and rise stretch with it' },
+    rise: { min: 0, max: 7, def: 4, step: 1, unit: 'st', desc: 'How far the chord glides up during the swell; 0 holds steady' },
+    glow: { min: 0, max: 1, def: 0.4, desc: 'Level of the airy glow and the bell at the crest: 0 a plain swell' },
   },
   play(T, out, t, p) {
     const L = p.length;

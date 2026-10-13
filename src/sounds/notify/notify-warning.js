@@ -8,11 +8,13 @@ export default {
   tags: ['warning', 'caution', 'alert', 'uh-oh', 'attention', 'careful'],
   desc: 'A two-note falling "uh-oh" in a round triangle tone. Cautions without scolding; milder than the error buzz.',
   dur: 0.65,
+  family: 'soft',
+  moments: ['warning'],
   params: {
-    pitch: { min: 250, max: 700, def: 440, unit: 'Hz' },
-    drop: { min: 2, max: 7, def: 3, step: 1, unit: 'st' },
-    gap: { min: 0.1, max: 0.3, def: 0.16, unit: 's' },
-    tone: { min: 800, max: 4000, def: 1800, unit: 'Hz' },
+    pitch: { min: 250, max: 700, def: 440, unit: 'Hz', desc: 'Note of the first, short note of the uh-oh' },
+    drop: { min: 2, max: 7, def: 3, step: 1, unit: 'st', desc: 'How far the second note falls below the first' },
+    gap: { min: 0.1, max: 0.3, def: 0.16, unit: 's', desc: 'Time between the two notes' },
+    tone: { min: 800, max: 4000, def: 1800, unit: 'Hz', desc: 'Lowpass cutoff: low is round and muted, high is brighter' },
   },
   play(T, out, t, p) {
     const lp = T.filter(out, t, { type: 'lowpass', f: p.tone, q: 0.7 });

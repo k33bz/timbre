@@ -7,10 +7,12 @@ export default {
   tags: ['info', 'notice', 'ping', 'neutral', 'heads-up', 'bell', 'fyi'],
   desc: 'One soft bell tap for neutral news: nothing wrong and nothing won, just a heads-up. Made to be heard all day.',
   dur: 0.8,
+  family: 'soft',
+  moments: ['info'],
   params: {
-    pitch: { min: 500, max: 1200, def: 880, unit: 'Hz' },
-    decay: { min: 0.2, max: 0.7, def: 0.4, unit: 's' },
-    bright: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 500, max: 1200, def: 880, unit: 'Hz', desc: 'Note of the bell tap' },
+    decay: { min: 0.2, max: 0.7, def: 0.4, unit: 's', desc: 'How long the bell rings out' },
+    bright: { min: 0, max: 1, def: 0.4, desc: 'Level of the octave and the glassy partial: 0 soft and pure, 1 brighter' },
   },
   play(T, out, t, p) {
     // the 2.76 partial lasts a quarter of the decay, so it reads as the edge of the attack, not a tone

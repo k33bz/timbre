@@ -7,10 +7,12 @@ export default {
   tags: ['card', 'deal', 'skim', 'felt', 'table', 'toss'],
   desc: 'One card dealt across the table: a flick off the deck, a soft skim over felt and a quiet landing.',
   dur: 0.39,
+  family: 'paper',
+  moments: ['card-draw'],
   params: {
-    reach: { min: 0.1, max: 0.32, def: 0.17, unit: 's' },
-    tone: { min: 0, max: 1, def: 0.4 },
-    land: { min: 0, max: 1, def: 0.6 },
+    reach: { min: 0.1, max: 0.32, def: 0.17, unit: 's', desc: 'Flight time to the seat: a longer skim and a later landing' },
+    tone: { min: 0, max: 1, def: 0.4, desc: 'Brightness of the flick and skim: 0 dark, 1 bright and airy' },
+    land: { min: 0, max: 1, def: 0.6, desc: 'Weight of the landing: 0 barely touches, 1 firm set-down' },
   },
   play(T, out, t, p) {
     const at = t + p.reach;

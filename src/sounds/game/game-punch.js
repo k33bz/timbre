@@ -7,11 +7,13 @@ export default {
   tags: ['punch', 'fist', 'hit', 'smack', 'brawler', 'fight', 'combat', 'impact'],
   desc: 'A fist landing with a thump and a smack. Up to three in a flurry, each slightly softer.',
   dur: 0.46,
+  family: 'impact',
+  moments: ['hit', 'attack'],
   params: {
-    pitch: { min: 80, max: 220, def: 140, unit: 'Hz' },
-    snap: { min: 0, max: 1, def: 0.5 },
-    hits: { min: 1, max: 3, def: 1, step: 1 },
-    gap: { min: 0.05, max: 0.12, def: 0.08, unit: 's' },
+    pitch: { min: 80, max: 220, def: 140, unit: 'Hz', desc: 'Note of the falling thump; lower is meatier' },
+    snap: { min: 0, max: 1, def: 0.5, desc: 'Brighter smack and louder high slap: 0 a dull thud, 1 a crisp snap' },
+    hits: { min: 1, max: 3, def: 1, step: 1, desc: 'How many punches land in the flurry, each a little softer' },
+    gap: { min: 0.05, max: 0.12, def: 0.08, unit: 's', desc: 'Time between punches in a flurry' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.hits);

@@ -7,11 +7,13 @@ export default {
   tags: ['mystery', 'suspense', 'eerie', 'clue', 'reveal', 'spooky', 'fm', 'stinger'],
   desc: 'Two hanging bell tones a tritone apart over a dark swell. For a clue, a twist or a door that should not open.',
   dur: 4.2,
+  family: 'synthetic',
+  moments: ['scare', 'music'],
   params: {
-    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st' },
-    tempo: { min: 0.75, max: 1.4, def: 1, unit: 'x' },
-    eerie: { min: 0, max: 1, def: 0.5 },
-    space: { min: 0.2, max: 0.7, def: 0.45 },
+    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole sting' },
+    tempo: { min: 0.75, max: 1.4, def: 1, unit: 'x', desc: 'Higher brings the second bell in sooner and swells the pad quicker' },
+    eerie: { min: 0, max: 1, def: 0.5, desc: "Opens the bells' FM clang, wobbles the pad and adds a high hiss" },
+    space: { min: 0.2, max: 0.7, def: 0.45, desc: 'Reverb mix of the big dark room, from close to cavernous' },
   },
   play(T, out, t, p) {
     const s = 1 / p.tempo;

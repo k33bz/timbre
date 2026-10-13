@@ -7,11 +7,13 @@ export default {
   tags: ['terminal', 'blip', 'beep', 'computer', 'console', 'readout', 'retro'],
   desc: 'A quick run of bitcrushed computer beeps, like a console printing a readout or acknowledging a command.',
   dur: 0.45,
+  family: 'chip',
+  moments: ['readout'],
   params: {
-    pitch: { min: 500, max: 2400, def: 1200, unit: 'Hz' },
-    count: { min: 1, max: 5, def: 3, step: 1 },
-    speed: { min: 0.04, max: 0.1, def: 0.055, unit: 's' },
-    grit: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 500, max: 2400, def: 1200, unit: 'Hz', desc: "First beep's pitch; later beeps pick scale notes up to an octave above" },
+    count: { min: 1, max: 5, def: 3, step: 1, desc: 'How many beeps in the run' },
+    speed: { min: 0.04, max: 0.1, def: 0.055, unit: 's', desc: 'Time between beeps' },
+    grit: { min: 0, max: 1, def: 0.5, desc: 'Bitcrush depth: low cleaner beeps, high crunchier with choppier tails' },
   },
   play(T, out, t, p) {
     const cr = T.crush(out, t, { bits: 8 - 5 * p.grit, ref: 0.1 });

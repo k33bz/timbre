@@ -7,11 +7,13 @@ export default {
   tags: ['wind', 'gust', 'breeze', 'storm', 'outdoor', 'bed', 'loop'],
   desc: 'An open-air wind bed: steady air with slow gusts rolling through and a faint whistle. Fades in and out.',
   dur: 8,
+  family: 'air',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 6, unit: 's' },
-    gust: { min: 0, max: 1, def: 0.55 },
-    pitch: { min: 0.6, max: 1.6, def: 1, unit: 'x' },
-    whistle: { min: 0, max: 1, def: 0.25 },
+    length: { min: 3, max: 8, def: 6, unit: 's', desc: 'Total duration of the bed, fades included' },
+    gust: { min: 0, max: 1, def: 0.55, desc: 'Strength of the slow passing gusts: 0 steady air only, 1 strong gusts' },
+    pitch: { min: 0.6, max: 1.6, def: 1, unit: 'x', desc: 'Scales air, gust and whistle pitch at even level: low deep, high thin' },
+    whistle: { min: 0, max: 1, def: 0.25, desc: 'Thin whistle through a gap: 0 none, 1 clearly audible' },
   },
   play(T, out, t, p) {
     const L = p.length;

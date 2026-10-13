@@ -8,10 +8,12 @@ export default {
   tags: ['card', 'fan', 'spread', 'hand', 'ratchet', 'show'],
   desc: 'A hand of cards fanned open: a quick climbing ratchet of paper ticks over a breath of air.',
   dur: 0.57,
+  family: 'paper',
+  moments: ['card-flip'],
   params: {
-    cards: { min: 4, max: 13, def: 8, step: 1 },
-    length: { min: 0.15, max: 0.5, def: 0.28, unit: 's' },
-    bright: { min: 0, max: 1, def: 0.5 },
+    cards: { min: 4, max: 13, def: 8, step: 1, desc: 'How many cards tick past as the hand opens' },
+    length: { min: 0.15, max: 0.5, def: 0.28, unit: 's', desc: 'Time to fan the whole hand open' },
+    bright: { min: 0, max: 1, def: 0.5, desc: 'Frequency of the ticks and air swell: 0 darker, 1 brighter' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.cards);

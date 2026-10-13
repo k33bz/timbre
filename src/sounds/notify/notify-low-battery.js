@@ -8,11 +8,13 @@ export default {
   tags: ['battery', 'low', 'power', 'drain', 'warning', 'falling', 'charge'],
   desc: 'Three slow falling notes under a closing filter, the last one sagging. Power is running out.',
   dur: 1.4,
+  family: 'synthetic',
+  moments: ['warning'],
   params: {
-    pitch: { min: 250, max: 700, def: 440, unit: 'Hz' },
-    steps: { min: 2, max: 4, def: 3, step: 1 },
-    gap: { min: 0.15, max: 0.3, def: 0.2, unit: 's' },
-    tone: { min: 800, max: 3000, def: 1800, unit: 'Hz' },
+    pitch: { min: 250, max: 700, def: 440, unit: 'Hz', desc: 'Note of the first step; each next step falls a whole tone' },
+    steps: { min: 2, max: 4, def: 3, step: 1, desc: 'Number of falling notes; the last one always sags' },
+    gap: { min: 0.15, max: 0.3, def: 0.2, unit: 's', desc: 'Time between the falling notes' },
+    tone: { min: 800, max: 3000, def: 1800, unit: 'Hz', desc: 'Starting lowpass cutoff, closing as the notes fall: low muffled, high clearer' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.steps);

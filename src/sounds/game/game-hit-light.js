@@ -7,10 +7,12 @@ export default {
   tags: ['hit', 'light', 'tap', 'slap', 'combat', 'impact', 'strike', 'attack'],
   desc: 'A quick, light strike landing: a short knock with a crisp crack. Small enough to chain in a fight.',
   dur: 0.16,
+  family: 'impact',
+  moments: ['hit', 'attack'],
   params: {
-    pitch: { min: 120, max: 400, def: 220, unit: 'Hz' },
-    snap: { min: 0, max: 1, def: 0.5 },
-    body: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 120, max: 400, def: 220, unit: 'Hz', desc: 'Note of the short falling knock' },
+    snap: { min: 0, max: 1, def: 0.5, desc: 'Crack brightness and level: 0 a dull tap, 1 a crisp bright snap' },
+    body: { min: 0, max: 1, def: 0.5, desc: 'Level of the knock under the crack: 0 thin, 1 fat' },
   },
   play(T, out, t, p) {
     const j = T.rand(0.95, 1.05);

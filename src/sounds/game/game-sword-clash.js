@@ -8,10 +8,12 @@ export default {
   tags: ['sword', 'clash', 'clang', 'parry', 'block', 'steel', 'metal', 'blades', 'duel'],
   desc: 'Steel meeting steel: a hard clang that rings, with an optional scrape. For parries and duels.',
   dur: 1.0,
+  family: 'metal',
+  moments: ['hit', 'attack'],
   params: {
-    pitch: { min: 600, max: 2200, def: 1250, unit: 'Hz' },
-    ring: { min: 0.25, max: 0.9, def: 0.55, unit: 's' },
-    scrape: { min: 0, max: 1, def: 0.3 },
+    pitch: { min: 600, max: 2200, def: 1250, unit: 'Hz', desc: 'Note of the clang; the second blade rings a third above' },
+    ring: { min: 0.25, max: 0.9, def: 0.55, unit: 's', desc: 'How long the steel rings after the clash' },
+    scrape: { min: 0, max: 1, def: 0.3, desc: 'Level and length of the blade-on-blade scrape, 0 none' },
   },
   play(T, out, t, p) {
     const steel = [[1, 1, 1], [2.76, 0.7, 0.7], [5.4, 0.45, 0.45], [8.93, 0.25, 0.25]];

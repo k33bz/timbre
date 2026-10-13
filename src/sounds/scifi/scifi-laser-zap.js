@@ -7,12 +7,14 @@ export default {
   tags: ['laser', 'zap', 'pew', 'shoot', 'ray', 'shot', 'retro'],
   desc: 'A bright falling pew for a laser shot. Fire it once, or in a quick burst of up to four.',
   dur: 0.8,
+  family: 'synthetic',
+  moments: ['shoot'],
   params: {
-    pitch: { min: 1200, max: 4000, def: 2400, unit: 'Hz' },
-    drop: { min: 0.5, max: 0.95, def: 0.85 },
-    shots: { min: 1, max: 4, def: 1, step: 1 },
-    rate: { min: 0.06, max: 0.2, def: 0.1, unit: 's' },
-    edge: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 1200, max: 4000, def: 2400, unit: 'Hz', desc: 'Start pitch of the pew' },
+    drop: { min: 0.5, max: 0.95, def: 0.85, desc: 'How far each pew falls: low a short dip, high a deep plunge' },
+    shots: { min: 1, max: 4, def: 1, step: 1, desc: 'How many pews in the burst, each a touch lower than the last' },
+    rate: { min: 0.06, max: 0.2, def: 0.1, unit: 's', desc: 'Time between shots in a burst; no effect on a single shot' },
+    edge: { min: 0, max: 1, def: 0.5, desc: 'Square-wave bite: low a smoother sine-like pew, high a buzzier one' },
   },
   play(T, out, t, p) {
     const lp = T.filter(out, t, { type: 'lowpass', f: 7000, q: 0.7 });

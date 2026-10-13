@@ -7,9 +7,11 @@ export default {
   tags: ['click', 'button', 'tap', 'tick', 'press', 'soft'],
   desc: 'A short muted tick for button presses: a falling sine blip with a breath of high noise.',
   dur: 0.08,
+  family: 'soft',
+  moments: ['click'],
   params: {
-    pitch: { min: 400, max: 2400, def: 1100, unit: 'Hz' },
-    tone: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 400, max: 2400, def: 1100, unit: 'Hz', desc: 'Start note of the falling sine blip' },
+    tone: { min: 0, max: 1, def: 0.4, desc: 'Brightness and level of the high noise breath: 0 muted, 1 crisp and airy' },
   },
   play(T, out, t, p) {
     T.osc(out, t, { f: p.pitch, to: p.pitch * 0.73, dur: 0.035, peak: 0.042, a: 0.002 });

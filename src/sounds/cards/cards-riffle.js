@@ -7,10 +7,12 @@ export default {
   tags: ['card', 'deck', 'riffle', 'shuffle', 'paper', 'bridge'],
   desc: 'A deck riffled together: a quick ripple of paper ticks, never two quite alike.',
   dur: 0.55,
+  family: 'paper',
+  moments: ['shuffle'],
   params: {
-    cards: { min: 3, max: 14, def: 6, step: 1 },
-    gap: { min: 0.014, max: 0.035, def: 0.022, unit: 's' },
-    pitch: { min: 800, max: 2600, def: 1500, unit: 'Hz' },
+    cards: { min: 3, max: 14, def: 6, step: 1, desc: 'How many cards ripple past' },
+    gap: { min: 0.014, max: 0.035, def: 0.022, unit: 's', desc: 'Time between card ticks: short a fast ripple, long a slower one' },
+    pitch: { min: 800, max: 2600, def: 1500, unit: 'Hz', desc: 'Base frequency of the paper ticks: low dull, high crisp' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.cards);

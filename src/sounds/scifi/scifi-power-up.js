@@ -7,11 +7,13 @@ export default {
   tags: ['power-up', 'charge', 'boot', 'startup', 'energize', 'spin-up', 'engine'],
   desc: 'A machine spinning up: accelerating ticks climb into a rising whine that locks on at full power.',
   dur: 1.65,
+  family: 'synthetic',
+  moments: ['power-up'],
   params: {
-    length: { min: 0.5, max: 1.4, def: 0.9, unit: 's' },
-    pitch: { min: 80, max: 250, def: 130, unit: 'Hz' },
-    ticks: { min: 4, max: 14, def: 9, step: 1 },
-    bright: { min: 0, max: 1, def: 0.5 },
+    length: { min: 0.5, max: 1.4, def: 0.9, unit: 's', desc: 'Spin-up time before the lock-on chime' },
+    pitch: { min: 80, max: 250, def: 130, unit: 'Hz', desc: 'Base pitch: tunes the climbing whine, the ticks and the lock-on chime' },
+    ticks: { min: 4, max: 14, def: 9, step: 1, desc: 'How many accelerating ticks play during the spin-up' },
+    bright: { min: 0, max: 1, def: 0.5, desc: 'How far the lowpass opens by the end: duller to brighter whine' },
   },
   play(T, out, t, p) {
     const L = p.length;

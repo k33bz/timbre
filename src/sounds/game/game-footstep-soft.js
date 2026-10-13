@@ -8,10 +8,12 @@ export default {
   tags: ['footstep', 'step', 'walk', 'run', 'grass', 'carpet', 'sand', 'soft'],
   desc: 'A quiet step on carpet, grass or sand. Use Vary so a walk never repeats exactly.',
   dur: 0.22,
+  family: 'organic',
+  moments: ['footstep'],
   params: {
-    weight: { min: 0, max: 1, def: 0.4 },
-    surface: { min: 0, max: 1, def: 0.4 },
-    length: { min: 0.06, max: 0.16, def: 0.1, unit: 's' },
+    weight: { min: 0, max: 1, def: 0.4, desc: 'How heavy the step is: a louder puff and a fuller low thud' },
+    surface: { min: 0, max: 1, def: 0.4, desc: 'Ground type: 0 muffled carpet, 1 brighter gravel with a little crunch' },
+    length: { min: 0.06, max: 0.16, def: 0.1, unit: 's', desc: "How long each step's puff and thud last" },
   },
   play(T, out, t, p) {
     const j = T.rand(0.9, 1.1);

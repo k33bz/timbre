@@ -7,10 +7,12 @@ export default {
   tags: ['radio', 'select', 'choose', 'option', 'bloop', 'soft'],
   desc: 'A soft rounded bloop for picking one option from a group: a sine that bends upward over a quiet low body.',
   dur: 0.1,
+  family: 'soft',
+  moments: ['click'],
   params: {
-    pitch: { min: 400, max: 1100, def: 659, unit: 'Hz' },
-    bloop: { min: 0, max: 1, def: 0.5 },
-    round: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 400, max: 1100, def: 659, unit: 'Hz', desc: 'Start note of the bloop; its octave-down body follows' },
+    bloop: { min: 0, max: 1, def: 0.5, desc: 'How far the sound bends upward: 0 a gentle lift, 1 a big rising bloop' },
+    round: { min: 0, max: 1, def: 0.5, desc: 'Level of the octave-down body: 0 thinner and chirpier, 1 fuller and rounder' },
   },
   play(T, out, t, p) {
     const rise = 1.15 + 0.6 * p.bloop;

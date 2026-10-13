@@ -7,11 +7,12 @@ export default {
   tags: ['hologram', 'flicker', 'glitch', 'projection', 'unstable', 'digital', 'static'],
   desc: 'A glassy digital tone that stutters and drops out as a projection flickers, with static in the gaps.',
   dur: 1.3,
+  family: 'synthetic',
   params: {
-    pitch: { min: 400, max: 1600, def: 800, unit: 'Hz' },
-    flickers: { min: 3, max: 9, def: 6, step: 1 },
-    glitch: { min: 0, max: 1, def: 0.5 },
-    length: { min: 0.5, max: 1.0, def: 0.8, unit: 's' },
+    pitch: { min: 400, max: 1600, def: 800, unit: 'Hz', desc: 'Base note of the glassy FM tone' },
+    flickers: { min: 3, max: 9, def: 6, step: 1, desc: 'How many bursts the tone stutters into before it settles' },
+    glitch: { min: 0, max: 1, def: 0.5, desc: 'Instability: more bitcrush, wider pitch wander and louder static in the gaps' },
+    length: { min: 0.5, max: 1.0, def: 0.8, unit: 's', desc: 'Time the flicker sequence spreads over; the bursts stretch with it' },
   },
   play(T, out, t, p) {
     const cr = T.crush(out, t, { bits: 9 - 5 * p.glitch, ref: 0.1 });

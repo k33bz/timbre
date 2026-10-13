@@ -7,10 +7,12 @@ export default {
   tags: ['thunder', 'storm', 'rumble', 'weather', 'low', 'distant', 'rolling'],
   desc: 'A storm miles away: a muffled crack and a long low rumble that rolls and fades out.',
   dur: 8,
+  family: 'organic',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 6, unit: 's' },
-    distance: { min: 0, max: 1, def: 0.55 },
-    rolls: { min: 0, max: 3, def: 2, step: 1 },
+    length: { min: 3, max: 8, def: 6, unit: 's', desc: 'Total duration of the rumble and its rolls' },
+    distance: { min: 0, max: 1, def: 0.55, desc: 'How far the storm is: 0 near with a loud crack, 1 far, darker, no crack' },
+    rolls: { min: 0, max: 3, def: 2, step: 1, desc: 'How many later rolls re-light the rumble after the first' },
   },
   play(T, out, t, p) {
     const L = p.length;

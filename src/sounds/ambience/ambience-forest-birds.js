@@ -7,11 +7,13 @@ export default {
   tags: ['birds', 'birdsong', 'chirp', 'tweet', 'forest', 'morning', 'nature', 'bed'],
   desc: 'Morning birdsong in the trees: tweets, trills and whistles from near and far over a faint breeze.',
   dur: 8,
+  family: 'organic',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 6, unit: 's' },
-    activity: { min: 0, max: 1, def: 0.5 },
-    pitch: { min: 0.7, max: 1.4, def: 1, unit: 'x' },
-    trill: { min: 0, max: 1, def: 0.4 },
+    length: { min: 3, max: 8, def: 6, unit: 's', desc: 'Total duration of the bed, fades included' },
+    activity: { min: 0, max: 1, def: 0.5, desc: 'How many bird phrases sing: 0 sparse, 1 busy' },
+    pitch: { min: 0.7, max: 1.4, def: 1, unit: 'x', desc: 'Scales all the birdsong pitch: low deeper, high shriller' },
+    trill: { min: 0, max: 1, def: 0.4, desc: 'Share of phrases that are fast warbling trills rather than tweets or whistles' },
   },
   play(T, out, t, p) {
     const L = p.length;

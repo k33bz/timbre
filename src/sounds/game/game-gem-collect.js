@@ -8,11 +8,13 @@ export default {
   tags: ['gem', 'crystal', 'jewel', 'collect', 'treasure', 'glass', 'sparkle', 'reward'],
   desc: 'A crystalline two-strike ring for a gem or treasure: bright, glassy and a little longer than a coin.',
   dur: 0.95,
+  family: 'glass',
+  moments: ['pickup', 'coin'],
   params: {
-    pitch: { min: 800, max: 2400, def: 1568, unit: 'Hz' },
-    ring: { min: 0.2, max: 0.8, def: 0.5, unit: 's' },
-    gap: { min: 0.05, max: 0.12, def: 0.08, unit: 's' },
-    sparkle: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 800, max: 2400, def: 1568, unit: 'Hz', desc: 'Note of the first glass strike; the second rings a fifth above' },
+    ring: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the glass strikes ring, the second a bit longer' },
+    gap: { min: 0.05, max: 0.12, def: 0.08, unit: 's', desc: 'Time between the two glass strikes' },
+    sparkle: { min: 0, max: 1, def: 0.5, desc: 'Level of the airy shimmer on the second strike, 0 none' },
   },
   play(T, out, t, p) {
     const glass = [[1, 1, 1], [2.32, 0.45, 0.55], [4.25, 0.25, 0.35], [6.63, 0.12, 0.22]];

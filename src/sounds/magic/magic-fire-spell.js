@@ -7,11 +7,13 @@ export default {
   tags: ['fire', 'fireball', 'flame', 'burn', 'spell', 'crackle', 'roar'],
   desc: 'A rushing fireball: a warm thump at the cast, a roar that swells and fades, and crackling embers.',
   dur: 1.3,
+  family: 'organic',
+  moments: ['spell', 'shoot'],
   params: {
-    heat: { min: 0, max: 1, def: 0.5 },
-    length: { min: 0.5, max: 1.2, def: 0.8, unit: 's' },
-    crackle: { min: 0, max: 1, def: 0.5 },
-    weight: { min: 0, max: 1, def: 0.5 },
+    heat: { min: 0, max: 1, def: 0.5, desc: "How far the roar's lowpass opens: low a muffled rumble, high a bright blaze" },
+    length: { min: 0.5, max: 1.2, def: 0.8, unit: 's', desc: 'How long the roar lasts, with the embers spread across it' },
+    crackle: { min: 0, max: 1, def: 0.5, desc: 'Number of popping embers, from a few to a dense crackle' },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the low thump at ignition' },
   },
   play(T, out, t, p) {
     const len = p.length;

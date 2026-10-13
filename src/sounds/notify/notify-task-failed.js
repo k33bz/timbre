@@ -8,11 +8,13 @@ export default {
   tags: ['fail', 'failed', 'error', 'task', 'build', 'broken', 'negative'],
   desc: 'A run of low falling buzzes that sags on the last one. Something you were waiting on did not work out; firm, not harsh.',
   dur: 0.85,
+  family: 'synthetic',
+  moments: ['error'],
   params: {
-    pitch: { min: 120, max: 320, def: 190, unit: 'Hz' },
-    pulses: { min: 2, max: 4, def: 3, step: 1 },
-    rough: { min: 0, max: 1, def: 0.4 },
-    weight: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 120, max: 320, def: 190, unit: 'Hz', desc: 'Note of the first buzz and the sine under it; later pulses step lower' },
+    pulses: { min: 2, max: 4, def: 3, step: 1, desc: 'Number of falling buzz pulses; the last one sags' },
+    rough: { min: 0, max: 1, def: 0.4, desc: 'Depth of the fast level trill: 0 a smooth tone, 1 a rattling buzz' },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Level of the low falling sine under the first pulse, 0 removes it' },
   },
   play(T, out, t, p) {
     const lp = T.filter(out, t, { type: 'lowpass', f: 1200, q: 0.8 });

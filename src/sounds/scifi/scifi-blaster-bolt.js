@@ -7,11 +7,13 @@ export default {
   tags: ['blaster', 'bolt', 'plasma', 'cannon', 'gun', 'shot', 'heavy'],
   desc: 'A heavy plasma shot: a gritty falling snarl with a bright crack on top and a thump underneath.',
   dur: 0.45,
+  family: 'synthetic',
+  moments: ['shoot'],
   params: {
-    pitch: { min: 300, max: 1200, def: 700, unit: 'Hz' },
-    length: { min: 0.18, max: 0.4, def: 0.3, unit: 's' },
-    grit: { min: 0, max: 1, def: 0.5 },
-    weight: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 300, max: 1200, def: 700, unit: 'Hz', desc: 'Start pitch of the falling snarl and its FM layer' },
+    length: { min: 0.18, max: 0.4, def: 0.3, unit: 's', desc: 'Duration of the falling snarl and its FM layer' },
+    grit: { min: 0, max: 1, def: 0.5, desc: 'Saturation on the snarl, from mild to heavily distorted' },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the low thump underneath' },
   },
   play(T, out, t, p) {
     const len = p.length;

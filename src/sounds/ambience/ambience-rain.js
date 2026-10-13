@@ -7,10 +7,12 @@ export default {
   tags: ['rain', 'drizzle', 'downpour', 'weather', 'water', 'outdoor', 'bed'],
   desc: 'Rain on leaves and puddles, from a drizzle to a steady downpour. Fades in and out.',
   dur: 8,
+  family: 'organic',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 6, unit: 's' },
-    rate: { min: 0, max: 1, def: 0.5 },
-    tone: { min: 0, max: 1, def: 0.5 },
+    length: { min: 3, max: 8, def: 6, unit: 's', desc: 'Total duration of the bed, fades included' },
+    rate: { min: 0, max: 1, def: 0.5, desc: 'Rain intensity: 0 light drizzle to 1 steady downpour, more drops and plinks' },
+    tone: { min: 0, max: 1, def: 0.5, desc: 'Brightness of the hiss, drops and plinks: 0 dull, 1 bright' },
   },
   play(T, out, t, p) {
     const L = p.length;

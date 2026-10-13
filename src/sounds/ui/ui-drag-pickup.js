@@ -7,10 +7,12 @@ export default {
   tags: ['drag', 'grab', 'pickup', 'lift', 'drag-start', 'air'],
   desc: 'A soft lift for grabbing an item to drag: a small grip tick and a short rising breath.',
   dur: 0.12,
+  family: 'air',
+  moments: ['drag'],
   params: {
-    pitch: { min: 250, max: 700, def: 392, unit: 'Hz' },
-    lift: { min: 0, max: 1, def: 0.5 },
-    air: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 250, max: 700, def: 392, unit: 'Hz', desc: 'Start note of the rising triangle tone' },
+    lift: { min: 0, max: 1, def: 0.5, desc: 'How far the breath and tone rise: 0 a small lift, 1 a wide upward sweep' },
+    air: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the rising breath of noise' },
   },
   play(T, out, t, p) {
     T.noise(out, t, { filter: 'highpass', f: 3500, q: 0.8, dur: 0.01, peak: 0.012, a: 0.002 });

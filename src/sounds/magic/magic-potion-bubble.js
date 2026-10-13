@@ -7,11 +7,12 @@ export default {
   tags: ['potion', 'bubble', 'brew', 'cauldron', 'liquid', 'bloop', 'alchemy'],
   desc: 'A bubbling cauldron of glassy bloops with a faint magical glimmer. For potions, brewing and alchemy.',
   dur: 1.6,
+  family: 'organic',
   params: {
-    bubbles: { min: 3, max: 12, def: 7, step: 1 },
-    pitch: { min: 200, max: 700, def: 380, unit: 'Hz' },
-    span: { min: 0.4, max: 1.2, def: 0.8, unit: 's' },
-    glimmer: { min: 0, max: 1, def: 0.5 },
+    bubbles: { min: 3, max: 12, def: 7, step: 1, desc: 'How many bloops rise from the cauldron' },
+    pitch: { min: 200, max: 700, def: 380, unit: 'Hz', desc: 'Base bloop pitch, each bubble lands randomly around it; glimmers sit far above' },
+    span: { min: 0.4, max: 1.2, def: 0.8, unit: 's', desc: 'Time the bubbling spreads over, and the length of the gurgle bed' },
+    glimmer: { min: 0, max: 1, def: 0.5, desc: 'Number and loudness of the faint high magic pings' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 0.5, mix: 0.15, tone: 0.6 });

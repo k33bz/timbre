@@ -7,10 +7,12 @@ export default {
   tags: ['card', 'deal', 'hand', 'round', 'seats', 'start'],
   desc: 'A hand dealt round the table, one card per seat, each landing a little differently.',
   dur: 1.47,
+  family: 'paper',
+  moments: ['card-draw'],
   params: {
-    cards: { min: 2, max: 7, def: 5, step: 1 },
-    gap: { min: 0.1, max: 0.22, def: 0.15, unit: 's' },
-    spread: { min: 0, max: 1, def: 0.6 },
+    cards: { min: 2, max: 7, def: 5, step: 1, desc: 'How many cards are dealt, one per seat' },
+    gap: { min: 0.1, max: 0.22, def: 0.15, unit: 's', desc: 'Time between one card and the next' },
+    spread: { min: 0, max: 1, def: 0.6, desc: 'How much the landing thump pitch differs by seat: 0 all alike, 1 widest' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.cards);

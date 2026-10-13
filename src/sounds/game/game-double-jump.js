@@ -7,11 +7,13 @@ export default {
   tags: ['double-jump', 'jump', 'flip', 'air', 'platformer', '8-bit', 'chiptune', 'retro'],
   desc: 'Two hops in a row, the second higher and quicker, for a mid-air jump. Chip is square; off is soft triangle.',
   dur: 0.34,
+  family: 'chip',
+  moments: ['jump'],
   params: {
-    pitch: { min: 200, max: 500, def: 300, unit: 'Hz' },
-    gap: { min: 0.08, max: 0.18, def: 0.11, unit: 's' },
-    lift: { min: 3, max: 12, def: 7, step: 1, unit: 'st' },
-    chip: { min: 0, max: 1, def: 1, step: 1 },
+    pitch: { min: 200, max: 500, def: 300, unit: 'Hz', desc: "Starting note of the first hop's sweep; the second hop scales with it" },
+    gap: { min: 0.08, max: 0.18, def: 0.11, unit: 's', desc: 'Time between the first hop and the second' },
+    lift: { min: 3, max: 12, def: 7, step: 1, unit: 'st', desc: 'How much higher the second hop starts than the first' },
+    chip: { min: 0, max: 1, def: 1, step: 1, role: 'chip', desc: '1 a bitcrushed square voice, 0 a soft triangle with a sine sheen and air puff' },
   },
   play(T, out, t, p) {
     const chip = p.chip >= 0.5;

@@ -7,11 +7,13 @@ export default {
   tags: ['warp', 'jump', 'hyperspace', 'ftl', 'engine', 'lightspeed', 'transition'],
   desc: 'An engine whine winds up, then the ship leaps: a stretched streak and a deep thump as it vanishes.',
   dur: 1.95,
+  family: 'synthetic',
+  moments: ['teleport', 'transition'],
   params: {
-    charge: { min: 0.3, max: 1.0, def: 0.6, unit: 's' },
-    pitch: { min: 60, max: 160, def: 90, unit: 'Hz' },
-    boom: { min: 0, max: 1, def: 0.5 },
-    tail: { min: 0.3, max: 0.9, def: 0.5, unit: 's' },
+    charge: { min: 0.3, max: 1.0, def: 0.6, unit: 's', desc: 'Wind-up time of the engine before the jump' },
+    pitch: { min: 60, max: 160, def: 90, unit: 'Hz', desc: 'Engine base pitch, tuning the rising whine and the zip at the jump' },
+    boom: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the deep thump as the ship vanishes' },
+    tail: { min: 0.3, max: 0.9, def: 0.5, unit: 's', desc: 'Length of the falling noise streak after the jump' },
   },
   play(T, out, t, p) {
     const C = p.charge;

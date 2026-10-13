@@ -7,11 +7,13 @@ export default {
   tags: ['upload', 'done', 'complete', 'finished', 'rise', 'success', 'cloud'],
   desc: 'A soft upward glide that lands on a bright chime note. The file has arrived.',
   dur: 0.75,
+  family: 'glass',
+  moments: ['success', 'send'],
   params: {
-    pitch: { min: 300, max: 900, def: 523.25, unit: 'Hz' },
-    rise: { min: 0.06, max: 0.2, def: 0.12, unit: 's' },
-    ring: { min: 0.15, max: 0.5, def: 0.3, unit: 's' },
-    shimmer: { min: 0, max: 1, def: 0.4 },
+    pitch: { min: 300, max: 900, def: 523.25, unit: 'Hz', desc: 'Base pitch: the glide rises from below it to a landing note a fifth up' },
+    rise: { min: 0.06, max: 0.2, def: 0.12, unit: 's', desc: 'Length of the upward glide, which also delays the landing note' },
+    ring: { min: 0.15, max: 0.5, def: 0.3, unit: 's', desc: 'How long the landing note and its shimmer ring out' },
+    shimmer: { min: 0, max: 1, def: 0.4, desc: 'Level of the octave sine over the landing note, 0 removes it' },
   },
   play(T, out, t, p) {
     const top = p.pitch * 1.5;

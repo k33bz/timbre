@@ -7,10 +7,12 @@ export default {
   tags: ['click', 'button', 'press', 'thock', 'low', 'soft'],
   desc: 'A low, padded thock for heavy buttons and primary actions: a falling sine body with a soft knock on top.',
   dur: 0.16,
+  family: 'soft',
+  moments: ['click'],
   params: {
-    pitch: { min: 90, max: 320, def: 165, unit: 'Hz' },
-    click: { min: 0, max: 1, def: 0.4 },
-    length: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 90, max: 320, def: 165, unit: 'Hz', desc: 'How low the thock sits; its octave overtone follows' },
+    click: { min: 0, max: 1, def: 0.4, desc: 'Level of the noise knock on top: 0 mostly a padded thump, 1 a pronounced knock' },
+    length: { min: 0, max: 1, def: 0.5, desc: 'Decay of the sine body and overtone: 0 a tight thud, 1 a longer falling thock' },
   },
   play(T, out, t, p) {
     T.osc(out, t, { f: p.pitch * 1.6, to: p.pitch * 0.7, dur: 0.05 + 0.1 * p.length, peak: 0.07, a: 0.003 });

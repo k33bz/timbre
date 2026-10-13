@@ -7,10 +7,12 @@ export default {
   tags: ['checkbox', 'check', 'uncheck', 'select', 'tick', 'soft'],
   desc: 'A bright two-note pluck when a box is checked and a short muted drop when it is cleared.',
   dur: 0.17,
+  family: 'soft',
+  moments: ['toggle-on', 'toggle-off'],
   params: {
-    on: { min: 0, max: 1, def: 1, step: 1 },
-    pitch: { min: 440, max: 1200, def: 880, unit: 'Hz' },
-    bright: { min: 0, max: 1, def: 0.4 },
+    on: { min: 0, max: 1, def: 1, step: 1, role: 'on', desc: '1 plays the rising two-note check, 0 the single muted falling uncheck' },
+    pitch: { min: 440, max: 1200, def: 880, unit: 'Hz', desc: 'Base note: the check rises a fifth above it, the uncheck falls from that fifth' },
+    bright: { min: 0, max: 1, def: 0.4, desc: 'Check sparkle: 0 pure notes, 1 octave overtones and a crisper tick; uncheck ignores it' },
   },
   play(T, out, t, p) {
     const note = (at, f, level) => {

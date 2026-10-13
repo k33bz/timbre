@@ -7,10 +7,12 @@ export default {
   tags: ['message', 'send', 'sent', 'whoosh', 'blip', 'outgoing', 'post'],
   desc: 'A soft rising whoosh into a tiny blip: your message is on its way. Quiet enough to play on every send.',
   dur: 0.35,
+  family: 'air',
+  moments: ['send'],
   params: {
-    pitch: { min: 600, max: 1400, def: 1047, unit: 'Hz' },
-    speed: { min: 0.08, max: 0.22, def: 0.13, unit: 's' },
-    air: { min: 0.2, max: 1, def: 0.5 },
+    pitch: { min: 600, max: 1400, def: 1047, unit: 'Hz', desc: 'Note of the closing blip' },
+    speed: { min: 0.08, max: 0.22, def: 0.13, unit: 's', desc: 'Length of the whoosh before the blip: low quick, high slower' },
+    air: { min: 0.2, max: 1, def: 0.5, desc: 'Loudness of the rising air whoosh, from faint to breathy' },
   },
   play(T, out, t, p) {
     const w = p.speed * (1 + T.rand(-0.06, 0.06));   // seeded variation so repeats are not identical

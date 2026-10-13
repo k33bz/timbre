@@ -8,12 +8,14 @@ export default {
   tags: ['lightning', 'thunder', 'bolt', 'shock', 'storm', 'electric', 'spell'],
   desc: 'A bright crack of electricity that forks into crackling arcs and rolls away as low thunder.',
   dur: 1.4,
+  family: 'synthetic',
+  moments: ['spell'],
   params: {
-    bright: { min: 1500, max: 6000, def: 3200, unit: 'Hz' },
-    crackle: { min: 0, max: 1, def: 0.5 },
-    rumble: { min: 0, max: 1, def: 0.5 },
-    thunder: { min: 0.3, max: 1.0, def: 0.7, unit: 's' },
-    space: { min: 0, max: 0.5, def: 0.2 },
+    bright: { min: 1500, max: 6000, def: 3200, unit: 'Hz', desc: 'Start pitch of the falling zap in the strike: lower is duller, higher sharper' },
+    crackle: { min: 0, max: 1, def: 0.5, desc: 'How many forked arcs crackle after the strike' },
+    rumble: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the rolling thunder underneath' },
+    thunder: { min: 0.3, max: 1.0, def: 0.7, unit: 's', desc: 'How long the thunder rolls on after the strike' },
+    space: { min: 0, max: 0.5, def: 0.2, desc: 'Small room reverb mix, from dry to roomy' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 0.6, mix: p.space, tone: 0.5 });

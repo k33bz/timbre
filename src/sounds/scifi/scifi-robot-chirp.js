@@ -7,11 +7,13 @@ export default {
   tags: ['robot', 'droid', 'chirp', 'bleep', 'chatter', 'android', 'talk'],
   desc: 'A quick burst of FM chirps that swoop up and down like a small, expressive droid.',
   dur: 1.05,
+  family: 'synthetic',
+  moments: ['readout'],
   params: {
-    pitch: { min: 500, max: 1400, def: 900, unit: 'Hz' },
-    chirps: { min: 2, max: 6, def: 4, step: 1 },
-    mood: { min: 0, max: 1, def: 0.6 },
-    speed: { min: 0.05, max: 0.12, def: 0.075, unit: 's' },
+    pitch: { min: 500, max: 1400, def: 900, unit: 'Hz', desc: 'Base voice pitch; chirps wander within about an octave of it' },
+    chirps: { min: 2, max: 6, def: 4, step: 1, desc: 'How many chirps the droid says' },
+    mood: { min: 0, max: 1, def: 0.6, desc: 'Chance each chirp swoops up: low glum and falling, high perky and rising' },
+    speed: { min: 0.05, max: 0.12, def: 0.075, unit: 's', desc: 'Average chirp length: short a quick chatter, long slower syllables' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.chirps);

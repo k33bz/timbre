@@ -7,11 +7,13 @@ export default {
   tags: ['ice', 'frost', 'freeze', 'crystal', 'glass', 'shatter', 'spell'],
   desc: 'A crystalline freeze: a glassy ring over a frosty hiss, then icy shards tinkling away downward.',
   dur: 1.4,
+  family: 'glass',
+  moments: ['spell'],
   params: {
-    pitch: { min: 1200, max: 3600, def: 2200, unit: 'Hz' },
-    shards: { min: 3, max: 9, def: 6, step: 1 },
-    frost: { min: 0, max: 1, def: 0.5 },
-    space: { min: 0, max: 0.6, def: 0.35 },
+    pitch: { min: 1200, max: 3600, def: 2200, unit: 'Hz', desc: 'Glass ring note; the shards start an octave above and fall below it' },
+    shards: { min: 3, max: 9, def: 6, step: 1, desc: 'How many icy shards tinkle down after the ring' },
+    frost: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the frosty high hiss under the glass' },
+    space: { min: 0, max: 0.6, def: 0.35, desc: 'Bright room reverb mix, from dry to a glittering wash' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 1.0, mix: p.space, tone: 0.9 });

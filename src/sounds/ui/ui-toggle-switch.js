@@ -7,11 +7,13 @@ export default {
   tags: ['toggle', 'switch', 'checkbox', 'on', 'off', 'click', 'mechanical'],
   desc: 'A two-stage click-clack for switches: rising when turned on, falling when turned off.',
   dur: 0.25,
+  family: 'mechanical',
+  moments: ['toggle-on', 'toggle-off'],
   params: {
-    on: { min: 0, max: 1, def: 1, step: 1 },
-    pitch: { min: 1200, max: 3600, def: 2600, unit: 'Hz' },
-    gap: { min: 0.03, max: 0.12, def: 0.075, unit: 's' },
-    body: { min: 0, max: 1, def: 0.5 },
+    on: { min: 0, max: 1, def: 1, step: 1, role: 'on', desc: '1 plays the click pair rising, 0 plays it falling' },
+    pitch: { min: 1200, max: 3600, def: 2600, unit: 'Hz', desc: 'Note of the higher click; the other sits about a fourth below' },
+    gap: { min: 0.03, max: 0.12, def: 0.075, unit: 's', desc: 'Time between the two clicks; the low thock lands with the second' },
+    body: { min: 0, max: 1, def: 0.5, desc: 'Level of the low thock under the second click: 0 none, 1 solid' },
   },
   play(T, out, t, p) {
     const lo = p.pitch * 0.73;

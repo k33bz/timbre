@@ -7,11 +7,13 @@ export default {
   tags: ['message', 'chat', 'received', 'incoming', 'dm', 'pop', 'bubble'],
   desc: 'Two quick bubbly pops rising a fourth, like a chat bubble arriving. Friendly and short enough for a busy channel.',
   dur: 0.4,
+  family: 'soft',
+  moments: ['message'],
   params: {
-    pitch: { min: 400, max: 880, def: 660, unit: 'Hz' },
-    interval: { min: 2, max: 7, def: 5, step: 1, unit: 'st' },
-    gap: { min: 0.07, max: 0.18, def: 0.11, unit: 's' },
-    pop: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 400, max: 880, def: 660, unit: 'Hz', desc: 'Note of the first pop; the second sits the interval above' },
+    interval: { min: 2, max: 7, def: 5, step: 1, unit: 'st', desc: 'How far the second pop rises above the first' },
+    gap: { min: 0.07, max: 0.18, def: 0.11, unit: 's', desc: 'Time between the two pops' },
+    pop: { min: 0, max: 1, def: 0.5, desc: 'Depth of the upward slide into each note: 0 a plain sine, 1 a bubbly bloop' },
   },
   play(T, out, t, p) {
     // seeded variation under 1% in pitch and about 1 dB in level, so repeats are not identical

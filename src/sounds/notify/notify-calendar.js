@@ -10,12 +10,14 @@ export default {
   tags: ['calendar', 'event', 'meeting', 'schedule', 'agenda', 'pluck', 'appointment'],
   desc: 'A tiny page-flip tick and two soft plucked notes rising a fourth. An event is starting; warm and organized, not urgent.',
   dur: 0.8,
+  family: 'orchestral',
+  moments: ['reminder'],
   params: {
-    pitch: { min: 330, max: 880, def: 523.25, unit: 'Hz' },
-    interval: { min: 3, max: 8, def: 5, step: 1, unit: 'st' },
-    gap: { min: 0.1, max: 0.25, def: 0.16, unit: 's' },
-    bright: { min: 0.1, max: 0.8, def: 0.45 },
-    tick: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 330, max: 880, def: 523.25, unit: 'Hz', desc: 'Note of the first pluck; the second sits the interval above' },
+    interval: { min: 3, max: 8, def: 5, step: 1, unit: 'st', desc: 'How far the second pluck rises above the first' },
+    gap: { min: 0.1, max: 0.25, def: 0.16, unit: 's', desc: 'Time between the two plucks' },
+    bright: { min: 0.1, max: 0.8, def: 0.45, desc: 'Opening filter cutoff of each pluck: low soft and muted, high twangy' },
+    tick: { min: 0, max: 1, def: 0.5, desc: 'Level of the page-flip noise tick before the notes, 0 removes it' },
   },
   play(T, out, t, p) {
     T.noise(out, t, { filter: 'bandpass', f: 2200, q: 1.4, dur: 0.025, peak: 0.09 * p.tick, a: 0.003 });

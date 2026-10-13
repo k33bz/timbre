@@ -7,11 +7,13 @@ export default {
   tags: ['success', 'done', 'complete', 'confirm', 'chime', 'positive'],
   desc: 'A gentle two-note rising chime for a completed action. Not a fanfare; a quiet yes.',
   dur: 0.5,
+  family: 'soft',
+  moments: ['success'],
   params: {
-    pitch: { min: 330, max: 1320, def: 659.25, unit: 'Hz' },
-    interval: { min: 3, max: 12, def: 7, step: 1, unit: 'st' },
-    gap: { min: 0.06, max: 0.2, def: 0.12, unit: 's' },
-    shimmer: { min: 0, max: 1, def: 0.35 },
+    pitch: { min: 330, max: 1320, def: 659.25, unit: 'Hz', desc: 'Note of the first chime; the second sits the interval above' },
+    interval: { min: 3, max: 12, def: 7, step: 1, unit: 'st', desc: 'How far the second note rises above the first' },
+    gap: { min: 0.06, max: 0.2, def: 0.12, unit: 's', desc: 'Time between the two notes' },
+    shimmer: { min: 0, max: 1, def: 0.35, desc: 'Level of the octave sine over the second note: 0 plain, 1 bright' },
   },
   play(T, out, t, p) {
     const hi = p.pitch * Math.pow(2, Math.round(p.interval) / 12);

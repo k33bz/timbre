@@ -8,10 +8,12 @@ export default {
   tags: ['card', 'place', 'pat', 'set-down', 'felt', 'table', 'land'],
   desc: 'A single card set down on the table with a soft pat, felt-dark or wood-bright.',
   dur: 0.09,
+  family: 'paper',
+  moments: ['drop'],
   params: {
-    weight: { min: 0, max: 1, def: 0.5 },
-    tone: { min: 0, max: 1, def: 0.35 },
-    drop: { min: 0, max: 1, def: 0.2 },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Heft of the pat: 0 light, 1 louder with a deeper thump' },
+    tone: { min: 0, max: 1, def: 0.35, desc: 'Surface color: 0 felt-dark, 1 wood-bright' },
+    drop: { min: 0, max: 1, def: 0.2, desc: 'Height the card falls from: adds a paper tick and a slightly later landing' },
   },
   play(T, out, t, p) {
     const f = 700 + 900 * p.tone;

@@ -8,11 +8,13 @@ export default {
   tags: ['space', 'drone', 'pad', 'ambient', 'sci-fi', 'dark', 'deep', 'bed'],
   desc: 'A slow, deep drone for a ship or a void: a dark pad that opens up, with a faint shimmer far above.',
   dur: 8,
+  family: 'synthetic',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 7, unit: 's' },
-    pitch: { min: 36, max: 110, def: 55, unit: 'Hz' },
-    tone: { min: 0, max: 1, def: 0.4 },
-    shimmer: { min: 0, max: 1, def: 0.4 },
+    length: { min: 3, max: 8, def: 7, unit: 's', desc: 'Total duration of the bed, fades included' },
+    pitch: { min: 36, max: 110, def: 55, unit: 'Hz', desc: 'Root frequency of the drone, harmonics and shimmer follow it' },
+    tone: { min: 0, max: 1, def: 0.4, desc: 'How far the slowly opening filter reaches: 0 dark, 1 brighter' },
+    shimmer: { min: 0, max: 1, def: 0.4, desc: 'Level of the high trembling shimmer: 0 none, 1 full' },
   },
   play(T, out, t, p) {
     const L = p.length;

@@ -7,11 +7,13 @@ export default {
   tags: ['defeat', 'lose', 'fail', 'game-over', 'sad', 'trombone', 'jingle', 'stinger'],
   desc: 'A falling four-note sad-brass wah for a lost round: three short steps down and one long sagging note.',
   dur: 3.4,
+  family: 'orchestral',
+  moments: ['game-over', 'music'],
   params: {
-    key: { min: -5, max: 5, def: 0, step: 1, unit: 'st' },
-    tempo: { min: 0.7, max: 1.4, def: 1, unit: 'x' },
-    droop: { min: 0, max: 1, def: 0.6 },
-    tone: { min: 0, max: 1, def: 0.5 },
+    key: { min: -5, max: 5, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole jingle' },
+    tempo: { min: 0.7, max: 1.4, def: 1, unit: 'x', desc: 'Higher plays the four notes faster and shorter, lower drags them out' },
+    droop: { min: 0, max: 1, def: 0.6, desc: 'Sag and wobble on the last note: 0 steady, 1 a deep wobbling slide down' },
+    tone: { min: 0, max: 1, def: 0.5, desc: 'Brightness of the wah filter: 0 dark and muffled, 1 brassier' },
   },
   play(T, out, t, p) {
     const s = 1 / p.tempo;

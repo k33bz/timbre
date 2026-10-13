@@ -8,11 +8,13 @@ export default {
   tags: ['achievement', 'unlock', 'reward', 'trophy', 'level-up', 'fanfare', 'win'],
   desc: 'A quick rising run into a warm bell chord with a few glints. A small celebration for something earned.',
   dur: 1.5,
+  family: 'orchestral',
+  moments: ['achievement', 'level-up'],
   params: {
-    pitch: { min: 392, max: 600, def: 523.25, unit: 'Hz' },
-    gap: { min: 0.05, max: 0.12, def: 0.075, unit: 's' },
-    space: { min: 0, max: 0.6, def: 0.3 },
-    sparkle: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 392, max: 600, def: 523.25, unit: 'Hz', desc: 'Root note: transposes the run, the bell chord and the glints together' },
+    gap: { min: 0.05, max: 0.12, def: 0.075, unit: 's', desc: 'Spacing of the three run notes; the bell chord lands after the third' },
+    space: { min: 0, max: 0.6, def: 0.3, desc: 'Reverb mix over the whole sound, from dry to roomy' },
+    sparkle: { min: 0, max: 1, def: 0.5, desc: 'Level of the high sine glints over the chord, 0 removes them' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 1.0, mix: p.space, tone: 0.65 });

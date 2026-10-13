@@ -7,11 +7,13 @@ export default {
   tags: ['shield', 'barrier', 'defend', 'guard', 'charge', 'activate', 'energy', 'buff'],
   desc: 'An energy field charging up: a humming rise that opens and locks in with a ping. For shields and buffs.',
   dur: 0.95,
+  family: 'synthetic',
+  moments: ['shield', 'power-up'],
   params: {
-    pitch: { min: 80, max: 300, def: 150, unit: 'Hz' },
-    length: { min: 0.3, max: 0.8, def: 0.5, unit: 's' },
-    shimmer: { min: 0, max: 1, def: 0.5 },
-    lock: { min: 0, max: 1, def: 0.6 },
+    pitch: { min: 80, max: 300, def: 150, unit: 'Hz', desc: 'Starting note of the hum, which climbs an octave; the lock ping follows it' },
+    length: { min: 0.3, max: 0.8, def: 0.5, unit: 's', desc: 'How long the shield takes to charge; the lock ping lands near the end' },
+    shimmer: { min: 0, max: 1, def: 0.5, desc: 'Level of the airy shimmer rising with the hum, 0 none' },
+    lock: { min: 0, max: 1, def: 0.6, desc: 'Level of the glassy ping when it locks in, 0 none' },
   },
   play(T, out, t, p) {
     const L = p.length;

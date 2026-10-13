@@ -7,11 +7,13 @@ export default {
   tags: ['mail', 'email', 'inbox', 'new', 'letter', 'ding', 'incoming'],
   desc: 'A soft falling swish into a short-long two-bell "tu-ding". A letter has landed in the inbox.',
   dur: 0.95,
+  family: 'glass',
+  moments: ['message'],
   params: {
-    pitch: { min: 440, max: 880, def: 784, unit: 'Hz' },
-    interval: { min: 3, max: 9, def: 5, step: 1, unit: 'st' },
-    swish: { min: 0.2, max: 1, def: 0.5 },
-    ring: { min: 0.25, max: 0.6, def: 0.4, unit: 's' },
+    pitch: { min: 440, max: 880, def: 784, unit: 'Hz', desc: 'Note of the short first bell; the long second bell is the interval above' },
+    interval: { min: 3, max: 9, def: 5, step: 1, unit: 'st', desc: 'How far the second bell rises above the first' },
+    swish: { min: 0.2, max: 1, def: 0.5, desc: 'Loudness of the falling air swish before the bells' },
+    ring: { min: 0.25, max: 0.6, def: 0.4, unit: 's', desc: 'How long the second, longer bell rings out' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 0.5, mix: 0.18, tone: 0.6 });

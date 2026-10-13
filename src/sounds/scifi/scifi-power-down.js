@@ -7,11 +7,13 @@ export default {
   tags: ['power-down', 'shutdown', 'deactivate', 'off', 'spin-down', 'fail', 'engine'],
   desc: 'A machine spinning down: a falling whine closes under a slowing patter of ticks and ends in a soft clunk.',
   dur: 1.6,
+  family: 'synthetic',
+  moments: ['power-down'],
   params: {
-    length: { min: 0.5, max: 1.4, def: 0.9, unit: 's' },
-    pitch: { min: 60, max: 200, def: 110, unit: 'Hz' },
-    ticks: { min: 3, max: 12, def: 7, step: 1 },
-    bright: { min: 0, max: 1, def: 0.5 },
+    length: { min: 0.5, max: 1.4, def: 0.9, unit: 's', desc: 'Time the machine takes to wind down before the clunk' },
+    pitch: { min: 60, max: 200, def: 110, unit: 'Hz', desc: "Machine's base pitch, tuning the falling whine and the ticks" },
+    ticks: { min: 3, max: 12, def: 7, step: 1, desc: 'How many ticks slow to a stop under the whine' },
+    bright: { min: 0, max: 1, def: 0.5, desc: 'Starting brightness of the closing lowpass, muted to bright' },
   },
   play(T, out, t, p) {
     const L = p.length;

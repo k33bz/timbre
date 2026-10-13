@@ -7,11 +7,13 @@ export default {
   tags: ['curse', 'hex', 'dark', 'debuff', 'evil', 'dread', 'malice'],
   desc: 'A sinister low toll with a sour interval, a sagging drone and creeping whispers. For debuffs and dark spells.',
   dur: 1.8,
+  family: 'synthetic',
+  moments: ['spell', 'scare'],
   params: {
-    pitch: { min: 70, max: 220, def: 110, unit: 'Hz' },
-    dread: { min: 0, max: 1, def: 0.6 },
-    whisper: { min: 0, max: 1, def: 0.5 },
-    space: { min: 0, max: 0.6, def: 0.35 },
+    pitch: { min: 70, max: 220, def: 110, unit: 'Hz', desc: 'Root note: the saw drone sits here, the tolling bells an octave up' },
+    dread: { min: 0, max: 1, def: 0.6, desc: 'Loudness of the sour tritone bell that clashes with the toll' },
+    whisper: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the breathy whisper bursts, faint to upfront' },
+    space: { min: 0, max: 0.6, def: 0.35, desc: 'Dim room reverb mix, from dry to murky' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 1.2, mix: p.space, tone: 0.25 });

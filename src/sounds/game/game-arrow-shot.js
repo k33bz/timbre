@@ -7,10 +7,12 @@ export default {
   tags: ['arrow', 'bow', 'shot', 'shoot', 'twang', 'archer', 'ranged', 'projectile'],
   desc: 'A bowstring twang and the zip of an arrow leaving. For archers and ranged attacks.',
   dur: 0.55,
+  family: 'organic',
+  moments: ['shoot', 'attack'],
   params: {
-    pitch: { min: 90, max: 320, def: 160, unit: 'Hz' },
-    flight: { min: 0.12, max: 0.4, def: 0.22, unit: 's' },
-    twang: { min: 0, max: 1, def: 0.6 },
+    pitch: { min: 90, max: 320, def: 160, unit: 'Hz', desc: 'Note of the plucked bowstring and the short thump under it' },
+    flight: { min: 0.12, max: 0.4, def: 0.22, unit: 's', desc: "How long the arrow's falling noise zip lasts as it recedes" },
+    twang: { min: 0, max: 1, def: 0.6, desc: 'String brightness and sustain: 0 a dull short pluck, 1 a bright ringing twang' },
   },
   play(T, out, t, p) {
     T.pluck(out, t, { f: p.pitch, dur: 0.22 + 0.12 * p.twang, bright: 0.3 + 0.6 * p.twang, peak: 0.075 });

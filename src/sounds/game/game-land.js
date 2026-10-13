@@ -7,10 +7,11 @@ export default {
   tags: ['land', 'landing', 'thud', 'fall', 'step', 'platformer', 'impact'],
   desc: 'A character landing after a jump or fall: a soft thump with a scuff of grit. Heavier settings hit longer.',
   dur: 0.3,
+  family: 'impact',
   params: {
-    weight: { min: 0, max: 1, def: 0.5 },
-    pitch: { min: 55, max: 160, def: 90, unit: 'Hz' },
-    scuff: { min: 0, max: 1, def: 0.4 },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Heft of the landing: a louder, longer thump and impact puff' },
+    pitch: { min: 55, max: 160, def: 90, unit: 'Hz', desc: 'Note of the falling thump; lower is deeper' },
+    scuff: { min: 0, max: 1, def: 0.4, desc: 'Grit on landing: a louder, longer scuff and a brighter puff' },
   },
   play(T, out, t, p) {
     const j = T.rand(0.94, 1.06);

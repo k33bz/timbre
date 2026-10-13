@@ -7,11 +7,13 @@ export default {
   tags: ['alert', 'warning', 'danger', 'alarm', 'urgent', 'boss', '8-bit', 'stinger'],
   desc: 'Short minor stabs and a long tense chord with a sub thump, for danger, a boss entrance or a hard warning.',
   dur: 1.8,
+  family: 'chip',
+  moments: ['warning', 'music'],
   params: {
-    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st' },
-    tempo: { min: 0.75, max: 1.5, def: 1, unit: 'x' },
-    stabs: { min: 1, max: 4, def: 2, step: 1 },
-    edge: { min: 0, max: 1, def: 0.5 },
+    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole sting' },
+    tempo: { min: 0.75, max: 1.5, def: 1, unit: 'x', desc: 'Higher plays the stabs and the chord faster and shorter' },
+    stabs: { min: 1, max: 4, def: 2, step: 1, desc: 'Number of short minor stabs before the long chord' },
+    edge: { min: 0, max: 1, def: 0.5, desc: 'Bit-crush amount: 0 light 8-bit grit, 1 coarser and harsher' },
   },
   play(T, out, t, p) {
     const s = 1 / p.tempo;

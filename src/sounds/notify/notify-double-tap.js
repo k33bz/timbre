@@ -8,11 +8,13 @@ export default {
   tags: ['tap', 'knock', 'double', 'attention', 'nudge', 'soft', 'wood'],
   desc: 'Two soft wooden knocks, each a touch lower and quieter. A gentle "excuse me" that is barely a sound.',
   dur: 0.55,
+  family: 'wood',
+  moments: ['notify'],
   params: {
-    pitch: { min: 200, max: 500, def: 320, unit: 'Hz' },
-    gap: { min: 0.07, max: 0.2, def: 0.12, unit: 's' },
-    wood: { min: 0, max: 1, def: 0.5 },
-    taps: { min: 2, max: 3, def: 2, step: 1 },
+    pitch: { min: 200, max: 500, def: 320, unit: 'Hz', desc: 'Body pitch of the first knock; each later knock is a bit lower' },
+    gap: { min: 0.07, max: 0.2, def: 0.12, unit: 's', desc: 'Time between knocks, with a slight natural wobble' },
+    wood: { min: 0, max: 1, def: 0.5, desc: 'Level of the woody click on each knock: 0 a pure thud, 1 crisp wood' },
+    taps: { min: 2, max: 3, def: 2, step: 1, desc: 'Number of knocks, each lower and softer than the last' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.taps);

@@ -137,23 +137,32 @@
       ],
       "desc": "A bright two-note pluck when a box is checked and a short muted drop when it is cleared.",
       "dur": 0.17,
+      "family": "soft",
+      "moments": [
+        "toggle-on",
+        "toggle-off"
+      ],
       "params": {
         "on": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "on",
+          "desc": "1 plays the rising two-note check, 0 the single muted falling uncheck"
         },
         "pitch": {
           "min": 440,
           "max": 1200,
           "def": 880,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base note: the check rises a fifth above it, the uncheck falls from that fifth"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Check sparkle: 0 pure notes, 1 octave overtones and a crisper tick; uncheck ignores it"
         }
       },
       "file": "src/sounds/ui/ui-checkbox.js",
@@ -188,22 +197,29 @@
       ],
       "desc": "A dry, snappy click for primary buttons: a bandpassed noise transient over a stiff triangle tick, gone in 30 ms.",
       "dur": 0.04,
+      "family": "mechanical",
+      "moments": [
+        "click"
+      ],
       "params": {
         "pitch": {
           "min": 1500,
           "max": 4000,
           "def": 2600,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Tuning of the click: sets the noise snap band and the triangle tick under it"
         },
         "snap": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Loudness of the noise transient: 0 a subdued tick, 1 a sharp crack"
         },
         "body": {
           "min": 0,
           "max": 1,
-          "def": 0.35
+          "def": 0.35,
+          "desc": "Level of the low triangle tick under the snap: 0 thin, 1 fuller"
         }
       },
       "file": "src/sounds/ui/ui-click-crisp.js",
@@ -238,22 +254,29 @@
       ],
       "desc": "A low, padded thock for heavy buttons and primary actions: a falling sine body with a soft knock on top.",
       "dur": 0.16,
+      "family": "soft",
+      "moments": [
+        "click"
+      ],
       "params": {
         "pitch": {
           "min": 90,
           "max": 320,
           "def": 165,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "How low the thock sits; its octave overtone follows"
         },
         "click": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the noise knock on top: 0 mostly a padded thump, 1 a pronounced knock"
         },
         "length": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Decay of the sine body and overtone: 0 a tight thud, 1 a longer falling thock"
         }
       },
       "file": "src/sounds/ui/ui-click-deep.js",
@@ -288,22 +311,29 @@
       ],
       "desc": "A bright, glassy tick for buttons: a few high inharmonic partials with a short ring, light and clean.",
       "dur": 0.21,
+      "family": "glass",
+      "moments": [
+        "click"
+      ],
       "params": {
         "pitch": {
           "min": 2000,
           "max": 4600,
           "def": 3136,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base frequency of the glassy partials"
         },
         "ring": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Decay of the glass tone: 0 a short tick, 1 a longer ring"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Top partial and air tick level: 0 rounder, 1 sparkly with more air"
         }
       },
       "file": "src/sounds/ui/ui-click-glass.js",
@@ -339,17 +369,23 @@
       ],
       "desc": "A short muted tick for button presses: a falling sine blip with a breath of high noise.",
       "dur": 0.08,
+      "family": "soft",
+      "moments": [
+        "click"
+      ],
       "params": {
         "pitch": {
           "min": 400,
           "max": 2400,
           "def": 1100,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start note of the falling sine blip"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Brightness and level of the high noise breath: 0 muted, 1 crisp and airy"
         }
       },
       "file": "src/sounds/ui/ui-click-soft.js",
@@ -384,22 +420,29 @@
       ],
       "desc": "A warm wooden knock for buttons: a short damped block tone with a dull knuckle thud, calm enough to repeat all day.",
       "dur": 0.15,
+      "family": "wood",
+      "moments": [
+        "click"
+      ],
       "params": {
         "pitch": {
           "min": 500,
           "max": 1600,
           "def": 880,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the block tone, which droops slightly as it rings"
         },
         "ring": {
           "min": 0,
           "max": 1,
-          "def": 0.35
+          "def": 0.35,
+          "desc": "Decay of the block tone: 0 a dead knock, 1 a short resonant ring"
         },
         "hollow": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the inharmonic overtone: 0 solid and dull, 1 hollow like a woodblock"
         }
       },
       "file": "src/sounds/ui/ui-click-wood.js",
@@ -435,22 +478,29 @@
       ],
       "desc": "A quick rising scoop and a bright ping to confirm a copy to the clipboard.",
       "dur": 0.3,
+      "family": "glass",
+      "moments": [
+        "copy"
+      ],
       "params": {
         "pitch": {
           "min": 1200,
           "max": 3200,
           "def": 2093,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the confirming bell ping"
         },
         "scoop": {
           "min": 0.1,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the rising noise scoop that leads into the ping"
         },
         "ring": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Decay of the ping: 0 a short blip, 1 a longer ring"
         }
       },
       "file": "src/sounds/ui/ui-copy.js",
@@ -487,23 +537,30 @@
       ],
       "desc": "A short paper crumple that drops into a bin with a dull thud, for deleting or discarding an item.",
       "dur": 0.27,
+      "family": "paper",
+      "moments": [
+        "delete"
+      ],
       "params": {
         "crunch": {
           "min": 2,
           "max": 6,
           "def": 4,
-          "step": 1
+          "step": 1,
+          "desc": "How many paper crackles play before the thud; more makes a longer crumple"
         },
         "pitch": {
           "min": 90,
           "max": 260,
           "def": 147,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Tuning of the landing thud"
         },
         "weight": {
           "min": 0.2,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Loudness of the landing thud and its knock, light to heavy"
         }
       },
       "file": "src/sounds/ui/ui-delete.js",
@@ -540,22 +597,29 @@
       ],
       "desc": "A soft landing thud for dropping an item on its target, with an optional small bounce as it settles.",
       "dur": 0.14,
+      "family": "wood",
+      "moments": [
+        "drop"
+      ],
       "params": {
         "pitch": {
           "min": 90,
           "max": 300,
           "def": 196,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Tuning of the landing thud and its bounce"
         },
         "bounce": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the small second bounce: 0 none, 1 a clear settle"
         },
         "snap": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the noise knock on impact: 0 soft and padded, 1 a sharper knock"
         }
       },
       "file": "src/sounds/ui/ui-drag-drop.js",
@@ -590,22 +654,29 @@
       ],
       "desc": "A soft lift for grabbing an item to drag: a small grip tick and a short rising breath.",
       "dur": 0.12,
+      "family": "air",
+      "moments": [
+        "drag"
+      ],
       "params": {
         "pitch": {
           "min": 250,
           "max": 700,
           "def": 392,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start note of the rising triangle tone"
         },
         "lift": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far the breath and tone rise: 0 a small lift, 1 a wide upward sweep"
         },
         "air": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the rising breath of noise"
         }
       },
       "file": "src/sounds/ui/ui-drag-pickup.js",
@@ -641,30 +712,40 @@
       ],
       "desc": "A quick stepped run of soft blips: rising when a section expands, falling and a touch quieter when it collapses.",
       "dur": 0.26,
+      "family": "soft",
+      "moments": [
+        "open",
+        "close"
+      ],
       "params": {
         "open": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "open",
+          "desc": "1 plays the rising expand run, 0 the falling, slightly quieter collapse run"
         },
         "steps": {
           "min": 2,
           "max": 5,
           "def": 3,
-          "step": 1
+          "step": 1,
+          "desc": "Number of blips in the run"
         },
         "gap": {
           "min": 0.02,
           "max": 0.05,
           "def": 0.03,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between blips: short for a quick flutter, long for a stepped run"
         },
         "pitch": {
           "min": 330,
           "max": 800,
           "def": 523,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Lowest note of the run; the others climb the pentatonic above it"
         }
       },
       "file": "src/sounds/ui/ui-expand.js",
@@ -700,23 +781,30 @@
       ],
       "desc": "A soft pip with a few fading echoes for keyboard focus landing on a control, like a ring spreading outward.",
       "dur": 0.4,
+      "family": "glass",
+      "moments": [
+        "hover"
+      ],
       "params": {
         "pitch": {
           "min": 700,
           "max": 2000,
           "def": 1047,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the pip, which bends slightly upward"
         },
         "spread": {
           "min": 0.03,
           "max": 0.075,
           "def": 0.05,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between echoes: short sounds tight, long spreads the ring outward"
         },
         "echo": {
           "min": 0.2,
           "max": 0.7,
-          "def": 0.45
+          "def": 0.45,
+          "desc": "Level of the fading echoes against the dry pip: low mostly pip, high a clear ring"
         }
       },
       "file": "src/sounds/ui/ui-focus-ring.js",
@@ -748,17 +836,23 @@
       ],
       "desc": "A barely-there high tick for the pointer entering a button or row. Very quiet, meant to repeat.",
       "dur": 0.03,
+      "family": "glass",
+      "moments": [
+        "hover"
+      ],
       "params": {
         "pitch": {
           "min": 1800,
           "max": 5200,
           "def": 3136,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Frequency of the tick, which dips slightly as it fades"
         },
         "air": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the high noise hiss over the tone: 0 mostly pure, 1 breathier"
         }
       },
       "file": "src/sounds/ui/ui-hover-tick.js",
@@ -793,22 +887,29 @@
       ],
       "desc": "A light, quiet keypress for typing: a soft thump and tap that varies a little each press; size reaches the spacebar.",
       "dur": 0.08,
+      "family": "wood",
+      "moments": [
+        "type"
+      ],
       "params": {
         "pitch": {
           "min": 140,
           "max": 400,
           "def": 220,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Tuning of the low thump, varied a little on each press"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Tone of the tap on top: 0 dull and muted, 1 brighter and clickier"
         },
         "size": {
           "min": 0,
           "max": 1,
-          "def": 0
+          "def": 0,
+          "desc": "Key size: 0 a letter key, 1 a spacebar with a lower, longer, louder thump"
         }
       },
       "file": "src/sounds/ui/ui-key-light.js",
@@ -845,22 +946,29 @@
       ],
       "desc": "A mechanical keyboard keypress: a bright click, a bottom-out thock and a faint release tick, different every time.",
       "dur": 0.11,
+      "family": "mechanical",
+      "moments": [
+        "type"
+      ],
       "params": {
         "pitch": {
           "min": 2000,
           "max": 5000,
           "def": 3520,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Tuning of the bright click leaf, varied slightly per press"
         },
         "click": {
           "min": 0,
           "max": 1,
-          "def": 0.7
+          "def": 0.7,
+          "desc": "Loudness of the click leaf and release tick: 0 a linear switch, 1 clicky"
         },
         "thock": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Loudness of the bottom-out thock: 0 light, 1 heavy"
         }
       },
       "file": "src/sounds/ui/ui-key-mechanical.js",
@@ -901,22 +1009,31 @@
       ],
       "desc": "An airy slide for a menu or drawer opening (rising, soft landing) and closing (falling, latch tick); size runs from dropdown to drawer.",
       "dur": 0.34,
+      "family": "air",
+      "moments": [
+        "open",
+        "close"
+      ],
       "params": {
         "open": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "open",
+          "desc": "1 plays the rising open with a soft landing, 0 the falling close with a latch tick"
         },
         "size": {
           "min": 0,
           "max": 1,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Slide length, dropdown to drawer; on open also a lower, heavier landing"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Register of the air sweep: 0 darker and lower, 1 brighter and higher"
         }
       },
       "file": "src/sounds/ui/ui-menu-slide.js",
@@ -953,28 +1070,38 @@
       ],
       "desc": "A soft low swell for a dialog opening, with a small glint on arrival, and a quick falling sigh for it closing.",
       "dur": 0.23,
+      "family": "soft",
+      "moments": [
+        "open",
+        "close"
+      ],
       "params": {
         "open": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "open",
+          "desc": "1 plays the rising swell with a glint, 0 the quick falling sigh"
         },
         "pitch": {
           "min": 100,
           "max": 260,
           "def": 165,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Tuning of the low swell or sigh tones; the glint stays fixed"
         },
         "air": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the breath of air in the swell or sigh"
         },
         "shine": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the high bell glint: 0 faint, 1 clear; it droops on close"
         }
       },
       "file": "src/sounds/ui/ui-modal.js",
@@ -1012,22 +1139,29 @@
       ],
       "desc": "A paper page turned: a soft sweep of air, light rustles and a quiet landing. For pagers, carousels and readers.",
       "dur": 0.35,
+      "family": "paper",
+      "moments": [
+        "transition"
+      ],
       "params": {
         "length": {
           "min": 0.14,
           "max": 0.34,
           "def": 0.22,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Duration of the turn: sweep, rustles and landing all stretch with it"
         },
         "rustle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the scattered paper rustles: 0 none, 1 crisp"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Register of the air sweep: 0 darker and lower, 1 brighter and higher"
         }
       },
       "file": "src/sounds/ui/ui-page-turn.js",
@@ -1063,22 +1197,29 @@
       ],
       "desc": "A soft rounded bloop for picking one option from a group: a sine that bends upward over a quiet low body.",
       "dur": 0.1,
+      "family": "soft",
+      "moments": [
+        "click"
+      ],
       "params": {
         "pitch": {
           "min": 400,
           "max": 1100,
           "def": 659,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start note of the bloop; its octave-down body follows"
         },
         "bloop": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far the sound bends upward: 0 a gentle lift, 1 a big rising bloop"
         },
         "round": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the octave-down body: 0 thinner and chirpier, 1 fuller and rounder"
         }
       },
       "file": "src/sounds/ui/ui-radio-select.js",
@@ -1114,24 +1255,31 @@
       ],
       "desc": "A tiny dry wooden tick for one notch of a scroll wheel or picker; raise ticks for a quick flick through several.",
       "dur": 0.32,
+      "family": "wood",
+      "moments": [
+        "scroll"
+      ],
       "params": {
         "ticks": {
           "min": 1,
           "max": 5,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "desc": "How many notches tick past: 1 a single notch, more for a quick flick"
         },
         "pitch": {
           "min": 300,
           "max": 900,
           "def": 523,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of each tick's short ring, varied slightly per notch"
         },
         "gap": {
           "min": 0.03,
           "max": 0.07,
           "def": 0.05,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between notches when ticks is above 1: short spins fast, long slower"
         }
       },
       "file": "src/sounds/ui/ui-scroll-detent.js",
@@ -1168,22 +1316,29 @@
       ],
       "desc": "A small pitched tick for a slider thumb crossing a notch; set pos from the thumb position and a drag climbs a scale.",
       "dur": 0.04,
+      "family": "mechanical",
+      "moments": [
+        "scroll"
+      ],
       "params": {
         "pitch": {
           "min": 500,
           "max": 1500,
           "def": 784,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Tick note at the bottom of the track; pos lifts it up to an octave"
         },
         "pos": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Thumb position along the track: 0 base note, 1 an octave up"
         },
         "edge": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the noise click on top: 0 a soft tonal tick, 1 a sharp edge"
         }
       },
       "file": "src/sounds/ui/ui-slider-detent.js",
@@ -1218,22 +1373,29 @@
       ],
       "desc": "A soft fingertip tap for touch screens and list rows: a muffled pat over a short mid thud, rounder than a click.",
       "dur": 0.06,
+      "family": "soft",
+      "moments": [
+        "click"
+      ],
       "params": {
         "pitch": {
           "min": 220,
           "max": 600,
           "def": 330,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Tuning of the short mid thud"
         },
         "pat": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the muffled noise pat over the thud"
         },
         "soft": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Muffling of the pat: 0 brighter and clearer, 1 duller and softer"
         }
       },
       "file": "src/sounds/ui/ui-tap.js",
@@ -1269,29 +1431,39 @@
       ],
       "desc": "A two-stage click-clack for switches: rising when turned on, falling when turned off.",
       "dur": 0.25,
+      "family": "mechanical",
+      "moments": [
+        "toggle-on",
+        "toggle-off"
+      ],
       "params": {
         "on": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "on",
+          "desc": "1 plays the click pair rising, 0 plays it falling"
         },
         "pitch": {
           "min": 1200,
           "max": 3600,
           "def": 2600,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the higher click; the other sits about a fourth below"
         },
         "gap": {
           "min": 0.03,
           "max": 0.12,
           "def": 0.075,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the two clicks; the low thock lands with the second"
         },
         "body": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the low thock under the second click: 0 none, 1 solid"
         }
       },
       "file": "src/sounds/ui/ui-toggle-switch.js",
@@ -1329,22 +1501,29 @@
       ],
       "desc": "A tiny glassy bubble pop for a tooltip or popover appearing: a bright pip that bends up and settles.",
       "dur": 0.08,
+      "family": "glass",
+      "moments": [
+        "tooltip"
+      ],
       "params": {
         "pitch": {
           "min": 800,
           "max": 2400,
           "def": 1318,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start note of the pip before it bends up"
         },
         "rise": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far the pip bends up: 0 steady, 1 nearly an octave"
         },
         "shimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Starting FM glitter before it settles: 0 nearly pure, 1 bright and sparkly"
         }
       },
       "file": "src/sounds/ui/ui-tooltip-pop.js",
@@ -1379,23 +1558,30 @@
       ],
       "desc": "A short rewind flutter that falls and settles with a soft tick, for undoing the last action.",
       "dur": 0.22,
+      "family": "soft",
+      "moments": [
+        "undo"
+      ],
       "params": {
         "pitch": {
           "min": 500,
           "max": 1400,
           "def": 784,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start note of the falling flutter; the settle tick sits an octave below"
         },
         "speed": {
           "min": 18,
           "max": 46,
           "def": 30,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Flutter rate of the rewind: low a slow wobble, high a fast whir"
         },
         "settle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the soft tick where it settles: 0 faint, 1 clear"
         }
       },
       "file": "src/sounds/ui/ui-undo.js",
@@ -1433,28 +1619,37 @@
       ],
       "desc": "A quick rising run into a warm bell chord with a few glints. A small celebration for something earned.",
       "dur": 1.5,
+      "family": "orchestral",
+      "moments": [
+        "achievement",
+        "level-up"
+      ],
       "params": {
         "pitch": {
           "min": 392,
           "max": 600,
           "def": 523.25,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Root note: transposes the run, the bell chord and the glints together"
         },
         "gap": {
           "min": 0.05,
           "max": 0.12,
           "def": 0.075,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Spacing of the three run notes; the bell chord lands after the third"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Reverb mix over the whole sound, from dry to roomy"
         },
         "sparkle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the high sine glints over the chord, 0 removes them"
         }
       },
       "file": "src/sounds/notify/notify-achievement.js",
@@ -1492,29 +1687,37 @@
       ],
       "desc": "Soft rounded beeps in rising pairs that swell round by round. Wakes you without startling you.",
       "dur": 2.3,
+      "family": "soft",
+      "moments": [
+        "timer"
+      ],
       "params": {
         "pitch": {
           "min": 440,
           "max": 1000,
           "def": 659.25,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first beep in each pair; the second is a fifth higher"
         },
         "rounds": {
           "min": 2,
           "max": 4,
           "def": 3,
-          "step": 1
+          "step": 1,
+          "desc": "How many rounds of rising beep pairs play"
         },
         "pace": {
           "min": 0.12,
           "max": 0.25,
           "def": 0.17,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the two beeps in a pair"
         },
         "swell": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "How much quieter the early rounds are: 0 all equal, 1 a strong build"
         }
       },
       "file": "src/sounds/notify/notify-alarm.js",
@@ -1547,35 +1750,44 @@
       ],
       "desc": "A tiny page-flip tick and two soft plucked notes rising a fourth. An event is starting; warm and organized, not urgent.",
       "dur": 0.8,
+      "family": "orchestral",
+      "moments": [
+        "reminder"
+      ],
       "params": {
         "pitch": {
           "min": 330,
           "max": 880,
           "def": 523.25,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first pluck; the second sits the interval above"
         },
         "interval": {
           "min": 3,
           "max": 8,
           "def": 5,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far the second pluck rises above the first"
         },
         "gap": {
           "min": 0.1,
           "max": 0.25,
           "def": 0.16,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the two plucks"
         },
         "bright": {
           "min": 0.1,
           "max": 0.8,
-          "def": 0.45
+          "def": 0.45,
+          "desc": "Opening filter cutoff of each pluck: low soft and muted, high twangy"
         },
         "tick": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the page-flip noise tick before the notes, 0 removes it"
         }
       },
       "file": "src/sounds/notify/notify-calendar.js",
@@ -1613,29 +1825,37 @@
       ],
       "desc": "Two soft wooden knocks, each a touch lower and quieter. A gentle \"excuse me\" that is barely a sound.",
       "dur": 0.55,
+      "family": "wood",
+      "moments": [
+        "notify"
+      ],
       "params": {
         "pitch": {
           "min": 200,
           "max": 500,
           "def": 320,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Body pitch of the first knock; each later knock is a bit lower"
         },
         "gap": {
           "min": 0.07,
           "max": 0.2,
           "def": 0.12,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between knocks, with a slight natural wobble"
         },
         "wood": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the woody click on each knock: 0 a pure thud, 1 crisp wood"
         },
         "taps": {
           "min": 2,
           "max": 3,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "Number of knocks, each lower and softer than the last"
         }
       },
       "file": "src/sounds/notify/notify-double-tap.js",
@@ -1672,29 +1892,37 @@
       ],
       "desc": "A soft downward glide that settles with a gentle thump and a small ting. The file is in place.",
       "dur": 0.8,
+      "family": "soft",
+      "moments": [
+        "success"
+      ],
       "params": {
         "pitch": {
           "min": 300,
           "max": 700,
           "def": 440,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Landing note; the glide starts an octave above it, the ting a fifth up"
         },
         "fall": {
           "min": 0.06,
           "max": 0.2,
           "def": 0.12,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Length of the downward glide, which also delays the landing"
         },
         "thump": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the low thump on landing, 0 removes it"
         },
         "ring": {
           "min": 0.15,
           "max": 0.5,
           "def": 0.3,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the landing note and the ting ring out"
         }
       },
       "file": "src/sounds/notify/notify-download-done.js",
@@ -1724,29 +1952,37 @@
       ],
       "desc": "A low falling double buzz for a rejected action. Clear without being harsh.",
       "dur": 0.45,
+      "family": "synthetic",
+      "moments": [
+        "error"
+      ],
       "params": {
         "pitch": {
           "min": 90,
           "max": 300,
           "def": 160,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first buzz; each further pulse steps lower"
         },
         "pulses": {
           "min": 1,
           "max": 3,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "Number of falling buzz pulses"
         },
         "rough": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Depth of the fast level trill: 0 a smooth tone, 1 a rattling buzz"
         },
         "tone": {
           "min": 500,
           "max": 3000,
           "def": 1200,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Lowpass cutoff: low is dull and muffled, high is brighter and edgier"
         }
       },
       "file": "src/sounds/notify/notify-error-buzz.js",
@@ -1779,30 +2015,38 @@
       ],
       "desc": "A short bell-like phone ring: bursts of fast alternating notes with a pause between. Loops cleanly if you repeat it.",
       "dur": 2,
+      "family": "synthetic",
+      "moments": [
+        "notify"
+      ],
       "params": {
         "pitch": {
           "min": 600,
           "max": 1000,
           "def": 880,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Lower note of the trill; the upper note is a major third above"
         },
         "rate": {
           "min": 8,
           "max": 16,
           "def": 12,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Speed of the note alternation: low a slow warble, high a fast trill"
         },
         "rings": {
           "min": 1,
           "max": 3,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "Number of ring bursts"
         },
         "tone": {
           "min": 1200,
           "max": 3500,
           "def": 2600,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Lowpass cutoff: low is soft and muted, high rings brighter"
         }
       },
       "file": "src/sounds/notify/notify-incoming-call.js",
@@ -1835,23 +2079,30 @@
       ],
       "desc": "One soft bell tap for neutral news: nothing wrong and nothing won, just a heads-up. Made to be heard all day.",
       "dur": 0.8,
+      "family": "soft",
+      "moments": [
+        "info"
+      ],
       "params": {
         "pitch": {
           "min": 500,
           "max": 1200,
           "def": 880,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the bell tap"
         },
         "decay": {
           "min": 0.2,
           "max": 0.7,
           "def": 0.4,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the bell rings out"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the octave and the glassy partial: 0 soft and pure, 1 brighter"
         }
       },
       "file": "src/sounds/notify/notify-info.js",
@@ -1886,30 +2137,38 @@
       ],
       "desc": "Three slow falling notes under a closing filter, the last one sagging. Power is running out.",
       "dur": 1.4,
+      "family": "synthetic",
+      "moments": [
+        "warning"
+      ],
       "params": {
         "pitch": {
           "min": 250,
           "max": 700,
           "def": 440,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first step; each next step falls a whole tone"
         },
         "steps": {
           "min": 2,
           "max": 4,
           "def": 3,
-          "step": 1
+          "step": 1,
+          "desc": "Number of falling notes; the last one always sags"
         },
         "gap": {
           "min": 0.15,
           "max": 0.3,
           "def": 0.2,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the falling notes"
         },
         "tone": {
           "min": 800,
           "max": 3000,
           "def": 1800,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Starting lowpass cutoff, closing as the notes fall: low muffled, high clearer"
         }
       },
       "file": "src/sounds/notify/notify-low-battery.js",
@@ -1942,28 +2201,37 @@
       ],
       "desc": "A quick grace note into a glassy bell ting with a soft echo. Stands out from ordinary messages without shouting.",
       "dur": 1.2,
+      "family": "glass",
+      "moments": [
+        "message",
+        "notify"
+      ],
       "params": {
         "pitch": {
           "min": 600,
           "max": 1318.5,
           "def": 1046.5,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the bell ting; the grace note before it is a fifth below"
         },
         "glass": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the inharmonic partial: 0 a round ting, 1 a glassy metallic edge"
         },
         "ring": {
           "min": 0.2,
           "max": 0.5,
           "def": 0.32,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the bell ting rings out"
         },
         "echo": {
           "min": 0,
           "max": 0.5,
-          "def": 0.25
+          "def": 0.25,
+          "desc": "Level of the soft echo trailing the ting, 0 dry"
         }
       },
       "file": "src/sounds/notify/notify-mention.js",
@@ -2001,30 +2269,38 @@
       ],
       "desc": "Two quick bubbly pops rising a fourth, like a chat bubble arriving. Friendly and short enough for a busy channel.",
       "dur": 0.4,
+      "family": "soft",
+      "moments": [
+        "message"
+      ],
       "params": {
         "pitch": {
           "min": 400,
           "max": 880,
           "def": 660,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first pop; the second sits the interval above"
         },
         "interval": {
           "min": 2,
           "max": 7,
           "def": 5,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far the second pop rises above the first"
         },
         "gap": {
           "min": 0.07,
           "max": 0.18,
           "def": 0.11,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the two pops"
         },
         "pop": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Depth of the upward slide into each note: 0 a plain sine, 1 a bubbly bloop"
         }
       },
       "file": "src/sounds/notify/notify-message-in.js",
@@ -2058,23 +2334,30 @@
       ],
       "desc": "A soft rising whoosh into a tiny blip: your message is on its way. Quiet enough to play on every send.",
       "dur": 0.35,
+      "family": "air",
+      "moments": [
+        "send"
+      ],
       "params": {
         "pitch": {
           "min": 600,
           "max": 1400,
           "def": 1047,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the closing blip"
         },
         "speed": {
           "min": 0.08,
           "max": 0.22,
           "def": 0.13,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Length of the whoosh before the blip: low quick, high slower"
         },
         "air": {
           "min": 0.2,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the rising air whoosh, from faint to breathy"
         }
       },
       "file": "src/sounds/notify/notify-message-out.js",
@@ -2111,30 +2394,38 @@
       ],
       "desc": "A soft falling swish into a short-long two-bell \"tu-ding\". A letter has landed in the inbox.",
       "dur": 0.95,
+      "family": "glass",
+      "moments": [
+        "message"
+      ],
       "params": {
         "pitch": {
           "min": 440,
           "max": 880,
           "def": 784,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the short first bell; the long second bell is the interval above"
         },
         "interval": {
           "min": 3,
           "max": 9,
           "def": 5,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far the second bell rises above the first"
         },
         "swish": {
           "min": 0.2,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the falling air swish before the bells"
         },
         "ring": {
           "min": 0.25,
           "max": 0.6,
           "def": 0.4,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the second, longer bell rings out"
         }
       },
       "file": "src/sounds/notify/notify-new-mail.js",
@@ -2174,36 +2465,45 @@
       ],
       "desc": "A soft two-bell \"ding-dong\" with a little room around it. A polite nudge that something is due.",
       "dur": 1.6,
+      "family": "soft",
+      "moments": [
+        "reminder"
+      ],
       "params": {
         "pitch": {
           "min": 440,
           "max": 990,
           "def": 659.25,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first bell, the ding"
         },
         "drop": {
           "min": 3,
           "max": 7,
           "def": 4,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far the second bell, the dong, falls below the first"
         },
         "gap": {
           "min": 0.2,
           "max": 0.4,
           "def": 0.3,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the ding and the dong"
         },
         "ring": {
           "min": 0.5,
           "max": 0.9,
           "def": 0.7,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long each bell rings out"
         },
         "space": {
           "min": 0,
           "max": 0.5,
-          "def": 0.2
+          "def": 0.2,
+          "desc": "Reverb mix around the bells, from dry to a small roomy wash"
         }
       },
       "file": "src/sounds/notify/notify-reminder.js",
@@ -2238,30 +2538,38 @@
       ],
       "desc": "A gentle two-note rising chime for a completed action. Not a fanfare; a quiet yes.",
       "dur": 0.5,
+      "family": "soft",
+      "moments": [
+        "success"
+      ],
       "params": {
         "pitch": {
           "min": 330,
           "max": 1320,
           "def": 659.25,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first chime; the second sits the interval above"
         },
         "interval": {
           "min": 3,
           "max": 12,
           "def": 7,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far the second note rises above the first"
         },
         "gap": {
           "min": 0.06,
           "max": 0.2,
           "def": 0.12,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the two notes"
         },
         "shimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.35
+          "def": 0.35,
+          "desc": "Level of the octave sine over the second note: 0 plain, 1 bright"
         }
       },
       "file": "src/sounds/notify/notify-success-chime.js",
@@ -2292,29 +2600,38 @@
       ],
       "desc": "A quick back-and-forth of two notes that settles on the octave. Everything is in step again.",
       "dur": 1.1,
+      "family": "soft",
+      "moments": [
+        "refresh",
+        "success"
+      ],
       "params": {
         "pitch": {
           "min": 330,
           "max": 700,
           "def": 523.25,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Root of the back-and-forth; it swaps with the fifth and lands an octave up"
         },
         "cycles": {
           "min": 1,
           "max": 3,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "Number of root-fifth back-and-forth pairs before the landing note"
         },
         "speed": {
           "min": 0.06,
           "max": 0.12,
           "def": 0.08,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time per quick note: low a fast flutter, high a slower swap"
         },
         "shimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the high sine on the landing note, 0 removes it"
         }
       },
       "file": "src/sounds/notify/notify-sync-done.js",
@@ -2345,28 +2662,36 @@
       ],
       "desc": "A run of low falling buzzes that sags on the last one. Something you were waiting on did not work out; firm, not harsh.",
       "dur": 0.85,
+      "family": "synthetic",
+      "moments": [
+        "error"
+      ],
       "params": {
         "pitch": {
           "min": 120,
           "max": 320,
           "def": 190,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first buzz and the sine under it; later pulses step lower"
         },
         "pulses": {
           "min": 2,
           "max": 4,
           "def": 3,
-          "step": 1
+          "step": 1,
+          "desc": "Number of falling buzz pulses; the last one sags"
         },
         "rough": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Depth of the fast level trill: 0 a smooth tone, 1 a rattling buzz"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the low falling sine under the first pulse, 0 removes it"
         }
       },
       "file": "src/sounds/notify/notify-task-failed.js",
@@ -2399,29 +2724,38 @@
       ],
       "desc": "A soft upward glide that lands on a bright chime note. The file has arrived.",
       "dur": 0.75,
+      "family": "glass",
+      "moments": [
+        "success",
+        "send"
+      ],
       "params": {
         "pitch": {
           "min": 300,
           "max": 900,
           "def": 523.25,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base pitch: the glide rises from below it to a landing note a fifth up"
         },
         "rise": {
           "min": 0.06,
           "max": 0.2,
           "def": 0.12,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Length of the upward glide, which also delays the landing note"
         },
         "ring": {
           "min": 0.15,
           "max": 0.5,
           "def": 0.3,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the landing note and its shimmer ring out"
         },
         "shimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the octave sine over the landing note, 0 removes it"
         }
       },
       "file": "src/sounds/notify/notify-upload-done.js",
@@ -2451,31 +2785,39 @@
       ],
       "desc": "A two-note falling \"uh-oh\" in a round triangle tone. Cautions without scolding; milder than the error buzz.",
       "dur": 0.65,
+      "family": "soft",
+      "moments": [
+        "warning"
+      ],
       "params": {
         "pitch": {
           "min": 250,
           "max": 700,
           "def": 440,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first, short note of the uh-oh"
         },
         "drop": {
           "min": 2,
           "max": 7,
           "def": 3,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far the second note falls below the first"
         },
         "gap": {
           "min": 0.1,
           "max": 0.3,
           "def": 0.16,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the two notes"
         },
         "tone": {
           "min": 800,
           "max": 4000,
           "def": 1800,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Lowpass cutoff: low is round and muted, high is brighter"
         }
       },
       "file": "src/sounds/notify/notify-warning.js",
@@ -2509,23 +2851,31 @@
       ],
       "desc": "A bowstring twang and the zip of an arrow leaving. For archers and ranged attacks.",
       "dur": 0.55,
+      "family": "organic",
+      "moments": [
+        "shoot",
+        "attack"
+      ],
       "params": {
         "pitch": {
           "min": 90,
           "max": 320,
           "def": 160,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the plucked bowstring and the short thump under it"
         },
         "flight": {
           "min": 0.12,
           "max": 0.4,
           "def": 0.22,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the arrow's falling noise zip lasts as it recedes"
         },
         "twang": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "String brightness and sustain: 0 a dull short pluck, 1 a bright ringing twang"
         }
       },
       "file": "src/sounds/game/game-arrow-shot.js",
@@ -2564,23 +2914,30 @@
       ],
       "desc": "A rubbery boing: a quick spring up, then a wobble that settles. For jump pads, springs and balls.",
       "dur": 0.66,
+      "family": "synthetic",
+      "moments": [
+        "jump"
+      ],
       "params": {
         "pitch": {
           "min": 150,
           "max": 500,
           "def": 260,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note the boing settles on after springing up to nearly an octave above"
         },
         "wobble": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Vibrato on the settle: 0 a clean glide, 1 a wide rubbery wobble"
         },
         "length": {
           "min": 0.25,
           "max": 0.6,
           "def": 0.4,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the boing takes to settle back down and fade"
         }
       },
       "file": "src/sounds/game/game-bounce.js",
@@ -2612,24 +2969,32 @@
       ],
       "desc": "A soft thump and three bells fanning up that ring together: progress saved. Warmer than a success chime.",
       "dur": 1.17,
+      "family": "orchestral",
+      "moments": [
+        "achievement",
+        "success"
+      ],
       "params": {
         "pitch": {
           "min": 262,
           "max": 784,
           "def": 392,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Root note of the three-bell chord of root, fifth and octave"
         },
         "spread": {
           "min": 0.04,
           "max": 0.14,
           "def": 0.08,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Gap between the three bell strikes, from near-chord to a slow fan"
         },
         "ring": {
           "min": 0.35,
           "max": 0.85,
           "def": 0.65,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long each bell rings out"
         }
       },
       "file": "src/sounds/game/game-checkpoint.js",
@@ -2666,30 +3031,38 @@
       ],
       "desc": "A coin spun into the air: rising ticks as it turns, then a bright ping when it lands.",
       "dur": 1.5,
+      "family": "metal",
+      "moments": [
+        "coin"
+      ],
       "params": {
         "spins": {
           "min": 3,
           "max": 8,
           "def": 6,
-          "step": 1
+          "step": 1,
+          "desc": "How many rising ticks play while the coin turns before it lands"
         },
         "spin": {
           "min": 0.05,
           "max": 0.1,
           "def": 0.075,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between spin ticks; longer also delays the landing ping"
         },
         "pitch": {
           "min": 900,
           "max": 2600,
           "def": 1568,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the landing ping; the spin ticks follow it, lower down"
         },
         "ring": {
           "min": 0.15,
           "max": 0.6,
           "def": 0.42,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the landing ping rings out"
         }
       },
       "file": "src/sounds/game/game-coin-flip.js",
@@ -2721,30 +3094,40 @@
       ],
       "desc": "A short bright ping that rises one scale step per streak count, so a combo plays a rising tune. Chip makes it a square ping.",
       "dur": 0.52,
+      "family": "glass",
+      "moments": [
+        "coin",
+        "pickup"
+      ],
       "params": {
         "pitch": {
           "min": 500,
           "max": 1400,
           "def": 880,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base note at a streak of 1; higher streaks climb a pentatonic scale from it"
         },
         "streak": {
           "min": 1,
           "max": 8,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "desc": "Combo count: each step plays the next note up a pentatonic scale"
         },
         "ring": {
           "min": 0.12,
           "max": 0.5,
           "def": 0.26,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the ping rings out"
         },
         "chip": {
           "min": 0,
           "max": 1,
           "def": 0,
-          "step": 1
+          "step": 1,
+          "role": "chip",
+          "desc": "1 a bitcrushed square ping, 0 a soft near-harmonic bell"
         }
       },
       "file": "src/sounds/game/game-combo-ping.js",
@@ -2781,30 +3164,41 @@
       ],
       "desc": "The beep for 3, 2, 1 in a race or round start; turn Go on for the longer, higher start tone.",
       "dur": 0.62,
+      "family": "chip",
+      "moments": [
+        "countdown",
+        "timer"
+      ],
       "params": {
         "pitch": {
           "min": 440,
           "max": 1320,
           "def": 880,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the beep; Go plays an octave above it"
         },
         "length": {
           "min": 0.06,
           "max": 0.25,
           "def": 0.14,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the beep holds; Go stretches it further"
         },
         "go": {
           "min": 0,
           "max": 1,
           "def": 0,
-          "step": 1
+          "step": 1,
+          "role": "go",
+          "desc": "1 the start tone: octave up, longer, with a fifth, 0 a plain count beep"
         },
         "chip": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "chip",
+          "desc": "1 a bitcrushed square beep, 0 a clean sine with a soft octave"
         }
       },
       "file": "src/sounds/game/game-countdown-beep.js",
@@ -2838,23 +3232,31 @@
       ],
       "desc": "A latch clicks and a wooden hinge creaks open. Use a short length for a quick door, long for a spooky one.",
       "dur": 1.1,
+      "family": "wood",
+      "moments": [
+        "door",
+        "open"
+      ],
       "params": {
         "pitch": {
           "min": 70,
           "max": 260,
           "def": 130,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Starting note of the hinge creak, which climbs as the door swings"
         },
         "length": {
           "min": 0.4,
           "max": 1,
           "def": 0.7,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the hinge creaks as the door swings open"
         },
         "creak": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Roughness of the hinge: 0 a smoother groan, 1 a juddering, wobbly creak with grit"
         }
       },
       "file": "src/sounds/game/game-door-open.js",
@@ -2894,31 +3296,40 @@
       ],
       "desc": "Two hops in a row, the second higher and quicker, for a mid-air jump. Chip is square; off is soft triangle.",
       "dur": 0.34,
+      "family": "chip",
+      "moments": [
+        "jump"
+      ],
       "params": {
         "pitch": {
           "min": 200,
           "max": 500,
           "def": 300,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Starting note of the first hop's sweep; the second hop scales with it"
         },
         "gap": {
           "min": 0.08,
           "max": 0.18,
           "def": 0.11,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the first hop and the second"
         },
         "lift": {
           "min": 3,
           "max": 12,
           "def": 7,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How much higher the second hop starts than the first"
         },
         "chip": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "chip",
+          "desc": "1 a bitcrushed square voice, 0 a soft triangle with a sine sheen and air puff"
         }
       },
       "file": "src/sounds/game/game-double-jump.js",
@@ -2957,28 +3368,36 @@
       ],
       "desc": "A big but friendly boom: a round blast with a pop on the front and crackles after. Cartoon, not harsh.",
       "dur": 1.05,
+      "family": "impact",
+      "moments": [
+        "explosion"
+      ],
       "params": {
         "size": {
           "min": 0.3,
           "max": 0.9,
           "def": 0.6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the boom's noise body and falling sub last"
         },
         "pitch": {
           "min": 35,
           "max": 110,
           "def": 60,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base note of the falling sub under the blast; lower is deeper"
         },
         "soften": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Darkens the blast: 0 a brighter bang, 1 a muffled puff"
         },
         "crackle": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Loudness of the tiny crackles scattered after the boom, 0 none"
         }
       },
       "file": "src/sounds/game/game-explosion-soft.js",
@@ -3017,22 +3436,29 @@
       ],
       "desc": "A step on wood, tile or stone: a crisp tap with a knock under it. Use Vary for a walking rhythm.",
       "dur": 0.2,
+      "family": "organic",
+      "moments": [
+        "footstep"
+      ],
       "params": {
         "surface": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Floor material: 0 wood with a dull, lower knock, 1 stone with a bright click and ring"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How heavy the step is: a louder knock and a stronger low thud under it"
         },
         "pitch": {
           "min": 0.7,
           "max": 1.5,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Scales the tuning of the whole step: click, knock, thud and ring"
         }
       },
       "file": "src/sounds/game/game-footstep-hard.js",
@@ -3072,22 +3498,29 @@
       ],
       "desc": "A quiet step on carpet, grass or sand. Use Vary so a walk never repeats exactly.",
       "dur": 0.22,
+      "family": "organic",
+      "moments": [
+        "footstep"
+      ],
       "params": {
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "How heavy the step is: a louder puff and a fuller low thud"
         },
         "surface": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Ground type: 0 muffled carpet, 1 brighter gravel with a little crunch"
         },
         "length": {
           "min": 0.06,
           "max": 0.16,
           "def": 0.1,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long each step's puff and thud last"
         }
       },
       "file": "src/sounds/game/game-footstep-soft.js",
@@ -3125,29 +3558,38 @@
       ],
       "desc": "A crystalline two-strike ring for a gem or treasure: bright, glassy and a little longer than a coin.",
       "dur": 0.95,
+      "family": "glass",
+      "moments": [
+        "pickup",
+        "coin"
+      ],
       "params": {
         "pitch": {
           "min": 800,
           "max": 2400,
           "def": 1568,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first glass strike; the second rings a fifth above"
         },
         "ring": {
           "min": 0.2,
           "max": 0.8,
           "def": 0.5,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the glass strikes ring, the second a bit longer"
         },
         "gap": {
           "min": 0.05,
           "max": 0.12,
           "def": 0.08,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the two glass strikes"
         },
         "sparkle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the airy shimmer on the second strike, 0 none"
         }
       },
       "file": "src/sounds/game/game-gem-collect.js",
@@ -3184,29 +3626,37 @@
       ],
       "desc": "A hammer swung and landing on metal: air, then a clank with a thump under it.",
       "dur": 0.95,
+      "family": "metal",
+      "moments": [
+        "hit"
+      ],
       "params": {
         "swing": {
           "min": 0,
           "max": 0.5,
           "def": 0.32,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Length of the rising air before impact; near zero it hits at once"
         },
         "pitch": {
           "min": 250,
           "max": 1200,
           "def": 560,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the metal clank and its falling ring"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Low body thump at contact: 0 a thin clank, 1 a heavy hit"
         },
         "ring": {
           "min": 0.06,
           "max": 0.4,
           "def": 0.12,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the metal clank rings out"
         }
       },
       "file": "src/sounds/game/game-hammer-hit.js",
@@ -3245,30 +3695,38 @@
       ],
       "desc": "A warm rising swell with a soft glow on top, for health restored. Gentle by design; it can repeat.",
       "dur": 0.95,
+      "family": "soft",
+      "moments": [
+        "heal"
+      ],
       "params": {
         "pitch": {
           "min": 220,
           "max": 700,
           "def": 392,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Starting root of the rising root, fifth and octave chord"
         },
         "length": {
           "min": 0.3,
           "max": 0.9,
           "def": 0.6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the swell lasts; its slow bloom and rise stretch with it"
         },
         "rise": {
           "min": 0,
           "max": 7,
           "def": 4,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far the chord glides up during the swell; 0 holds steady"
         },
         "glow": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the airy glow and the bell at the crest: 0 a plain swell"
         }
       },
       "file": "src/sounds/game/game-heal.js",
@@ -3308,28 +3766,37 @@
       ],
       "desc": "A heavy blow landing: deep sub, a body of rumble and a hard crack. For bosses, crits and slams.",
       "dur": 0.78,
+      "family": "impact",
+      "moments": [
+        "hit",
+        "damage"
+      ],
       "params": {
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Heft of the blow: a louder sub and rumble body"
         },
         "pitch": {
           "min": 45,
           "max": 110,
           "def": 70,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base note of the falling sub; lower is deeper"
         },
         "crack": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Level of the hard high crack at the moment of impact"
         },
         "tail": {
           "min": 0.2,
           "max": 0.6,
           "def": 0.38,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the rumble body and sub carry on after the hit"
         }
       },
       "file": "src/sounds/game/game-hit-heavy.js",
@@ -3368,22 +3835,30 @@
       ],
       "desc": "A quick, light strike landing: a short knock with a crisp crack. Small enough to chain in a fight.",
       "dur": 0.16,
+      "family": "impact",
+      "moments": [
+        "hit",
+        "attack"
+      ],
       "params": {
         "pitch": {
           "min": 120,
           "max": 400,
           "def": 220,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the short falling knock"
         },
         "snap": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Crack brightness and level: 0 a dull tap, 1 a crisp bright snap"
         },
         "body": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the knock under the crack: 0 thin, 1 fat"
         }
       },
       "file": "src/sounds/game/game-hit-light.js",
@@ -3422,29 +3897,38 @@
       ],
       "desc": "A falling, wobbling \"ow\" with a crunch on the hit, for the player taking damage. Chip is square; off is a softer saw.",
       "dur": 0.32,
+      "family": "chip",
+      "moments": [
+        "damage"
+      ],
       "params": {
         "pitch": {
           "min": 150,
           "max": 500,
           "def": 300,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Starting note of the falling ow"
         },
         "drop": {
           "min": 0.3,
           "max": 0.7,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far the ow falls in pitch: low a slight sag, high a deep plunge"
         },
         "length": {
           "min": 0.12,
           "max": 0.3,
           "def": 0.2,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the ow lasts; the falling glide stretches with it"
         },
         "chip": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "chip",
+          "desc": "1 a bitcrushed square ow, 0 a softer sawtooth through a closing lowpass"
         }
       },
       "file": "src/sounds/game/game-hurt.js",
@@ -3484,30 +3968,39 @@
       ],
       "desc": "The classic platformer hop: a quick rising sweep. Chip is a stepped square wave; off is a soft triangle.",
       "dur": 0.27,
+      "family": "chip",
+      "moments": [
+        "jump"
+      ],
       "params": {
         "pitch": {
           "min": 180,
           "max": 600,
           "def": 300,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Starting note of the upward sweep"
         },
         "rise": {
           "min": 1.5,
           "max": 4,
           "def": 2.6,
-          "unit": "x"
+          "unit": "x",
+          "desc": "How far the sweep climbs above the start note"
         },
         "length": {
           "min": 0.08,
           "max": 0.26,
           "def": 0.16,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the hop lasts and how slowly it sweeps"
         },
         "chip": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "chip",
+          "desc": "1 a stepped, bitcrushed square sweep, 0 a soft triangle with a sine octave"
         }
       },
       "file": "src/sounds/game/game-jump.js",
@@ -3541,28 +4034,36 @@
       ],
       "desc": "A key jingles, turns and the lock gives: tiny metal ticks, a bolt clunk and a small ding.",
       "dur": 0.85,
+      "family": "metal",
+      "moments": [
+        "door"
+      ],
       "params": {
         "pitch": {
           "min": 1800,
           "max": 4200,
           "def": 2800,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the metal jingles; the final ding sits an octave below"
         },
         "jingles": {
           "min": 2,
           "max": 6,
           "def": 3,
-          "step": 1
+          "step": 1,
+          "desc": "How many tiny key jingles rattle before the turn"
         },
         "clunk": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Weight of the deadbolt: a louder low thud and knock"
         },
         "ding": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the small reward ding after the bolt, 0 none"
         }
       },
       "file": "src/sounds/game/game-key-unlock.js",
@@ -3601,22 +4102,26 @@
       ],
       "desc": "A character landing after a jump or fall: a soft thump with a scuff of grit. Heavier settings hit longer.",
       "dur": 0.3,
+      "family": "impact",
       "params": {
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Heft of the landing: a louder, longer thump and impact puff"
         },
         "pitch": {
           "min": 55,
           "max": 160,
           "def": 90,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the falling thump; lower is deeper"
         },
         "scuff": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Grit on landing: a louder, longer scuff and a brighter puff"
         }
       },
       "file": "src/sounds/game/game-land.js",
@@ -3654,31 +4159,40 @@
       ],
       "desc": "A soft two-note blip for picking up an item. Quiet enough to repeat. Chip switches to square notes.",
       "dur": 0.25,
+      "family": "soft",
+      "moments": [
+        "pickup"
+      ],
       "params": {
         "pitch": {
           "min": 500,
           "max": 1500,
           "def": 880,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the first blip"
         },
         "interval": {
           "min": 2,
           "max": 12,
           "def": 5,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far above the first blip the second one lands"
         },
         "gap": {
           "min": 0.04,
           "max": 0.1,
           "def": 0.06,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between the two blips"
         },
         "chip": {
           "min": 0,
           "max": 1,
           "def": 0,
-          "step": 1
+          "step": 1,
+          "role": "chip",
+          "desc": "1 two bitcrushed square notes, 0 soft sines with a sparkle and a speck of air"
         }
       },
       "file": "src/sounds/game/game-pickup-item.js",
@@ -3718,30 +4232,40 @@
       ],
       "desc": "A quick rising scale that lands on a held note: you got stronger. Chip is square; off is soft triangle.",
       "dur": 0.72,
+      "family": "chip",
+      "moments": [
+        "power-up",
+        "level-up"
+      ],
       "params": {
         "pitch": {
           "min": 200,
           "max": 600,
           "def": 330,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Starting note of the rising scale run"
         },
         "notes": {
           "min": 4,
           "max": 8,
           "def": 6,
-          "step": 1
+          "step": 1,
+          "desc": "How many notes the run plays, the last one held"
         },
         "gap": {
           "min": 0.035,
           "max": 0.07,
           "def": 0.05,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between notes in the run; smaller is faster"
         },
         "chip": {
           "min": 0,
           "max": 1,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "role": "chip",
+          "desc": "1 bitcrushed square notes, 0 soft triangles with an octave and vibrato at the end"
         }
       },
       "file": "src/sounds/game/game-power-up.js",
@@ -3775,29 +4299,38 @@
       ],
       "desc": "A fist landing with a thump and a smack. Up to three in a flurry, each slightly softer.",
       "dur": 0.46,
+      "family": "impact",
+      "moments": [
+        "hit",
+        "attack"
+      ],
       "params": {
         "pitch": {
           "min": 80,
           "max": 220,
           "def": 140,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the falling thump; lower is meatier"
         },
         "snap": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Brighter smack and louder high slap: 0 a dull thud, 1 a crisp snap"
         },
         "hits": {
           "min": 1,
           "max": 3,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "desc": "How many punches land in the flurry, each a little softer"
         },
         "gap": {
           "min": 0.05,
           "max": 0.12,
           "def": 0.08,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between punches in a flurry"
         }
       },
       "file": "src/sounds/game/game-punch.js",
@@ -3835,28 +4368,37 @@
       ],
       "desc": "An energy field charging up: a humming rise that opens and locks in with a ping. For shields and buffs.",
       "dur": 0.95,
+      "family": "synthetic",
+      "moments": [
+        "shield",
+        "power-up"
+      ],
       "params": {
         "pitch": {
           "min": 80,
           "max": 300,
           "def": 150,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Starting note of the hum, which climbs an octave; the lock ping follows it"
         },
         "length": {
           "min": 0.3,
           "max": 0.8,
           "def": 0.5,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the shield takes to charge; the lock ping lands near the end"
         },
         "shimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the airy shimmer rising with the hum, 0 none"
         },
         "lock": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Level of the glassy ping when it locks in, 0 none"
         }
       },
       "file": "src/sounds/game/game-shield-up.js",
@@ -3898,23 +4440,31 @@
       ],
       "desc": "Steel meeting steel: a hard clang that rings, with an optional scrape. For parries and duels.",
       "dur": 1,
+      "family": "metal",
+      "moments": [
+        "hit",
+        "attack"
+      ],
       "params": {
         "pitch": {
           "min": 600,
           "max": 2200,
           "def": 1250,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Note of the clang; the second blade rings a third above"
         },
         "ring": {
           "min": 0.25,
           "max": 0.9,
           "def": 0.55,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the steel rings after the clash"
         },
         "scrape": {
           "min": 0,
           "max": 1,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Level and length of the blade-on-blade scrape, 0 none"
         }
       },
       "file": "src/sounds/game/game-sword-clash.js",
@@ -3952,23 +4502,30 @@
       ],
       "desc": "A blade cutting the air: a quick bright swish with a thin edge of steel. Sharper than the generic whoosh.",
       "dur": 0.38,
+      "family": "air",
+      "moments": [
+        "attack"
+      ],
       "params": {
         "length": {
           "min": 0.1,
           "max": 0.3,
           "def": 0.17,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the swish takes; attack and tail stretch together"
         },
         "pitch": {
           "min": 0.6,
           "max": 1.6,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Shifts the swish bands and the steel ring up or down"
         },
         "edge": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the thin steel ring under the swish: 0 pure air"
         }
       },
       "file": "src/sounds/game/game-sword-swing.js",
@@ -4004,23 +4561,30 @@
       ],
       "desc": "Air rushing past: a swing, a dash, or a panel sliding across the screen.",
       "dur": 0.62,
+      "family": "air",
+      "moments": [
+        "transition"
+      ],
       "params": {
         "length": {
           "min": 0.15,
           "max": 0.6,
           "def": 0.27,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the whoosh lasts; both sweeps stretch with it"
         },
         "pitch": {
           "min": 0.5,
           "max": 2,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Shifts both sweep bands: low a deep rush, high a thin hiss"
         },
         "q": {
           "min": 0.6,
           "max": 3,
-          "def": 1.1
+          "def": 1.1,
+          "desc": "Narrowness of the sweeps: low a broad rush, high a tighter, whistly band"
         }
       },
       "file": "src/sounds/game/game-whoosh.js",
@@ -4054,23 +4618,30 @@
       ],
       "desc": "A single poker chip clicked down: a crisp clay tick with a short ring and a hint of felt underneath.",
       "dur": 0.12,
+      "family": "wood",
+      "moments": [
+        "chips"
+      ],
       "params": {
         "pitch": {
           "min": 1600,
           "max": 3600,
           "def": 2500,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Ring frequency of the clay bands: low duller chip, high crisper and brighter"
         },
         "ring": {
           "min": 0.02,
           "max": 0.1,
           "def": 0.05,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the clay ring lasts after the tick"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Felt thump under the click: 0 chip on chip, 1 heavy landing on felt"
         }
       },
       "file": "src/sounds/cards/cards-chip-click.js",
@@ -4107,24 +4678,31 @@
       ],
       "desc": "Poker chips stacked one by one: uneven clay clicks climbing a little as the stack grows.",
       "dur": 0.8,
+      "family": "wood",
+      "moments": [
+        "chips"
+      ],
       "params": {
         "chips": {
           "min": 2,
           "max": 8,
           "def": 5,
-          "step": 1
+          "step": 1,
+          "desc": "How many chips are stacked, one click each"
         },
         "pace": {
           "min": 0.04,
           "max": 0.1,
           "def": 0.065,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Average time between chips, with some random unevenness"
         },
         "pitch": {
           "min": 1500,
           "max": 3200,
           "def": 2300,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Ring frequency of the first chip, later chips climb slightly higher"
         }
       },
       "file": "src/sounds/cards/cards-chip-stack.js",
@@ -4162,29 +4740,37 @@
       ],
       "desc": "A pile of chips pushed forward for an all-in: a swelling rattle of clay clicks that ends in a thud and a few settling chips.",
       "dur": 1.27,
+      "family": "wood",
+      "moments": [
+        "chips"
+      ],
       "params": {
         "length": {
           "min": 0.4,
           "max": 0.9,
           "def": 0.65,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Duration of the shove before the heap thuds into the pot"
         },
         "chips": {
           "min": 14,
           "max": 40,
           "def": 26,
-          "step": 1
+          "step": 1,
+          "desc": "How many clay clicks rattle during the shove"
         },
         "pitch": {
           "min": 1400,
           "max": 3200,
           "def": 2200,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Center frequency of the clicks and settling chips: low duller, high brighter"
         },
         "slide": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Sliding noise under the clicks: 0 nearly silent, 1 loud felt hiss"
         }
       },
       "file": "src/sounds/cards/cards-chips-push.js",
@@ -4220,22 +4806,29 @@
       ],
       "desc": "One card dealt across the table: a flick off the deck, a soft skim over felt and a quiet landing.",
       "dur": 0.39,
+      "family": "paper",
+      "moments": [
+        "card-draw"
+      ],
       "params": {
         "reach": {
           "min": 0.1,
           "max": 0.32,
           "def": 0.17,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Flight time to the seat: a longer skim and a later landing"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Brightness of the flick and skim: 0 dark, 1 bright and airy"
         },
         "land": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Weight of the landing: 0 barely touches, 1 firm set-down"
         }
       },
       "file": "src/sounds/cards/cards-deal.js",
@@ -4270,23 +4863,30 @@
       ],
       "desc": "A hand dealt round the table, one card per seat, each landing a little differently.",
       "dur": 1.47,
+      "family": "paper",
+      "moments": [
+        "card-draw"
+      ],
       "params": {
         "cards": {
           "min": 2,
           "max": 7,
           "def": 5,
-          "step": 1
+          "step": 1,
+          "desc": "How many cards are dealt, one per seat"
         },
         "gap": {
           "min": 0.1,
           "max": 0.22,
           "def": 0.15,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between one card and the next"
         },
         "spread": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "How much the landing thump pitch differs by seat: 0 all alike, 1 widest"
         }
       },
       "file": "src/sounds/cards/cards-deal-hand.js",
@@ -4323,23 +4923,30 @@
       ],
       "desc": "A die thrown and tumbling to rest: bounces that close up and soften, then a last rocking tick.",
       "dur": 1.04,
+      "family": "wood",
+      "moments": [
+        "dice"
+      ],
       "params": {
         "bounces": {
           "min": 2,
           "max": 8,
           "def": 5,
-          "step": 1
+          "step": 1,
+          "desc": "How many times the die bounces before rocking to rest"
         },
         "length": {
           "min": 0.35,
           "max": 0.9,
           "def": 0.6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time from the first bounce to the last, gaps shrinking inside it"
         },
         "surface": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Table it lands on: 0 dull, short felt to 1 bright, ringing wood"
         }
       },
       "file": "src/sounds/cards/cards-dice-roll.js",
@@ -4376,30 +4983,38 @@
       ],
       "desc": "Dice shaken in a cup: bursts of hard little clacks at each stroke, swelling and fading.",
       "dur": 1,
+      "family": "wood",
+      "moments": [
+        "dice"
+      ],
       "params": {
         "shakes": {
           "min": 2,
           "max": 5,
           "def": 4,
-          "step": 1
+          "step": 1,
+          "desc": "Number of back-and-forth strokes"
         },
         "length": {
           "min": 0.35,
           "max": 0.95,
           "def": 0.6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Duration of the whole shake"
         },
         "pitch": {
           "min": 0.7,
           "max": 1.5,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Scales the clack, tock and rattle pitch: low chunky, high small and sharp"
         },
         "dice": {
           "min": 1,
           "max": 4,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "How many dice: more dice, more clacks per stroke"
         }
       },
       "file": "src/sounds/cards/cards-dice-shake.js",
@@ -4435,21 +5050,25 @@
       ],
       "desc": "A card tossed onto the discard pile: a flick, a short flight and a papery landing on the stack.",
       "dur": 0.23,
+      "family": "paper",
       "params": {
         "toss": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Flight before the landing: 0 dropped close, 1 tossed far with a longer whoosh"
         },
         "pile": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Cards already on the pile: more adds papery ticks and softens the thump"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Heft of the landing thump: 0 light, 1 heavy"
         }
       },
       "file": "src/sounds/cards/cards-discard.js",
@@ -4485,22 +5104,29 @@
       ],
       "desc": "A card drawn off the top of the deck: a rising paper rub that ends in a small snap as it comes free.",
       "dur": 0.27,
+      "family": "paper",
+      "moments": [
+        "card-draw"
+      ],
       "params": {
         "reach": {
           "min": 0.07,
           "max": 0.22,
           "def": 0.12,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Length of the drag before the card comes free"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Brightness of the rub and snap: 0 dark, 1 bright"
         },
         "snap": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Level of the snap as the card clears the deck: 0 faint, 1 crisp"
         }
       },
       "file": "src/sounds/cards/cards-draw.js",
@@ -4535,23 +5161,30 @@
       ],
       "desc": "A hand of cards fanned open: a quick climbing ratchet of paper ticks over a breath of air.",
       "dur": 0.57,
+      "family": "paper",
+      "moments": [
+        "card-flip"
+      ],
       "params": {
         "cards": {
           "min": 4,
           "max": 13,
           "def": 8,
-          "step": 1
+          "step": 1,
+          "desc": "How many cards tick past as the hand opens"
         },
         "length": {
           "min": 0.15,
           "max": 0.5,
           "def": 0.28,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time to fan the whole hand open"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Frequency of the ticks and air swell: 0 darker, 1 brighter"
         }
       },
       "file": "src/sounds/cards/cards-fan.js",
@@ -4585,23 +5218,30 @@
       ],
       "desc": "A playing card flicked off the deck, or a short fan of them dealt one after another.",
       "dur": 0.65,
+      "family": "paper",
+      "moments": [
+        "card-draw"
+      ],
       "params": {
         "count": {
           "min": 1,
           "max": 6,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "desc": "How many cards are flicked in a row"
         },
         "gap": {
           "min": 0.045,
           "max": 0.12,
           "def": 0.07,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between successive flicks"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Snap brightness: 0 dull, 1 bright, each later card a touch brighter"
         }
       },
       "file": "src/sounds/cards/cards-flick.js",
@@ -4636,22 +5276,29 @@
       ],
       "desc": "A card turned face up: a small scrape, a crisp snap at the turn and a light landing.",
       "dur": 0.32,
+      "family": "paper",
+      "moments": [
+        "card-flip"
+      ],
       "params": {
         "speed": {
           "min": 0.6,
           "max": 1.8,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Pace of the whole gesture: low slow and drawn out, high quick"
         },
         "snap": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Strength of the paper snap at the turn: 0 faint, 1 crisp"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Brightness of the scrape and snap: 0 dark, 1 bright"
         }
       },
       "file": "src/sounds/cards/cards-flip.js",
@@ -4688,22 +5335,29 @@
       ],
       "desc": "One wooden piece knocking another off its square: a sharp clack, then the lost piece skittering away.",
       "dur": 0.49,
+      "family": "wood",
+      "moments": [
+        "hit"
+      ],
       "params": {
         "pitch": {
           "min": 300,
           "max": 900,
           "def": 560,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Wood pitch of the clack and of the tocks as the piece skitters away"
         },
         "force": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "How hard the strike is: louder, brighter clack and a firmer low thump"
         },
         "scatter": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far the taken piece skitters: more tocks, spaced wider apart"
         }
       },
       "file": "src/sounds/cards/cards-piece-capture.js",
@@ -4743,23 +5397,30 @@
       ],
       "desc": "A wooden piece slid a little and set down on a board with a hollow, polite tok.",
       "dur": 0.26,
+      "family": "wood",
+      "moments": [
+        "drop"
+      ],
       "params": {
         "pitch": {
           "min": 300,
           "max": 900,
           "def": 520,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Wood pitch of the tok, also tinting the drag and click: low big, high small"
         },
         "hollow": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Boxiness of the board: 0 dull solid tok, 1 hollow wood-block ring"
         },
         "slide": {
           "min": 0,
           "max": 0.12,
           "def": 0.04,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Drag over the board before set-down, very short values skip the drag sound"
         }
       },
       "file": "src/sounds/cards/cards-piece-move.js",
@@ -4798,21 +5459,28 @@
       ],
       "desc": "A single card set down on the table with a soft pat, felt-dark or wood-bright.",
       "dur": 0.09,
+      "family": "paper",
+      "moments": [
+        "drop"
+      ],
       "params": {
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Heft of the pat: 0 light, 1 louder with a deeper thump"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.35
+          "def": 0.35,
+          "desc": "Surface color: 0 felt-dark, 1 wood-bright"
         },
         "drop": {
           "min": 0,
           "max": 1,
-          "def": 0.2
+          "def": 0.2,
+          "desc": "Height the card falls from: adds a paper tick and a slightly later landing"
         }
       },
       "file": "src/sounds/cards/cards-place.js",
@@ -4847,24 +5515,31 @@
       ],
       "desc": "A deck riffled together: a quick ripple of paper ticks, never two quite alike.",
       "dur": 0.55,
+      "family": "paper",
+      "moments": [
+        "shuffle"
+      ],
       "params": {
         "cards": {
           "min": 3,
           "max": 14,
           "def": 6,
-          "step": 1
+          "step": 1,
+          "desc": "How many cards ripple past"
         },
         "gap": {
           "min": 0.014,
           "max": 0.035,
           "def": 0.022,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between card ticks: short a fast ripple, long a slower one"
         },
         "pitch": {
           "min": 800,
           "max": 2600,
           "def": 1500,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base frequency of the paper ticks: low dull, high crisp"
         }
       },
       "file": "src/sounds/cards/cards-riffle.js",
@@ -4898,29 +5573,37 @@
       ],
       "desc": "An overhand shuffle: separate short ripples of paper as chunks drop off the deck, then a pat to square it.",
       "dur": 1.31,
+      "family": "paper",
+      "moments": [
+        "shuffle"
+      ],
       "params": {
         "chunks": {
           "min": 3,
           "max": 7,
           "def": 5,
-          "step": 1
+          "step": 1,
+          "desc": "How many chunks are peeled off the deck"
         },
         "pace": {
           "min": 0.1,
           "max": 0.17,
           "def": 0.12,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between chunks"
         },
         "pitch": {
           "min": 800,
           "max": 2400,
           "def": 1400,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base frequency of the paper ripples: low dull, high crisp"
         },
         "square": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Closing pat that squares the deck: 0 barely there, 1 firm"
         }
       },
       "file": "src/sounds/cards/cards-shuffle-overhand.js",
@@ -4957,28 +5640,36 @@
       ],
       "desc": "A card slid across the felt: a soft breathy glide that falls away from you or rises toward you.",
       "dur": 0.52,
+      "family": "paper",
+      "moments": [
+        "drag"
+      ],
       "params": {
         "length": {
           "min": 0.1,
           "max": 0.5,
           "def": 0.25,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Duration of the glide"
         },
         "pitch": {
           "min": 0.6,
           "max": 1.6,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Scales the glide and grit frequencies: low dark, high bright"
         },
         "rise": {
           "min": 0,
           "max": 1,
-          "def": 0.2
+          "def": 0.2,
+          "desc": "Glide direction: 0 falls away from you, middle flat, 1 rises toward you"
         },
         "grit": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Fine gritty grains on top of the glide: 0 smooth, 1 grainy"
         }
       },
       "file": "src/sounds/cards/cards-slide.js",
@@ -5013,29 +5704,38 @@
       ],
       "desc": "A quiet wooden clock tick-tock for a turn timer, small enough to repeat every second.",
       "dur": 1.06,
+      "family": "wood",
+      "moments": [
+        "timer",
+        "countdown"
+      ],
       "params": {
         "pitch": {
           "min": 700,
           "max": 2400,
           "def": 1500,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Frequency of the tick, the tock beat sits lower"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Character of each beat: 0 soft wooden knock, 1 crisp click"
         },
         "beats": {
           "min": 1,
           "max": 3,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "How many beats play, alternating tick and tock"
         },
         "gap": {
           "min": 0.25,
           "max": 0.5,
           "def": 0.4,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between beats"
         }
       },
       "file": "src/sounds/cards/cards-timer-tick.js",
@@ -5071,29 +5771,37 @@
       ],
       "desc": "A gentle two-note mallet cue that says it is your move, with a soft tap of a card underneath.",
       "dur": 0.65,
+      "family": "orchestral",
+      "moments": [
+        "notify"
+      ],
       "params": {
         "pitch": {
           "min": 440,
           "max": 880,
           "def": 659,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Frequency of the first mallet note"
         },
         "interval": {
           "min": 3,
           "max": 12,
           "def": 7,
-          "unit": "st"
+          "unit": "st",
+          "desc": "How far the second note leaps above the first, default a fifth"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Mallet hardness: 0 soft and round, 1 brighter with more overtones"
         },
         "ring": {
           "min": 0.2,
           "max": 0.5,
           "def": 0.3,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the notes ring, the first a little shorter"
         }
       },
       "file": "src/sounds/cards/cards-your-turn.js",
@@ -5130,28 +5838,37 @@
       ],
       "desc": "Energy gathering: a glowing swell climbs in pitch with shimmering overtones and ends in a ready ping.",
       "dur": 2.1,
+      "family": "synthetic",
+      "moments": [
+        "spell",
+        "power-up"
+      ],
       "params": {
         "length": {
           "min": 0.5,
           "max": 1.3,
           "def": 0.9,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Climb time: how long the swell rises before the ready ping"
         },
         "pitch": {
           "min": 200,
           "max": 600,
           "def": 330,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base note: the climb rises to three times it, the ping lands at six times"
         },
         "shimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the airy high hiss rising with the swell, faint to prominent"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Room reverb mix, from dry to a lush wash"
         }
       },
       "file": "src/sounds/magic/magic-charge-up.js",
@@ -5191,27 +5908,36 @@
       ],
       "desc": "A sinister low toll with a sour interval, a sagging drone and creeping whispers. For debuffs and dark spells.",
       "dur": 1.8,
+      "family": "synthetic",
+      "moments": [
+        "spell",
+        "scare"
+      ],
       "params": {
         "pitch": {
           "min": 70,
           "max": 220,
           "def": 110,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Root note: the saw drone sits here, the tolling bells an octave up"
         },
         "dread": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Loudness of the sour tritone bell that clashes with the toll"
         },
         "whisper": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the breathy whisper bursts, faint to upfront"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.35
+          "def": 0.35,
+          "desc": "Dim room reverb mix, from dry to murky"
         }
       },
       "file": "src/sounds/magic/magic-curse-hex.js",
@@ -5254,34 +5980,43 @@
       ],
       "desc": "A harp-like run of plucked notes over a glowing pad, closing on a bell. For enchanting an item.",
       "dur": 1.9,
+      "family": "orchestral",
+      "moments": [
+        "spell"
+      ],
       "params": {
         "pitch": {
           "min": 200,
           "max": 600,
           "def": 329.63,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "First harp note: the run, the glowing pad and the closing bell are tuned from it"
         },
         "notes": {
           "min": 4,
           "max": 8,
           "def": 6,
-          "step": 1
+          "step": 1,
+          "desc": "How many plucked strings climb the run; more notes reach higher and last longer"
         },
         "speed": {
           "min": 0.04,
           "max": 0.12,
           "def": 0.07,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Gap between plucks: short for a fast glissando, long for a slow strum"
         },
         "glow": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the soft pad humming under the harp"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.35
+          "def": 0.35,
+          "desc": "Room reverb mix, from dry to a lush wash"
         }
       },
       "file": "src/sounds/magic/magic-enchant.js",
@@ -5320,27 +6055,36 @@
       ],
       "desc": "A rushing fireball: a warm thump at the cast, a roar that swells and fades, and crackling embers.",
       "dur": 1.3,
+      "family": "organic",
+      "moments": [
+        "spell",
+        "shoot"
+      ],
       "params": {
         "heat": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far the roar's lowpass opens: low a muffled rumble, high a bright blaze"
         },
         "length": {
           "min": 0.5,
           "max": 1.2,
           "def": 0.8,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the roar lasts, with the embers spread across it"
         },
         "crackle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Number of popping embers, from a few to a dense crackle"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the low thump at ignition"
         }
       },
       "file": "src/sounds/magic/magic-fire-spell.js",
@@ -5377,28 +6121,36 @@
       ],
       "desc": "A warm chord that swells and blooms with a few falling sparkles. For healing, a blessing or a buff.",
       "dur": 2,
+      "family": "synthetic",
+      "moments": [
+        "heal"
+      ],
       "params": {
         "pitch": {
           "min": 220,
           "max": 880,
           "def": 392,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Chord root; the falling sparkles are tuned above it"
         },
         "swell": {
           "min": 0.15,
           "max": 0.6,
           "def": 0.35,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Chord fade-in time: short blooms fast, long swells slowly; sparkles start later too"
         },
         "sparkle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How many sparkles fall, and how loud the airy hiss under them is"
         },
         "space": {
           "min": 0.1,
           "max": 0.6,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Warm room reverb mix, from a light touch to a lush wash"
         }
       },
       "file": "src/sounds/magic/magic-healing-shimmer.js",
@@ -5437,28 +6189,36 @@
       ],
       "desc": "A crystalline freeze: a glassy ring over a frosty hiss, then icy shards tinkling away downward.",
       "dur": 1.4,
+      "family": "glass",
+      "moments": [
+        "spell"
+      ],
       "params": {
         "pitch": {
           "min": 1200,
           "max": 3600,
           "def": 2200,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Glass ring note; the shards start an octave above and fall below it"
         },
         "shards": {
           "min": 3,
           "max": 9,
           "def": 6,
-          "step": 1
+          "step": 1,
+          "desc": "How many icy shards tinkle down after the ring"
         },
         "frost": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the frosty high hiss under the glass"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.35
+          "def": 0.35,
+          "desc": "Bright room reverb mix, from dry to a glittering wash"
         }
       },
       "file": "src/sounds/magic/magic-ice-spell.js",
@@ -5498,33 +6258,42 @@
       ],
       "desc": "A bright crack of electricity that forks into crackling arcs and rolls away as low thunder.",
       "dur": 1.4,
+      "family": "synthetic",
+      "moments": [
+        "spell"
+      ],
       "params": {
         "bright": {
           "min": 1500,
           "max": 6000,
           "def": 3200,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start pitch of the falling zap in the strike: lower is duller, higher sharper"
         },
         "crackle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How many forked arcs crackle after the strike"
         },
         "rumble": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the rolling thunder underneath"
         },
         "thunder": {
           "min": 0.3,
           "max": 1,
           "def": 0.7,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the thunder rolls on after the strike"
         },
         "space": {
           "min": 0,
           "max": 0.5,
-          "def": 0.2
+          "def": 0.2,
+          "desc": "Small room reverb mix, from dry to roomy"
         }
       },
       "file": "src/sounds/magic/magic-lightning.js",
@@ -5565,28 +6334,36 @@
       ],
       "desc": "A swirling gateway tears open: a resonant vortex whirls up, then a deep shimmering chord settles.",
       "dur": 2.5,
+      "family": "synthetic",
+      "moments": [
+        "teleport"
+      ],
       "params": {
         "size": {
           "min": 0.5,
           "max": 1.3,
           "def": 0.9,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Build time: how long the vortex whirls before the gateway opens"
         },
         "pitch": {
           "min": 80,
           "max": 220,
           "def": 110,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Root of the throb, the opening thump and the shimmering chord"
         },
         "swirl": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Vortex loudness, plus how fast and hard the throb pulses"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Big room reverb mix, from dry to cavernous"
         }
       },
       "file": "src/sounds/magic/magic-portal-open.js",
@@ -5626,29 +6403,34 @@
       ],
       "desc": "A bubbling cauldron of glassy bloops with a faint magical glimmer. For potions, brewing and alchemy.",
       "dur": 1.6,
+      "family": "organic",
       "params": {
         "bubbles": {
           "min": 3,
           "max": 12,
           "def": 7,
-          "step": 1
+          "step": 1,
+          "desc": "How many bloops rise from the cauldron"
         },
         "pitch": {
           "min": 200,
           "max": 700,
           "def": 380,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base bloop pitch, each bubble lands randomly around it; glimmers sit far above"
         },
         "span": {
           "min": 0.4,
           "max": 1.2,
           "def": 0.8,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time the bubbling spreads over, and the length of the gurgle bed"
         },
         "glimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Number and loudness of the faint high magic pings"
         }
       },
       "file": "src/sounds/magic/magic-potion-bubble.js",
@@ -5687,34 +6469,44 @@
       ],
       "desc": "A rising twinkle of bright notes over a breath of shimmer, with a little room around it.",
       "dur": 1.5,
+      "family": "glass",
+      "moments": [
+        "sparkle",
+        "notify"
+      ],
       "params": {
         "notes": {
           "min": 3,
           "max": 7,
           "def": 4,
-          "step": 1
+          "step": 1,
+          "desc": "How many notes climb the major arpeggio"
         },
         "pitch": {
           "min": 600,
           "max": 2000,
           "def": 1046.5,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "First note of the arpeggio; the rest climb from it"
         },
         "gap": {
           "min": 0.025,
           "max": 0.09,
           "def": 0.05,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between notes: short a quick flurry, long a slower twinkle"
         },
         "shimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the airy high hiss under the notes; none at the bottom"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Small room reverb mix, from dry to roomy"
         }
       },
       "file": "src/sounds/magic/magic-sparkle.js",
@@ -5752,28 +6544,36 @@
       ],
       "desc": "Magic gathered and let go: a quick rising swirl, then a bright bell bloom opening in a soft room.",
       "dur": 1.5,
+      "family": "glass",
+      "moments": [
+        "spell"
+      ],
       "params": {
         "pitch": {
           "min": 330,
           "max": 1320,
           "def": 659.25,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Bell bloom note; the swirl rises from an octave below to meet it"
         },
         "gather": {
           "min": 0.1,
           "max": 0.4,
           "def": 0.2,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Wind-up time of the rising swirl before the bell blooms"
         },
         "bloom": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Brightness of the bell: adds upper partials and a sparkle of hiss"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Soft room reverb mix, from dry to a lush wash"
         }
       },
       "file": "src/sounds/magic/magic-spell-cast.js",
@@ -5813,29 +6613,37 @@
       ],
       "desc": "A vanishing rush upward, a beat of silence, then a soft bell where you reappear.",
       "dur": 1.4,
+      "family": "synthetic",
+      "moments": [
+        "teleport"
+      ],
       "params": {
         "pitch": {
           "min": 400,
           "max": 1600,
           "def": 800,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start note of the vanishing rush, which shoots up to six times higher"
         },
         "gap": {
           "min": 0.08,
           "max": 0.3,
           "def": 0.16,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Silence between vanishing and reappearing"
         },
         "reach": {
           "min": 1,
           "max": 2.5,
           "def": 1.5,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Raises the arrival rush and landing bell relative to the departure pitch"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Room reverb mix, from dry to roomy"
         }
       },
       "file": "src/sounds/magic/magic-teleport.js",
@@ -5875,37 +6683,46 @@
       ],
       "desc": "A gentle two-tone siren that swoops between notes: a warning that gets attention without startling.",
       "dur": 2.3,
+      "family": "synthetic",
+      "moments": [
+        "warning"
+      ],
       "params": {
         "pitch": {
           "min": 350,
           "max": 900,
           "def": 520,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Lower of the two siren notes"
         },
         "cycles": {
           "min": 1,
           "max": 3,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "How many up-and-back siren cycles play"
         },
         "interval": {
           "min": 3,
           "max": 12,
           "def": 7,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Gap between the two siren notes, narrow to wide"
         },
         "rate": {
           "min": 0.15,
           "max": 0.3,
           "def": 0.22,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time per swoop: short a hurried alarm, long a slow wail"
         },
         "tone": {
           "min": 600,
           "max": 4000,
           "def": 1800,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Lowpass cutoff: low a muffled siren, high a brighter, edgier one"
         }
       },
       "file": "src/sounds/scifi/scifi-alert-siren.js",
@@ -5940,28 +6757,36 @@
       ],
       "desc": "A heavy plasma shot: a gritty falling snarl with a bright crack on top and a thump underneath.",
       "dur": 0.45,
+      "family": "synthetic",
+      "moments": [
+        "shoot"
+      ],
       "params": {
         "pitch": {
           "min": 300,
           "max": 1200,
           "def": 700,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start pitch of the falling snarl and its FM layer"
         },
         "length": {
           "min": 0.18,
           "max": 0.4,
           "def": 0.3,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Duration of the falling snarl and its FM layer"
         },
         "grit": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Saturation on the snarl, from mild to heavily distorted"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the low thump underneath"
         }
       },
       "file": "src/sounds/scifi/scifi-blaster-bolt.js",
@@ -6003,34 +6828,43 @@
       ],
       "desc": "A rapid patter of tiny bitcrushed ticks and chirps, like data pouring through a channel.",
       "dur": 1.1,
+      "family": "synthetic",
+      "moments": [
+        "readout"
+      ],
       "params": {
         "ticks": {
           "min": 10,
           "max": 40,
           "def": 22,
-          "step": 1
+          "step": 1,
+          "desc": "How many ticks pour through, sparse to dense"
         },
         "length": {
           "min": 0.3,
           "max": 1,
           "def": 0.6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time the ticks spread over, and the length of the hiss bed"
         },
         "pitch": {
           "min": 600,
           "max": 3000,
           "def": 1600,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Center pitch of the ticks"
         },
         "spread": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Pitch scatter of the ticks, from one pitch to a wide random spread"
         },
         "grit": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Bitcrush depth: low cleaner, high coarser and more lo-fi"
         }
       },
       "file": "src/sounds/scifi/scifi-data-stream.js",
@@ -6069,29 +6903,34 @@
       ],
       "desc": "A glassy digital tone that stutters and drops out as a projection flickers, with static in the gaps.",
       "dur": 1.3,
+      "family": "synthetic",
       "params": {
         "pitch": {
           "min": 400,
           "max": 1600,
           "def": 800,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base note of the glassy FM tone"
         },
         "flickers": {
           "min": 3,
           "max": 9,
           "def": 6,
-          "step": 1
+          "step": 1,
+          "desc": "How many bursts the tone stutters into before it settles"
         },
         "glitch": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Instability: more bitcrush, wider pitch wander and louder static in the gaps"
         },
         "length": {
           "min": 0.5,
           "max": 1,
           "def": 0.8,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time the flicker sequence spreads over; the bursts stretch with it"
         }
       },
       "file": "src/sounds/scifi/scifi-hologram-flicker.js",
@@ -6130,34 +6969,43 @@
       ],
       "desc": "A bright falling pew for a laser shot. Fire it once, or in a quick burst of up to four.",
       "dur": 0.8,
+      "family": "synthetic",
+      "moments": [
+        "shoot"
+      ],
       "params": {
         "pitch": {
           "min": 1200,
           "max": 4000,
           "def": 2400,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Start pitch of the pew"
         },
         "drop": {
           "min": 0.5,
           "max": 0.95,
-          "def": 0.85
+          "def": 0.85,
+          "desc": "How far each pew falls: low a short dip, high a deep plunge"
         },
         "shots": {
           "min": 1,
           "max": 4,
           "def": 1,
-          "step": 1
+          "step": 1,
+          "desc": "How many pews in the burst, each a touch lower than the last"
         },
         "rate": {
           "min": 0.06,
           "max": 0.2,
           "def": 0.1,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between shots in a burst; no effect on a single shot"
         },
         "edge": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Square-wave bite: low a smoother sine-like pew, high a buzzier one"
         }
       },
       "file": "src/sounds/scifi/scifi-laser-zap.js",
@@ -6197,29 +7045,37 @@
       ],
       "desc": "A machine spinning down: a falling whine closes under a slowing patter of ticks and ends in a soft clunk.",
       "dur": 1.6,
+      "family": "synthetic",
+      "moments": [
+        "power-down"
+      ],
       "params": {
         "length": {
           "min": 0.5,
           "max": 1.4,
           "def": 0.9,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time the machine takes to wind down before the clunk"
         },
         "pitch": {
           "min": 60,
           "max": 200,
           "def": 110,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Machine's base pitch, tuning the falling whine and the ticks"
         },
         "ticks": {
           "min": 3,
           "max": 12,
           "def": 7,
-          "step": 1
+          "step": 1,
+          "desc": "How many ticks slow to a stop under the whine"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Starting brightness of the closing lowpass, muted to bright"
         }
       },
       "file": "src/sounds/scifi/scifi-power-down.js",
@@ -6257,29 +7113,37 @@
       ],
       "desc": "A machine spinning up: accelerating ticks climb into a rising whine that locks on at full power.",
       "dur": 1.65,
+      "family": "synthetic",
+      "moments": [
+        "power-up"
+      ],
       "params": {
         "length": {
           "min": 0.5,
           "max": 1.4,
           "def": 0.9,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Spin-up time before the lock-on chime"
         },
         "pitch": {
           "min": 80,
           "max": 250,
           "def": 130,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base pitch: tunes the climbing whine, the ticks and the lock-on chime"
         },
         "ticks": {
           "min": 4,
           "max": 14,
           "def": 9,
-          "step": 1
+          "step": 1,
+          "desc": "How many accelerating ticks play during the spin-up"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far the lowpass opens by the end: duller to brighter whine"
         }
       },
       "file": "src/sounds/scifi/scifi-power-up.js",
@@ -6312,29 +7176,37 @@
       ],
       "desc": "A quick burst of FM chirps that swoop up and down like a small, expressive droid.",
       "dur": 1.05,
+      "family": "synthetic",
+      "moments": [
+        "readout"
+      ],
       "params": {
         "pitch": {
           "min": 500,
           "max": 1400,
           "def": 900,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base voice pitch; chirps wander within about an octave of it"
         },
         "chirps": {
           "min": 2,
           "max": 6,
           "def": 4,
-          "step": 1
+          "step": 1,
+          "desc": "How many chirps the droid says"
         },
         "mood": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Chance each chirp swoops up: low glum and falling, high perky and rising"
         },
         "speed": {
           "min": 0.05,
           "max": 0.12,
           "def": 0.075,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Average chirp length: short a quick chatter, long slower syllables"
         }
       },
       "file": "src/sounds/scifi/scifi-robot-chirp.js",
@@ -6368,29 +7240,37 @@
       ],
       "desc": "A narrow beam sweeping up and back with a wobble, ending on a two-blip confirm.",
       "dur": 2.3,
+      "family": "synthetic",
+      "moments": [
+        "scan"
+      ],
       "params": {
         "pitch": {
           "min": 300,
           "max": 1200,
           "def": 520,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Bottom of the sweep; the beam climbs two octaves and the blips sit above"
         },
         "sweeps": {
           "min": 1,
           "max": 3,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "Number of beam passes, alternating up and back, before the confirm blips"
         },
         "length": {
           "min": 0.3,
           "max": 0.7,
           "def": 0.5,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Duration of each sweep"
         },
         "wobble": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Depth of the fast tremolo on the beam, steady to warbling"
         }
       },
       "file": "src/sounds/scifi/scifi-scanner-sweep.js",
@@ -6426,29 +7306,37 @@
       ],
       "desc": "A throbbing energy hum that swells in as a shield powers up, then settles into a slow pulse.",
       "dur": 1.6,
+      "family": "synthetic",
+      "moments": [
+        "shield"
+      ],
       "params": {
         "pitch": {
           "min": 70,
           "max": 200,
           "def": 110,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Base pitch of the hum; a square sits an octave under, a thin whine high above"
         },
         "pulse": {
           "min": 2,
           "max": 10,
           "def": 5,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "How fast the hum throbs, slow pulse to rapid flutter"
         },
         "bright": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far the resonant lowpass opens, and the level of the thin top whine"
         },
         "length": {
           "min": 0.6,
           "max": 1.6,
           "def": 1.2,
-          "unit": "s"
+          "unit": "s",
+          "desc": "How long the shield hums before fading"
         }
       },
       "file": "src/sounds/scifi/scifi-shield-hum.js",
@@ -6481,29 +7369,37 @@
       ],
       "desc": "A quick run of bitcrushed computer beeps, like a console printing a readout or acknowledging a command.",
       "dur": 0.45,
+      "family": "chip",
+      "moments": [
+        "readout"
+      ],
       "params": {
         "pitch": {
           "min": 500,
           "max": 2400,
           "def": 1200,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "First beep's pitch; later beeps pick scale notes up to an octave above"
         },
         "count": {
           "min": 1,
           "max": 5,
           "def": 3,
-          "step": 1
+          "step": 1,
+          "desc": "How many beeps in the run"
         },
         "speed": {
           "min": 0.04,
           "max": 0.1,
           "def": 0.055,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between beeps"
         },
         "grit": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Bitcrush depth: low cleaner beeps, high crunchier with choppier tails"
         }
       },
       "file": "src/sounds/scifi/scifi-terminal-blip.js",
@@ -6539,29 +7435,38 @@
       ],
       "desc": "An engine whine winds up, then the ship leaps: a stretched streak and a deep thump as it vanishes.",
       "dur": 1.95,
+      "family": "synthetic",
+      "moments": [
+        "teleport",
+        "transition"
+      ],
       "params": {
         "charge": {
           "min": 0.3,
           "max": 1,
           "def": 0.6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Wind-up time of the engine before the jump"
         },
         "pitch": {
           "min": 60,
           "max": 160,
           "def": 90,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Engine base pitch, tuning the rising whine and the zip at the jump"
         },
         "boom": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Loudness of the deep thump as the ship vanishes"
         },
         "tail": {
           "min": 0.3,
           "max": 0.9,
           "def": 0.5,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Length of the falling noise streak after the jump"
         }
       },
       "file": "src/sounds/scifi/scifi-warp-jump.js",
@@ -6602,29 +7507,37 @@
       ],
       "desc": "Slow drips falling in a damp stone chamber, each one ringing in the echo, over a low draft of air.",
       "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the bed, fades included"
         },
         "drips": {
           "min": 2,
           "max": 10,
           "def": 5,
-          "step": 1
+          "step": 1,
+          "desc": "How many drips fall during the bed"
         },
         "pitch": {
           "min": 0.6,
           "max": 1.6,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Scales drip pitch: low heavy drops, high small bright ones"
         },
         "cave": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Chamber echo: 0 shorter and drier, 1 longer and wetter"
         }
       },
       "file": "src/sounds/ambience/ambience-cave-drips.js",
@@ -6663,23 +7576,30 @@
       ],
       "desc": "A storm miles away: a muffled crack and a long low rumble that rolls and fades out.",
       "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the rumble and its rolls"
         },
         "distance": {
           "min": 0,
           "max": 1,
-          "def": 0.55
+          "def": 0.55,
+          "desc": "How far the storm is: 0 near with a loud crack, 1 far, darker, no crack"
         },
         "rolls": {
           "min": 0,
           "max": 3,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "How many later rolls re-light the rumble after the first"
         }
       },
       "file": "src/sounds/ambience/ambience-distant-thunder.js",
@@ -6715,27 +7635,35 @@
       ],
       "desc": "A hearth or campfire: a soft roar of flame with random snaps, pops and the odd log settling.",
       "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the bed, fades included"
         },
         "crackle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Density of snaps and pops, and how often a log settles"
         },
         "roar": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the flame roar and its flicker swells: 0 nearly silent, 1 full"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Crackle brightness: 0 dull and woody, 1 bright and sharp"
         }
       },
       "file": "src/sounds/ambience/ambience-fire-crackle.js",
@@ -6773,28 +7701,36 @@
       ],
       "desc": "Morning birdsong in the trees: tweets, trills and whistles from near and far over a faint breeze.",
       "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the bed, fades included"
         },
         "activity": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How many bird phrases sing: 0 sparse, 1 busy"
         },
         "pitch": {
           "min": 0.7,
           "max": 1.4,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Scales all the birdsong pitch: low deeper, high shriller"
         },
         "trill": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Share of phrases that are fast warbling trills rather than tweets or whistles"
         }
       },
       "file": "src/sounds/ambience/ambience-forest-birds.js",
@@ -6834,28 +7770,36 @@
       ],
       "desc": "Waves building and breaking on a beach, each with a hiss of foam, over a low swell. Fades in and out.",
       "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 7,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the bed, fades included"
         },
         "period": {
           "min": 2.5,
           "max": 6,
           "def": 4,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Time between waves, longer also makes each wave build slower"
         },
         "foam": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the foam hiss after each crest: 0 none, 1 full"
         },
         "depth": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Low sea swell under the waves: 0 nearly gone, 1 heavy"
         }
       },
       "file": "src/sounds/ambience/ambience-ocean-surf.js",
@@ -6890,22 +7834,29 @@
       ],
       "desc": "Rain on leaves and puddles, from a drizzle to a steady downpour. Fades in and out.",
       "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the bed, fades included"
         },
         "rate": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Rain intensity: 0 light drizzle to 1 steady downpour, more drops and plinks"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Brightness of the hiss, drops and plinks: 0 dull, 1 bright"
         }
       },
       "file": "src/sounds/ambience/ambience-rain.js",
@@ -6943,28 +7894,36 @@
       ],
       "desc": "A quiet indoor bed: electrical hum with its buzzing harmonics over a breath of ventilation hiss.",
       "dur": 8,
+      "family": "mechanical",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the bed, fades included"
         },
         "pitch": {
           "min": 50,
           "max": 120,
           "def": 60,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Mains hum frequency, with a soft sine an octave above it"
         },
         "buzz": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Brightness of the sawtooth buzz: 0 dull hum, 1 bright buzzy harmonics"
         },
         "air": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Ventilation hiss: 0 none, 1 full"
         }
       },
       "file": "src/sounds/ambience/ambience-room-hum.js",
@@ -7003,28 +7962,36 @@
       ],
       "desc": "A slow, deep drone for a ship or a void: a dark pad that opens up, with a faint shimmer far above.",
       "dur": 8,
+      "family": "synthetic",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 7,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the bed, fades included"
         },
         "pitch": {
           "min": 36,
           "max": 110,
           "def": 55,
-          "unit": "Hz"
+          "unit": "Hz",
+          "desc": "Root frequency of the drone, harmonics and shimmer follow it"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "How far the slowly opening filter reaches: 0 dark, 1 brighter"
         },
         "shimmer": {
           "min": 0,
           "max": 1,
-          "def": 0.4
+          "def": 0.4,
+          "desc": "Level of the high trembling shimmer: 0 none, 1 full"
         }
       },
       "file": "src/sounds/ambience/ambience-space-drone.js",
@@ -7061,28 +8028,36 @@
       ],
       "desc": "An open-air wind bed: steady air with slow gusts rolling through and a faint whistle. Fades in and out.",
       "dur": 8,
+      "family": "air",
+      "moments": [
+        "ambience"
+      ],
       "params": {
         "length": {
           "min": 3,
           "max": 8,
           "def": 6,
-          "unit": "s"
+          "unit": "s",
+          "desc": "Total duration of the bed, fades included"
         },
         "gust": {
           "min": 0,
           "max": 1,
-          "def": 0.55
+          "def": 0.55,
+          "desc": "Strength of the slow passing gusts: 0 steady air only, 1 strong gusts"
         },
         "pitch": {
           "min": 0.6,
           "max": 1.6,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Scales air, gust and whistle pitch at even level: low deep, high thin"
         },
         "whistle": {
           "min": 0,
           "max": 1,
-          "def": 0.25
+          "def": 0.25,
+          "desc": "Thin whistle through a gap: 0 none, 1 clearly audible"
         }
       },
       "file": "src/sounds/ambience/ambience-wind-gusts.js",
@@ -7118,30 +8093,39 @@
       ],
       "desc": "Short minor stabs and a long tense chord with a sub thump, for danger, a boss entrance or a hard warning.",
       "dur": 1.8,
+      "family": "chip",
+      "moments": [
+        "warning",
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 7,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole sting"
         },
         "tempo": {
           "min": 0.75,
           "max": 1.5,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher plays the stabs and the chord faster and shorter"
         },
         "stabs": {
           "min": 1,
           "max": 4,
           "def": 2,
-          "step": 1
+          "step": 1,
+          "desc": "Number of short minor stabs before the long chord"
         },
         "edge": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Bit-crush amount: 0 light 8-bit grit, 1 coarser and harsher"
         }
       },
       "file": "src/sounds/music/music-alert-sting.js",
@@ -7177,29 +8161,38 @@
       ],
       "desc": "A falling four-note sad-brass wah for a lost round: three short steps down and one long sagging note.",
       "dur": 3.4,
+      "family": "orchestral",
+      "moments": [
+        "game-over",
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 5,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole jingle"
         },
         "tempo": {
           "min": 0.7,
           "max": 1.4,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher plays the four notes faster and shorter, lower drags them out"
         },
         "droop": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Sag and wobble on the last note: 0 steady, 1 a deep wobbling slide down"
         },
         "tone": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Brightness of the wah filter: 0 dark and muffled, 1 brassier"
         }
       },
       "file": "src/sounds/music/music-defeat-jingle.js",
@@ -7239,29 +8232,39 @@
       ],
       "desc": "Three stabs and a long chord on synth brass: an announcement or a proud arrival in two seconds.",
       "dur": 2.2,
+      "family": "orchestral",
+      "moments": [
+        "victory",
+        "achievement",
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 7,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole fanfare"
         },
         "tempo": {
           "min": 0.75,
           "max": 1.4,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher plays the stabs and the final chord faster and shorter"
         },
         "brass": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "How far each note's filter opens: 0 a mellow horn, 1 a bright brassy blat"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the low octave root and the cymbal wash on the final chord"
         }
       },
       "file": "src/sounds/music/music-fanfare-short.js",
@@ -7304,29 +8307,37 @@
       ],
       "desc": "A rising sweep that opens into a warm, ringing major-seventh chord with a glint on top. A calm logo reveal.",
       "dur": 4.2,
+      "family": "orchestral",
+      "moments": [
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 7,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole sting"
         },
         "tempo": {
           "min": 0.8,
           "max": 1.3,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher shortens the rising sweep so the chord lands sooner"
         },
         "shine": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the high bell glint over the chord"
         },
         "space": {
           "min": 0.2,
           "max": 0.7,
-          "def": 0.45
+          "def": 0.45,
+          "desc": "Reverb mix: low keeps the chord close, high a long washy room"
         }
       },
       "file": "src/sounds/music/music-intro-logo.js",
@@ -7371,29 +8382,39 @@
       ],
       "desc": "A warm plucked arpeggio climbing into a ringing bell chord. For finishing a stage, not a whole game.",
       "dur": 3.4,
+      "family": "orchestral",
+      "moments": [
+        "victory",
+        "level-up",
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 7,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole jingle"
         },
         "tempo": {
           "min": 0.75,
           "max": 1.4,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher climbs the arpeggio faster and lands the chord sooner"
         },
         "sparkle": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Lifts the top bell and the airy high shimmer at the landing"
         },
         "space": {
           "min": 0,
           "max": 0.6,
-          "def": 0.3
+          "def": 0.3,
+          "desc": "Reverb mix over everything, from dry to roomy"
         }
       },
       "file": "src/sounds/music/music-level-complete.js",
@@ -7438,30 +8459,39 @@
       ],
       "desc": "Two to four quick rising notes with an echo, for pressing Start or confirming a menu choice.",
       "dur": 1.7,
+      "family": "chip",
+      "moments": [
+        "success",
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 7,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole melody"
         },
         "notes": {
           "min": 2,
           "max": 4,
           "def": 3,
-          "step": 1
+          "step": 1,
+          "desc": "How many rising notes play, always ending on the high tonic"
         },
         "speed": {
           "min": 0.7,
           "max": 1.6,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher plays the run faster; the final held note keeps its length"
         },
         "echo": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level and feedback of the trailing echo: 0 dry, 1 a longer trail"
         }
       },
       "file": "src/sounds/music/music-menu-confirm.js",
@@ -7497,29 +8527,38 @@
       ],
       "desc": "Two hanging bell tones a tritone apart over a dark swell. For a clue, a twist or a door that should not open.",
       "dur": 4.2,
+      "family": "synthetic",
+      "moments": [
+        "scare",
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 7,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole sting"
         },
         "tempo": {
           "min": 0.75,
           "max": 1.4,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher brings the second bell in sooner and swells the pad quicker"
         },
         "eerie": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Opens the bells' FM clang, wobbles the pad and adds a high hiss"
         },
         "space": {
           "min": 0.2,
           "max": 0.7,
-          "def": 0.45
+          "def": 0.45,
+          "desc": "Reverb mix of the big dark room, from close to cavernous"
         }
       },
       "file": "src/sounds/music/music-mystery-sting.js",
@@ -7562,29 +8601,39 @@
       ],
       "desc": "A cheerful two-chord reveal: a quick staccato hit and a bright held chord with a sparkle on top.",
       "dur": 2,
+      "family": "orchestral",
+      "moments": [
+        "achievement",
+        "victory",
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 7,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole ta-da"
         },
         "tempo": {
           "min": 0.75,
           "max": 1.4,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher brings the held chord in sooner and quickens the glissando"
         },
         "sparkle": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the rising glissando and the high bell on top"
         },
         "weight": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Level of the low bass note under the held chord"
         }
       },
       "file": "src/sounds/music/music-ta-da.js",
@@ -7626,29 +8675,39 @@
       ],
       "desc": "A chiptune win: a quick rising arpeggio into a held major chord. Bright, short and proud.",
       "dur": 1.7,
+      "family": "chip",
+      "moments": [
+        "victory",
+        "level-up",
+        "music"
+      ],
       "params": {
         "key": {
           "min": -5,
           "max": 7,
           "def": 0,
           "step": 1,
-          "unit": "st"
+          "unit": "st",
+          "desc": "Transposes the whole jingle"
         },
         "tempo": {
           "min": 0.75,
           "max": 1.5,
           "def": 1,
-          "unit": "x"
+          "unit": "x",
+          "desc": "Higher plays the arpeggio faster and shortens the held chord"
         },
         "crunch": {
           "min": 0,
           "max": 1,
-          "def": 0.5
+          "def": 0.5,
+          "desc": "Bit-crush amount: 0 light 8-bit grit, 1 grittier and harsher"
         },
         "bass": {
           "min": 0,
           "max": 1,
-          "def": 0.6
+          "def": 0.6,
+          "desc": "Level of the low triangle bass under the held chord"
         }
       },
       "file": "src/sounds/music/music-victory-jingle.js",

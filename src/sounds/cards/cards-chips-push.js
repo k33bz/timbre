@@ -8,11 +8,13 @@ export default {
   tags: ['chip', 'poker', 'all-in', 'push', 'bet', 'shove', 'pot', 'casino'],
   desc: 'A pile of chips pushed forward for an all-in: a swelling rattle of clay clicks that ends in a thud and a few settling chips.',
   dur: 1.27,
+  family: 'wood',
+  moments: ['chips'],
   params: {
-    length: { min: 0.4, max: 0.9, def: 0.65, unit: 's' },
-    chips: { min: 14, max: 40, def: 26, step: 1 },
-    pitch: { min: 1400, max: 3200, def: 2200, unit: 'Hz' },
-    slide: { min: 0, max: 1, def: 0.6 },
+    length: { min: 0.4, max: 0.9, def: 0.65, unit: 's', desc: 'Duration of the shove before the heap thuds into the pot' },
+    chips: { min: 14, max: 40, def: 26, step: 1, desc: 'How many clay clicks rattle during the shove' },
+    pitch: { min: 1400, max: 3200, def: 2200, unit: 'Hz', desc: 'Center frequency of the clicks and settling chips: low duller, high brighter' },
+    slide: { min: 0, max: 1, def: 0.6, desc: 'Sliding noise under the clicks: 0 nearly silent, 1 loud felt hiss' },
   },
   play(T, out, t, p) {
     const L = p.length;

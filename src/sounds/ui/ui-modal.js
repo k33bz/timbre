@@ -7,11 +7,13 @@ export default {
   tags: ['modal', 'dialog', 'popup', 'overlay', 'open', 'close', 'sheet', 'soft'],
   desc: 'A soft low swell for a dialog opening, with a small glint on arrival, and a quick falling sigh for it closing.',
   dur: 0.23,
+  family: 'soft',
+  moments: ['open', 'close'],
   params: {
-    open: { min: 0, max: 1, def: 1, step: 1 },
-    pitch: { min: 100, max: 260, def: 165, unit: 'Hz' },
-    air: { min: 0, max: 1, def: 0.5 },
-    shine: { min: 0, max: 1, def: 0.4 },
+    open: { min: 0, max: 1, def: 1, step: 1, role: 'open', desc: '1 plays the rising swell with a glint, 0 the quick falling sigh' },
+    pitch: { min: 100, max: 260, def: 165, unit: 'Hz', desc: 'Tuning of the low swell or sigh tones; the glint stays fixed' },
+    air: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the breath of air in the swell or sigh' },
+    shine: { min: 0, max: 1, def: 0.4, desc: 'Level of the high bell glint: 0 faint, 1 clear; it droops on close' },
   },
   play(T, out, t, p) {
     const w = p.pitch;

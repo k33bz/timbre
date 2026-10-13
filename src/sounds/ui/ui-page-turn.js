@@ -7,10 +7,12 @@ export default {
   tags: ['page', 'turn', 'paper', 'next', 'book', 'swipe', 'air'],
   desc: 'A paper page turned: a soft sweep of air, light rustles and a quiet landing. For pagers, carousels and readers.',
   dur: 0.35,
+  family: 'paper',
+  moments: ['transition'],
   params: {
-    length: { min: 0.14, max: 0.34, def: 0.22, unit: 's' },
-    rustle: { min: 0, max: 1, def: 0.5 },
-    bright: { min: 0, max: 1, def: 0.5 },
+    length: { min: 0.14, max: 0.34, def: 0.22, unit: 's', desc: 'Duration of the turn: sweep, rustles and landing all stretch with it' },
+    rustle: { min: 0, max: 1, def: 0.5, desc: 'Level of the scattered paper rustles: 0 none, 1 crisp' },
+    bright: { min: 0, max: 1, def: 0.5, desc: 'Register of the air sweep: 0 darker and lower, 1 brighter and higher' },
   },
   play(T, out, t, p) {
     const len = p.length;

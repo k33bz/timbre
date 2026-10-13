@@ -7,10 +7,12 @@ export default {
   tags: ['dice', 'roll', 'throw', 'bounce', 'land', 'table', 'board-game'],
   desc: 'A die thrown and tumbling to rest: bounces that close up and soften, then a last rocking tick.',
   dur: 1.04,
+  family: 'wood',
+  moments: ['dice'],
   params: {
-    bounces: { min: 2, max: 8, def: 5, step: 1 },
-    length: { min: 0.35, max: 0.9, def: 0.6, unit: 's' },
-    surface: { min: 0, max: 1, def: 0.5 },
+    bounces: { min: 2, max: 8, def: 5, step: 1, desc: 'How many times the die bounces before rocking to rest' },
+    length: { min: 0.35, max: 0.9, def: 0.6, unit: 's', desc: 'Time from the first bounce to the last, gaps shrinking inside it' },
+    surface: { min: 0, max: 1, def: 0.5, desc: 'Table it lands on: 0 dull, short felt to 1 bright, ringing wood' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.bounces);

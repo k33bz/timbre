@@ -7,11 +7,13 @@ export default {
   tags: ['teleport', 'blink', 'warp', 'vanish', 'appear', 'phase', 'travel'],
   desc: 'A vanishing rush upward, a beat of silence, then a soft bell where you reappear.',
   dur: 1.4,
+  family: 'synthetic',
+  moments: ['teleport'],
   params: {
-    pitch: { min: 400, max: 1600, def: 800, unit: 'Hz' },
-    gap: { min: 0.08, max: 0.3, def: 0.16, unit: 's' },
-    reach: { min: 1, max: 2.5, def: 1.5, unit: 'x' },
-    space: { min: 0, max: 0.6, def: 0.3 },
+    pitch: { min: 400, max: 1600, def: 800, unit: 'Hz', desc: 'Start note of the vanishing rush, which shoots up to six times higher' },
+    gap: { min: 0.08, max: 0.3, def: 0.16, unit: 's', desc: 'Silence between vanishing and reappearing' },
+    reach: { min: 1, max: 2.5, def: 1.5, unit: 'x', desc: 'Raises the arrival rush and landing bell relative to the departure pitch' },
+    space: { min: 0, max: 0.6, def: 0.3, desc: 'Room reverb mix, from dry to roomy' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 0.9, mix: p.space, tone: 0.7 });

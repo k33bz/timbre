@@ -6,11 +6,13 @@ export default {
   tags: ['spell', 'cast', 'magic', 'conjure', 'wand', 'release', 'bloom'],
   desc: 'Magic gathered and let go: a quick rising swirl, then a bright bell bloom opening in a soft room.',
   dur: 1.5,
+  family: 'glass',
+  moments: ['spell'],
   params: {
-    pitch: { min: 330, max: 1320, def: 659.25, unit: 'Hz' },
-    gather: { min: 0.1, max: 0.4, def: 0.2, unit: 's' },
-    bloom: { min: 0, max: 1, def: 0.6 },
-    space: { min: 0, max: 0.6, def: 0.3 },
+    pitch: { min: 330, max: 1320, def: 659.25, unit: 'Hz', desc: 'Bell bloom note; the swirl rises from an octave below to meet it' },
+    gather: { min: 0.1, max: 0.4, def: 0.2, unit: 's', desc: 'Wind-up time of the rising swirl before the bell blooms' },
+    bloom: { min: 0, max: 1, def: 0.6, desc: 'Brightness of the bell: adds upper partials and a sparkle of hiss' },
+    space: { min: 0, max: 0.6, def: 0.3, desc: 'Soft room reverb mix, from dry to a lush wash' },
   },
   play(T, out, t, p) {
     const room = T.reverb(out, t, { time: 1.1, mix: p.space, tone: 0.7 });

@@ -8,10 +8,12 @@ export default {
   tags: ['door', 'open', 'creak', 'hinge', 'latch', 'wood', 'squeak', 'entrance'],
   desc: 'A latch clicks and a wooden hinge creaks open. Use a short length for a quick door, long for a spooky one.',
   dur: 1.1,
+  family: 'wood',
+  moments: ['door', 'open'],
   params: {
-    pitch: { min: 70, max: 260, def: 130, unit: 'Hz' },
-    length: { min: 0.4, max: 1.0, def: 0.7, unit: 's' },
-    creak: { min: 0, max: 1, def: 0.6 },
+    pitch: { min: 70, max: 260, def: 130, unit: 'Hz', desc: 'Starting note of the hinge creak, which climbs as the door swings' },
+    length: { min: 0.4, max: 1.0, def: 0.7, unit: 's', desc: 'How long the hinge creaks as the door swings open' },
+    creak: { min: 0, max: 1, def: 0.6, desc: 'Roughness of the hinge: 0 a smoother groan, 1 a juddering, wobbly creak with grit' },
   },
   play(T, out, t, p) {
     // the latch: a bright click then a small knock as it lets go

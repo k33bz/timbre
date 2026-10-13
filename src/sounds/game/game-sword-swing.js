@@ -8,10 +8,12 @@ export default {
   tags: ['sword', 'swing', 'slash', 'blade', 'swish', 'melee', 'attack', 'whoosh'],
   desc: 'A blade cutting the air: a quick bright swish with a thin edge of steel. Sharper than the generic whoosh.',
   dur: 0.38,
+  family: 'air',
+  moments: ['attack'],
   params: {
-    length: { min: 0.1, max: 0.3, def: 0.17, unit: 's' },
-    pitch: { min: 0.6, max: 1.6, def: 1, unit: 'x' },
-    edge: { min: 0, max: 1, def: 0.4 },
+    length: { min: 0.1, max: 0.3, def: 0.17, unit: 's', desc: 'How long the swish takes; attack and tail stretch together' },
+    pitch: { min: 0.6, max: 1.6, def: 1, unit: 'x', desc: 'Shifts the swish bands and the steel ring up or down' },
+    edge: { min: 0, max: 1, def: 0.4, desc: 'Level of the thin steel ring under the swish: 0 pure air' },
   },
   play(T, out, t, p) {
     const s = p.length / 0.17;

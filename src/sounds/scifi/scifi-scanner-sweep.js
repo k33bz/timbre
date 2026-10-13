@@ -7,11 +7,13 @@ export default {
   tags: ['scanner', 'scan', 'sweep', 'radar', 'sensor', 'detect', 'sonar'],
   desc: 'A narrow beam sweeping up and back with a wobble, ending on a two-blip confirm.',
   dur: 2.3,
+  family: 'synthetic',
+  moments: ['scan'],
   params: {
-    pitch: { min: 300, max: 1200, def: 520, unit: 'Hz' },
-    sweeps: { min: 1, max: 3, def: 2, step: 1 },
-    length: { min: 0.3, max: 0.7, def: 0.5, unit: 's' },
-    wobble: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 300, max: 1200, def: 520, unit: 'Hz', desc: 'Bottom of the sweep; the beam climbs two octaves and the blips sit above' },
+    sweeps: { min: 1, max: 3, def: 2, step: 1, desc: 'Number of beam passes, alternating up and back, before the confirm blips' },
+    length: { min: 0.3, max: 0.7, def: 0.5, unit: 's', desc: 'Duration of each sweep' },
+    wobble: { min: 0, max: 1, def: 0.5, desc: 'Depth of the fast tremolo on the beam, steady to warbling' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.sweeps);

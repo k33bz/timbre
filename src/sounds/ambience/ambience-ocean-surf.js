@@ -7,11 +7,13 @@ export default {
   tags: ['ocean', 'sea', 'surf', 'waves', 'beach', 'shore', 'water', 'bed'],
   desc: 'Waves building and breaking on a beach, each with a hiss of foam, over a low swell. Fades in and out.',
   dur: 8,
+  family: 'organic',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 7, unit: 's' },
-    period: { min: 2.5, max: 6, def: 4, unit: 's' },
-    foam: { min: 0, max: 1, def: 0.5 },
-    depth: { min: 0, max: 1, def: 0.5 },
+    length: { min: 3, max: 8, def: 7, unit: 's', desc: 'Total duration of the bed, fades included' },
+    period: { min: 2.5, max: 6, def: 4, unit: 's', desc: 'Time between waves, longer also makes each wave build slower' },
+    foam: { min: 0, max: 1, def: 0.5, desc: 'Level of the foam hiss after each crest: 0 none, 1 full' },
+    depth: { min: 0, max: 1, def: 0.5, desc: 'Low sea swell under the waves: 0 nearly gone, 1 heavy' },
   },
   play(T, out, t, p) {
     const L = p.length;

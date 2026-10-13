@@ -7,10 +7,12 @@ export default {
   tags: ['tap', 'touch', 'finger', 'press', 'row', 'soft'],
   desc: 'A soft fingertip tap for touch screens and list rows: a muffled pat over a short mid thud, rounder than a click.',
   dur: 0.06,
+  family: 'soft',
+  moments: ['click'],
   params: {
-    pitch: { min: 220, max: 600, def: 330, unit: 'Hz' },
-    pat: { min: 0, max: 1, def: 0.5 },
-    soft: { min: 0, max: 1, def: 0.5 },
+    pitch: { min: 220, max: 600, def: 330, unit: 'Hz', desc: 'Tuning of the short mid thud' },
+    pat: { min: 0, max: 1, def: 0.5, desc: 'Loudness of the muffled noise pat over the thud' },
+    soft: { min: 0, max: 1, def: 0.5, desc: 'Muffling of the pat: 0 brighter and clearer, 1 duller and softer' },
   },
   play(T, out, t, p) {
     T.osc(out, t, { f: p.pitch, to: p.pitch * 0.62, dur: 0.05, peak: 0.05, a: 0.004 });

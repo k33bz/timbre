@@ -8,11 +8,13 @@ export default {
   tags: ['timer', 'tick', 'clock', 'countdown', 'turn', 'tock', 'wood'],
   desc: 'A quiet wooden clock tick-tock for a turn timer, small enough to repeat every second.',
   dur: 1.06,
+  family: 'wood',
+  moments: ['timer', 'countdown'],
   params: {
-    pitch: { min: 700, max: 2400, def: 1500, unit: 'Hz' },
-    tone: { min: 0, max: 1, def: 0.5 },
-    beats: { min: 1, max: 3, def: 2, step: 1 },
-    gap: { min: 0.25, max: 0.5, def: 0.4, unit: 's' },
+    pitch: { min: 700, max: 2400, def: 1500, unit: 'Hz', desc: 'Frequency of the tick, the tock beat sits lower' },
+    tone: { min: 0, max: 1, def: 0.5, desc: 'Character of each beat: 0 soft wooden knock, 1 crisp click' },
+    beats: { min: 1, max: 3, def: 2, step: 1, desc: 'How many beats play, alternating tick and tock' },
+    gap: { min: 0.25, max: 0.5, def: 0.4, unit: 's', desc: 'Time between beats' },
   },
   play(T, out, t, p) {
     const n = Math.round(p.beats);

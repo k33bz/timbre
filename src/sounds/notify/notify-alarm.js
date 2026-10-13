@@ -7,11 +7,13 @@ export default {
   tags: ['alarm', 'wake', 'timer', 'beep', 'gentle', 'morning', 'swell'],
   desc: 'Soft rounded beeps in rising pairs that swell round by round. Wakes you without startling you.',
   dur: 2.3,
+  family: 'soft',
+  moments: ['timer'],
   params: {
-    pitch: { min: 440, max: 1000, def: 659.25, unit: 'Hz' },
-    rounds: { min: 2, max: 4, def: 3, step: 1 },
-    pace: { min: 0.12, max: 0.25, def: 0.17, unit: 's' },
-    swell: { min: 0, max: 1, def: 0.6 },
+    pitch: { min: 440, max: 1000, def: 659.25, unit: 'Hz', desc: 'Note of the first beep in each pair; the second is a fifth higher' },
+    rounds: { min: 2, max: 4, def: 3, step: 1, desc: 'How many rounds of rising beep pairs play' },
+    pace: { min: 0.12, max: 0.25, def: 0.17, unit: 's', desc: 'Time between the two beeps in a pair' },
+    swell: { min: 0, max: 1, def: 0.6, desc: 'How much quieter the early rounds are: 0 all equal, 1 a strong build' },
   },
   play(T, out, t, p) {
     const rounds = Math.round(p.rounds);

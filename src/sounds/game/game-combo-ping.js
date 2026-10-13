@@ -7,11 +7,13 @@ export default {
   tags: ['combo', 'streak', 'chain', 'multiplier', 'ping', 'score', 'hit-streak', 'arcade'],
   desc: 'A short bright ping that rises one scale step per streak count, so a combo plays a rising tune. Chip makes it a square ping.',
   dur: 0.52,
+  family: 'glass',
+  moments: ['coin', 'pickup'],
   params: {
-    pitch: { min: 500, max: 1400, def: 880, unit: 'Hz' },
-    streak: { min: 1, max: 8, def: 1, step: 1 },
-    ring: { min: 0.12, max: 0.5, def: 0.26, unit: 's' },
-    chip: { min: 0, max: 1, def: 0, step: 1 },
+    pitch: { min: 500, max: 1400, def: 880, unit: 'Hz', desc: 'Base note at a streak of 1; higher streaks climb a pentatonic scale from it' },
+    streak: { min: 1, max: 8, def: 1, step: 1, desc: 'Combo count: each step plays the next note up a pentatonic scale' },
+    ring: { min: 0.12, max: 0.5, def: 0.26, unit: 's', desc: 'How long the ping rings out' },
+    chip: { min: 0, max: 1, def: 0, step: 1, role: 'chip', desc: '1 a bitcrushed square ping, 0 a soft near-harmonic bell' },
   },
   play(T, out, t, p) {
     const chip = p.chip >= 0.5;

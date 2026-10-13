@@ -7,11 +7,13 @@ export default {
   tags: ['ta-da', 'tada', 'reveal', 'cheerful', 'achievement', 'surprise', 'celebrate', 'stinger'],
   desc: 'A cheerful two-chord reveal: a quick staccato hit and a bright held chord with a sparkle on top.',
   dur: 2.0,
+  family: 'orchestral',
+  moments: ['achievement', 'victory', 'music'],
   params: {
-    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st' },
-    tempo: { min: 0.75, max: 1.4, def: 1, unit: 'x' },
-    sparkle: { min: 0, max: 1, def: 0.5 },
-    weight: { min: 0, max: 1, def: 0.5 },
+    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole ta-da' },
+    tempo: { min: 0.75, max: 1.4, def: 1, unit: 'x', desc: 'Higher brings the held chord in sooner and quickens the glissando' },
+    sparkle: { min: 0, max: 1, def: 0.5, desc: 'Level of the rising glissando and the high bell on top' },
+    weight: { min: 0, max: 1, def: 0.5, desc: 'Level of the low bass note under the held chord' },
   },
   play(T, out, t, p) {
     const s = 1 / p.tempo;

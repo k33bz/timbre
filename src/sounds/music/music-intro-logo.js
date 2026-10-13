@@ -7,11 +7,13 @@ export default {
   tags: ['intro', 'logo', 'brand', 'title', 'opening', 'reveal', 'shimmer', 'stinger'],
   desc: 'A rising sweep that opens into a warm, ringing major-seventh chord with a glint on top. A calm logo reveal.',
   dur: 4.2,
+  family: 'orchestral',
+  moments: ['music'],
   params: {
-    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st' },
-    tempo: { min: 0.8, max: 1.3, def: 1, unit: 'x' },
-    shine: { min: 0, max: 1, def: 0.5 },
-    space: { min: 0.2, max: 0.7, def: 0.45 },
+    key: { min: -5, max: 7, def: 0, step: 1, unit: 'st', desc: 'Transposes the whole sting' },
+    tempo: { min: 0.8, max: 1.3, def: 1, unit: 'x', desc: 'Higher shortens the rising sweep so the chord lands sooner' },
+    shine: { min: 0, max: 1, def: 0.5, desc: 'Level of the high bell glint over the chord' },
+    space: { min: 0.2, max: 0.7, def: 0.45, desc: 'Reverb mix: low keeps the chord close, high a long washy room' },
   },
   play(T, out, t, p) {
     const s = 1 / p.tempo;

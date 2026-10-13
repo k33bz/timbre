@@ -7,11 +7,13 @@ export default {
   tags: ['shield', 'force-field', 'hum', 'barrier', 'energy', 'activate', 'deflect'],
   desc: 'A throbbing energy hum that swells in as a shield powers up, then settles into a slow pulse.',
   dur: 1.6,
+  family: 'synthetic',
+  moments: ['shield'],
   params: {
-    pitch: { min: 70, max: 200, def: 110, unit: 'Hz' },
-    pulse: { min: 2, max: 10, def: 5, unit: 'Hz' },
-    bright: { min: 0, max: 1, def: 0.5 },
-    length: { min: 0.6, max: 1.6, def: 1.2, unit: 's' },
+    pitch: { min: 70, max: 200, def: 110, unit: 'Hz', desc: 'Base pitch of the hum; a square sits an octave under, a thin whine high above' },
+    pulse: { min: 2, max: 10, def: 5, unit: 'Hz', desc: 'How fast the hum throbs, slow pulse to rapid flutter' },
+    bright: { min: 0, max: 1, def: 0.5, desc: 'How far the resonant lowpass opens, and the level of the thin top whine' },
+    length: { min: 0.6, max: 1.6, def: 1.2, unit: 's', desc: 'How long the shield hums before fading' },
   },
   play(T, out, t, p) {
     const L = p.length;

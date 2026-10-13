@@ -7,11 +7,13 @@ export default {
   tags: ['cave', 'drip', 'water', 'dungeon', 'echo', 'underground', 'damp', 'bed'],
   desc: 'Slow drips falling in a damp stone chamber, each one ringing in the echo, over a low draft of air.',
   dur: 8,
+  family: 'organic',
+  moments: ['ambience'],
   params: {
-    length: { min: 3, max: 8, def: 6, unit: 's' },
-    drips: { min: 2, max: 10, def: 5, step: 1 },
-    pitch: { min: 0.6, max: 1.6, def: 1, unit: 'x' },
-    cave: { min: 0, max: 1, def: 0.5 },
+    length: { min: 3, max: 8, def: 6, unit: 's', desc: 'Total duration of the bed, fades included' },
+    drips: { min: 2, max: 10, def: 5, step: 1, desc: 'How many drips fall during the bed' },
+    pitch: { min: 0.6, max: 1.6, def: 1, unit: 'x', desc: 'Scales drip pitch: low heavy drops, high small bright ones' },
+    cave: { min: 0, max: 1, def: 0.5, desc: 'Chamber echo: 0 shorter and drier, 1 longer and wetter' },
   },
   play(T, out, t, p) {
     const L = p.length;

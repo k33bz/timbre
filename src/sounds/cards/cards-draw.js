@@ -8,10 +8,12 @@ export default {
   tags: ['card', 'draw', 'pull', 'deck', 'top', 'pick-up'],
   desc: 'A card drawn off the top of the deck: a rising paper rub that ends in a small snap as it comes free.',
   dur: 0.27,
+  family: 'paper',
+  moments: ['card-draw'],
   params: {
-    reach: { min: 0.07, max: 0.22, def: 0.12, unit: 's' },
-    tone: { min: 0, max: 1, def: 0.4 },
-    snap: { min: 0, max: 1, def: 0.6 },
+    reach: { min: 0.07, max: 0.22, def: 0.12, unit: 's', desc: 'Length of the drag before the card comes free' },
+    tone: { min: 0, max: 1, def: 0.4, desc: 'Brightness of the rub and snap: 0 dark, 1 bright' },
+    snap: { min: 0, max: 1, def: 0.6, desc: 'Level of the snap as the card clears the deck: 0 faint, 1 crisp' },
   },
   play(T, out, t, p) {
     const r = p.reach;

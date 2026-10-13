@@ -7,11 +7,13 @@ export default {
   tags: ['hit', 'heavy', 'slam', 'smash', 'boss', 'impact', 'thump', 'crit', 'combat'],
   desc: 'A heavy blow landing: deep sub, a body of rumble and a hard crack. For bosses, crits and slams.',
   dur: 0.78,
+  family: 'impact',
+  moments: ['hit', 'damage'],
   params: {
-    weight: { min: 0, max: 1, def: 0.6 },
-    pitch: { min: 45, max: 110, def: 70, unit: 'Hz' },
-    crack: { min: 0, max: 1, def: 0.6 },
-    tail: { min: 0.2, max: 0.6, def: 0.38, unit: 's' },
+    weight: { min: 0, max: 1, def: 0.6, desc: 'Heft of the blow: a louder sub and rumble body' },
+    pitch: { min: 45, max: 110, def: 70, unit: 'Hz', desc: 'Base note of the falling sub; lower is deeper' },
+    crack: { min: 0, max: 1, def: 0.6, desc: 'Level of the hard high crack at the moment of impact' },
+    tail: { min: 0.2, max: 0.6, def: 0.38, unit: 's', desc: 'How long the rumble body and sub carry on after the hit' },
   },
   play(T, out, t, p) {
     const bus = T.drive(out, t, { amount: 0.2, ref: 0.15 });
