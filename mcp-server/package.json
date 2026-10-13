@@ -1,6 +1,7 @@
 {
   "name": "timbre-mcp-server",
   "version": "0.1.0",
+  "private": true,
   "description": "MCP server over the Timbre sound catalog: search, copy and bundle synthesized WebAudio sound effects.",
   "type": "module",
   "bin": { "timbre-mcp": "./cli.js" },
@@ -13,6 +14,5 @@
   },
   "engines": { "node": ">=22" },
   "keywords": ["mcp", "model-context-protocol", "timbre", "webaudio", "sound-effects"],
-  "license": "MIT",
   "dependencies": {}
 }

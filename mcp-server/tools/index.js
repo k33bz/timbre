@@ -223,12 +223,13 @@ const getSoundTool = {
     'Read everything about one sound before using it: name, tags, description, duration, every parameter with its range, default and control kind (switch, count, amount, value), ' +
     'levels (peak and RMS in dBFS with the loudness band, marked measured or estimated), the themes that use it, similar sounds, and its self-contained Copy code at the default parameters. ' +
     'Use it after search_sounds or suggest_sounds named an id, especially to see what a parameter can do before tuning it. ' +
-    'To get code with specific parameter values baked in, call get_copy; to use several sounds in one project, call build_kit.',
+    'To get code with specific parameter values baked in, call get_copy; to use several sounds in one project, call build_kit. ' +
+    'The code is 4 to 10 KB per sound: set include_code false when you are only comparing candidates.',
   inputSchema: {
     type: 'object',
     properties: {
       id: { type: 'string', minLength: 1, description: 'Sound id, e.g. "ui-click-soft".' },
-      include_code: { type: 'boolean', description: 'Include the Copy code at the default parameters (default true). Set false to read only the metadata.' },
+      include_code: { type: 'boolean', description: 'Include the Copy code at the default parameters (default true). Set false to read only the metadata, which is much shorter.' },
     },
     required: ['id'],
     additionalProperties: false,

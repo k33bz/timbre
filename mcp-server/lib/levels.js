@@ -149,8 +149,7 @@ export function estimateLevels(sound, helperSrc, params, seedValue = 1, { timeou
     if (m.silent) return null;
     return { peak: wet ? Math.round((m.peak + WET_DB) * 10) / 10 : m.peak, rms: m.rms, end: m.end, tail: m.tail, wet };
   } catch (e) {
-    if (process.env.TIMBRE_DEBUG) console.error(e);
-    return null;
+    return null;   // a sound that cannot be run here has no estimate; the tools report it as unknown
   }
 }
 
