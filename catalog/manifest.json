@@ -1,0 +1,691 @@
+{
+  "name": "Timbre",
+  "schema": 1,
+  "count": 10,
+  "categories": [
+    "ui",
+    "notify",
+    "game",
+    "cards",
+    "magic"
+  ],
+  "sounds": [
+    {
+      "id": "ui-click-soft",
+      "name": "Soft Click",
+      "category": "ui",
+      "tags": [
+        "click",
+        "button",
+        "tap",
+        "tick",
+        "press"
+      ],
+      "desc": "A short muted tick for button presses: a falling sine blip with a breath of high noise.",
+      "dur": 0.08,
+      "params": {
+        "pitch": {
+          "min": 400,
+          "max": 2400,
+          "def": 1100,
+          "unit": "Hz"
+        },
+        "tone": {
+          "min": 0,
+          "max": 1,
+          "def": 0.4
+        }
+      },
+      "file": "src/sounds/ui/ui-click-soft.js",
+      "play": "function (T, out, t, p) {\n  T.osc(out, t, { f: p.pitch, to: p.pitch * 0.73, dur: 0.035, peak: 0.042, a: 0.002 });\n  T.noise(out, t, {\n    filter: 'highpass', f: 2800 + 2400 * p.tone, to: 2200 + 1800 * p.tone, q: 0.8,\n    dur: 0.022, peak: 0.011 + 0.034 * p.tone, a: 0.001,\n  });\n}",
+      "uses": [
+        "osc",
+        "noise"
+      ],
+      "helpers": [
+        "env",
+        "glide",
+        "osc",
+        "rand",
+        "noiseBuffer",
+        "noise",
+        "seed",
+        "master"
+      ]
+    },
+    {
+      "id": "ui-toggle-switch",
+      "name": "Toggle Switch",
+      "category": "ui",
+      "tags": [
+        "toggle",
+        "switch",
+        "checkbox",
+        "on",
+        "off",
+        "click"
+      ],
+      "desc": "A two-stage click-clack for switches: rising when turned on, falling when turned off.",
+      "dur": 0.25,
+      "params": {
+        "on": {
+          "min": 0,
+          "max": 1,
+          "def": 1,
+          "step": 1
+        },
+        "pitch": {
+          "min": 1200,
+          "max": 3600,
+          "def": 2600,
+          "unit": "Hz"
+        },
+        "gap": {
+          "min": 0.03,
+          "max": 0.12,
+          "def": 0.075,
+          "unit": "s"
+        },
+        "body": {
+          "min": 0,
+          "max": 1,
+          "def": 0.5
+        }
+      },
+      "file": "src/sounds/ui/ui-toggle-switch.js",
+      "play": "function (T, out, t, p) {\n  const lo = p.pitch * 0.73;\n  const up = p.on >= 0.5;\n  const click = (f, at, level) => {\n    T.bell(out, at, { f, partials: [[1, 1, 1], [2.76, 0.5, 0.67]], drift: 0.98, dur: 0.12, peak: level });\n    T.noise(out, at, { filter: 'highpass', f: 4200, to: 3000, q: 0.8, dur: 0.02, peak: level * 0.6, a: 0.001 });\n  };\n  click(up ? lo : p.pitch, t, 0.024);\n  click(up ? p.pitch : lo, t + p.gap, 0.033);\n  T.osc(out, t + p.gap, { f: 420, to: 300, dur: 0.06, peak: 0.075 * p.body, a: 0.002 });\n}",
+      "uses": [
+        "bell",
+        "noise",
+        "osc"
+      ],
+      "helpers": [
+        "env",
+        "glide",
+        "osc",
+        "bell",
+        "rand",
+        "noiseBuffer",
+        "noise",
+        "seed",
+        "master"
+      ]
+    },
+    {
+      "id": "notify-error-buzz",
+      "name": "Error Buzz",
+      "category": "notify",
+      "tags": [
+        "error",
+        "fail",
+        "invalid",
+        "denied",
+        "buzz",
+        "negative"
+      ],
+      "desc": "A low falling double buzz for a rejected action. Clear without being harsh.",
+      "dur": 0.45,
+      "params": {
+        "pitch": {
+          "min": 90,
+          "max": 300,
+          "def": 160,
+          "unit": "Hz"
+        },
+        "pulses": {
+          "min": 1,
+          "max": 3,
+          "def": 2,
+          "step": 1
+        },
+        "rough": {
+          "min": 0,
+          "max": 1,
+          "def": 0.5
+        },
+        "tone": {
+          "min": 500,
+          "max": 3000,
+          "def": 1200,
+          "unit": "Hz"
+        }
+      },
+      "file": "src/sounds/notify/notify-error-buzz.js",
+      "play": "function (T, out, t, p) {\n  const lp = T.filter(out, t, { type: 'lowpass', f: p.tone, q: 0.8 });\n  const n = Math.round(p.pulses);\n  for (let k = 0; k < n; k++) {\n    const f = p.pitch * Math.pow(0.89, k);\n    T.osc(lp, t + k * 0.15, {\n      type: 'square', f, to: f * 0.95, dur: 0.12, peak: 0.075, a: 0.006, s: 0.6, d: 0.03, r: 0.03,\n      trem: { rate: 34, depth: 0.8 * p.rough },\n    });\n  }\n}",
+      "uses": [
+        "filter",
+        "osc"
+      ],
+      "helpers": [
+        "glide",
+        "filter",
+        "env",
+        "osc",
+        "master"
+      ]
+    },
+    {
+      "id": "notify-success-chime",
+      "name": "Success Chime",
+      "category": "notify",
+      "tags": [
+        "success",
+        "done",
+        "complete",
+        "confirm",
+        "chime",
+        "positive"
+      ],
+      "desc": "A gentle two-note rising chime for a completed action. Not a fanfare; a quiet yes.",
+      "dur": 0.5,
+      "params": {
+        "pitch": {
+          "min": 330,
+          "max": 1320,
+          "def": 659.25,
+          "unit": "Hz"
+        },
+        "interval": {
+          "min": 3,
+          "max": 12,
+          "def": 7,
+          "step": 1,
+          "unit": "st"
+        },
+        "gap": {
+          "min": 0.06,
+          "max": 0.2,
+          "def": 0.12,
+          "unit": "s"
+        },
+        "shimmer": {
+          "min": 0,
+          "max": 1,
+          "def": 0.35
+        }
+      },
+      "file": "src/sounds/notify/notify-success-chime.js",
+      "play": "function (T, out, t, p) {\n  const hi = p.pitch * Math.pow(2, Math.round(p.interval) / 12);\n  T.osc(out, t, { type: 'triangle', f: p.pitch, dur: 0.19, peak: 0.11, a: 0.01 });\n  T.osc(out, t + p.gap, { type: 'triangle', f: hi, dur: 0.26, peak: 0.11, a: 0.01 });\n  T.osc(out, t + p.gap, { f: hi * 2, dur: 0.13, peak: 0.1 * p.shimmer, a: 0.01 });\n}",
+      "uses": [
+        "osc"
+      ],
+      "helpers": [
+        "env",
+        "glide",
+        "osc",
+        "master"
+      ]
+    },
+    {
+      "id": "game-coin-flip",
+      "name": "Coin Flip",
+      "category": "game",
+      "tags": [
+        "coin",
+        "flip",
+        "toss",
+        "spin",
+        "money",
+        "ping"
+      ],
+      "desc": "A coin spun into the air: rising ticks as it turns, then a bright ping when it lands.",
+      "dur": 1.5,
+      "params": {
+        "spins": {
+          "min": 3,
+          "max": 8,
+          "def": 6,
+          "step": 1
+        },
+        "spin": {
+          "min": 0.05,
+          "max": 0.1,
+          "def": 0.075,
+          "unit": "s"
+        },
+        "pitch": {
+          "min": 900,
+          "max": 2600,
+          "def": 1568,
+          "unit": "Hz"
+        },
+        "ring": {
+          "min": 0.15,
+          "max": 0.6,
+          "def": 0.42,
+          "unit": "s"
+        }
+      },
+      "file": "src/sounds/game/game-coin-flip.js",
+      "play": "function (T, out, t, p) {\n  const n = Math.round(p.spins);\n  const base = p.pitch * 0.574;\n  for (let k = 0; k < n; k++) {\n    T.osc(out, t + k * p.spin, { type: 'triangle', f: base * (1 + 0.078 * k), dur: 0.05, peak: 0.055, a: 0.004 });\n  }\n  const land = t + n * p.spin + 0.07;\n  T.osc(out, land, { f: p.pitch, dur: p.ring, peak: 0.13, a: 0.006 });\n  T.osc(out, land, { f: p.pitch * 2.76, to: p.pitch * 2.7, dur: p.ring * 0.38, peak: 0.05, a: 0.006 });\n}",
+      "uses": [
+        "osc"
+      ],
+      "helpers": [
+        "env",
+        "glide",
+        "osc",
+        "master"
+      ]
+    },
+    {
+      "id": "game-hammer-hit",
+      "name": "Hammer Hit",
+      "category": "game",
+      "tags": [
+        "hammer",
+        "hit",
+        "impact",
+        "metal",
+        "clank",
+        "anvil",
+        "smash"
+      ],
+      "desc": "A hammer swung and landing on metal: air, then a clank with a thump under it.",
+      "dur": 0.95,
+      "params": {
+        "swing": {
+          "min": 0,
+          "max": 0.5,
+          "def": 0.32,
+          "unit": "s"
+        },
+        "pitch": {
+          "min": 250,
+          "max": 1200,
+          "def": 560,
+          "unit": "Hz"
+        },
+        "weight": {
+          "min": 0,
+          "max": 1,
+          "def": 0.5
+        },
+        "ring": {
+          "min": 0.06,
+          "max": 0.4,
+          "def": 0.12,
+          "unit": "s"
+        }
+      },
+      "file": "src/sounds/game/game-hammer-hit.js",
+      "play": "function (T, out, t, p) {\n  const h = t + p.swing;\n  const r = p.pitch / 560;\n  if (p.swing > 0.05) {\n    T.noise(out, t, { filter: 'bandpass', f: 350, to: 1700, q: 1.2, dur: p.swing + 0.02, peak: 0.055, a: p.swing * 0.85 });\n  }\n  T.bell(out, h, { f: p.pitch, partials: [[1, 1, 1], [2.76, 0.5, 0.67]], drift: 0.98, dur: p.ring, peak: 0.065 });\n  T.noise(out, h, { filter: 'highpass', f: 4200, to: 3000, q: 0.8, dur: 0.02, peak: 0.04, a: 0.001 });\n  T.noise(out, h, { filter: 'highpass', f: 3200, to: 2000, q: 0.8, dur: 0.05, peak: 0.037, a: 0.002 });\n  T.osc(out, h, { type: 'triangle', f: 1800 * r, to: 700 * r, dur: 0.09, peak: 0.021, a: 0.002 });\n  T.osc(out, h, { f: 140, to: 60, dur: 0.16, peak: 0.14 * p.weight + 0.01, a: 0.002 });\n}",
+      "uses": [
+        "noise",
+        "bell",
+        "osc"
+      ],
+      "helpers": [
+        "rand",
+        "noiseBuffer",
+        "env",
+        "glide",
+        "noise",
+        "osc",
+        "bell",
+        "seed",
+        "master"
+      ]
+    },
+    {
+      "id": "game-whoosh",
+      "name": "Whoosh",
+      "category": "game",
+      "tags": [
+        "whoosh",
+        "swoosh",
+        "swing",
+        "swipe",
+        "dash",
+        "air",
+        "transition"
+      ],
+      "desc": "Air rushing past: a swing, a dash, or a panel sliding across the screen.",
+      "dur": 0.62,
+      "params": {
+        "length": {
+          "min": 0.15,
+          "max": 0.6,
+          "def": 0.27,
+          "unit": "s"
+        },
+        "pitch": {
+          "min": 0.5,
+          "max": 2,
+          "def": 1,
+          "unit": "x"
+        },
+        "q": {
+          "min": 0.6,
+          "max": 3,
+          "def": 1.1
+        }
+      },
+      "file": "src/sounds/game/game-whoosh.js",
+      "play": "function (T, out, t, p) {\n  const s = p.length / 0.27;\n  // a narrower band throws more of the noise away: lift the peak so the loudness holds\n  const lift = Math.sqrt(p.q / 1.1);\n  T.noise(out, t, {\n    filter: 'bandpass', f: 420 * p.pitch, to: 2300 * p.pitch, q: p.q,\n    dur: 0.21 * s, peak: 0.19 * lift, a: 0.045 * s,\n  });\n  T.noise(out, t + 0.1 * s, {\n    filter: 'bandpass', f: 1900 * p.pitch, to: 620 * p.pitch, q: p.q * 1.36,\n    dur: 0.17 * s, peak: 0.105 * lift, a: 0.032 * s,\n  });\n}",
+      "uses": [
+        "noise"
+      ],
+      "helpers": [
+        "rand",
+        "noiseBuffer",
+        "env",
+        "glide",
+        "noise",
+        "seed",
+        "master"
+      ]
+    },
+    {
+      "id": "cards-flick",
+      "name": "Card Flick",
+      "category": "cards",
+      "tags": [
+        "card",
+        "flick",
+        "paper",
+        "draw",
+        "deal",
+        "snap"
+      ],
+      "desc": "A playing card flicked off the deck, or a short fan of them dealt one after another.",
+      "dur": 0.65,
+      "params": {
+        "count": {
+          "min": 1,
+          "max": 6,
+          "def": 1,
+          "step": 1
+        },
+        "gap": {
+          "min": 0.045,
+          "max": 0.12,
+          "def": 0.07,
+          "unit": "s"
+        },
+        "bright": {
+          "min": 0,
+          "max": 1,
+          "def": 0.3
+        }
+      },
+      "file": "src/sounds/cards/cards-flick.js",
+      "play": "function (T, out, t, p) {\n  const n = Math.round(p.count);\n  for (let k = 0; k < n; k++) {\n    const at = t + k * p.gap;\n    const l = 1 - 0.06 * k;\n    const b = Math.min(1, p.bright + k / 12);\n    T.noise(out, at, { filter: 'highpass', f: 2600 + 900 * b, to: 1800, q: 0.9, dur: 0.034, peak: 0.037 * l, a: 0.002 });\n    T.osc(out, at, { type: 'triangle', f: 460 + 160 * b, to: 260, dur: 0.028, peak: 0.011 * l, a: 0.002 });\n  }\n}",
+      "uses": [
+        "noise",
+        "osc"
+      ],
+      "helpers": [
+        "rand",
+        "noiseBuffer",
+        "env",
+        "glide",
+        "noise",
+        "osc",
+        "seed",
+        "master"
+      ]
+    },
+    {
+      "id": "cards-riffle",
+      "name": "Deck Riffle",
+      "category": "cards",
+      "tags": [
+        "card",
+        "deck",
+        "riffle",
+        "shuffle",
+        "paper",
+        "bridge"
+      ],
+      "desc": "A deck riffled together: a quick ripple of paper ticks, never two quite alike.",
+      "dur": 0.55,
+      "params": {
+        "cards": {
+          "min": 3,
+          "max": 14,
+          "def": 6,
+          "step": 1
+        },
+        "gap": {
+          "min": 0.014,
+          "max": 0.035,
+          "def": 0.022,
+          "unit": "s"
+        },
+        "pitch": {
+          "min": 800,
+          "max": 2600,
+          "def": 1500,
+          "unit": "Hz"
+        }
+      },
+      "file": "src/sounds/cards/cards-riffle.js",
+      "play": "function (T, out, t, p) {\n  const n = Math.round(p.cards);\n  for (let k = 0; k < n; k++) {\n    T.noise(out, t + k * p.gap, {\n      filter: 'bandpass', f: p.pitch * T.rand(1, 1.93), to: p.pitch * 0.6, q: 2.2,\n      dur: 0.045, peak: (k === 0 ? 0.135 : 0.104) * T.rand(0.75, 1.25), a: 0.003,\n    });\n  }\n}",
+      "uses": [
+        "noise",
+        "rand"
+      ],
+      "helpers": [
+        "rand",
+        "noiseBuffer",
+        "env",
+        "glide",
+        "noise",
+        "seed",
+        "master"
+      ]
+    },
+    {
+      "id": "magic-sparkle",
+      "name": "Magic Sparkle",
+      "category": "magic",
+      "tags": [
+        "magic",
+        "sparkle",
+        "shimmer",
+        "twinkle",
+        "fairy",
+        "heal",
+        "bonus"
+      ],
+      "desc": "A rising twinkle of bright notes over a breath of shimmer, with a little room around it.",
+      "dur": 1.5,
+      "params": {
+        "notes": {
+          "min": 3,
+          "max": 7,
+          "def": 4,
+          "step": 1
+        },
+        "pitch": {
+          "min": 600,
+          "max": 2000,
+          "def": 1046.5,
+          "unit": "Hz"
+        },
+        "gap": {
+          "min": 0.025,
+          "max": 0.09,
+          "def": 0.05,
+          "unit": "s"
+        },
+        "shimmer": {
+          "min": 0,
+          "max": 1,
+          "def": 0.5
+        },
+        "space": {
+          "min": 0,
+          "max": 0.6,
+          "def": 0.3
+        }
+      },
+      "file": "src/sounds/magic/magic-sparkle.js",
+      "play": "function (T, out, t, p) {\n  const steps = [0, 4, 7, 12, 16, 19, 24];\n  const n = Math.round(p.notes);\n  const room = T.reverb(out, t, { time: 0.9, mix: p.space, tone: 0.7 });\n  for (let k = 0; k < n; k++) {\n    const f = p.pitch * Math.pow(2, steps[k] / 12);\n    const at = t + k * p.gap;\n    const l = 1 - 0.08 * k;\n    T.osc(room, at, { type: 'triangle', f, dur: 0.22, peak: 0.06 * l, a: 0.004 });\n    T.osc(room, at, { f: f * 2, to: f * 2.02, dur: 0.12, peak: 0.02 * l, a: 0.004 });\n  }\n  T.noise(room, t, { filter: 'highpass', f: 5000, to: 8000, q: 0.8, dur: n * p.gap + 0.25, peak: 0.06 * p.shimmer, a: 0.06 });\n}",
+      "uses": [
+        "reverb",
+        "osc",
+        "noise"
+      ],
+      "helpers": [
+        "rand",
+        "reverb",
+        "env",
+        "glide",
+        "osc",
+        "noiseBuffer",
+        "noise",
+        "seed",
+        "master"
+      ]
+    }
+  ],
+  "themes": [
+    {
+      "id": "soft-ui",
+      "name": "Soft UI",
+      "desc": "Quiet, rounded feedback for productivity apps: soft ticks, a gentle chime, a low buzz.",
+      "moments": {
+        "click": {
+          "sound": "ui-click-soft"
+        },
+        "toggle-on": {
+          "sound": "ui-toggle-switch",
+          "params": {
+            "on": 1,
+            "body": 0.4
+          }
+        },
+        "toggle-off": {
+          "sound": "ui-toggle-switch",
+          "params": {
+            "on": 0,
+            "body": 0.4
+          }
+        },
+        "success": {
+          "sound": "notify-success-chime",
+          "params": {
+            "shimmer": 0.25
+          }
+        },
+        "error": {
+          "sound": "notify-error-buzz",
+          "params": {
+            "pulses": 2,
+            "rough": 0.35,
+            "tone": 900
+          }
+        },
+        "notify": {
+          "sound": "magic-sparkle",
+          "params": {
+            "notes": 3,
+            "pitch": 880,
+            "gap": 0.07,
+            "space": 0.2
+          }
+        }
+      },
+      "file": "src/themes/soft-ui.js"
+    }
+  ],
+  "helpers": {
+    "bell": {
+      "deps": [
+        "osc"
+      ],
+      "src": "function bell(out, t, o) {\n  o = o || {};\n  const f = o.f || 880;\n  const dur = o.dur == null ? 1 : o.dur;\n  const peak = o.peak == null ? 0.15 : o.peak;\n  const drift = o.drift == null ? 1 : o.drift;\n  const parts = o.partials || [[1, 1, 1], [2.76, 0.5, 0.6], [5.4, 0.25, 0.4], [8.93, 0.12, 0.25]];\n  let end = t;\n  for (let k = 0; k < parts.length; k++) {\n    const pr = parts[k];\n    const e = osc(out, t, {\n      type: o.type || 'sine', f: f * pr[0], to: f * pr[0] * drift,\n      dur: Math.max(0.03, dur * (pr[2] == null ? 1 : pr[2])), peak: peak * (pr[1] == null ? 1 : pr[1]),\n      a: o.a == null ? 0.002 : o.a, curve: o.curve,\n    });\n    if (e > end) end = e;\n  }\n  return end;\n}"
+    },
+    "crush": {
+      "deps": [],
+      "src": "function crush(out, t, o) {\n  o = o || {};\n  const ws = out.context.createWaveShaper();\n  const bits = Math.min(16, Math.max(1, o.bits == null ? 6 : o.bits));\n  const steps = Math.pow(2, bits - 1);\n  const ref = o.ref || 0.25;\n  const n = 8192;\n  const cur = new Float32Array(n);\n  for (let i = 0; i < n; i++) {\n    const x = (i * 2) / (n - 1) - 1;\n    cur[i] = (Math.round((x / ref) * steps) / steps) * ref;\n  }\n  ws.curve = cur;\n  ws.oversample = 'none';\n  ws.connect(out);\n  return ws;\n}"
+    },
+    "delay": {
+      "deps": [],
+      "src": "function delay(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const inp = c.createGain();\n  const dl = c.createDelay(2);\n  const fbk = c.createGain();\n  const wet = c.createGain();\n  const lp = c.createBiquadFilter();\n  dl.delayTime.value = Math.min(2, Math.max(0.01, o.time == null ? 0.18 : o.time));\n  fbk.gain.value = Math.min(0.9, Math.max(0, o.fb == null ? 0.35 : o.fb));\n  wet.gain.value = o.mix == null ? 0.35 : o.mix;\n  lp.type = 'lowpass';\n  lp.frequency.value = o.tone || 4000;\n  inp.connect(out);\n  inp.connect(dl);\n  dl.connect(lp);\n  lp.connect(fbk);\n  fbk.connect(dl);\n  lp.connect(wet);\n  wet.connect(out);\n  return inp;\n}"
+    },
+    "drive": {
+      "deps": [],
+      "src": "function drive(out, t, o) {\n  o = o || {};\n  const ws = out.context.createWaveShaper();\n  const k = 1 + 24 * Math.min(1, Math.max(0, o.amount == null ? 0.5 : o.amount));\n  const ref = o.ref || 0.25;\n  const n = 4096;\n  const cur = new Float32Array(n);\n  const norm = Math.tanh(k);\n  for (let i = 0; i < n; i++) {\n    const x = (i * 2) / (n - 1) - 1;\n    cur[i] = (ref * Math.tanh((k * x) / ref)) / norm;\n  }\n  ws.curve = cur;\n  ws.oversample = '2x';\n  ws.connect(out);\n  return ws;\n}"
+    },
+    "env": {
+      "deps": [],
+      "src": "function env(param, t, o) {\n  o = o || {};\n  const peak = Math.max(0.0002, o.peak == null ? 0.2 : o.peak);\n  const a = Math.max(0.002, o.a == null ? 0.005 : o.a);\n  const end = t + Math.max(a + 0.01, o.dur == null ? 0.2 : o.dur);\n  const lin = o.curve === 'lin';\n  const floor = 0.0001;\n  param.value = 0;\n  param.setValueAtTime(0, t);\n  param.linearRampToValueAtTime(peak, t + a);\n  if (o.s > 0) {\n    const sus = Math.max(floor * 2, peak * Math.min(1, o.s));\n    const rel = Math.max(0.005, o.r == null ? 0.05 : o.r);\n    const rs = Math.max(t + a + 0.001, end - rel);\n    const ds = Math.min(t + a + Math.max(0.002, o.d == null ? 0.05 : o.d), rs);\n    if (lin) param.linearRampToValueAtTime(sus, ds);\n    else param.exponentialRampToValueAtTime(sus, ds);\n    param.setValueAtTime(sus, rs);\n  }\n  if (lin) param.linearRampToValueAtTime(0, end);\n  else {\n    param.exponentialRampToValueAtTime(floor, end);\n    param.setValueAtTime(0, end);\n  }\n  return end;\n}"
+    },
+    "filter": {
+      "deps": [
+        "glide"
+      ],
+      "src": "function filter(out, t, o) {\n  o = o || {};\n  const b = out.context.createBiquadFilter();\n  b.type = o.type || 'lowpass';\n  const f = Math.max(20, o.f || 1000);\n  glide(b.frequency, t, f, o.to ? Math.max(20, o.to) : f, o.dur == null ? 0.3 : o.dur, o.curve);\n  b.Q.value = o.q == null ? 0.707 : o.q;\n  if (o.db) b.gain.value = o.db;\n  b.connect(out);\n  return b;\n}"
+    },
+    "fm": {
+      "deps": [
+        "env",
+        "glide"
+      ],
+      "src": "function fm(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const dur = o.dur == null ? 0.3 : o.dur;\n  const car = c.createOscillator();\n  const mod = c.createOscillator();\n  const depth = c.createGain();\n  const g = c.createGain();\n  car.type = o.type || 'sine';\n  mod.type = o.modType || 'sine';\n  const f = Math.max(20, o.f || 440);\n  const to = o.to ? Math.max(20, o.to) : f;\n  const ratio = o.ratio || 2;\n  const gl = o.glide == null ? dur * 0.9 : o.glide;\n  glide(car.frequency, t, f, to, gl, o.glideCurve);\n  glide(mod.frequency, t, f * ratio, to * ratio, gl, o.glideCurve);\n  const i0 = o.index == null ? 2 : o.index;\n  const i1 = o.index1 == null ? i0 : o.index1;\n  const end = env(g.gain, t, o);\n  glide(depth.gain, t, i0 * f * ratio, i1 * to * ratio, end - t, 'lin');\n  mod.connect(depth);\n  depth.connect(car.frequency);\n  car.connect(g);\n  g.connect(out);\n  car.start(t);\n  mod.start(t);\n  car.stop(end + 0.05);\n  mod.stop(end + 0.05);\n  return end;\n}"
+    },
+    "gain": {
+      "deps": [],
+      "src": "function gain(out, v) {\n  const g = out.context.createGain();\n  g.gain.value = v == null ? 1 : v;\n  g.connect(out);\n  return g;\n}"
+    },
+    "glide": {
+      "deps": [],
+      "src": "function glide(param, t, from, to, dur, curve) {\n  param.setValueAtTime(from, t);\n  if (to == null || to === from || !(dur > 0)) return;\n  if (curve === 'lin' || from <= 0 || to <= 0) param.linearRampToValueAtTime(to, t + dur);\n  else param.exponentialRampToValueAtTime(to, t + dur);\n}"
+    },
+    "master": {
+      "deps": [],
+      "src": "function master(c, dest) {\n  const g = c.createGain();\n  const lim = c.createDynamicsCompressor();\n  const sat = c.createWaveShaper();\n  g.gain.value = 0.55;\n  lim.threshold.value = -12;\n  lim.knee.value = 6;\n  lim.ratio.value = 12;\n  lim.attack.value = 0.003;\n  lim.release.value = 0.12;\n  const n = 2048;\n  const cur = new Float32Array(n);\n  for (let k = 0; k < n; k++) {\n    const x = (k * 2) / (n - 1) - 1;\n    cur[k] = 0.5 * Math.tanh(2 * x);\n  }\n  sat.curve = cur;\n  sat.oversample = '2x';\n  g.connect(lim);\n  lim.connect(sat);\n  sat.connect(dest || c.destination);\n  return g;\n}"
+    },
+    "noise": {
+      "deps": [
+        "noiseBuffer",
+        "env",
+        "glide"
+      ],
+      "src": "function noise(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const dur = o.dur == null ? 0.2 : o.dur;\n  const s = c.createBufferSource();\n  const g = c.createGain();\n  s.buffer = noiseBuffer(c, Math.max(dur, (o.a || 0.005) + 0.01) + 0.06);\n  s.loop = true;\n  let head = s;\n  if (o.filter !== 'none') {\n    const b = c.createBiquadFilter();\n    b.type = o.filter || 'bandpass';\n    const f = Math.max(40, o.f || 1000);\n    glide(b.frequency, t, f, o.to ? Math.max(40, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);\n    b.Q.value = o.q == null ? 1 : o.q;\n    s.connect(b);\n    head = b;\n  }\n  const end = env(g.gain, t, o);\n  head.connect(g);\n  g.connect(out);\n  s.start(t);\n  s.stop(end + 0.05);\n  return end;\n}"
+    },
+    "noiseBuffer": {
+      "deps": [
+        "rand"
+      ],
+      "src": "function noiseBuffer(c, dur) {\n  const n = Math.max(1, Math.ceil(dur * c.sampleRate));\n  const b = c.createBuffer(1, n, c.sampleRate);\n  const d = b.getChannelData(0);\n  for (let i = 0; i < n; i++) d[i] = rand() * 2 - 1;\n  return b;\n}"
+    },
+    "note": {
+      "deps": [],
+      "src": "function note(n) {\n  if (typeof n === 'number') return 440 * Math.pow(2, n / 12);\n  const s = String(n);\n  const base = { C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 }[s.charAt(0).toUpperCase()];\n  if (base == null) return 440;\n  let i = 1;\n  let acc = 0;\n  if (s.charAt(1) === '#') { acc = 1; i = 2; } else if (s.charAt(1) === 'b') { acc = -1; i = 2; }\n  const oct = parseInt(s.slice(i), 10);\n  return 440 * Math.pow(2, (base + acc + ((isNaN(oct) ? 4 : oct) - 4) * 12) / 12);\n}"
+    },
+    "osc": {
+      "deps": [
+        "env",
+        "glide"
+      ],
+      "src": "function osc(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const dur = o.dur == null ? 0.2 : o.dur;\n  const n = c.createOscillator();\n  const g = c.createGain();\n  n.type = o.type || 'sine';\n  const f = Math.max(20, o.f || 440);\n  glide(n.frequency, t, f, o.to ? Math.max(20, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);\n  if (o.detune) n.detune.value = o.detune;\n  const end = env(g.gain, t, o);\n  let src = n;\n  if (o.vib && o.vib.depth) {\n    const lfo = c.createOscillator();\n    const lg = c.createGain();\n    lfo.frequency.value = o.vib.rate || 5;\n    lg.gain.value = o.vib.depth;\n    lfo.connect(lg);\n    lg.connect(n.detune);\n    lfo.start(t);\n    lfo.stop(end + 0.05);\n  }\n  if (o.trem && o.trem.depth > 0) {\n    const depth = Math.min(1, o.trem.depth);\n    const am = c.createGain();\n    const lfo = c.createOscillator();\n    const lg = c.createGain();\n    am.gain.value = 1 - depth / 2;\n    lg.gain.value = depth / 2;\n    lfo.frequency.value = o.trem.rate || 6;\n    lfo.connect(lg);\n    lg.connect(am.gain);\n    n.connect(am);\n    src = am;\n    lfo.start(t);\n    lfo.stop(end + 0.05);\n  }\n  src.connect(g);\n  g.connect(out);\n  n.start(t);\n  n.stop(end + 0.05);\n  return end;\n}"
+    },
+    "pluck": {
+      "deps": [
+        "rand",
+        "env"
+      ],
+      "src": "function pluck(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const sr = c.sampleRate;\n  const dur = Math.max(0.05, o.dur == null ? 0.8 : o.dur);\n  const f = Math.max(30, Math.min(sr / 4, o.f || 220));\n  const len = Math.ceil((dur + 0.06) * sr);\n  const buf = c.createBuffer(1, len, sr);\n  const y = buf.getChannelData(0);\n  const bright = Math.min(1, Math.max(0, o.bright == null ? 0.5 : o.bright));\n  const w = 0.5 - 0.45 * bright;           // weight of the older sample in the loop's averager\n  const P = sr / f;                         // samples per period\n  const D = P - w;                          // the averager itself delays by w samples\n  const N = Math.floor(D);\n  const fr = D - N;\n  const fb = Math.pow(0.001, 1 / (f * dur)); // -60 dB after dur seconds\n  const ex = Math.min(len, Math.round(P));\n  // the excitation: one period of seeded noise with its mean removed (the loop passes DC almost\n  // untouched, so a short burst's random offset would otherwise ride under the whole note)\n  let mean = 0;\n  for (let i = 0; i < ex; i++) { y[i] = rand() * 2 - 1; mean += y[i]; }\n  mean /= ex;\n  for (let i = 0; i < ex; i++) y[i] -= mean;\n  let pk = 0;\n  for (let i = 0; i < len; i++) {\n    let v = y[i];\n    if (i - N - 2 >= 0) {\n      const d0 = y[i - N] + (y[i - N - 1] - y[i - N]) * fr;\n      const d1 = y[i - N - 1] + (y[i - N - 2] - y[i - N - 1]) * fr;\n      v += fb * ((1 - w) * d0 + w * d1);\n    }\n    y[i] = v;\n    const m = v < 0 ? -v : v;\n    if (m > pk) pk = m;\n  }\n  if (pk > 0) for (let i = 0; i < len; i++) y[i] /= pk;\n  const s = c.createBufferSource();\n  const g = c.createGain();\n  s.buffer = buf;\n  const end = env(g.gain, t, {\n    peak: o.peak == null ? 0.2 : o.peak, a: o.a == null ? 0.002 : o.a, dur, s: 1, d: 0.002,\n    r: Math.min(0.05, dur * 0.2),\n  });\n  s.connect(g);\n  g.connect(out);\n  s.start(t);\n  s.stop(end + 0.05);\n  return end;\n}"
+    },
+    "rand": {
+      "deps": [],
+      "src": "function rand(lo, hi) {\n  let a = (rand.s = ((rand.s | 0) + 0x6d2b79f5) | 0);\n  a = Math.imul(a ^ (a >>> 15), a | 1);\n  a ^= a + Math.imul(a ^ (a >>> 7), a | 61);\n  const u = ((a ^ (a >>> 14)) >>> 0) / 4294967296;\n  if (lo == null) return u;\n  if (hi == null) return u * lo;\n  return lo + (hi - lo) * u;\n}"
+    },
+    "reverb": {
+      "deps": [
+        "rand"
+      ],
+      "src": "function reverb(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const sr = c.sampleRate;\n  const time = Math.min(6, Math.max(0.1, o.time == null ? 1.2 : o.time));\n  const len = Math.ceil(time * sr);\n  const ir = c.createBuffer(2, len, sr);\n  const k = Math.exp(-6.9078 / (time * sr));\n  const tone = Math.min(1, Math.max(0, o.tone == null ? 0.5 : o.tone));\n  const coef = 0.08 + 0.9 * tone;\n  for (let ch = 0; ch < 2; ch++) {\n    const d = ir.getChannelData(ch);\n    let lp = 0;\n    let e = 1;\n    let energy = 0;\n    for (let i = 0; i < len; i++) {\n      lp += (rand() * 2 - 1 - lp) * coef;\n      d[i] = lp * e;\n      e *= k;\n      energy += d[i] * d[i];\n    }\n    const sc = energy > 0 ? 1 / Math.sqrt(energy) : 0;\n    for (let i = 0; i < len; i++) d[i] *= sc;\n  }\n  const inp = c.createGain();\n  const conv = c.createConvolver();\n  const wet = c.createGain();\n  conv.normalize = false;\n  conv.buffer = ir;\n  wet.gain.value = o.mix == null ? 0.3 : o.mix;\n  inp.connect(out);\n  if (o.pre > 0) {\n    const pd = c.createDelay(1);\n    pd.delayTime.value = Math.min(1, o.pre);\n    inp.connect(pd);\n    pd.connect(conv);\n  } else {\n    inp.connect(conv);\n  }\n  conv.connect(wet);\n  wet.connect(out);\n  return inp;\n}"
+    },
+    "seed": {
+      "deps": [
+        "rand"
+      ],
+      "src": "function seed(s) {\n  rand.s = (Number(s) || 0) >>> 0;\n}"
+    }
+  }
+}

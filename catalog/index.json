@@ -1,0 +1,174 @@
+{
+  "name": "Timbre",
+  "schema": 1,
+  "count": 10,
+  "sounds": [
+    {
+      "id": "ui-click-soft",
+      "name": "Soft Click",
+      "category": "ui",
+      "tags": [
+        "click",
+        "button",
+        "tap",
+        "tick",
+        "press"
+      ],
+      "desc": "A short muted tick for button presses: a falling sine blip with a breath of high noise.",
+      "dur": 0.08
+    },
+    {
+      "id": "ui-toggle-switch",
+      "name": "Toggle Switch",
+      "category": "ui",
+      "tags": [
+        "toggle",
+        "switch",
+        "checkbox",
+        "on",
+        "off",
+        "click"
+      ],
+      "desc": "A two-stage click-clack for switches: rising when turned on, falling when turned off.",
+      "dur": 0.25
+    },
+    {
+      "id": "notify-error-buzz",
+      "name": "Error Buzz",
+      "category": "notify",
+      "tags": [
+        "error",
+        "fail",
+        "invalid",
+        "denied",
+        "buzz",
+        "negative"
+      ],
+      "desc": "A low falling double buzz for a rejected action. Clear without being harsh.",
+      "dur": 0.45
+    },
+    {
+      "id": "notify-success-chime",
+      "name": "Success Chime",
+      "category": "notify",
+      "tags": [
+        "success",
+        "done",
+        "complete",
+        "confirm",
+        "chime",
+        "positive"
+      ],
+      "desc": "A gentle two-note rising chime for a completed action. Not a fanfare; a quiet yes.",
+      "dur": 0.5
+    },
+    {
+      "id": "game-coin-flip",
+      "name": "Coin Flip",
+      "category": "game",
+      "tags": [
+        "coin",
+        "flip",
+        "toss",
+        "spin",
+        "money",
+        "ping"
+      ],
+      "desc": "A coin spun into the air: rising ticks as it turns, then a bright ping when it lands.",
+      "dur": 1.5
+    },
+    {
+      "id": "game-hammer-hit",
+      "name": "Hammer Hit",
+      "category": "game",
+      "tags": [
+        "hammer",
+        "hit",
+        "impact",
+        "metal",
+        "clank",
+        "anvil",
+        "smash"
+      ],
+      "desc": "A hammer swung and landing on metal: air, then a clank with a thump under it.",
+      "dur": 0.95
+    },
+    {
+      "id": "game-whoosh",
+      "name": "Whoosh",
+      "category": "game",
+      "tags": [
+        "whoosh",
+        "swoosh",
+        "swing",
+        "swipe",
+        "dash",
+        "air",
+        "transition"
+      ],
+      "desc": "Air rushing past: a swing, a dash, or a panel sliding across the screen.",
+      "dur": 0.62
+    },
+    {
+      "id": "cards-flick",
+      "name": "Card Flick",
+      "category": "cards",
+      "tags": [
+        "card",
+        "flick",
+        "paper",
+        "draw",
+        "deal",
+        "snap"
+      ],
+      "desc": "A playing card flicked off the deck, or a short fan of them dealt one after another.",
+      "dur": 0.65
+    },
+    {
+      "id": "cards-riffle",
+      "name": "Deck Riffle",
+      "category": "cards",
+      "tags": [
+        "card",
+        "deck",
+        "riffle",
+        "shuffle",
+        "paper",
+        "bridge"
+      ],
+      "desc": "A deck riffled together: a quick ripple of paper ticks, never two quite alike.",
+      "dur": 0.55
+    },
+    {
+      "id": "magic-sparkle",
+      "name": "Magic Sparkle",
+      "category": "magic",
+      "tags": [
+        "magic",
+        "sparkle",
+        "shimmer",
+        "twinkle",
+        "fairy",
+        "heal",
+        "bonus"
+      ],
+      "desc": "A rising twinkle of bright notes over a breath of shimmer, with a little room around it.",
+      "dur": 1.5
+    }
+  ],
+  "themes": [
+    {
+      "id": "soft-ui",
+      "name": "Soft UI",
+      "desc": "Quiet, rounded feedback for productivity apps: soft ticks, a gentle chime, a low buzz.",
+      "moments": [
+        "click",
+        "toggle-on",
+        "toggle-off",
+        "success",
+        "error",
+        "notify"
+      ]
+    }
+  ]
+}
