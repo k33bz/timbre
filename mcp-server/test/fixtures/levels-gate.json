@@ -1,0 +1,933 @@
+[
+ {"id":"ui-checkbox","dur":0.17,"playHash":"3683fb2440ed","renders":[
+   {"label":"defaults","seed":1,"peak":-24.9,"rms":-37.8,"pre":-30.3,"end":0.127},
+   {"label":"defaults","seed":2,"peak":-24.9,"rms":-37.8,"pre":-30.3,"end":0.127},
+   {"label":"defaults","seed":3,"peak":-24.9,"rms":-37.8,"pre":-30.3,"end":0.127},
+   {"label":"random 3","seed":2,"peak":-27.6,"rms":-39,"pre":-33,"end":0.052},
+   {"label":"random 2","seed":1,"peak":-23.8,"rms":-37.5,"pre":-29.2,"end":0.128}
+  ]},
+ {"id":"ui-click-crisp","dur":0.04,"playHash":"897becfdd4de","renders":[
+   {"label":"defaults","seed":1,"peak":-24.1,"rms":-39.4,"pre":-29.5,"end":0.024},
+   {"label":"defaults","seed":2,"peak":-25.8,"rms":-40.5,"pre":-31.2,"end":0.024},
+   {"label":"defaults","seed":3,"peak":-23.2,"rms":-38.8,"pre":-28.6,"end":0.024},
+   {"label":"random 1","seed":2,"peak":-29.5,"rms":-42.9,"pre":-34.9,"end":0.024},
+   {"label":"random 2","seed":1,"peak":-22,"rms":-37.6,"pre":-27.3,"end":0.025}
+  ]},
+ {"id":"ui-click-deep","dur":0.16,"playHash":"fa6aaf79e8bc","renders":[
+   {"label":"defaults","seed":1,"peak":-21,"rms":-34.3,"pre":-26.4,"end":0.073},
+   {"label":"defaults","seed":2,"peak":-22,"rms":-34.4,"pre":-27.4,"end":0.073},
+   {"label":"defaults","seed":3,"peak":-21.2,"rms":-34,"pre":-26.5,"end":0.073},
+   {"label":"random 3","seed":3,"peak":-22.3,"rms":-34.5,"pre":-27.7,"end":0.098},
+   {"label":"random 2","seed":1,"peak":-20.9,"rms":-34.3,"pre":-26.2,"end":0.076}
+  ]},
+ {"id":"ui-click-glass","dur":0.21,"playHash":"202c62e51413","renders":[
+   {"label":"defaults","seed":1,"peak":-26,"rms":-41.3,"pre":-31.4,"end":0.075},
+   {"label":"defaults","seed":2,"peak":-26.7,"rms":-41.3,"pre":-32.1,"end":0.075},
+   {"label":"defaults","seed":3,"peak":-26.2,"rms":-41.3,"pre":-31.7,"end":0.075},
+   {"label":"random 2","seed":2,"peak":-27.3,"rms":-41.4,"pre":-32.8,"end":0.103},
+   {"label":"random 3","seed":2,"peak":-25.7,"rms":-41.4,"pre":-31.2,"end":0.119}
+  ]},
+ {"id":"ui-click-soft","dur":0.08,"playHash":"0be6086c1dd2","renders":[
+   {"label":"defaults","seed":1,"peak":-23.7,"rms":-37.7,"pre":-29.1,"end":0.031},
+   {"label":"defaults","seed":2,"peak":-23.7,"rms":-37.8,"pre":-29.2,"end":0.031},
+   {"label":"defaults","seed":3,"peak":-23.5,"rms":-37.8,"pre":-28.9,"end":0.031},
+   {"label":"random 3","seed":2,"peak":-24.2,"rms":-37.6,"pre":-29.7,"end":0.031},
+   {"label":"random 2","seed":1,"peak":-20.3,"rms":-36.7,"pre":-25.6,"end":0.031}
+  ]},
+ {"id":"ui-click-wood","dur":0.15,"playHash":"ec5174639b83","renders":[
+   {"label":"defaults","seed":1,"peak":-24.2,"rms":-38.4,"pre":-29.6,"end":0.056},
+   {"label":"defaults","seed":2,"peak":-24.4,"rms":-38.5,"pre":-29.8,"end":0.056},
+   {"label":"defaults","seed":3,"peak":-24.3,"rms":-38.8,"pre":-29.6,"end":0.056},
+   {"label":"random 2","seed":1,"peak":-26.6,"rms":-38.9,"pre":-32,"end":0.053},
+   {"label":"random 1","seed":3,"peak":-22.4,"rms":-37.8,"pre":-27.8,"end":0.06}
+  ]},
+ {"id":"ui-copy","dur":0.3,"playHash":"e803ef0e51b3","renders":[
+   {"label":"defaults","seed":1,"peak":-25.3,"rms":-40,"pre":-30.7,"end":0.141},
+   {"label":"defaults","seed":2,"peak":-25.3,"rms":-40.1,"pre":-30.7,"end":0.141},
+   {"label":"defaults","seed":3,"peak":-25.3,"rms":-40.1,"pre":-30.7,"end":0.141},
+   {"label":"random 1","seed":1,"peak":-25.3,"rms":-39.8,"pre":-30.7,"end":0.184},
+   {"label":"random 2","seed":1,"peak":-25.1,"rms":-40.2,"pre":-30.5,"end":0.136}
+  ]},
+ {"id":"ui-delete","dur":0.27,"playHash":"fc8a96b0b3f3","renders":[
+   {"label":"defaults","seed":1,"peak":-24.2,"rms":-39.2,"pre":-29.6,"end":0.145},
+   {"label":"defaults","seed":2,"peak":-23.7,"rms":-39.2,"pre":-29.1,"end":0.144},
+   {"label":"defaults","seed":3,"peak":-23.1,"rms":-39.3,"pre":-28.5,"end":0.144},
+   {"label":"random 3","seed":1,"peak":-22.2,"rms":-37.6,"pre":-27.5,"end":0.148},
+   {"label":"random 3","seed":2,"peak":-20.6,"rms":-37.6,"pre":-26,"end":0.146}
+  ]},
+ {"id":"ui-drag-drop","dur":0.14,"playHash":"bde8badc19cf","renders":[
+   {"label":"defaults","seed":1,"peak":-22.5,"rms":-37.6,"pre":-27.9,"end":0.109},
+   {"label":"defaults","seed":2,"peak":-21.9,"rms":-37.6,"pre":-27.3,"end":0.109},
+   {"label":"defaults","seed":3,"peak":-21.5,"rms":-37.2,"pre":-26.9,"end":0.109},
+   {"label":"random 1","seed":2,"peak":-23.2,"rms":-37.6,"pre":-28.6,"end":0.111},
+   {"label":"random 1","seed":3,"peak":-19.9,"rms":-37.5,"pre":-25.2,"end":0.111}
+  ]},
+ {"id":"ui-drag-pickup","dur":0.12,"playHash":"74162bb69ded","renders":[
+   {"label":"defaults","seed":1,"peak":-29.8,"rms":-41.3,"pre":-35.2,"end":0.086},
+   {"label":"defaults","seed":2,"peak":-29.8,"rms":-42,"pre":-35.3,"end":0.086},
+   {"label":"defaults","seed":3,"peak":-27.4,"rms":-41.3,"pre":-32.8,"end":0.086},
+   {"label":"random 2","seed":2,"peak":-30.5,"rms":-41.9,"pre":-35.9,"end":0.086},
+   {"label":"random 3","seed":3,"peak":-24.8,"rms":-40.1,"pre":-30.2,"end":0.087}
+  ]},
+ {"id":"ui-expand","dur":0.26,"playHash":"e8dbf9a619f9","renders":[
+   {"label":"defaults","seed":1,"peak":-25.3,"rms":-38.9,"pre":-30.7,"end":0.1},
+   {"label":"defaults","seed":2,"peak":-26,"rms":-38.9,"pre":-31.4,"end":0.1},
+   {"label":"defaults","seed":3,"peak":-26.1,"rms":-38.9,"pre":-31.5,"end":0.1},
+   {"label":"random 3","seed":1,"peak":-26,"rms":-39.1,"pre":-31.5,"end":0.171},
+   {"label":"random 2","seed":2,"peak":-25.1,"rms":-40.4,"pre":-30.5,"end":0.183}
+  ]},
+ {"id":"ui-focus-ring","dur":0.4,"playHash":"490b64371993","renders":[
+   {"label":"defaults","seed":1,"peak":-27.9,"rms":-44.4,"pre":-33.3,"end":0.177},
+   {"label":"defaults","seed":2,"peak":-27.9,"rms":-44.4,"pre":-33.3,"end":0.177},
+   {"label":"defaults","seed":3,"peak":-27.9,"rms":-44.4,"pre":-33.3,"end":0.177},
+   {"label":"random 3","seed":1,"peak":-28.1,"rms":-45.2,"pre":-33.6,"end":0.245},
+   {"label":"random 1","seed":1,"peak":-27.8,"rms":-43.4,"pre":-33.2,"end":0.12}
+  ]},
+ {"id":"ui-hover-tick","dur":0.03,"playHash":"060b28f651be","renders":[
+   {"label":"defaults","seed":1,"peak":-31.6,"rms":-43.5,"pre":-37,"end":0.021},
+   {"label":"defaults","seed":2,"peak":-31.4,"rms":-43.5,"pre":-36.9,"end":0.021},
+   {"label":"defaults","seed":3,"peak":-32.1,"rms":-43.5,"pre":-37.5,"end":0.021},
+   {"label":"random 1","seed":1,"peak":-33.7,"rms":-43.7,"pre":-39.1,"end":0.021},
+   {"label":"random 3","seed":2,"peak":-32.1,"rms":-43.6,"pre":-37.6,"end":0.021}
+  ]},
+ {"id":"ui-key-light","dur":0.08,"playHash":"b1ec482ca5c8","renders":[
+   {"label":"defaults","seed":1,"peak":-28.6,"rms":-40,"pre":-34,"end":0.033},
+   {"label":"defaults","seed":2,"peak":-26.5,"rms":-39.4,"pre":-31.9,"end":0.033},
+   {"label":"defaults","seed":3,"peak":-28.3,"rms":-39.9,"pre":-33.7,"end":0.033},
+   {"label":"random 3","seed":3,"peak":-28.4,"rms":-39.1,"pre":-33.8,"end":0.041},
+   {"label":"random 2","seed":2,"peak":-25,"rms":-38,"pre":-30.4,"end":0.045}
+  ]},
+ {"id":"ui-key-mechanical","dur":0.11,"playHash":"6303b6ed087b","renders":[
+   {"label":"defaults","seed":1,"peak":-24.6,"rms":-42.6,"pre":-30,"end":0.101},
+   {"label":"defaults","seed":2,"peak":-25.6,"rms":-42.3,"pre":-31,"end":0.102},
+   {"label":"defaults","seed":3,"peak":-26.5,"rms":-42.9,"pre":-31.9,"end":0.101},
+   {"label":"random 2","seed":2,"peak":-28.8,"rms":-46.8,"pre":-34.4,"end":0.102},
+   {"label":"random 3","seed":1,"peak":-23.3,"rms":-41.7,"pre":-28.7,"end":0.1}
+  ]},
+ {"id":"ui-menu-slide","dur":0.34,"playHash":"1f8de092eccb","renders":[
+   {"label":"defaults","seed":1,"peak":-26.6,"rms":-41.1,"pre":-32,"end":0.164},
+   {"label":"defaults","seed":2,"peak":-27.9,"rms":-41.1,"pre":-33.3,"end":0.167},
+   {"label":"defaults","seed":3,"peak":-27.5,"rms":-41.3,"pre":-32.9,"end":0.165},
+   {"label":"random 1","seed":1,"peak":-30.4,"rms":-42.6,"pre":-35.8,"end":0.119},
+   {"label":"random 3","seed":3,"peak":-25.6,"rms":-40.5,"pre":-31,"end":0.285}
+  ]},
+ {"id":"ui-modal","dur":0.23,"playHash":"23e68c9b066f","renders":[
+   {"label":"defaults","seed":1,"peak":-22.3,"rms":-35.3,"pre":-27.7,"end":0.183},
+   {"label":"defaults","seed":2,"peak":-22.4,"rms":-35.3,"pre":-27.7,"end":0.185},
+   {"label":"defaults","seed":3,"peak":-22.5,"rms":-35.2,"pre":-27.8,"end":0.18},
+   {"label":"random 2","seed":2,"peak":-23.1,"rms":-35.3,"pre":-28.5,"end":0.186},
+   {"label":"random 3","seed":3,"peak":-21.6,"rms":-37,"pre":-26.9,"end":0.104}
+  ]},
+ {"id":"ui-page-turn","dur":0.35,"playHash":"af659669e220","renders":[
+   {"label":"defaults","seed":1,"peak":-25.1,"rms":-41.2,"pre":-30.5,"end":0.223},
+   {"label":"defaults","seed":2,"peak":-24.5,"rms":-40.9,"pre":-29.9,"end":0.223},
+   {"label":"defaults","seed":3,"peak":-24.3,"rms":-41.1,"pre":-29.7,"end":0.22},
+   {"label":"random 1","seed":1,"peak":-26.5,"rms":-41,"pre":-31.9,"end":0.263},
+   {"label":"random 3","seed":1,"peak":-23.5,"rms":-41.1,"pre":-28.9,"end":0.209}
+  ]},
+ {"id":"ui-radio-select","dur":0.1,"playHash":"295adee83337","renders":[
+   {"label":"defaults","seed":1,"peak":-23,"rms":-35.7,"pre":-28.4,"end":0.07},
+   {"label":"defaults","seed":2,"peak":-23,"rms":-35.7,"pre":-28.4,"end":0.07},
+   {"label":"defaults","seed":3,"peak":-23.1,"rms":-35.7,"pre":-28.5,"end":0.07},
+   {"label":"random 3","seed":3,"peak":-22.3,"rms":-35.3,"pre":-27.6,"end":0.069},
+   {"label":"random 1","seed":2,"peak":-21,"rms":-35,"pre":-26.3,"end":0.069}
+  ]},
+ {"id":"ui-scroll-detent","dur":0.32,"playHash":"07c721cd5479","renders":[
+   {"label":"defaults","seed":1,"peak":-28.3,"rms":-43.6,"pre":-33.7,"end":0.029},
+   {"label":"defaults","seed":2,"peak":-29.8,"rms":-43.7,"pre":-35.2,"end":0.029},
+   {"label":"defaults","seed":3,"peak":-29.8,"rms":-43.7,"pre":-35.3,"end":0.029},
+   {"label":"random 3","seed":2,"peak":-30.3,"rms":-46.6,"pre":-35.7,"end":0.169},
+   {"label":"random 2","seed":3,"peak":-28.6,"rms":-46.7,"pre":-34,"end":0.17}
+  ]},
+ {"id":"ui-slider-detent","dur":0.04,"playHash":"f89d47e24ff3","renders":[
+   {"label":"defaults","seed":1,"peak":-27.6,"rms":-40.6,"pre":-33,"end":0.028},
+   {"label":"defaults","seed":2,"peak":-28.2,"rms":-41,"pre":-33.6,"end":0.028},
+   {"label":"defaults","seed":3,"peak":-29.6,"rms":-41.3,"pre":-35,"end":0.028},
+   {"label":"random 1","seed":3,"peak":-30.2,"rms":-41.3,"pre":-35.6,"end":0.028},
+   {"label":"random 3","seed":3,"peak":-25.3,"rms":-40.3,"pre":-30.7,"end":0.028}
+  ]},
+ {"id":"ui-tap","dur":0.06,"playHash":"a0fc734586c2","renders":[
+   {"label":"defaults","seed":1,"peak":-27,"rms":-36.6,"pre":-32.4,"end":0.04},
+   {"label":"defaults","seed":2,"peak":-25.4,"rms":-36.6,"pre":-30.8,"end":0.04},
+   {"label":"defaults","seed":3,"peak":-24.6,"rms":-36.7,"pre":-30,"end":0.04},
+   {"label":"random 2","seed":1,"peak":-26.3,"rms":-36.8,"pre":-31.7,"end":0.042},
+   {"label":"random 3","seed":3,"peak":-22.6,"rms":-34.9,"pre":-28,"end":0.04}
+  ]},
+ {"id":"ui-toggle-switch","dur":0.25,"playHash":"873c52f66d86","renders":[
+   {"label":"defaults","seed":1,"peak":-22,"rms":-39.7,"pre":-27.3,"end":0.159},
+   {"label":"defaults","seed":2,"peak":-22.2,"rms":-39.7,"pre":-27.6,"end":0.159},
+   {"label":"defaults","seed":3,"peak":-21.8,"rms":-39.7,"pre":-27.2,"end":0.159},
+   {"label":"random 1","seed":1,"peak":-23.6,"rms":-39.4,"pre":-29,"end":0.118},
+   {"label":"random 2","seed":3,"peak":-20.1,"rms":-39,"pre":-25.4,"end":0.18}
+  ]},
+ {"id":"ui-tooltip-pop","dur":0.08,"playHash":"b0c4eada27eb","renders":[
+   {"label":"defaults","seed":1,"peak":-27.8,"rms":-39,"pre":-33.2,"end":0.053},
+   {"label":"defaults","seed":2,"peak":-28.2,"rms":-39,"pre":-33.6,"end":0.053},
+   {"label":"defaults","seed":3,"peak":-27.7,"rms":-39,"pre":-33.1,"end":0.053},
+   {"label":"random 1","seed":2,"peak":-27.9,"rms":-39,"pre":-33.3,"end":0.053},
+   {"label":"random 2","seed":1,"peak":-27.3,"rms":-39,"pre":-32.8,"end":0.053}
+  ]},
+ {"id":"ui-undo","dur":0.22,"playHash":"28b06fcb1f94","renders":[
+   {"label":"defaults","seed":1,"peak":-25.2,"rms":-39.7,"pre":-30.6,"end":0.184},
+   {"label":"defaults","seed":2,"peak":-26.9,"rms":-39.7,"pre":-32.4,"end":0.184},
+   {"label":"defaults","seed":3,"peak":-26.2,"rms":-39.7,"pre":-31.6,"end":0.184},
+   {"label":"random 1","seed":1,"peak":-26.7,"rms":-39.4,"pre":-32.1,"end":0.187},
+   {"label":"random 1","seed":2,"peak":-25.5,"rms":-39.4,"pre":-30.9,"end":0.187}
+  ]},
+ {"id":"notify-achievement","dur":1.5,"playHash":"6a9efafe597f","renders":[
+   {"label":"defaults","seed":1,"peak":-17.2,"rms":-34.4,"pre":-22.4,"end":1.084},
+   {"label":"defaults","seed":2,"peak":-17.3,"rms":-35.2,"pre":-22.5,"end":0.996},
+   {"label":"defaults","seed":3,"peak":-17.2,"rms":-35.6,"pre":-22.4,"end":1.02},
+   {"label":"random 3","seed":2,"peak":-17.5,"rms":-35.6,"pre":-22.7,"end":1.089},
+   {"label":"random 2","seed":1,"peak":-15.7,"rms":-34.7,"pre":-20.8,"end":0.983}
+  ]},
+ {"id":"notify-alarm","dur":2.3,"playHash":"b98780da524b","renders":[
+   {"label":"defaults","seed":1,"peak":-18.5,"rms":-37.2,"pre":-23.7,"end":1.485},
+   {"label":"defaults","seed":2,"peak":-18.5,"rms":-37.2,"pre":-23.7,"end":1.485},
+   {"label":"defaults","seed":3,"peak":-18.5,"rms":-37.2,"pre":-23.7,"end":1.485},
+   {"label":"random 1","seed":1,"peak":-19.2,"rms":-37.9,"pre":-24.4,"end":2.164},
+   {"label":"random 2","seed":1,"peak":-18.8,"rms":-37.6,"pre":-24.1,"end":2.117}
+  ]},
+ {"id":"notify-calendar","dur":0.8,"playHash":"b5a9dcdb38a7","renders":[
+   {"label":"defaults","seed":1,"peak":-20.8,"rms":-37.5,"pre":-26.1,"end":0.492},
+   {"label":"defaults","seed":2,"peak":-20.8,"rms":-37.5,"pre":-26.1,"end":0.492},
+   {"label":"defaults","seed":3,"peak":-20.8,"rms":-37.5,"pre":-26.1,"end":0.492},
+   {"label":"random 2","seed":1,"peak":-21.6,"rms":-37.1,"pre":-26.9,"end":0.45},
+   {"label":"random 3","seed":1,"peak":-20.9,"rms":-38,"pre":-26.2,"end":0.546}
+  ]},
+ {"id":"notify-double-tap","dur":0.55,"playHash":"d50fd3184b1c","renders":[
+   {"label":"defaults","seed":1,"peak":-21.5,"rms":-36.4,"pre":-26.8,"end":0.192},
+   {"label":"defaults","seed":2,"peak":-21.2,"rms":-36.5,"pre":-26.6,"end":0.198},
+   {"label":"defaults","seed":3,"peak":-21.1,"rms":-36.5,"pre":-26.4,"end":0.197},
+   {"label":"random 1","seed":2,"peak":-22,"rms":-36.4,"pre":-27.4,"end":0.248},
+   {"label":"random 3","seed":1,"peak":-21.2,"rms":-37,"pre":-26.6,"end":0.283}
+  ]},
+ {"id":"notify-download-done","dur":0.8,"playHash":"09e4c60eb740","renders":[
+   {"label":"defaults","seed":1,"peak":-20,"rms":-32.2,"pre":-25.3,"end":0.354},
+   {"label":"defaults","seed":2,"peak":-20,"rms":-32.2,"pre":-25.3,"end":0.354},
+   {"label":"defaults","seed":3,"peak":-20,"rms":-32.2,"pre":-25.3,"end":0.354},
+   {"label":"random 2","seed":1,"peak":-21.4,"rms":-32.3,"pre":-26.7,"end":0.307},
+   {"label":"random 1","seed":1,"peak":-20,"rms":-32.1,"pre":-25.3,"end":0.277}
+  ]},
+ {"id":"notify-error-buzz","dur":0.45,"playHash":"29caa85c5bf6","renders":[
+   {"label":"defaults","seed":1,"peak":-20.9,"rms":-30.3,"pre":-26.3,"end":0.266},
+   {"label":"defaults","seed":2,"peak":-20.9,"rms":-30.3,"pre":-26.3,"end":0.266},
+   {"label":"defaults","seed":3,"peak":-20.9,"rms":-30.3,"pre":-26.3,"end":0.266},
+   {"label":"random 1","seed":1,"peak":-21.2,"rms":-31.4,"pre":-26.6,"end":0.264},
+   {"label":"random 2","seed":1,"peak":-21,"rms":-30.5,"pre":-26.3,"end":0.265}
+  ]},
+ {"id":"notify-incoming-call","dur":2,"playHash":"82b22e881ef1","renders":[
+   {"label":"defaults","seed":1,"peak":-21.5,"rms":-35.1,"pre":-26.9,"end":1.111},
+   {"label":"defaults","seed":2,"peak":-21.5,"rms":-35.1,"pre":-26.9,"end":1.111},
+   {"label":"defaults","seed":3,"peak":-21.5,"rms":-35.1,"pre":-26.9,"end":1.111},
+   {"label":"random 1","seed":1,"peak":-21.6,"rms":-33.9,"pre":-27,"end":0.465},
+   {"label":"random 2","seed":1,"peak":-21.1,"rms":-35.2,"pre":-26.5,"end":1.755}
+  ]},
+ {"id":"notify-info","dur":0.8,"playHash":"1c4065a7e78e","renders":[
+   {"label":"defaults","seed":1,"peak":-21.9,"rms":-35.3,"pre":-27.3,"end":0.27},
+   {"label":"defaults","seed":2,"peak":-21.7,"rms":-35.1,"pre":-27,"end":0.271},
+   {"label":"defaults","seed":3,"peak":-22,"rms":-35.3,"pre":-27.3,"end":0.27},
+   {"label":"random 1","seed":1,"peak":-21.2,"rms":-35.1,"pre":-26.5,"end":0.246},
+   {"label":"random 2","seed":2,"peak":-20.8,"rms":-34.7,"pre":-26.2,"end":0.171}
+  ]},
+ {"id":"notify-low-battery","dur":1.4,"playHash":"584b5e1ca655","renders":[
+   {"label":"defaults","seed":1,"peak":-19.7,"rms":-35.5,"pre":-25,"end":0.698},
+   {"label":"defaults","seed":2,"peak":-19.7,"rms":-35.5,"pre":-25,"end":0.698},
+   {"label":"defaults","seed":3,"peak":-19.7,"rms":-35.5,"pre":-25,"end":0.698},
+   {"label":"random 3","seed":1,"peak":-19.5,"rms":-36,"pre":-24.8,"end":0.829},
+   {"label":"random 1","seed":1,"peak":-19.1,"rms":-36.2,"pre":-24.4,"end":1.04}
+  ]},
+ {"id":"notify-mention","dur":1.2,"playHash":"667e77f92a00","renders":[
+   {"label":"defaults","seed":1,"peak":-20,"rms":-39.1,"pre":-25.3,"end":0.7},
+   {"label":"defaults","seed":2,"peak":-20,"rms":-39.2,"pre":-25.3,"end":0.696},
+   {"label":"defaults","seed":3,"peak":-20,"rms":-39.2,"pre":-25.3,"end":0.696},
+   {"label":"random 2","seed":1,"peak":-20.3,"rms":-39.3,"pre":-25.6,"end":0.704},
+   {"label":"random 3","seed":1,"peak":-19.4,"rms":-35.7,"pre":-24.7,"end":0.44}
+  ]},
+ {"id":"notify-message-in","dur":0.4,"playHash":"5b2537c04394","renders":[
+   {"label":"defaults","seed":1,"peak":-20.8,"rms":-34.7,"pre":-26.2,"end":0.232},
+   {"label":"defaults","seed":2,"peak":-20.5,"rms":-34.5,"pre":-25.8,"end":0.232},
+   {"label":"defaults","seed":3,"peak":-20.8,"rms":-34.7,"pre":-26.1,"end":0.232},
+   {"label":"random 1","seed":1,"peak":-21.1,"rms":-35.8,"pre":-26.5,"end":0.297},
+   {"label":"random 3","seed":2,"peak":-20.5,"rms":-34.7,"pre":-25.8,"end":0.248}
+  ]},
+ {"id":"notify-message-out","dur":0.35,"playHash":"7a291016a184","renders":[
+   {"label":"defaults","seed":1,"peak":-20.6,"rms":-36.3,"pre":-25.9,"end":0.195},
+   {"label":"defaults","seed":2,"peak":-20.6,"rms":-36.3,"pre":-26,"end":0.197},
+   {"label":"defaults","seed":3,"peak":-20.4,"rms":-36.4,"pre":-25.7,"end":0.196},
+   {"label":"random 1","seed":2,"peak":-20.6,"rms":-35.1,"pre":-26,"end":0.184},
+   {"label":"random 3","seed":1,"peak":-19.8,"rms":-36.4,"pre":-25.2,"end":0.213}
+  ]},
+ {"id":"notify-new-mail","dur":0.95,"playHash":"c609706c2334","renders":[
+   {"label":"defaults","seed":1,"peak":-21.3,"rms":-36.2,"pre":-26.7,"end":0.476},
+   {"label":"defaults","seed":2,"peak":-21.3,"rms":-37.2,"pre":-26.7,"end":0.52},
+   {"label":"defaults","seed":3,"peak":-21.1,"rms":-37.9,"pre":-26.5,"end":0.497},
+   {"label":"random 1","seed":2,"peak":-21.7,"rms":-36,"pre":-27,"end":0.523},
+   {"label":"random 1","seed":1,"peak":-20.7,"rms":-35.7,"pre":-26.1,"end":0.552}
+  ]},
+ {"id":"notify-reminder","dur":1.6,"playHash":"1553aeea5353","renders":[
+   {"label":"defaults","seed":1,"peak":-20,"rms":-34.2,"pre":-25.3,"end":0.79},
+   {"label":"defaults","seed":2,"peak":-20.2,"rms":-33.7,"pre":-25.6,"end":0.827},
+   {"label":"defaults","seed":3,"peak":-19.7,"rms":-34.3,"pre":-25,"end":0.799},
+   {"label":"random 2","seed":3,"peak":-20.4,"rms":-34,"pre":-25.7,"end":0.599},
+   {"label":"random 3","seed":3,"peak":-17.7,"rms":-31.7,"pre":-23,"end":1.004}
+  ]},
+ {"id":"notify-success-chime","dur":0.5,"playHash":"8f3c5bcf43c6","renders":[
+   {"label":"defaults","seed":1,"peak":-19.1,"rms":-32.5,"pre":-24.4,"end":0.306},
+   {"label":"defaults","seed":2,"peak":-19.1,"rms":-32.5,"pre":-24.4,"end":0.306},
+   {"label":"defaults","seed":3,"peak":-19.1,"rms":-32.5,"pre":-24.4,"end":0.306},
+   {"label":"random 1","seed":1,"peak":-19.3,"rms":-32.1,"pre":-24.6,"end":0.262},
+   {"label":"random 2","seed":1,"peak":-17.3,"rms":-33.1,"pre":-22.5,"end":0.367}
+  ]},
+ {"id":"notify-sync-done","dur":1.1,"playHash":"26f63a78ec5f","renders":[
+   {"label":"defaults","seed":1,"peak":-20.1,"rms":-35.9,"pre":-25.4,"end":0.531},
+   {"label":"defaults","seed":2,"peak":-20.1,"rms":-35.9,"pre":-25.4,"end":0.531},
+   {"label":"defaults","seed":3,"peak":-20.1,"rms":-35.9,"pre":-25.4,"end":0.531},
+   {"label":"random 2","seed":1,"peak":-19.3,"rms":-35.6,"pre":-24.6,"end":0.469},
+   {"label":"random 1","seed":1,"peak":-18.3,"rms":-35.9,"pre":-23.5,"end":0.65}
+  ]},
+ {"id":"notify-task-failed","dur":0.85,"playHash":"994014220efd","renders":[
+   {"label":"defaults","seed":1,"peak":-22,"rms":-32.1,"pre":-27.4,"end":0.61},
+   {"label":"defaults","seed":2,"peak":-22,"rms":-32.1,"pre":-27.4,"end":0.61},
+   {"label":"defaults","seed":3,"peak":-22,"rms":-32.1,"pre":-27.4,"end":0.61},
+   {"label":"random 3","seed":1,"peak":-22.6,"rms":-33.6,"pre":-27.9,"end":0.609},
+   {"label":"random 1","seed":1,"peak":-20.4,"rms":-31.6,"pre":-25.7,"end":0.448}
+  ]},
+ {"id":"notify-upload-done","dur":0.75,"playHash":"4e2decd06435","renders":[
+   {"label":"defaults","seed":1,"peak":-19.6,"rms":-32.6,"pre":-24.9,"end":0.332},
+   {"label":"defaults","seed":2,"peak":-19.6,"rms":-32.6,"pre":-24.9,"end":0.332},
+   {"label":"defaults","seed":3,"peak":-19.6,"rms":-32.6,"pre":-24.9,"end":0.332},
+   {"label":"random 3","seed":1,"peak":-18.4,"rms":-32.8,"pre":-23.7,"end":0.338},
+   {"label":"random 1","seed":1,"peak":-17,"rms":-32.5,"pre":-22.2,"end":0.481}
+  ]},
+ {"id":"notify-warning","dur":0.65,"playHash":"7b69becec488","renders":[
+   {"label":"defaults","seed":1,"peak":-20.2,"rms":-34.1,"pre":-25.5,"end":0.372},
+   {"label":"defaults","seed":2,"peak":-20.2,"rms":-34.1,"pre":-25.5,"end":0.372},
+   {"label":"defaults","seed":3,"peak":-20.2,"rms":-34.1,"pre":-25.5,"end":0.372},
+   {"label":"random 2","seed":1,"peak":-20.1,"rms":-35.5,"pre":-25.4,"end":0.486},
+   {"label":"random 1","seed":1,"peak":-20,"rms":-33.5,"pre":-25.3,"end":0.314}
+  ]},
+ {"id":"game-arrow-shot","dur":0.55,"playHash":"385578d30adb","renders":[
+   {"label":"defaults","seed":1,"peak":-20.3,"rms":-37.1,"pre":-25.7,"end":0.166},
+   {"label":"defaults","seed":2,"peak":-20,"rms":-36.7,"pre":-25.3,"end":0.154},
+   {"label":"defaults","seed":3,"peak":-20.3,"rms":-36.9,"pre":-25.6,"end":0.168},
+   {"label":"random 1","seed":1,"peak":-20.6,"rms":-37.5,"pre":-25.6,"end":0.144},
+   {"label":"random 1","seed":3,"peak":-19.6,"rms":-37.2,"pre":-25,"end":0.151}
+  ]},
+ {"id":"game-bounce","dur":0.66,"playHash":"bd1ac2f33c8d","renders":[
+   {"label":"defaults","seed":1,"peak":-20.7,"rms":-34.1,"pre":-26,"end":0.329},
+   {"label":"defaults","seed":2,"peak":-20.7,"rms":-34.1,"pre":-26,"end":0.329},
+   {"label":"defaults","seed":3,"peak":-20.7,"rms":-34.1,"pre":-26,"end":0.329},
+   {"label":"random 3","seed":1,"peak":-20.8,"rms":-34.1,"pre":-26.1,"end":0.275},
+   {"label":"random 1","seed":1,"peak":-20.7,"rms":-34.1,"pre":-26,"end":0.3}
+  ]},
+ {"id":"game-checkpoint","dur":1.17,"playHash":"c9ba04741004","renders":[
+   {"label":"defaults","seed":1,"peak":-19.1,"rms":-33.5,"pre":-24.4,"end":0.653},
+   {"label":"defaults","seed":2,"peak":-19.3,"rms":-33.5,"pre":-24.6,"end":0.653},
+   {"label":"defaults","seed":3,"peak":-19.2,"rms":-33.5,"pre":-24.5,"end":0.653},
+   {"label":"random 1","seed":1,"peak":-20.2,"rms":-33.8,"pre":-25.5,"end":0.593},
+   {"label":"random 2","seed":1,"peak":-19.9,"rms":-33.7,"pre":-25.2,"end":0.883}
+  ]},
+ {"id":"game-coin-flip","dur":1.5,"playHash":"598d90649e61","renders":[
+   {"label":"defaults","seed":1,"peak":-15.2,"rms":-34,"pre":-20.3,"end":0.817},
+   {"label":"defaults","seed":2,"peak":-15.2,"rms":-34,"pre":-20.3,"end":0.817},
+   {"label":"defaults","seed":3,"peak":-15.2,"rms":-34,"pre":-20.3,"end":0.817},
+   {"label":"random 1","seed":1,"peak":-15.3,"rms":-34.9,"pre":-20.3,"end":0.774},
+   {"label":"random 3","seed":1,"peak":-15.2,"rms":-35.6,"pre":-20.3,"end":0.556}
+  ]},
+ {"id":"game-combo-ping","dur":0.52,"playHash":"424b6c32b20b","renders":[
+   {"label":"defaults","seed":1,"peak":-21.4,"rms":-34.6,"pre":-26.7,"end":0.179},
+   {"label":"defaults","seed":2,"peak":-21.4,"rms":-34.6,"pre":-26.7,"end":0.179},
+   {"label":"defaults","seed":3,"peak":-21.4,"rms":-34.6,"pre":-26.7,"end":0.179},
+   {"label":"random 1","seed":1,"peak":-21.5,"rms":-34.6,"pre":-26.8,"end":0.153},
+   {"label":"random 2","seed":1,"peak":-21.3,"rms":-34.7,"pre":-26.7,"end":0.221}
+  ]},
+ {"id":"game-countdown-beep","dur":0.62,"playHash":"998474ab0504","renders":[
+   {"label":"defaults","seed":1,"peak":-23.6,"rms":-26.6,"pre":-28.9,"end":0.132},
+   {"label":"defaults","seed":2,"peak":-23.6,"rms":-26.6,"pre":-28.9,"end":0.132},
+   {"label":"defaults","seed":3,"peak":-23.6,"rms":-26.6,"pre":-28.9,"end":0.132},
+   {"label":"random 2","seed":1,"peak":-23.5,"rms":-26.6,"pre":-28.9,"end":0.19},
+   {"label":"random 1","seed":1,"peak":-18.7,"rms":-25.7,"pre":-24,"end":0.484}
+  ]},
+ {"id":"game-door-open","dur":1.1,"playHash":"b7c23540fdf6","renders":[
+   {"label":"defaults","seed":1,"peak":-21.6,"rms":-37.2,"pre":-27,"end":0.705},
+   {"label":"defaults","seed":2,"peak":-22,"rms":-37.3,"pre":-27.4,"end":0.693},
+   {"label":"defaults","seed":3,"peak":-22.4,"rms":-37.1,"pre":-27.8,"end":0.7},
+   {"label":"random 1","seed":3,"peak":-21.3,"rms":-36.4,"pre":-26.6,"end":0.874},
+   {"label":"random 2","seed":2,"peak":-20.4,"rms":-36,"pre":-25.7,"end":0.646}
+  ]},
+ {"id":"game-double-jump","dur":0.34,"playHash":"a2955ebf8e1e","renders":[
+   {"label":"defaults","seed":1,"peak":-23.4,"rms":-30.7,"pre":-28.8,"end":0.226},
+   {"label":"defaults","seed":2,"peak":-23.4,"rms":-30.7,"pre":-28.8,"end":0.226},
+   {"label":"defaults","seed":3,"peak":-23.4,"rms":-30.7,"pre":-28.8,"end":0.226},
+   {"label":"random 1","seed":1,"peak":-23.4,"rms":-30.6,"pre":-28.8,"end":0.219},
+   {"label":"random 1","seed":1,"peak":-23.4,"rms":-30.6,"pre":-28.8,"end":0.219}
+  ]},
+ {"id":"game-explosion-soft","dur":1.05,"playHash":"94106bee31ee","renders":[
+   {"label":"defaults","seed":1,"peak":-13.7,"rms":-30.8,"pre":-18.6,"end":0.366},
+   {"label":"defaults","seed":2,"peak":-14.5,"rms":-30.9,"pre":-19.5,"end":0.376},
+   {"label":"defaults","seed":3,"peak":-15.6,"rms":-31,"pre":-20.7,"end":0.376},
+   {"label":"random 2","seed":2,"peak":-15.7,"rms":-31,"pre":-20.8,"end":0.356},
+   {"label":"random 1","seed":3,"peak":-13.4,"rms":-31.4,"pre":-18.2,"end":0.243}
+  ]},
+ {"id":"game-footstep-hard","dur":0.2,"playHash":"e742902f1675","renders":[
+   {"label":"defaults","seed":1,"peak":-29.6,"rms":-42.6,"pre":-35,"end":0.066},
+   {"label":"defaults","seed":2,"peak":-29,"rms":-41.8,"pre":-34.4,"end":0.065},
+   {"label":"defaults","seed":3,"peak":-26.6,"rms":-42.2,"pre":-32,"end":0.065},
+   {"label":"random 1","seed":3,"peak":-29.2,"rms":-41.9,"pre":-34.7,"end":0.062},
+   {"label":"random 2","seed":3,"peak":-23.8,"rms":-40.7,"pre":-29.1,"end":0.068}
+  ]},
+ {"id":"game-footstep-soft","dur":0.22,"playHash":"84dea1494ac0","renders":[
+   {"label":"defaults","seed":1,"peak":-30.8,"rms":-44.1,"pre":-36.2,"end":0.072},
+   {"label":"defaults","seed":2,"peak":-28.7,"rms":-43.1,"pre":-34.1,"end":0.07},
+   {"label":"defaults","seed":3,"peak":-30.6,"rms":-43.7,"pre":-36,"end":0.069},
+   {"label":"random 3","seed":3,"peak":-29.3,"rms":-42.8,"pre":-34.7,"end":0.089},
+   {"label":"random 1","seed":1,"peak":-26.1,"rms":-41,"pre":-31.4,"end":0.067}
+  ]},
+ {"id":"game-gem-collect","dur":0.95,"playHash":"98ca0ed07627","renders":[
+   {"label":"defaults","seed":1,"peak":-19.4,"rms":-35.2,"pre":-24.7,"end":0.409},
+   {"label":"defaults","seed":2,"peak":-19.8,"rms":-35.1,"pre":-25.1,"end":0.409},
+   {"label":"defaults","seed":3,"peak":-20.2,"rms":-35.2,"pre":-25.5,"end":0.409},
+   {"label":"random 1","seed":1,"peak":-20,"rms":-35,"pre":-25.4,"end":0.54},
+   {"label":"random 2","seed":1,"peak":-19.5,"rms":-34.9,"pre":-24.8,"end":0.499}
+  ]},
+ {"id":"game-hammer-hit","dur":0.95,"playHash":"370e9ecc72f8","renders":[
+   {"label":"defaults","seed":1,"peak":-15,"rms":-37.2,"pre":-20,"end":0.438},
+   {"label":"defaults","seed":2,"peak":-15.4,"rms":-37.2,"pre":-20.4,"end":0.438},
+   {"label":"defaults","seed":3,"peak":-13.6,"rms":-37.2,"pre":-18.5,"end":0.438},
+   {"label":"random 1","seed":3,"peak":-18,"rms":-38.9,"pre":-23.3,"end":0.737},
+   {"label":"random 2","seed":1,"peak":-15.3,"rms":-34.7,"pre":-20.3,"end":0.318}
+  ]},
+ {"id":"game-heal","dur":0.95,"playHash":"64fe3b96c760","renders":[
+   {"label":"defaults","seed":1,"peak":-21.8,"rms":-35.6,"pre":-27.2,"end":0.545},
+   {"label":"defaults","seed":2,"peak":-21.6,"rms":-35.6,"pre":-26.9,"end":0.545},
+   {"label":"defaults","seed":3,"peak":-21.7,"rms":-35.6,"pre":-27.1,"end":0.542},
+   {"label":"random 1","seed":3,"peak":-21.9,"rms":-35.5,"pre":-27.2,"end":0.589},
+   {"label":"random 3","seed":1,"peak":-20.7,"rms":-35.5,"pre":-26,"end":0.431}
+  ]},
+ {"id":"game-hit-heavy","dur":0.78,"playHash":"535703391a12","renders":[
+   {"label":"defaults","seed":1,"peak":-14.1,"rms":-23.1,"pre":-19.2,"end":0.448},
+   {"label":"defaults","seed":2,"peak":-14.9,"rms":-23,"pre":-19.9,"end":0.448},
+   {"label":"defaults","seed":3,"peak":-14.1,"rms":-23.1,"pre":-19.1,"end":0.448},
+   {"label":"random 3","seed":3,"peak":-15.7,"rms":-23.1,"pre":-20.8,"end":0.312},
+   {"label":"random 2","seed":1,"peak":-13.2,"rms":-24.2,"pre":-18.2,"end":0.491}
+  ]},
+ {"id":"game-hit-light","dur":0.16,"playHash":"99570b9dba40","renders":[
+   {"label":"defaults","seed":1,"peak":-20.8,"rms":-36.4,"pre":-26.1,"end":0.052},
+   {"label":"defaults","seed":2,"peak":-23.1,"rms":-36.5,"pre":-28.5,"end":0.052},
+   {"label":"defaults","seed":3,"peak":-21.9,"rms":-36.3,"pre":-27.3,"end":0.052},
+   {"label":"random 1","seed":3,"peak":-22.8,"rms":-35.6,"pre":-28.1,"end":0.055},
+   {"label":"random 2","seed":1,"peak":-21,"rms":-35.2,"pre":-26.3,"end":0.054}
+  ]},
+ {"id":"game-hurt","dur":0.32,"playHash":"9a4b6684cd67","renders":[
+   {"label":"defaults","seed":1,"peak":-19.1,"rms":-24.2,"pre":-24.4,"end":0.156},
+   {"label":"defaults","seed":2,"peak":-19.6,"rms":-24.2,"pre":-24.9,"end":0.156},
+   {"label":"defaults","seed":3,"peak":-19,"rms":-24.2,"pre":-24.3,"end":0.156},
+   {"label":"random 2","seed":2,"peak":-19.5,"rms":-24.2,"pre":-24.9,"end":0.134},
+   {"label":"random 3","seed":1,"peak":-18.9,"rms":-24.1,"pre":-24.2,"end":0.209}
+  ]},
+ {"id":"game-jump","dur":0.27,"playHash":"dabeb5017263","renders":[
+   {"label":"defaults","seed":1,"peak":-23.5,"rms":-28,"pre":-28.9,"end":0.125},
+   {"label":"defaults","seed":2,"peak":-23.5,"rms":-28,"pre":-28.9,"end":0.125},
+   {"label":"defaults","seed":3,"peak":-23.5,"rms":-28,"pre":-28.9,"end":0.125},
+   {"label":"random 2","seed":1,"peak":-23.5,"rms":-28.1,"pre":-28.9,"end":0.136},
+   {"label":"random 1","seed":1,"peak":-21.3,"rms":-29.5,"pre":-26.7,"end":0.096}
+  ]},
+ {"id":"game-key-unlock","dur":0.85,"playHash":"53a8d0de5966","renders":[
+   {"label":"defaults","seed":1,"peak":-21.6,"rms":-42.5,"pre":-26.9,"end":0.507},
+   {"label":"defaults","seed":2,"peak":-20.8,"rms":-42.2,"pre":-26.1,"end":0.507},
+   {"label":"defaults","seed":3,"peak":-20.8,"rms":-42.2,"pre":-26.4,"end":0.507},
+   {"label":"random 3","seed":2,"peak":-23.7,"rms":-41.8,"pre":-29.1,"end":0.552},
+   {"label":"random 1","seed":1,"peak":-19.4,"rms":-40.4,"pre":-24.7,"end":0.555}
+  ]},
+ {"id":"game-land","dur":0.3,"playHash":"846556686fda","renders":[
+   {"label":"defaults","seed":1,"peak":-25.9,"rms":-39,"pre":-31.3,"end":0.105},
+   {"label":"defaults","seed":2,"peak":-25,"rms":-38.5,"pre":-30.4,"end":0.104},
+   {"label":"defaults","seed":3,"peak":-22.9,"rms":-38.9,"pre":-28.2,"end":0.104},
+   {"label":"random 3","seed":2,"peak":-27.3,"rms":-39.7,"pre":-32.7,"end":0.093},
+   {"label":"random 2","seed":3,"peak":-21.6,"rms":-36.3,"pre":-27,"end":0.122}
+  ]},
+ {"id":"game-pickup-item","dur":0.25,"playHash":"0e6653de6d8c","renders":[
+   {"label":"defaults","seed":1,"peak":-23.4,"rms":-36.3,"pre":-28.7,"end":0.16},
+   {"label":"defaults","seed":2,"peak":-23.4,"rms":-36.3,"pre":-28.7,"end":0.16},
+   {"label":"defaults","seed":3,"peak":-23.4,"rms":-36.3,"pre":-28.7,"end":0.16},
+   {"label":"random 1","seed":1,"peak":-26.7,"rms":-36.6,"pre":-32.1,"end":0.141},
+   {"label":"random 2","seed":1,"peak":-23,"rms":-36.6,"pre":-28.4,"end":0.17}
+  ]},
+ {"id":"game-power-up","dur":0.72,"playHash":"ff833c0f13b3","renders":[
+   {"label":"defaults","seed":1,"peak":-21.7,"rms":-25,"pre":-27.1,"end":0.404},
+   {"label":"defaults","seed":2,"peak":-21.7,"rms":-25,"pre":-27.1,"end":0.404},
+   {"label":"defaults","seed":3,"peak":-21.7,"rms":-25,"pre":-27.1,"end":0.404},
+   {"label":"random 1","seed":1,"peak":-21.8,"rms":-24.9,"pre":-27.1,"end":0.44},
+   {"label":"random 2","seed":1,"peak":-19.1,"rms":-30.9,"pre":-24.4,"end":0.353}
+  ]},
+ {"id":"game-punch","dur":0.46,"playHash":"598fccf8b686","renders":[
+   {"label":"defaults","seed":1,"peak":-17.8,"rms":-34.6,"pre":-23,"end":0.094},
+   {"label":"defaults","seed":2,"peak":-18.1,"rms":-34.6,"pre":-23.4,"end":0.094},
+   {"label":"defaults","seed":3,"peak":-18.8,"rms":-34.2,"pre":-24,"end":0.094},
+   {"label":"random 1","seed":1,"peak":-19.7,"rms":-36.4,"pre":-25,"end":0.317},
+   {"label":"random 2","seed":3,"peak":-16.4,"rms":-34.8,"pre":-21.6,"end":0.17}
+  ]},
+ {"id":"game-shield-up","dur":0.95,"playHash":"1c4a7f0ad6ed","renders":[
+   {"label":"defaults","seed":1,"peak":-23,"rms":-36.7,"pre":-28.2,"end":0.59},
+   {"label":"defaults","seed":2,"peak":-23,"rms":-36.7,"pre":-28.3,"end":0.59},
+   {"label":"defaults","seed":3,"peak":-22.9,"rms":-36.7,"pre":-28.2,"end":0.59},
+   {"label":"random 3","seed":2,"peak":-22.3,"rms":-35.5,"pre":-27.6,"end":0.463},
+   {"label":"random 1","seed":2,"peak":-20.3,"rms":-34.8,"pre":-25.4,"end":0.674}
+  ]},
+ {"id":"game-sword-clash","dur":1,"playHash":"b578f03b2287","renders":[
+   {"label":"defaults","seed":1,"peak":-15.8,"rms":-38.9,"pre":-20.9,"end":0.372},
+   {"label":"defaults","seed":2,"peak":-17.6,"rms":-38.9,"pre":-22.5,"end":0.372},
+   {"label":"defaults","seed":3,"peak":-18.3,"rms":-38.9,"pre":-23.7,"end":0.372},
+   {"label":"random 1","seed":2,"peak":-18.7,"rms":-38.7,"pre":-23.7,"end":0.322},
+   {"label":"random 2","seed":1,"peak":-16,"rms":-39.1,"pre":-21.1,"end":0.506}
+  ]},
+ {"id":"game-sword-swing","dur":0.38,"playHash":"d24361271fef","renders":[
+   {"label":"defaults","seed":1,"peak":-22,"rms":-38.9,"pre":-27.3,"end":0.141},
+   {"label":"defaults","seed":2,"peak":-23.7,"rms":-38.9,"pre":-29.1,"end":0.139},
+   {"label":"defaults","seed":3,"peak":-21.7,"rms":-38.8,"pre":-27.1,"end":0.139},
+   {"label":"random 3","seed":1,"peak":-26.3,"rms":-40.3,"pre":-31.7,"end":0.112},
+   {"label":"random 1","seed":2,"peak":-20.9,"rms":-38,"pre":-26.2,"end":0.123}
+  ]},
+ {"id":"game-whoosh","dur":0.62,"playHash":"37e6335d4803","renders":[
+   {"label":"defaults","seed":1,"peak":-25.2,"rms":-40.4,"pre":-30.6,"end":0.208},
+   {"label":"defaults","seed":2,"peak":-24.1,"rms":-40.1,"pre":-29.5,"end":0.201},
+   {"label":"defaults","seed":3,"peak":-24.2,"rms":-40.2,"pre":-29.6,"end":0.204},
+   {"label":"random 1","seed":1,"peak":-25.4,"rms":-39.8,"pre":-30.8,"end":0.205},
+   {"label":"random 2","seed":2,"peak":-21.4,"rms":-37.8,"pre":-26.7,"end":0.359}
+  ]},
+ {"id":"cards-chip-click","dur":0.12,"playHash":"d1a1ee49e5ff","renders":[
+   {"label":"defaults","seed":1,"peak":-23.5,"rms":-40.3,"pre":-28.9,"end":0.034},
+   {"label":"defaults","seed":2,"peak":-25.3,"rms":-40.5,"pre":-30.7,"end":0.033},
+   {"label":"defaults","seed":3,"peak":-23.6,"rms":-39.6,"pre":-29,"end":0.035},
+   {"label":"random 1","seed":3,"peak":-26.8,"rms":-42.2,"pre":-32.1,"end":0.042},
+   {"label":"random 3","seed":2,"peak":-22.1,"rms":-40.2,"pre":-27.5,"end":0.032}
+  ]},
+ {"id":"cards-chip-stack","dur":0.8,"playHash":"25c7c1d7b1f8","renders":[
+   {"label":"defaults","seed":1,"peak":-24.2,"rms":-46.1,"pre":-29.6,"end":0.293},
+   {"label":"defaults","seed":2,"peak":-25.5,"rms":-46.8,"pre":-30.9,"end":0.308},
+   {"label":"defaults","seed":3,"peak":-26,"rms":-47.3,"pre":-31.3,"end":0.333},
+   {"label":"random 2","seed":3,"peak":-27.9,"rms":-47.4,"pre":-33.2,"end":0.123},
+   {"label":"random 3","seed":2,"peak":-24.5,"rms":-46.2,"pre":-29.9,"end":0.227}
+  ]},
+ {"id":"cards-chips-push","dur":1.27,"playHash":"98c20bbeaa25","renders":[
+   {"label":"defaults","seed":1,"peak":-20.1,"rms":-40,"pre":-25.4,"end":0.983},
+   {"label":"defaults","seed":2,"peak":-20.3,"rms":-39.6,"pre":-25.6,"end":0.983},
+   {"label":"defaults","seed":3,"peak":-19.7,"rms":-39.8,"pre":-25,"end":0.982},
+   {"label":"random 2","seed":1,"peak":-21.3,"rms":-40,"pre":-26.6,"end":0.957},
+   {"label":"random 1","seed":1,"peak":-18.1,"rms":-39.3,"pre":-23.3,"end":1.042}
+  ]},
+ {"id":"cards-deal","dur":0.39,"playHash":"28e5ecfc5494","renders":[
+   {"label":"defaults","seed":1,"peak":-25.1,"rms":-39.9,"pre":-30.5,"end":0.21},
+   {"label":"defaults","seed":2,"peak":-25.5,"rms":-40.8,"pre":-30.9,"end":0.209},
+   {"label":"defaults","seed":3,"peak":-26.2,"rms":-40.8,"pre":-31.6,"end":0.209},
+   {"label":"random 1","seed":2,"peak":-25.9,"rms":-41.3,"pre":-31.3,"end":0.189},
+   {"label":"random 2","seed":1,"peak":-22.5,"rms":-38.8,"pre":-27.8,"end":0.16}
+  ]},
+ {"id":"cards-deal-hand","dur":1.47,"playHash":"9ee61b587db7","renders":[
+   {"label":"defaults","seed":1,"peak":-25.6,"rms":-42.4,"pre":-30.8,"end":0.719},
+   {"label":"defaults","seed":2,"peak":-27.6,"rms":-42.5,"pre":-33,"end":0.719},
+   {"label":"defaults","seed":3,"peak":-25.5,"rms":-42.2,"pre":-30.9,"end":0.72},
+   {"label":"random 1","seed":2,"peak":-27.6,"rms":-41.1,"pre":-33,"end":0.336},
+   {"label":"random 3","seed":3,"peak":-25.4,"rms":-42.4,"pre":-30.8,"end":0.459}
+  ]},
+ {"id":"cards-dice-roll","dur":1.04,"playHash":"0504b9049b5c","renders":[
+   {"label":"defaults","seed":1,"peak":-27,"rms":-51.1,"pre":-32.4,"end":0.713},
+   {"label":"defaults","seed":2,"peak":-27,"rms":-51.9,"pre":-32.4,"end":0.712},
+   {"label":"defaults","seed":3,"peak":-26.8,"rms":-51,"pre":-32.2,"end":0.712},
+   {"label":"random 3","seed":2,"peak":-26.5,"rms":-50.8,"pre":-31.9,"end":0.773},
+   {"label":"random 2","seed":3,"peak":-22.7,"rms":-49.8,"pre":-28.1,"end":0.708}
+  ]},
+ {"id":"cards-dice-shake","dur":1,"playHash":"bf81da451d39","renders":[
+   {"label":"defaults","seed":1,"peak":-26.4,"rms":-45.7,"pre":-31.8,"end":0.596},
+   {"label":"defaults","seed":2,"peak":-25.1,"rms":-45.6,"pre":-30.5,"end":0.601},
+   {"label":"defaults","seed":3,"peak":-25.9,"rms":-45.5,"pre":-31.3,"end":0.597},
+   {"label":"random 1","seed":2,"peak":-27.5,"rms":-45,"pre":-32.9,"end":0.537},
+   {"label":"random 3","seed":1,"peak":-23,"rms":-42.9,"pre":-28.4,"end":0.649}
+  ]},
+ {"id":"cards-discard","dur":0.23,"playHash":"bbc72d7bf3c9","renders":[
+   {"label":"defaults","seed":1,"peak":-25.7,"rms":-40.5,"pre":-31,"end":0.117},
+   {"label":"defaults","seed":2,"peak":-24.4,"rms":-40.9,"pre":-29.8,"end":0.117},
+   {"label":"defaults","seed":3,"peak":-26,"rms":-40.8,"pre":-31.4,"end":0.117},
+   {"label":"random 3","seed":2,"peak":-28.9,"rms":-42.5,"pre":-34.1,"end":0.122},
+   {"label":"random 2","seed":2,"peak":-25.1,"rms":-39.5,"pre":-30.5,"end":0.113}
+  ]},
+ {"id":"cards-draw","dur":0.27,"playHash":"f50f5bf70a54","renders":[
+   {"label":"defaults","seed":1,"peak":-26.3,"rms":-41.3,"pre":-31.7,"end":0.148},
+   {"label":"defaults","seed":2,"peak":-25.2,"rms":-41,"pre":-30.6,"end":0.149},
+   {"label":"defaults","seed":3,"peak":-26.3,"rms":-41.3,"pre":-31.7,"end":0.148},
+   {"label":"random 3","seed":2,"peak":-26.7,"rms":-41,"pre":-32,"end":0.135},
+   {"label":"random 2","seed":2,"peak":-24.6,"rms":-40.8,"pre":-30,"end":0.104}
+  ]},
+ {"id":"cards-fan","dur":0.57,"playHash":"50330f333364","renders":[
+   {"label":"defaults","seed":1,"peak":-25.5,"rms":-44.2,"pre":-30.9,"end":0.298},
+   {"label":"defaults","seed":2,"peak":-25.1,"rms":-44.3,"pre":-30.5,"end":0.297},
+   {"label":"defaults","seed":3,"peak":-27.2,"rms":-44.5,"pre":-32.7,"end":0.297},
+   {"label":"random 3","seed":3,"peak":-28.3,"rms":-44.6,"pre":-33.7,"end":0.494},
+   {"label":"random 2","seed":1,"peak":-23.4,"rms":-43.8,"pre":-28.8,"end":0.378}
+  ]},
+ {"id":"cards-flick","dur":0.65,"playHash":"91d7f8551414","renders":[
+   {"label":"defaults","seed":1,"peak":-25.8,"rms":-40.8,"pre":-31.1,"end":0.032},
+   {"label":"defaults","seed":2,"peak":-28,"rms":-41.2,"pre":-32.9,"end":0.032},
+   {"label":"defaults","seed":3,"peak":-26.5,"rms":-41.1,"pre":-31.9,"end":0.031},
+   {"label":"random 1","seed":2,"peak":-27.5,"rms":-41.2,"pre":-32.7,"end":0.032},
+   {"label":"random 2","seed":1,"peak":-25,"rms":-47.6,"pre":-30.3,"end":0.24}
+  ]},
+ {"id":"cards-flip","dur":0.32,"playHash":"cbf529852815","renders":[
+   {"label":"defaults","seed":1,"peak":-26,"rms":-43.5,"pre":-31.3,"end":0.187},
+   {"label":"defaults","seed":2,"peak":-25.9,"rms":-43.6,"pre":-31.6,"end":0.187},
+   {"label":"defaults","seed":3,"peak":-26.4,"rms":-43.4,"pre":-31.8,"end":0.186},
+   {"label":"random 2","seed":2,"peak":-29.8,"rms":-44.7,"pre":-35.2,"end":0.174},
+   {"label":"random 3","seed":3,"peak":-25.3,"rms":-43,"pre":-30.7,"end":0.141}
+  ]},
+ {"id":"cards-piece-capture","dur":0.49,"playHash":"56a6cf69ce32","renders":[
+   {"label":"defaults","seed":1,"peak":-19.7,"rms":-39.4,"pre":-25.1,"end":0.235},
+   {"label":"defaults","seed":2,"peak":-20.5,"rms":-40,"pre":-25.8,"end":0.271},
+   {"label":"defaults","seed":3,"peak":-21.5,"rms":-39.4,"pre":-26.9,"end":0.239},
+   {"label":"random 2","seed":1,"peak":-23.3,"rms":-40.9,"pre":-28.7,"end":0.238},
+   {"label":"random 3","seed":3,"peak":-19.3,"rms":-38.5,"pre":-24.6,"end":0.246}
+  ]},
+ {"id":"cards-piece-move","dur":0.26,"playHash":"22902d5dee3c","renders":[
+   {"label":"defaults","seed":1,"peak":-24,"rms":-41,"pre":-29.4,"end":0.104},
+   {"label":"defaults","seed":2,"peak":-24.6,"rms":-41.1,"pre":-30,"end":0.104},
+   {"label":"defaults","seed":3,"peak":-24.4,"rms":-41.1,"pre":-29.8,"end":0.104},
+   {"label":"random 1","seed":2,"peak":-25.8,"rms":-42.5,"pre":-31.2,"end":0.148},
+   {"label":"random 2","seed":1,"peak":-23.1,"rms":-43,"pre":-28.5,"end":0.18}
+  ]},
+ {"id":"cards-place","dur":0.09,"playHash":"3464681becbc","renders":[
+   {"label":"defaults","seed":1,"peak":-26.7,"rms":-37,"pre":-32.1,"end":0.045},
+   {"label":"defaults","seed":2,"peak":-24.2,"rms":-36.6,"pre":-29.6,"end":0.045},
+   {"label":"defaults","seed":3,"peak":-25.2,"rms":-37,"pre":-30.6,"end":0.045},
+   {"label":"random 3","seed":1,"peak":-26,"rms":-36.3,"pre":-31.4,"end":0.051},
+   {"label":"random 1","seed":2,"peak":-22.4,"rms":-34.3,"pre":-27.7,"end":0.053}
+  ]},
+ {"id":"cards-riffle","dur":0.55,"playHash":"b1dd9dc132a0","renders":[
+   {"label":"defaults","seed":1,"peak":-26.6,"rms":-44,"pre":-32.1,"end":0.14},
+   {"label":"defaults","seed":2,"peak":-27.6,"rms":-45.1,"pre":-33,"end":0.141},
+   {"label":"defaults","seed":3,"peak":-27.5,"rms":-44.4,"pre":-32.9,"end":0.139},
+   {"label":"random 1","seed":2,"peak":-27.8,"rms":-46,"pre":-33.2,"end":0.466},
+   {"label":"random 2","seed":3,"peak":-23.3,"rms":-41.6,"pre":-28.7,"end":0.178}
+  ]},
+ {"id":"cards-shuffle-overhand","dur":1.31,"playHash":"74396a5de569","renders":[
+   {"label":"defaults","seed":1,"peak":-27.2,"rms":-47.4,"pre":-32.6,"end":0.681},
+   {"label":"defaults","seed":2,"peak":-25.4,"rms":-47,"pre":-30.8,"end":0.682},
+   {"label":"defaults","seed":3,"peak":-27,"rms":-47.2,"pre":-32.4,"end":0.685},
+   {"label":"random 1","seed":1,"peak":-28.8,"rms":-49,"pre":-34.2,"end":0.821},
+   {"label":"random 2","seed":1,"peak":-24.3,"rms":-45.4,"pre":-29.7,"end":0.496}
+  ]},
+ {"id":"cards-slide","dur":0.52,"playHash":"fe0bbe9ed8de","renders":[
+   {"label":"defaults","seed":1,"peak":-25.3,"rms":-38.7,"pre":-30.7,"end":0.23},
+   {"label":"defaults","seed":2,"peak":-24.4,"rms":-38.7,"pre":-29.8,"end":0.216},
+   {"label":"defaults","seed":3,"peak":-24.7,"rms":-39,"pre":-30.1,"end":0.222},
+   {"label":"random 1","seed":3,"peak":-28.1,"rms":-39,"pre":-33.6,"end":0.094},
+   {"label":"random 2","seed":1,"peak":-25.7,"rms":-39.1,"pre":-31.1,"end":0.392}
+  ]},
+ {"id":"cards-timer-tick","dur":1.06,"playHash":"771a00679122","renders":[
+   {"label":"defaults","seed":1,"peak":-27.1,"rms":-51.1,"pre":-32.5,"end":0.43},
+   {"label":"defaults","seed":2,"peak":-28,"rms":-51.2,"pre":-33.4,"end":0.43},
+   {"label":"defaults","seed":3,"peak":-27.2,"rms":-51.1,"pre":-32.6,"end":0.43},
+   {"label":"random 1","seed":2,"peak":-28.7,"rms":-50.7,"pre":-34.2,"end":0.454},
+   {"label":"random 2","seed":3,"peak":-24,"rms":-50.6,"pre":-29.4,"end":0.601}
+  ]},
+ {"id":"cards-your-turn","dur":0.65,"playHash":"da7df11dd214","renders":[
+   {"label":"defaults","seed":1,"peak":-20.7,"rms":-34.2,"pre":-26,"end":0.337},
+   {"label":"defaults","seed":2,"peak":-20.7,"rms":-34.2,"pre":-26,"end":0.337},
+   {"label":"defaults","seed":3,"peak":-20.7,"rms":-34.2,"pre":-26,"end":0.337},
+   {"label":"random 2","seed":1,"peak":-20.9,"rms":-33.7,"pre":-26.2,"end":0.443},
+   {"label":"random 3","seed":1,"peak":-20.4,"rms":-33.8,"pre":-25.7,"end":0.398}
+  ]},
+ {"id":"magic-charge-up","dur":2.1,"playHash":"a5003466c011","renders":[
+   {"label":"defaults","seed":1,"peak":-17.5,"rms":-33.7,"pre":-22.7,"end":1.448},
+   {"label":"defaults","seed":2,"peak":-16.6,"rms":-33.8,"pre":-21.8,"end":1.485},
+   {"label":"defaults","seed":3,"peak":-17.3,"rms":-33.5,"pre":-22.5,"end":1.401},
+   {"label":"random 1","seed":1,"peak":-18,"rms":-34.3,"pre":-23.3,"end":1.375},
+   {"label":"random 1","seed":3,"peak":-16.9,"rms":-34.4,"pre":-22.2,"end":1.366}
+  ]},
+ {"id":"magic-curse-hex","dur":1.8,"playHash":"6cf4ec6e95fa","renders":[
+   {"label":"defaults","seed":1,"peak":-17.4,"rms":-33.8,"pre":-22.6,"end":1.284},
+   {"label":"defaults","seed":2,"peak":-17.7,"rms":-34.1,"pre":-23,"end":1.328},
+   {"label":"defaults","seed":3,"peak":-15.9,"rms":-33.6,"pre":-21,"end":1.236},
+   {"label":"random 2","seed":1,"peak":-20,"rms":-35.3,"pre":-25.3,"end":1.011},
+   {"label":"random 1","seed":1,"peak":-15.1,"rms":-31.3,"pre":-20.1,"end":1.344}
+  ]},
+ {"id":"magic-enchant","dur":1.9,"playHash":"7117fb025bcd","renders":[
+   {"label":"defaults","seed":1,"peak":-19.2,"rms":-36.9,"pre":-24.7,"end":1.079},
+   {"label":"defaults","seed":2,"peak":-20.4,"rms":-37,"pre":-26,"end":1.095},
+   {"label":"defaults","seed":3,"peak":-20.9,"rms":-37.8,"pre":-26.3,"end":1.131},
+   {"label":"random 2","seed":3,"peak":-23.2,"rms":-39,"pre":-28.5,"end":1.062},
+   {"label":"random 1","seed":3,"peak":-20.4,"rms":-35.7,"pre":-25.8,"end":0.956}
+  ]},
+ {"id":"magic-fire-spell","dur":1.3,"playHash":"b688fd7662fb","renders":[
+   {"label":"defaults","seed":1,"peak":-17.6,"rms":-33.2,"pre":-22.8,"end":0.721},
+   {"label":"defaults","seed":2,"peak":-15.1,"rms":-32.2,"pre":-20.3,"end":0.62},
+   {"label":"defaults","seed":3,"peak":-15.9,"rms":-32.9,"pre":-21.1,"end":0.735},
+   {"label":"random 3","seed":3,"peak":-17.2,"rms":-32.7,"pre":-22.4,"end":1.052},
+   {"label":"random 2","seed":1,"peak":-15.6,"rms":-31.2,"pre":-20.7,"end":0.682}
+  ]},
+ {"id":"magic-healing-shimmer","dur":2,"playHash":"35553b39cf90","renders":[
+   {"label":"defaults","seed":1,"peak":-18.6,"rms":-35,"pre":-23.9,"end":1.507},
+   {"label":"defaults","seed":2,"peak":-17.5,"rms":-34.9,"pre":-22.6,"end":1.462},
+   {"label":"defaults","seed":3,"peak":-17,"rms":-34.9,"pre":-22.2,"end":1.517},
+   {"label":"random 3","seed":1,"peak":-20,"rms":-36.6,"pre":-25.3,"end":1.29},
+   {"label":"random 1","seed":2,"peak":-17.3,"rms":-34.5,"pre":-22.6,"end":1.392}
+  ]},
+ {"id":"magic-ice-spell","dur":1.4,"playHash":"2ccc7b87a289","renders":[
+   {"label":"defaults","seed":1,"peak":-18.4,"rms":-34.8,"pre":-23.7,"end":0.953},
+   {"label":"defaults","seed":2,"peak":-18,"rms":-33.8,"pre":-23.2,"end":0.898},
+   {"label":"defaults","seed":3,"peak":-17.9,"rms":-34.9,"pre":-23.2,"end":0.977},
+   {"label":"random 2","seed":2,"peak":-18.4,"rms":-33.7,"pre":-23.6,"end":0.95},
+   {"label":"random 1","seed":2,"peak":-16.9,"rms":-32.9,"pre":-22.1,"end":0.883}
+  ]},
+ {"id":"magic-lightning","dur":1.4,"playHash":"720b5a4e7973","renders":[
+   {"label":"defaults","seed":1,"peak":-18.7,"rms":-38.3,"pre":-23.7,"end":0.468},
+   {"label":"defaults","seed":2,"peak":-17.5,"rms":-37.5,"pre":-22.7,"end":0.44},
+   {"label":"defaults","seed":3,"peak":-17.7,"rms":-38,"pre":-22.9,"end":0.465},
+   {"label":"random 2","seed":2,"peak":-18.5,"rms":-39.7,"pre":-23.8,"end":0.465},
+   {"label":"random 1","seed":2,"peak":-15.9,"rms":-38.3,"pre":-21,"end":0.519}
+  ]},
+ {"id":"magic-portal-open","dur":2.5,"playHash":"5b35abf36305","renders":[
+   {"label":"defaults","seed":1,"peak":-16.1,"rms":-35,"pre":-21.2,"end":1.81},
+   {"label":"defaults","seed":2,"peak":-16,"rms":-34.5,"pre":-21.1,"end":1.726},
+   {"label":"defaults","seed":3,"peak":-15.7,"rms":-34.9,"pre":-20.8,"end":1.762},
+   {"label":"random 2","seed":1,"peak":-17.4,"rms":-34.4,"pre":-22.6,"end":1.868},
+   {"label":"random 3","seed":1,"peak":-15.1,"rms":-34.2,"pre":-20.2,"end":1.465}
+  ]},
+ {"id":"magic-potion-bubble","dur":1.6,"playHash":"0c67acaa14ff","renders":[
+   {"label":"defaults","seed":1,"peak":-19.9,"rms":-36.6,"pre":-25.2,"end":0.927},
+   {"label":"defaults","seed":2,"peak":-19.5,"rms":-37.5,"pre":-24.8,"end":0.959},
+   {"label":"defaults","seed":3,"peak":-21.3,"rms":-37.6,"pre":-26.7,"end":0.923},
+   {"label":"random 3","seed":1,"peak":-21.6,"rms":-40.1,"pre":-26.9,"end":0.779},
+   {"label":"random 2","seed":1,"peak":-19.8,"rms":-36.2,"pre":-25.1,"end":1.163}
+  ]},
+ {"id":"magic-sparkle","dur":1.5,"playHash":"42b3ff6c771e","renders":[
+   {"label":"defaults","seed":1,"peak":-20,"rms":-37.4,"pre":-25.2,"end":0.602},
+   {"label":"defaults","seed":2,"peak":-18.6,"rms":-37.4,"pre":-23.8,"end":0.598},
+   {"label":"defaults","seed":3,"peak":-19.9,"rms":-37.7,"pre":-25.1,"end":0.615},
+   {"label":"random 1","seed":3,"peak":-20.7,"rms":-37.4,"pre":-26.1,"end":0.695},
+   {"label":"random 3","seed":3,"peak":-19,"rms":-36.1,"pre":-24.3,"end":0.799}
+  ]},
+ {"id":"magic-spell-cast","dur":1.5,"playHash":"00b9e30cf991","renders":[
+   {"label":"defaults","seed":1,"peak":-16.4,"rms":-35.7,"pre":-21.6,"end":0.967},
+   {"label":"defaults","seed":2,"peak":-17.3,"rms":-35.7,"pre":-22.4,"end":0.991},
+   {"label":"defaults","seed":3,"peak":-16.6,"rms":-35.6,"pre":-21.7,"end":0.92},
+   {"label":"random 1","seed":2,"peak":-19.9,"rms":-35.3,"pre":-25.2,"end":0.802},
+   {"label":"random 3","seed":1,"peak":-16.8,"rms":-30.7,"pre":-21.9,"end":1.052}
+  ]},
+ {"id":"magic-teleport","dur":1.4,"playHash":"e425cb7bfc80","renders":[
+   {"label":"defaults","seed":1,"peak":-16.1,"rms":-37.2,"pre":-21.2,"end":1.013},
+   {"label":"defaults","seed":2,"peak":-15.2,"rms":-36.6,"pre":-20.4,"end":1.046},
+   {"label":"defaults","seed":3,"peak":-17.5,"rms":-36.8,"pre":-22.7,"end":1.01},
+   {"label":"random 1","seed":2,"peak":-18.3,"rms":-35.5,"pre":-23.4,"end":0.902},
+   {"label":"random 2","seed":2,"peak":-15,"rms":-37.3,"pre":-20.3,"end":1.174}
+  ]},
+ {"id":"scifi-alert-siren","dur":2.3,"playHash":"d6e31d6e7054","renders":[
+   {"label":"defaults","seed":1,"peak":-20.4,"rms":-27.9,"pre":-25.7,"end":1.214},
+   {"label":"defaults","seed":2,"peak":-20.4,"rms":-27.9,"pre":-25.7,"end":1.214},
+   {"label":"defaults","seed":3,"peak":-20.4,"rms":-27.9,"pre":-25.7,"end":1.214},
+   {"label":"random 1","seed":1,"peak":-20.9,"rms":-28.1,"pre":-26.3,"end":1.388},
+   {"label":"random 3","seed":1,"peak":-19.7,"rms":-28.6,"pre":-25,"end":0.764}
+  ]},
+ {"id":"scifi-blaster-bolt","dur":0.45,"playHash":"0a7996585a17","renders":[
+   {"label":"defaults","seed":1,"peak":-14.9,"rms":-26.8,"pre":-19.9,"end":0.311},
+   {"label":"defaults","seed":2,"peak":-14.4,"rms":-26.8,"pre":-19.2,"end":0.311},
+   {"label":"defaults","seed":3,"peak":-14.6,"rms":-26.9,"pre":-19.6,"end":0.311},
+   {"label":"random 1","seed":3,"peak":-15.6,"rms":-27.2,"pre":-20.7,"end":0.313},
+   {"label":"random 2","seed":2,"peak":-14.2,"rms":-27.4,"pre":-19,"end":0.398}
+  ]},
+ {"id":"scifi-data-stream","dur":1.1,"playHash":"3483268c352a","renders":[
+   {"label":"defaults","seed":1,"peak":-26.8,"rms":-40.6,"pre":-32.2,"end":0.595},
+   {"label":"defaults","seed":2,"peak":-27.3,"rms":-41.6,"pre":-32.7,"end":0.615},
+   {"label":"defaults","seed":3,"peak":-26.3,"rms":-41.6,"pre":-31.6,"end":0.595},
+   {"label":"random 2","seed":2,"peak":-27.1,"rms":-42.7,"pre":-32.5,"end":0.942},
+   {"label":"random 2","seed":1,"peak":-24.8,"rms":-42,"pre":-30.2,"end":0.929}
+  ]},
+ {"id":"scifi-hologram-flicker","dur":1.3,"playHash":"38668278e0bc","renders":[
+   {"label":"defaults","seed":1,"peak":-21.8,"rms":-29.4,"pre":-27.2,"end":0.898},
+   {"label":"defaults","seed":2,"peak":-21.8,"rms":-30,"pre":-27.2,"end":0.898},
+   {"label":"defaults","seed":3,"peak":-21.8,"rms":-29.4,"pre":-27.2,"end":0.898},
+   {"label":"random 1","seed":2,"peak":-22.1,"rms":-29,"pre":-27.5,"end":0.825},
+   {"label":"random 2","seed":1,"peak":-21.8,"rms":-29.6,"pre":-27.2,"end":0.919}
+  ]},
+ {"id":"scifi-laser-zap","dur":0.8,"playHash":"f583c1f3e1c1","renders":[
+   {"label":"defaults","seed":1,"peak":-17.2,"rms":-31.8,"pre":-22.4,"end":0.133},
+   {"label":"defaults","seed":2,"peak":-17.3,"rms":-31.8,"pre":-22.4,"end":0.133},
+   {"label":"defaults","seed":3,"peak":-18,"rms":-31.8,"pre":-23.3,"end":0.133},
+   {"label":"random 1","seed":3,"peak":-18.2,"rms":-33,"pre":-23.5,"end":0.213},
+   {"label":"random 2","seed":1,"peak":-16.5,"rms":-32.9,"pre":-21.6,"end":0.324}
+  ]},
+ {"id":"scifi-power-down","dur":1.6,"playHash":"52dc27574478","renders":[
+   {"label":"defaults","seed":1,"peak":-20.3,"rms":-34.8,"pre":-25.7,"end":1.002},
+   {"label":"defaults","seed":2,"peak":-20.4,"rms":-34.8,"pre":-25.7,"end":1.002},
+   {"label":"defaults","seed":3,"peak":-19.2,"rms":-34.8,"pre":-24.5,"end":1.002},
+   {"label":"random 2","seed":1,"peak":-21.2,"rms":-34.6,"pre":-26.6,"end":1.411},
+   {"label":"random 1","seed":3,"peak":-19.2,"rms":-35.1,"pre":-24.5,"end":1.378}
+  ]},
+ {"id":"scifi-power-up","dur":1.65,"playHash":"ef98f64fdd43","renders":[
+   {"label":"defaults","seed":1,"peak":-22,"rms":-34.1,"pre":-27.4,"end":1.106},
+   {"label":"defaults","seed":2,"peak":-22,"rms":-34.1,"pre":-27.4,"end":1.106},
+   {"label":"defaults","seed":3,"peak":-22,"rms":-34.1,"pre":-27.4,"end":1.106},
+   {"label":"random 2","seed":1,"peak":-21.7,"rms":-34.2,"pre":-27,"end":1.558},
+   {"label":"random 1","seed":1,"peak":-20.9,"rms":-33.5,"pre":-26.3,"end":0.75}
+  ]},
+ {"id":"scifi-robot-chirp","dur":1.05,"playHash":"3fc89848c186","renders":[
+   {"label":"defaults","seed":1,"peak":-20.8,"rms":-27.9,"pre":-26.1,"end":0.334},
+   {"label":"defaults","seed":2,"peak":-20.8,"rms":-27.8,"pre":-26.1,"end":0.363},
+   {"label":"defaults","seed":3,"peak":-20.8,"rms":-27.8,"pre":-26.1,"end":0.363},
+   {"label":"random 1","seed":1,"peak":-20.8,"rms":-27.6,"pre":-26.1,"end":0.756},
+   {"label":"random 1","seed":2,"peak":-20.6,"rms":-27.8,"pre":-26.1,"end":0.844}
+  ]},
+ {"id":"scifi-scanner-sweep","dur":2.3,"playHash":"2e75114aa14e","renders":[
+   {"label":"defaults","seed":1,"peak":-17,"rms":-28.8,"pre":-22.2,"end":1.133},
+   {"label":"defaults","seed":2,"peak":-17.6,"rms":-28.7,"pre":-22.8,"end":1.133},
+   {"label":"defaults","seed":3,"peak":-18.2,"rms":-28.9,"pre":-23.4,"end":1.133},
+   {"label":"random 1","seed":1,"peak":-18,"rms":-28.9,"pre":-23.3,"end":0.753},
+   {"label":"random 2","seed":1,"peak":-16.6,"rms":-29,"pre":-21.7,"end":0.682}
+  ]},
+ {"id":"scifi-shield-hum","dur":1.6,"playHash":"3d9393b30560","renders":[
+   {"label":"defaults","seed":1,"peak":-19.5,"rms":-33.6,"pre":-24.8,"end":1.116},
+   {"label":"defaults","seed":2,"peak":-19.5,"rms":-33.6,"pre":-24.8,"end":1.116},
+   {"label":"defaults","seed":3,"peak":-19.5,"rms":-33.6,"pre":-24.8,"end":1.116},
+   {"label":"random 2","seed":1,"peak":-22.4,"rms":-34.7,"pre":-27.8,"end":0.808},
+   {"label":"random 1","seed":1,"peak":-19.9,"rms":-33.6,"pre":-25.2,"end":1.009}
+  ]},
+ {"id":"scifi-terminal-blip","dur":0.45,"playHash":"0dc8f772172c","renders":[
+   {"label":"defaults","seed":1,"peak":-20.9,"rms":-33.4,"pre":-26.3,"end":0.142},
+   {"label":"defaults","seed":2,"peak":-20.9,"rms":-33.4,"pre":-26.3,"end":0.141},
+   {"label":"defaults","seed":3,"peak":-20.9,"rms":-33.4,"pre":-26.3,"end":0.142},
+   {"label":"random 3","seed":2,"peak":-21.5,"rms":-34.3,"pre":-26.8,"end":0.115},
+   {"label":"random 3","seed":1,"peak":-20.5,"rms":-34.3,"pre":-25.8,"end":0.115}
+  ]},
+ {"id":"scifi-warp-jump","dur":1.95,"playHash":"fcb0cf920754","renders":[
+   {"label":"defaults","seed":1,"peak":-15.6,"rms":-34.9,"pre":-20.7,"end":0.943},
+   {"label":"defaults","seed":2,"peak":-15.6,"rms":-34.9,"pre":-20.7,"end":0.943},
+   {"label":"defaults","seed":3,"peak":-16.5,"rms":-34.9,"pre":-21.6,"end":0.944},
+   {"label":"random 3","seed":1,"peak":-16.8,"rms":-35.3,"pre":-22,"end":1.328},
+   {"label":"random 1","seed":2,"peak":-14.5,"rms":-34.9,"pre":-19.5,"end":1.408}
+  ]},
+ {"id":"ambience-cave-drips","dur":8,"playHash":"fdbba885b19e","renders":[
+   {"label":"defaults","seed":1,"peak":-24.7,"rms":-43.2,"pre":-30.1,"end":5.329},
+   {"label":"defaults","seed":2,"peak":-26.1,"rms":-43.6,"pre":-31.5,"end":5.27},
+   {"label":"defaults","seed":3,"peak":-24.9,"rms":-43.6,"pre":-30.3,"end":5.319},
+   {"label":"random 2","seed":1,"peak":-26,"rms":-45.2,"pre":-31.4,"end":6.84},
+   {"label":"random 3","seed":1,"peak":-24,"rms":-44.4,"pre":-29.4,"end":6.667}
+  ]},
+ {"id":"ambience-distant-thunder","dur":8,"playHash":"45bdbbdde6d7","renders":[
+   {"label":"defaults","seed":1,"peak":-26.2,"rms":-41.6,"pre":-31.6,"end":5.81},
+   {"label":"defaults","seed":2,"peak":-25.6,"rms":-41.5,"pre":-31,"end":5.709},
+   {"label":"defaults","seed":3,"peak":-26.5,"rms":-41.6,"pre":-31.9,"end":5.679},
+   {"label":"random 2","seed":3,"peak":-26.4,"rms":-42.1,"pre":-31.8,"end":5.39},
+   {"label":"random 3","seed":2,"peak":-25.2,"rms":-41.8,"pre":-30.6,"end":6.77}
+  ]},
+ {"id":"ambience-fire-crackle","dur":8,"playHash":"19b9dac19ff4","renders":[
+   {"label":"defaults","seed":1,"peak":-25.3,"rms":-47.1,"pre":-30.7,"end":5.76},
+   {"label":"defaults","seed":2,"peak":-23,"rms":-46.7,"pre":-28.4,"end":5.882},
+   {"label":"defaults","seed":3,"peak":-21.4,"rms":-46.5,"pre":-26.8,"end":5.766},
+   {"label":"random 2","seed":2,"peak":-25.8,"rms":-45.8,"pre":-31.2,"end":3.406},
+   {"label":"random 3","seed":1,"peak":-21.9,"rms":-45.9,"pre":-27.2,"end":5.538}
+  ]},
+ {"id":"ambience-forest-birds","dur":8,"playHash":"dced31271185","renders":[
+   {"label":"defaults","seed":1,"peak":-22,"rms":-39.8,"pre":-27.3,"end":5.482},
+   {"label":"defaults","seed":2,"peak":-22.3,"rms":-41.4,"pre":-27.7,"end":5.486},
+   {"label":"defaults","seed":3,"peak":-24.1,"rms":-40.9,"pre":-29.5,"end":5.486},
+   {"label":"random 1","seed":2,"peak":-26.2,"rms":-40.2,"pre":-31.6,"end":2.816},
+   {"label":"random 3","seed":1,"peak":-22,"rms":-40.1,"pre":-27.4,"end":3.891}
+  ]},
+ {"id":"ambience-ocean-surf","dur":8,"playHash":"ff0d3cb7093b","renders":[
+   {"label":"defaults","seed":1,"peak":-26.6,"rms":-42.7,"pre":-32,"end":6.547},
+   {"label":"defaults","seed":2,"peak":-24.7,"rms":-42.2,"pre":-30.1,"end":6.523},
+   {"label":"defaults","seed":3,"peak":-26.7,"rms":-42.7,"pre":-32.1,"end":6.595},
+   {"label":"random 2","seed":2,"peak":-29.2,"rms":-46.5,"pre":-34.6,"end":4.32},
+   {"label":"random 3","seed":1,"peak":-23.5,"rms":-39.4,"pre":-28.9,"end":5.369}
+  ]},
+ {"id":"ambience-rain","dur":8,"playHash":"7a7dd350afec","renders":[
+   {"label":"defaults","seed":1,"peak":-27.1,"rms":-42.6,"pre":-32.5,"end":5.752},
+   {"label":"defaults","seed":2,"peak":-26.7,"rms":-42.6,"pre":-32.1,"end":5.869},
+   {"label":"defaults","seed":3,"peak":-28.1,"rms":-42.6,"pre":-33.5,"end":5.908},
+   {"label":"random 3","seed":2,"peak":-31,"rms":-46.1,"pre":-36.4,"end":4.3},
+   {"label":"random 1","seed":1,"peak":-24.8,"rms":-39.7,"pre":-30.2,"end":6.704}
+  ]},
+ {"id":"ambience-room-hum","dur":8,"playHash":"c20e8b1134e0","renders":[
+   {"label":"defaults","seed":1,"peak":-26.7,"rms":-37.6,"pre":-32.1,"end":5.678},
+   {"label":"defaults","seed":2,"peak":-26.1,"rms":-37.5,"pre":-31.5,"end":5.661},
+   {"label":"defaults","seed":3,"peak":-25.7,"rms":-37.5,"pre":-31.1,"end":5.677},
+   {"label":"random 3","seed":1,"peak":-27.7,"rms":-38.2,"pre":-33.2,"end":5.367},
+   {"label":"random 1","seed":3,"peak":-23,"rms":-36.1,"pre":-28.4,"end":7.586}
+  ]},
+ {"id":"ambience-space-drone","dur":8,"playHash":"c15a429c44e5","renders":[
+   {"label":"defaults","seed":1,"peak":-26.7,"rms":-38.4,"pre":-32.1,"end":6.497},
+   {"label":"defaults","seed":2,"peak":-26.9,"rms":-38.3,"pre":-32.3,"end":6.497},
+   {"label":"defaults","seed":3,"peak":-27.3,"rms":-38.3,"pre":-32.7,"end":6.497},
+   {"label":"random 3","seed":2,"peak":-27.6,"rms":-38.5,"pre":-33,"end":4.264},
+   {"label":"random 2","seed":3,"peak":-23.2,"rms":-36.6,"pre":-28.6,"end":6.083}
+  ]},
+ {"id":"ambience-wind-gusts","dur":8,"playHash":"4a7c1fc18711","renders":[
+   {"label":"defaults","seed":1,"peak":-29.9,"rms":-44.7,"pre":-35.3,"end":5.549},
+   {"label":"defaults","seed":2,"peak":-30.3,"rms":-44.8,"pre":-35.7,"end":5.448},
+   {"label":"defaults","seed":3,"peak":-29.3,"rms":-44.9,"pre":-34.7,"end":5.45},
+   {"label":"random 1","seed":2,"peak":-33,"rms":-46.5,"pre":-38.4,"end":4.8},
+   {"label":"random 2","seed":1,"peak":-24.6,"rms":-42,"pre":-30,"end":6.262}
+  ]},
+ {"id":"music-alert-sting","dur":1.8,"playHash":"c76ce737dac4","renders":[
+   {"label":"defaults","seed":1,"peak":-18.6,"rms":-31,"pre":-23.9,"end":0.749},
+   {"label":"defaults","seed":2,"peak":-18.6,"rms":-31,"pre":-23.9,"end":0.749},
+   {"label":"defaults","seed":3,"peak":-18.6,"rms":-31,"pre":-23.9,"end":0.749},
+   {"label":"random 3","seed":1,"peak":-17.9,"rms":-31.2,"pre":-23.1,"end":0.882},
+   {"label":"random 2","seed":1,"peak":-17.6,"rms":-31.5,"pre":-22.8,"end":1.107}
+  ]},
+ {"id":"music-defeat-jingle","dur":3.4,"playHash":"886fe130d80b","renders":[
+   {"label":"defaults","seed":1,"peak":-22.4,"rms":-33.7,"pre":-27.8,"end":2.142},
+   {"label":"defaults","seed":2,"peak":-21.5,"rms":-34,"pre":-26.8,"end":2.174},
+   {"label":"defaults","seed":3,"peak":-22.7,"rms":-34.1,"pre":-28.1,"end":2.174},
+   {"label":"random 1","seed":2,"peak":-22,"rms":-33.9,"pre":-27.3,"end":2.633},
+   {"label":"random 1","seed":1,"peak":-21.3,"rms":-34.4,"pre":-26.7,"end":2.657}
+  ]},
+ {"id":"music-fanfare-short","dur":2.2,"playHash":"01622c9968dd","renders":[
+   {"label":"defaults","seed":1,"peak":-18.3,"rms":-31.5,"pre":-23.5,"end":1.576},
+   {"label":"defaults","seed":2,"peak":-18.1,"rms":-32,"pre":-23.3,"end":1.641},
+   {"label":"defaults","seed":3,"peak":-18.6,"rms":-32.3,"pre":-23.9,"end":1.588},
+   {"label":"random 3","seed":2,"peak":-19.4,"rms":-32.6,"pre":-24.7,"end":1.986},
+   {"label":"random 2","seed":3,"peak":-14.8,"rms":-30.3,"pre":-19.8,"end":1.705}
+  ]},
+ {"id":"music-intro-logo","dur":4.2,"playHash":"f0ddba0286c2","renders":[
+   {"label":"defaults","seed":1,"peak":-16.7,"rms":-32,"pre":-21.9,"end":2.838},
+   {"label":"defaults","seed":2,"peak":-16.4,"rms":-32.5,"pre":-21.6,"end":2.838},
+   {"label":"defaults","seed":3,"peak":-17,"rms":-35.8,"pre":-22.2,"end":2.952},
+   {"label":"random 2","seed":1,"peak":-18.7,"rms":-36.1,"pre":-23.9,"end":2.691},
+   {"label":"random 3","seed":3,"peak":-15.9,"rms":-31.8,"pre":-21,"end":2.991}
+  ]},
+ {"id":"music-level-complete","dur":3.4,"playHash":"b03c5e569760","renders":[
+   {"label":"defaults","seed":1,"peak":-18.3,"rms":-37.5,"pre":-23.6,"end":2.063},
+   {"label":"defaults","seed":2,"peak":-17.9,"rms":-36.7,"pre":-23.2,"end":2.042},
+   {"label":"defaults","seed":3,"peak":-18.7,"rms":-36.9,"pre":-24,"end":2.003},
+   {"label":"random 1","seed":2,"peak":-18.3,"rms":-35.6,"pre":-23.6,"end":1.557},
+   {"label":"random 3","seed":2,"peak":-16.5,"rms":-35.2,"pre":-21.6,"end":1.995}
+  ]},
+ {"id":"music-menu-confirm","dur":1.7,"playHash":"ab7293214137","renders":[
+   {"label":"defaults","seed":1,"peak":-22.8,"rms":-34.4,"pre":-28.2,"end":0.818},
+   {"label":"defaults","seed":2,"peak":-22.8,"rms":-34.4,"pre":-28.2,"end":0.818},
+   {"label":"defaults","seed":3,"peak":-22.8,"rms":-34.4,"pre":-28.2,"end":0.818},
+   {"label":"random 3","seed":1,"peak":-23.2,"rms":-34,"pre":-28.6,"end":0.73},
+   {"label":"random 1","seed":1,"peak":-21.5,"rms":-34.3,"pre":-26.8,"end":0.863}
+  ]},
+ {"id":"music-mystery-sting","dur":4.2,"playHash":"b59b7dbcd1f4","renders":[
+   {"label":"defaults","seed":1,"peak":-17.8,"rms":-32.4,"pre":-23,"end":2.466},
+   {"label":"defaults","seed":2,"peak":-18.7,"rms":-32,"pre":-24,"end":2.355},
+   {"label":"defaults","seed":3,"peak":-19.1,"rms":-33.6,"pre":-24.4,"end":2.523},
+   {"label":"random 2","seed":2,"peak":-23.3,"rms":-37.3,"pre":-28.7,"end":2.174},
+   {"label":"random 3","seed":1,"peak":-18.2,"rms":-32.8,"pre":-23.5,"end":2.329}
+  ]},
+ {"id":"music-ta-da","dur":2,"playHash":"a53dd24a9b5b","renders":[
+   {"label":"defaults","seed":1,"peak":-16.6,"rms":-33.9,"pre":-21.8,"end":1.245},
+   {"label":"defaults","seed":2,"peak":-17.4,"rms":-34.1,"pre":-22.6,"end":1.213},
+   {"label":"defaults","seed":3,"peak":-16.1,"rms":-35.1,"pre":-21.2,"end":1.204},
+   {"label":"random 1","seed":1,"peak":-18.8,"rms":-33.1,"pre":-24,"end":1.219},
+   {"label":"random 2","seed":2,"peak":-16.9,"rms":-35.2,"pre":-22.1,"end":1.223}
+  ]},
+ {"id":"music-victory-jingle","dur":1.7,"playHash":"07d405852cc9","renders":[
+   {"label":"defaults","seed":1,"peak":-17.5,"rms":-28.4,"pre":-22.7,"end":0.969},
+   {"label":"defaults","seed":2,"peak":-17.5,"rms":-28.4,"pre":-22.7,"end":0.969},
+   {"label":"defaults","seed":3,"peak":-17.5,"rms":-28.4,"pre":-22.7,"end":0.969},
+   {"label":"random 2","seed":1,"peak":-17.5,"rms":-28.8,"pre":-22.7,"end":0.784},
+   {"label":"random 1","seed":1,"peak":-17.4,"rms":-28.4,"pre":-22.7,"end":1.228}
+  ]}
+]
