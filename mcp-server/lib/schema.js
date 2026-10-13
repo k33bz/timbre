@@ -61,7 +61,7 @@ function check(schema, value, path, errors) {
     const out = {};
     for (const req of schema.required || []) if (v[req] === undefined) errors.push(`${path ? path + '.' : ''}${req} is required`);
     for (const [k, val] of Object.entries(v)) {
-      if (schema.properties[k]) out[k] = check(schema.properties[k], val, path ? `${path}.${k}` : k, errors);
+      if (Object.hasOwn(schema.properties, k)) out[k] = check(schema.properties[k], val, path ? `${path}.${k}` : k, errors);
       else if (schema.additionalProperties === false) {
         errors.push(`unknown argument "${k}"${path ? ' in ' + path : ''}; allowed: ${Object.keys(schema.properties).join(', ')}`);
       } else out[k] = val;

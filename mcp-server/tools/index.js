@@ -288,7 +288,7 @@ const getCopyTool = {
     properties: {
       id: { type: 'string', minLength: 1, description: 'Sound id, e.g. "notify-success-chime".' },
       params: { type: 'object', description: 'Parameter values to bake in as defaults, e.g. { "pitch": 880 }. Names and ranges come from get_sound. Values outside the range are clamped and reported; unknown names are an error.' },
-      seed: { type: 'integer', minimum: 0, description: 'Noise seed baked in (default 1). Only sounds with randomness use it; the result says whether yours does.' },
+      seed: { type: 'integer', minimum: 0, maximum: 4294967295, description: 'Noise seed baked in (default 1). Only sounds with randomness use it; the result says whether yours does.' },
     },
     required: ['id'],
     additionalProperties: false,

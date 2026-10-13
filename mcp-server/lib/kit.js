@@ -34,7 +34,10 @@ export function checkParams(sound, over, where) {
   if (over == null) return { values, clamped };
   if (typeof over !== 'object' || Array.isArray(over)) throw new ToolError(`${where}: params must be an object of parameter values.`, { code: 'bad_params' });
   for (const [k, v] of Object.entries(over)) {
-    const d = sound.params[k];
+    const d = Object.hasOwn(sound.params, k) ? sound.params[k] : null;
+    if (k === 'seed') {
+      throw new ToolError(`${where}: the seed is not a parameter; pass it as the seed argument (get_copy) or in play(moment, { seed }).`, { code: 'unknown_param', data: { sound: sound.id, valid: Object.keys(sound.params) } });
+    }
     if (!d) {
       throw new ToolError(`${where}: ${sound.id} has no parameter "${k}". Its parameters: ${Object.keys(sound.params).join(', ') || '(none)'}.`, { code: 'unknown_param', data: { sound: sound.id, valid: Object.keys(sound.params) } });
     }
@@ -103,7 +106,7 @@ export function resolveKit(catalog, { moments, theme, mood, filters = {} }) {
       }
       source = 'explicit';
       reason = 'chosen by you';
-    } else if (themeObj && themeObj.moments[w.name]) {
+    } else if (themeObj && Object.hasOwn(themeObj.moments, w.name)) {
       const tm = themeObj.moments[w.name];
       sound = catalog.get(tm.sound);
       if (sound) { source = 'theme'; reason = `the ${themeObj.name} theme's sound for ${w.name}`; base = tm.params || {}; }
@@ -122,13 +125,13 @@ export function resolveKit(catalog, { moments, theme, mood, filters = {} }) {
       alternatives = pick.alternatives.map((r) => r.sound.id);
       base = hintsFor(pick.spec, sound, moods);
       if (!pick.row.strong) warnings.push(`moment "${w.name}": only a loose match (${sound.id}); consider choosing explicitly`);
-      if (themeObj && !themeObj.moments[w.name]) warnings.push(`theme ${themeObj.id} has no "${w.name}" moment; picked ${sound.id} from the catalog`);
+      if (themeObj && !Object.hasOwn(themeObj.moments, w.name)) warnings.push(`theme ${themeObj.id} has no "${w.name}" moment; picked ${sound.id} from the catalog`);
     } else if (source === 'explicit') {
       base = hintsFor(spec, sound, moods);
     }
     if (!sound.copyable) throw new ToolError(`Sound ${sound.id} cannot be copied: ${sound.copyIssue || 'the catalog has no code for it'}.`, { code: 'copy_unavailable' });
     for (const k of OPT_KEYS) {
-      if (sound.params[k]) throw new ToolError(`Sound ${sound.id} has a parameter named "${k}", which a kit's play() reserves for its own options. Pick another sound.`, { code: 'reserved_param' });
+      if (Object.hasOwn(sound.params, k)) throw new ToolError(`Sound ${sound.id} has a parameter named "${k}", which a kit's play() reserves for its own options. Pick another sound.`, { code: 'reserved_param' });
     }
     const checked = checkParams(sound, w.params, `moment "${w.name}"`);
     for (const c of checked.clamped) warnings.push(`moment "${w.name}": ${c.param} ${c.requested} is outside ${c.range[0]}..${c.range[1]}; used ${c.used}`);

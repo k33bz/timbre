@@ -534,3 +534,37 @@ test('suggest_sounds on the real catalog: an app description gets sensible, dist
   assert.ok(r.data.read.mood.some((m) => m.mood === 'retro'));
   assert.ok(Object.values(by).every((g) => g.candidates.every((c) => c.reasons.length > 0)));
 });
+
+// ---------------------------------------------------------------- names that are also Object.prototype members
+
+test('names that are also properties of every object are just unknown names', async (t) => {
+  const s = fx(t);
+  if (!s) return;
+  for (const key of ['constructor', 'toString', '__proto__', 'hasOwnProperty']) {
+    const args = JSON.parse(`{ ${JSON.stringify(key)}: 1 }`);
+    const r = await call(s, 'search_sounds', args);
+    assert.equal(r.isError, true, key);
+    assert.match(r.data.error, new RegExp(`unknown argument "${key}"`), key);
+    const p = await call(s, 'get_copy', { id: 'ui-click-soft', params: JSON.parse(`{ ${JSON.stringify(key)}: 1 }`) });
+    assert.equal(p.isError, true, key);
+    assert.equal(p.data.code, 'unknown_param', key);
+  }
+  const moment = await call(s, 'suggest_sounds', { moments: ['constructor'] });
+  assert.equal(moment.isError, false);
+  assert.equal(moment.data.suggestions[0].moment, 'constructor');
+  assert.equal(moment.data.suggestions[0].candidates.length, 0);
+  const kit = await call(s, 'build_kit', { moments: ['constructor', 'click'], theme: 'soft-ui' });
+  assert.equal(kit.isError, false);
+  assert.deepEqual(kit.data.unresolved.map((u) => u.moment), ['constructor']);
+  assert.deepEqual(kit.data.moments.map((m) => m.moment), ['click']);
+});
+
+test('get_copy: the seed is its own argument and says so when passed as a parameter', async (t) => {
+  const s = fx(t);
+  if (!s) return;
+  const r = await call(s, 'get_copy', { id: 'cards-riffle', params: { seed: 4 } });
+  assert.equal(r.isError, true);
+  assert.match(r.data.error, /the seed is not a parameter; pass it as the seed argument/);
+  assert.match((await call(s, 'get_copy', { id: 'cards-riffle', seed: 4294967296 })).data.error, /seed must be at most 4294967295/);
+  assert.equal((await call(s, 'get_copy', { id: 'cards-riffle', seed: 4294967295 })).isError, false);
+});

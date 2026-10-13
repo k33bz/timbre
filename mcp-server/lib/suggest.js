@@ -25,7 +25,7 @@ const round = (v, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
 /** A moment spec for any name: the lexicon's, or one made from the words of the name. */
 export function specFor(name) {
   const key = String(name).toLowerCase().trim().replace(/\s+/g, '-');
-  if (MOMENTS[key]) return { ...MOMENTS[key], known: true };
+  if (Object.hasOwn(MOMENTS, key)) return { ...MOMENTS[key], known: true };
   const words = stems(key.replace(/-/g, ' '));
   return {
     name: key, known: false, about: `A custom moment named "${key}".`, tags: [key], terms: [], categories: [],
@@ -70,7 +70,7 @@ export function rankMoment(catalog, spec, ctx = {}) {
   for (const w of spec.tagStems) add(w, 1);
   for (const w of stems(spec.name.replace(/-/g, ' '))) if (w !== 'up') add(w, 1);
   for (const w of spec.termStems) add(w, 0.6);
-  const themeEntry = ctx.theme ? ctx.theme.moments[spec.name] : null;
+  const themeEntry = ctx.theme && Object.hasOwn(ctx.theme.moments, spec.name) ? ctx.theme.moments[spec.name] : null;
   const rows = [];
   for (const d of docs) {
     const r = index.score(d, tokens, { coverage: false });
@@ -134,7 +134,7 @@ export function rankMoment(catalog, spec, ctx = {}) {
       const fam = mood.tagStems.filter((w) => d.tags.has(w));
       if (fam.length) { score *= 1 + (mood.tagBoost || 0.18) * Math.min(2, fam.length); reasons.push(`tagged ${[...new Set(fam.slice(0, 2).map(tagOf))].join(', ')}, a ${mood.name} mood`); }
       // a sound with a setting the mood asks for (the retro mood turns a chip switch on) can fulfil it
-      const knob = Object.keys(mood.hints || {}).find((k) => d.s.params[k]);
+      const knob = Object.keys(mood.hints || {}).find((k) => Object.hasOwn(d.s.params, k));
       if (knob) { score *= 1.3; reasons.push(`has a ${knob} setting for the ${mood.name} mood`); }
       if (lv && mood.loud) {
         const mi = mood.loud.indexOf(lv.band);
@@ -168,7 +168,7 @@ export function hintsFor(spec, sound, moods = []) {
   const out = {};
   const take = (hints) => {
     for (const [k, v] of Object.entries(hints || {})) {
-      const d = sound.params[k];
+      const d = Object.hasOwn(sound.params, k) ? sound.params[k] : null;
       if (!(k in out) && d && v >= d.min && v <= d.max) out[k] = v;
     }
   };
