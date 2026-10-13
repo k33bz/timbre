@@ -34,23 +34,26 @@ for (const [name, m] of Object.entries(MOMENTS)) {
 
 /**
  * Moods. Fields: words that signal it in a description; tags a sound carries when it fits (a tag
- * match lifts the sound); category boosts; loudness preference (best first); categories that clash.
- * hints set parameters the same way a moment's do (the retro mood turns a sound's chip switch on).
- * Boosts are fractions: boost 1.5 lifts a score by 18 percent. A tag match lifts it by tagBoost
- * (default 0.18) per tag, at most two; the style moods (wood, glass, mechanical, air, retro) use 0.6
- * because naming a style is an explicit request.
+ * match lifts the sound); families (src/vocabulary.js) whose sounds fit, a match that counts like a
+ * tag; category boosts; loudness preference (best first); categories that clash. hints set
+ * parameters the same way a moment's do (the retro mood turns a sound's chip switch on).
+ * Boosts are fractions: boost 1.5 lifts a score by 18 percent. A tag or family match lifts it by
+ * tagBoost (default 0.18) per match, at most two; the style moods (wood, glass, mechanical, air,
+ * retro) use 0.6 because naming a style is an explicit request.
  */
 export const MOODS = {
   calm: {
     about: 'Quiet, unobtrusive feedback.',
     words: ['calm', 'soft', 'gentle', 'quiet', 'subtle', 'mindful', 'meditation', 'wellness', 'sleep', 'relax', 'relaxing', 'zen', 'minimal', 'peaceful', 'cozy', 'muted', 'unobtrusive', 'discreet'],
     tags: ['soft', 'gentle', 'cozy', 'warm', 'quiet'],
+    families: ['soft'],
     boost: { ui: 1.5, notify: 1 }, loud: ['quiet', 'medium'], dislike: ['loud'],
   },
   professional: {
     about: 'Clean, restrained feedback for work tools.',
     words: ['professional', 'productivity', 'business', 'enterprise', 'saas', 'dashboard', 'work', 'serious', 'corporate', 'fintech', 'finance', 'banking', 'admin', 'office', 'tool', 'b2b'],
     tags: ['soft', 'glass'],
+    families: ['soft', 'glass'],
     boost: { ui: 1.5, notify: 1 }, loud: ['quiet', 'medium'], dislike: ['loud'], penalty: { game: 1.5, magic: 1 },
   },
   playful: {
@@ -63,6 +66,7 @@ export const MOODS = {
     about: 'Retro game feel: chiptune beeps and blips.',
     words: ['retro', 'arcade', '8bit', 'chiptune', 'pixel', 'nes', 'platformer', 'rpg'],
     tags: ['8-bit', 'chiptune', 'retro', 'arcade', 'square'],
+    families: ['chip'],
     tagBoost: 0.6,
     hints: { chip: 1 },   // game sounds with a chip switch get their square-wave voicing
     boost: { game: 2 }, loud: ['medium', 'loud'],
@@ -77,6 +81,7 @@ export const MOODS = {
     about: 'Futuristic and technical.',
     words: ['scifi', 'sci', 'space', 'futuristic', 'cyber', 'cyberpunk', 'robot', 'tech', 'hud', 'starship', 'terminal'],
     tags: ['sci-fi', 'digital', 'robot', 'computer', 'terminal', 'console'],
+    families: ['synthetic'],
     boost: { scifi: 2.5 }, loud: ['medium'],
   },
   magical: {
@@ -89,30 +94,35 @@ export const MOODS = {
     about: 'Cards, boards and dice.',
     words: ['cards', 'card', 'tabletop', 'board', 'poker', 'deck', 'solitaire', 'boardgame', 'dice', 'casino', 'chess'],
     tags: ['card', 'poker', 'board-game', 'casino', 'dice', 'chess'],
+    families: ['paper', 'wood'],
     boost: { cards: 2.5 }, loud: ['quiet', 'medium'],
   },
   atmospheric: {
     about: 'Immersive background sound.',
     words: ['ambient', 'atmospheric', 'immersive', 'ambience', 'soundscape'],
     tags: ['ambient', 'bed', 'nature'],
+    families: ['organic'],
     boost: { ambience: 2.5 }, loud: ['quiet'],
   },
   musical: {
     about: 'Melodic, tuned feedback.',
     words: ['musical', 'melodic', 'music', 'melody', 'tuned'],
     tags: ['stinger', 'jingle', 'melody', 'arpeggio'],
+    families: ['orchestral'],
     boost: { music: 2.5 }, loud: ['medium'],
   },
   dramatic: {
     about: 'Big, punchy, high impact.',
     words: ['dramatic', 'epic', 'intense', 'powerful', 'action', 'heavy', 'punchy', 'bold', 'loud', 'cinematic'],
     tags: ['heavy', 'boss', 'impact', 'combat'],
+    families: ['impact'],
     boost: { game: 1 }, loud: ['loud', 'medium'],
   },
   wooden: {
     about: 'Warm, natural, wooden knocks.',
     words: ['wood', 'wooden', 'natural', 'organic', 'warm', 'analog', 'handmade', 'craft'],
     tags: ['wood', 'knock', 'thock'],
+    families: ['wood'],
     tagBoost: 0.6,
     boost: {}, loud: ['quiet', 'medium'],
   },
@@ -120,6 +130,7 @@ export const MOODS = {
     about: 'Bright, clear, glassy ticks and pings.',
     words: ['glass', 'glassy', 'crystal', 'crystalline', 'shiny', 'crisp', 'clear', 'bright', 'sleek', 'modern'],
     tags: ['glass', 'crystal', 'ting', 'bright'],
+    families: ['glass'],
     tagBoost: 0.6,
     boost: {}, loud: ['quiet', 'medium'],
   },
@@ -127,6 +138,7 @@ export const MOODS = {
     about: 'Switches, keys and latches.',
     words: ['mechanical', 'keyboard', 'clicky', 'industrial', 'switch', 'tactile'],
     tags: ['mechanical', 'clicky', 'thock', 'latch'],
+    families: ['mechanical'],
     tagBoost: 0.6,
     boost: {}, loud: ['quiet', 'medium'],
   },
@@ -134,6 +146,7 @@ export const MOODS = {
     about: 'Light, breathy, airy.',
     words: ['airy', 'breathy', 'whisper', 'floaty', 'light', 'ethereal'],
     tags: ['air', 'breeze'],
+    families: ['air'],
     tagBoost: 0.6,
     boost: {}, loud: ['quiet'],
   },
@@ -142,6 +155,7 @@ for (const [name, m] of Object.entries(MOODS)) {
   m.name = name;
   m.wordStems = [...new Set(m.words.map((w) => stem(w)))];
   m.tagStems = [...new Set(m.tags.flatMap((t) => stems(t.replace(/-/g, ' '))))].filter((w) => w !== '8');
+  m.families = m.families || [];
 }
 
 /** The moods named by words in a text, strongest first (by number of words matched). */

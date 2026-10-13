@@ -1,10 +1,12 @@
-// Sound levels: measured when the level gate's report is at hand, estimated otherwise.
+// Sound levels: measured when the level gate's numbers are at hand, estimated otherwise.
 //
-// The catalog does not carry levels. The level gate (gates/check_levels.mjs) renders every sound in a
-// browser and writes gates/out/levels.json; that file is gitignored, so it exists only on a machine
-// that ran the gate. This module reads it when it can find it (TIMBRE_LEVELS, --levels, a levels.json
-// beside the catalog, or ../gates/out/levels.json) and says so ("measured"). For every sound the
-// report does not cover it falls back to an ESTIMATE made in Node, without a browser:
+// The level gate (gates/check_levels.mjs) renders every sound in a browser and writes
+// catalog/levels.json, and the build embeds each current measurement in the manifest (a sound's
+// `levels`, kept only while its fingerprint matches what was measured). Those come first. Then a
+// report file when one is found (TIMBRE_LEVELS, --levels, catalog/levels.json, or the gate's full
+// gates/out/levels.json), entries carrying a fingerprint used only while it matches the sound. Both
+// say "measured". For every sound neither covers it falls back to an ESTIMATE made in Node, without
+// a browser:
 //
 //   1. run the sound's own `play` (from the catalog) with the catalog's helper sources against a
 //      recording mock of the audio graph, at the sound's default parameters and seed 1;
@@ -47,10 +49,16 @@ const dB = (a) => (a > 0 ? round1(20 * Math.log10(a)) : -120);
 
 // ------------------------------------------------------------------ measured (the gate's report)
 
-/** Read a level report: the gate's array of { id, renders: [...] } or a plain { id: { peak, rms } } map. */
+/**
+ * Read a level report: the gate's array of { id, renders: [...] } (gates/out/levels.json), the
+ * catalog's { sounds: { id: { fingerprint, peak, rms, worstPeak, lowestPeak, pre, end } } }
+ * (catalog/levels.json) or a plain { id: { peak, rms } } map.
+ */
 export function parseReport(json) {
   const out = new Map();
-  const rows = Array.isArray(json) ? json : Object.entries(json && typeof json === 'object' ? json : {}).map(([id, v]) => ({ id, ...v }));
+  const isMap = (v) => v && typeof v === 'object' && !Array.isArray(v);
+  const src = isMap(json) && isMap(json.sounds) ? json.sounds : json;
+  const rows = Array.isArray(src) ? src : Object.entries(isMap(src) ? src : {}).map(([id, v]) => ({ id, ...v }));
   for (const row of rows) {
     if (!row || typeof row.id !== 'string') continue;
     if (Array.isArray(row.renders) && row.renders.length) {
@@ -72,7 +80,13 @@ export function parseReport(json) {
         problems: Array.isArray(row.problems) ? row.problems.length : 0,
       });
     } else if (Number.isFinite(row.peak)) {
-      out.set(row.id, { peak: row.peak, rms: Number.isFinite(row.rms) ? row.rms : null, pre: null, range: null, end: null, renders: 1, problems: 0 });
+      const num = (k) => (Number.isFinite(row[k]) ? row[k] : null);
+      out.set(row.id, {
+        peak: row.peak, rms: num('rms'), pre: num('pre'),
+        range: num('lowestPeak') != null && num('worstPeak') != null ? { min: row.lowestPeak, max: row.worstPeak } : null,
+        end: num('end'), renders: 1, problems: 0,
+        ...(typeof row.fingerprint === 'string' ? { fingerprint: row.fingerprint } : {}),
+      });
     }
   }
   return out;
@@ -254,15 +268,32 @@ export class LevelBook {
   /** True when the report is older than the catalog (the sounds may have changed since). */
   get reportStale() { return !!(this.report && this.catalogMtimeMs && this.report.mtimeMs < this.catalogMtimeMs); }
 
-  /** The measured level of a sound, when the report covers it. */
+  /**
+   * The measured level of a sound: the catalog's own (embedded by the build, current by construction)
+   * first, then the report's. levels: false (--levels none) turns both off.
+   */
   measured(sound) {
+    if (this.explicit === false) return null;
+    const l = sound.levels;
+    if (l && Number.isFinite(l.peak)) {
+      return {
+        peak: l.peak, rms: Number.isFinite(l.rms) ? l.rms : null, band: bandOf(l.peak), source: 'measured', from: 'catalog',
+        ...(Number.isFinite(l.pre) ? { preLimiter: l.pre } : {}),
+        ...(Number.isFinite(l.lowestPeak) && Number.isFinite(l.worstPeak) ? { peakRange: { min: l.lowestPeak, max: l.worstPeak } } : {}),
+        ...(Number.isFinite(l.worstRms) ? { worstRms: l.worstRms } : {}),
+        ...(Number.isFinite(l.end) ? { audibleEnd: l.end } : {}),
+      };
+    }
     const rep = this.report && this.report.byId.get(sound.id);
     if (!rep) return null;
+    // a report entry that names the version it measured is used only for that version
+    if (rep.fingerprint && sound.fingerprint && rep.fingerprint !== sound.fingerprint) return null;
     return {
-      peak: rep.peak, rms: rep.rms, band: bandOf(rep.peak), source: 'measured',
+      peak: rep.peak, rms: rep.rms, band: bandOf(rep.peak), source: 'measured', from: 'report',
       ...(rep.pre != null ? { preLimiter: rep.pre } : {}),
       ...(rep.range ? { peakRange: rep.range } : {}),
-      ...(this.reportStale ? { stale: true } : {}),
+      ...(rep.end != null ? { audibleEnd: rep.end } : {}),
+      ...(this.reportStale && !rep.fingerprint ? { stale: true } : {}),
     };
   }
 

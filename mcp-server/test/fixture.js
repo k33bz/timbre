@@ -3,7 +3,9 @@
 // Every fixture sound has metadata written here (id, name, tags, description, duration, category),
 // so what a search should find never depends on how the real sounds are tagged. Its code (play,
 // params, helper list) is borrowed from a real sound of the same shape, and the helper sources come
-// from the real catalog, so Copy and kits built from the fixture are real, runnable code.
+// from the real catalog, so Copy and kits built from the fixture are real, runnable code. The
+// template's own family, moments, measured levels and fingerprint are dropped: they describe the
+// real sound, not the fixture one (tests that need them set their own).
 import fs from 'node:fs';
 import path from 'node:path';
 import { REAL_CATALOG, tmpDir, writeCatalog } from './helper.js';
@@ -45,7 +47,7 @@ export function fixtureManifest() {
     return s;
   };
   const sounds = SOUNDS.map(([id, from, category, name, tags, desc, dur]) => {
-    const t = clone(by(from));
+    const { family, moments, levels, fingerprint, ...t } = clone(by(from));
     return { ...t, id, name, category, tags, desc, dur, file: `src/sounds/${category}/${id}.js` };
   });
   return {

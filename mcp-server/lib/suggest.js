@@ -3,10 +3,12 @@
 // A moment's score is the catalog search score of its vocabulary (lib/moments.js) against each
 // sound, then multiplied by fit factors: the category, the length (a button click wants a short
 // sound), the loudness band, the mood, a rule-out list, and a nudge for the sounds a theme already
-// uses. Every factor that moved a score leaves a reason, so an agent can show why a sound was picked.
+// uses. A sound that lists the moment in its own `moments` (the catalog says it was made for it)
+// counts as an exact match, and a mood matches a sound's `family` like a tag. Every factor that
+// moved a score leaves a reason, so an agent can show why a sound was picked.
 import { SearchIndex, applyFilters, queryTokens } from './search.js';
 import { MOMENTS, momentsIn, moodsIn } from './moments.js';
-import { stems } from './text.js';
+import { stems, stem } from './text.js';
 
 const indexCache = new WeakMap();
 
@@ -77,9 +79,12 @@ export function rankMoment(catalog, spec, ctx = {}) {
     const themed = themeEntry && themeEntry.sound === d.s.id;
     // whole hyphenated tags ("level-up", "power-up") count as exact tag hits
     const rawHits = (spec.rawTags || []).filter((t) => d.s.tags.includes(t));
-    if (r.score <= 0 && !themed && !rawHits.length) continue;
-    let score = r.score + rawHits.length * 14;
+    // the catalog's own word: the sound lists this moment among the ones it was made for
+    const madeFor = (d.s.moments || []).includes(spec.name);
+    if (r.score <= 0 && !themed && !rawHits.length && !madeFor) continue;
+    let score = r.score + rawHits.length * 14 + (madeFor ? 16 : 0);
     const reasons = [];
+    if (madeFor) reasons.push(`made for ${spec.name}`);
     // what matched, in words
     const byField = {};
     for (const w of r.why) {
@@ -93,7 +98,7 @@ export function rankMoment(catalog, spec, ctx = {}) {
     const viaSyn = Object.values(byField).flat().filter((x) => x.includes('~'));
     // a tag is a strong match when it is one of the moment's own tag stems, found directly
     const tagHits = direct('tag').filter((x) => spec.tagStems.includes(x) || spec.termStems.includes(x));
-    const strong = tagHits.length > 0 || rawHits.length > 0 || direct('name').some((x) => spec.tagStems.includes(x));
+    const strong = madeFor || tagHits.length > 0 || rawHits.length > 0 || direct('name').some((x) => spec.tagStems.includes(x));
     if (tagHits.length || rawHits.length) reasons.push(`tagged ${[...rawHits, ...tagHits.map(word)].join(', ')}`);
     else if (direct('name').length) reasons.push(`name matches ${direct('name').map(word).join(', ')}`);
     else if (direct('desc').length) reasons.push(`description mentions ${direct('desc').slice(0, 3).map(word).join(', ')}`);
@@ -132,9 +137,16 @@ export function rankMoment(catalog, spec, ctx = {}) {
       const pen = mood.penalty && mood.penalty[d.s.category];
       if (pen) score *= 1 - 0.1 * pen;
       const fam = mood.tagStems.filter((w) => d.tags.has(w));
-      if (fam.length) { score *= 1 + (mood.tagBoost || 0.18) * Math.min(2, fam.length); reasons.push(`tagged ${[...new Set(fam.slice(0, 2).map(tagOf))].join(', ')}, a ${mood.name} mood`); }
+      // the sound's declared family counts as one more match, unless a tag already said the same word
+      const famHit = !!d.s.family && mood.families.includes(d.s.family) && !fam.includes(stem(d.s.family));
+      const n = Math.min(2, fam.length + (famHit ? 1 : 0));
+      if (n) {
+        score *= 1 + (mood.tagBoost || 0.18) * n;
+        if (famHit) reasons.push(`${d.s.family} family, a ${mood.name} mood`);
+        if (fam.length) reasons.push(`tagged ${[...new Set(fam.slice(0, 2).map(tagOf))].join(', ')}, a ${mood.name} mood`);
+      }
       // a sound with a setting the mood asks for (the retro mood turns a chip switch on) can fulfil it
-      const knob = Object.keys(mood.hints || {}).find((k) => Object.hasOwn(d.s.params, k));
+      const knob = Object.keys(mood.hints || {}).map((k) => paramFor(d.s, k)).find(Boolean);
       if (knob) { score *= 1.3; reasons.push(`has a ${knob} setting for the ${mood.name} mood`); }
       if (lv && mood.loud) {
         const mi = mood.loud.indexOf(lv.band);
@@ -161,15 +173,28 @@ export function trimRows(rows, limit) {
 }
 
 /**
+ * The parameter of a sound that a hint key names: the one whose role is that key (src/vocabulary.js,
+ * ROLES), else, for catalogs without roles, the one with that name unless it declares another role.
+ */
+export function paramFor(sound, key) {
+  const params = sound.params || {};
+  const byRole = Object.keys(params).find((k) => params[k].role === key);
+  if (byRole) return byRole;
+  return Object.hasOwn(params, key) && (!params[key].role || params[key].role === key) ? key : null;
+}
+
+/**
  * Parameter values a moment (and then the moods) ask for, limited to parameters the sound has and
- * inside their range; the moment's own hints win over a mood's.
+ * inside their range; the moment's own hints win over a mood's. A hint names a role (on, open, chip,
+ * go), so it finds the switch whatever the sound calls it.
  */
 export function hintsFor(spec, sound, moods = []) {
   const out = {};
   const take = (hints) => {
     for (const [k, v] of Object.entries(hints || {})) {
-      const d = Object.hasOwn(sound.params, k) ? sound.params[k] : null;
-      if (!(k in out) && d && v >= d.min && v <= d.max) out[k] = v;
+      const name = paramFor(sound, k);
+      const d = name ? sound.params[name] : null;
+      if (d && !(name in out) && v >= d.min && v <= d.max) out[name] = v;
     }
   };
   take(spec.hints);

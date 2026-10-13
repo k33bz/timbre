@@ -8,6 +8,10 @@
 // The catalog is data on disk that other tools rewrite, so this loader is defensive: a malformed
 // sound is skipped with a warning instead of taking the server down, and the files are re-read when
 // their modification time changes (a rebuilt catalog shows up without a restart).
+//
+// Schema 2 catalogs also carry, and the tools use instead of inferring: each sound's family and the
+// moments it was made for, a description and a role for each parameter, its measured levels (from
+// the level gate, embedded by the build), the version and the Copy contract.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -45,6 +49,18 @@ function normParam(name, d) {
   const out = { min: d.min, max: d.max, def: Math.min(d.max, Math.max(d.min, d.def)) };
   if (isStr(d.unit)) out.unit = d.unit;
   if (isNum(d.step) && d.step > 0) out.step = d.step;
+  if (isStr(d.desc)) out.desc = d.desc;
+  if (isStr(d.role)) out.role = d.role;
+  return out;
+}
+
+const LEVEL_KEYS = ['peak', 'rms', 'worstPeak', 'worstRms', 'lowestPeak', 'pre', 'end'];
+
+/** Measured levels the build embedded in the manifest (the level gate's numbers), or null. */
+function normLevels(l) {
+  if (!l || typeof l !== 'object' || !isNum(l.peak)) return null;
+  const out = {};
+  for (const k of LEVEL_KEYS) if (isNum(l[k])) out[k] = l[k];
   return out;
 }
 
@@ -70,6 +86,10 @@ function normSound(raw, helpers) {
     tags: Array.isArray(raw.tags) ? raw.tags.filter(isStr) : [],
     desc: typeof raw.desc === 'string' ? raw.desc : '',
     dur: raw.dur,
+    family: isStr(raw.family) ? raw.family : null,
+    moments: Array.isArray(raw.moments) ? raw.moments.filter(isStr) : [],
+    levels: normLevels(raw.levels),
+    fingerprint: isStr(raw.fingerprint) ? raw.fingerprint : null,
     params,
     file: isStr(raw.file) ? raw.file : null,
     play: hasCode ? raw.play : null,
@@ -124,6 +144,7 @@ export class Catalog {
     this.warnings = [];
     this.schema = null;
     this.version = null;
+    this.copyContract = null;
     this.mode = 'empty';
     this.error = null;
     this.levels = this.makeLevelBook(0);
@@ -177,7 +198,7 @@ export class Catalog {
 
   /** The loaded state, to put back if a reload fails. */
   snapshot() {
-    const keys = ['sounds', 'byId', 'themes', 'themeById', 'helpers', 'warnings', 'schema', 'version', 'mode', 'levels'];
+    const keys = ['sounds', 'byId', 'themes', 'themeById', 'helpers', 'warnings', 'schema', 'version', 'copyContract', 'mode', 'levels'];
     return Object.fromEntries(keys.map((k) => [k, this[k]]));
   }
 
@@ -223,6 +244,7 @@ export class Catalog {
     this.schema = man.schema == null ? null : man.schema;
     this.helpers = man.helpers && typeof man.helpers === 'object' ? man.helpers : {};
     this.version = this.readVersion(man);
+    this.copyContract = man.copy && typeof man.copy === 'object' && isNum(man.copy.preroll) ? man.copy : null;
     for (const raw of man.sounds) {
       const r = normSound(raw, this.helpers);
       if (r.error) { this.warnings.push(`skipped a sound (${raw && raw.id ? raw.id : '?'}): ${r.error}`); continue; }
@@ -266,6 +288,13 @@ export class Catalog {
   peekLevel(sound) { return this.levels.peek(sound, this.helpers); }
 
   theme(id) { return this.themeById.get(id) || null; }
+
+  /** Count of sounds per family (sounds that declare one). */
+  familyCounts() {
+    const out = {};
+    for (const s of this.sounds) if (s.family) out[s.family] = (out[s.family] || 0) + 1;
+    return out;
+  }
 
   /** Count of sounds per category, every known category included (zero when empty). */
   categoryCounts() {

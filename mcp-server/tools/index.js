@@ -8,7 +8,7 @@ import { buildCopy, camel, paramsFor, PREROLL } from '../lib/copy.js';
 import { BANDS, BAND_NAMES } from '../lib/levels.js';
 import { search, FilterError } from '../lib/search.js';
 import { suggest, indexFor } from '../lib/suggest.js';
-import { MOMENTS, MOODS } from '../lib/moments.js';
+import { MOMENTS, MOODS, FAMILIES, ROLES } from '../lib/moments.js';
 import { resolveKit, buildKitModule, checkParams } from '../lib/kit.js';
 import { SERVER_NAME, SERVER_VERSION } from '../lib/meta.js';
 
@@ -40,11 +40,14 @@ function levelsOf(catalog, s) {
   return { band: lv.band, peak: lv.peak, rms: lv.rms, source: lv.source };
 }
 
+/** The family and moments a sound declares, when it does. */
+const declared = (s) => ({ ...(s.family ? { family: s.family } : {}), ...(s.moments && s.moments.length ? { moments: s.moments } : {}) });
+
 /** A sound in search results and lists. */
 function summary(catalog, s, extra = {}) {
   const lv = levelsOf(catalog, s);
   return {
-    id: s.id, name: s.name, category: s.category, dur: s.dur, tags: s.tags, desc: s.desc,
+    id: s.id, name: s.name, category: s.category, ...declared(s), dur: s.dur, tags: s.tags, desc: s.desc,
     params: Object.keys(s.params),
     ...(lv ? { loudness: { band: lv.band, peak: lv.peak, source: lv.source } } : {}),
     ...extra,
@@ -62,6 +65,7 @@ function getSound(catalog, id) {
 function filtersOf(args) {
   const f = {};
   if (args.category != null) f.category = args.category;
+  if (args.family != null) f.family = args.family;
   if (args.max_duration != null) f.max_duration = args.max_duration;
   if (args.min_duration != null) f.min_duration = args.min_duration;
   if (args.loudness != null) f.loudness = args.loudness;
@@ -88,6 +92,8 @@ function paramInfo(s) {
   return s.paramList.map((p) => ({
     name: p.name, min: p.min, max: p.max, default: p.def,
     ...(p.unit ? { unit: p.unit } : {}), ...(p.step ? { step: p.step } : {}), control: p.kind,
+    ...(p.desc ? { desc: p.desc } : {}),
+    ...(p.role ? { role: p.role, ...(ROLES[p.role] ? { roleMeans: ROLES[p.role] } : {}) } : {}),
   }));
 }
 
@@ -99,6 +105,13 @@ const CATEGORY_SCHEMA = {
     { type: 'array', items: { type: 'string' }, minItems: 1 },
   ],
   description: `One category or a list. Known: ${CATEGORIES.join(', ')} (info shows which have sounds).`,
+};
+const FAMILY_SCHEMA = {
+  anyOf: [
+    { type: 'string' },
+    { type: 'array', items: { type: 'string' }, minItems: 1 },
+  ],
+  description: `One timbre family or a list: ${Object.keys(FAMILIES).join(', ')} (info describes each). Sounds that declare no family never match.`,
 };
 const LOUDNESS_SCHEMA = {
   anyOf: [
@@ -130,6 +143,12 @@ const info = {
       bandCounts[lv.band]++;
       if (lv.source === 'measured') measured++;
     }
+    const fams = c.familyCounts();
+    const fromCatalog = c.sounds.filter((s) => s.levels).length;
+    const reportMeasured = measured - (c.levels.explicit === false ? 0 : fromCatalog);
+    const sources = [];
+    if (fromCatalog && c.levels.explicit !== false) sources.push(`measured values carried in the catalog (catalog/levels.json, the level gate) for ${fromCatalog} sound(s)`);
+    if (c.levels.reportFile && reportMeasured > 0) sources.push(`measured values from ${c.levels.reportFile} for ${reportMeasured} ${sources.length ? 'more' : 'sound(s)'}${c.levels.reportStale ? ' (the report is older than the catalog)' : ''}`);
     const out = {
       name: 'Timbre',
       about: 'A single-file offline gallery of synthesized WebAudio sound effects. Every sound is a small recipe (oscillators, seeded noise, filters, envelopes); nothing is sampled or fetched.',
@@ -143,26 +162,33 @@ const info = {
         ...(c.warnings.length ? { warnings: c.warnings.slice(0, 10) } : {}),
       },
       categories: Object.entries(counts).map(([category, count]) => ({ category, label: CATEGORY_LABELS[category] || category, count })),
+      families: Object.fromEntries(Object.keys(FAMILIES).map((f) => [f, fams[f] || 0])),
       ...(durs.length ? { durations: { shortest: durs[0], median: durs[Math.floor(durs.length / 2)], longest: durs[durs.length - 1] } } : {}),
       themes: c.themes.map((t) => ({ id: t.id, name: t.name, moments: Object.keys(t.moments) })),
       loudness: {
         bands: BANDS.map((b) => ({ band: b.name, note: b.note })),
         houseRange: 'Every sound peaks between -36 and -12 dBFS after the master chain; the typical effect sits at -25 to -15.',
         counts: bandCounts,
-        source: c.levels.reportFile
-          ? `measured values from ${c.levels.reportFile} for ${measured} sound(s)${c.levels.reportStale ? ' (older than the catalog)' : ''}; the rest are estimated offline`
-          : 'estimated offline from each sound\'s own recipe (about a dB from the browser level gate on average); the gate\'s report was not found, so nothing is measured',
+        source: sources.length
+          ? `${sources.join('; ')}; the rest are estimated offline`
+          : 'estimated offline from each sound\'s own recipe (about a dB from the browser level gate on average); no measured levels were found, so nothing is measured',
       },
       moments: {
         inThemes: [...new Set(c.themes.flatMap((t) => Object.keys(t.moments)))],
         understood: Object.keys(MOMENTS),
         moods: Object.keys(MOODS),
       },
-      copyContract: {
+      copyContract: c.copyContract ? {
+        signature: `${c.copyContract.signature} returns ${c.copyContract.returns || 'the end time'}`,
+        masterChain: c.copyContract.master,
+        warmUp: `a new master chain needs ${c.copyContract.preroll} s before a sound may start on it`,
+        ...(c.copyContract.chains ? { chains: c.copyContract.chains } : {}),
+      } : {
         signature: 'fn(ac, opts, when, dest) returns the end time',
         masterChain: 'gain 0.55 -> limiter (-12 dB, 12:1) -> tanh ceiling (-6 dBFS)',
         warmUp: `a new master chain needs ${PREROLL} s before a sound may start on it`,
       },
+      parameterRoles: ROLES,
       next: [
         'suggest_sounds { description } maps an app or a moment to candidates with reasons',
         'search_sounds { query } is plain ranked search; filter by category, max_duration, loudness',
@@ -178,8 +204,8 @@ const info = {
 const searchSounds = {
   name: 'search_sounds',
   description:
-    'Find sounds by words, ranked by relevance with the reasons for each hit. Searches name, tags, description and category, understands plurals and near-synonyms ("tap" finds clicks), ' +
-    'and filters by category, maximum or minimum duration, loudness band and required tags. Use it when you know roughly what you want ("coin", "soft click", "whoosh", "paper") or want to browse a category. ' +
+    'Find sounds by words, ranked by relevance with the reasons for each hit. Searches name, tags, the moments a sound was made for, its family, description and category, understands plurals and near-synonyms ("tap" finds clicks), ' +
+    'and filters by category, family (wood, glass, chip, ...), maximum or minimum duration, loudness band and required tags. Use it when you know roughly what you want ("coin", "soft click", "whoosh", "paper") or want to browse a category. ' +
     'With no query it lists everything that passes the filters. It returns summaries, not code: use get_sound for parameters and levels, get_copy or build_kit for code. ' +
     'To turn a description of an app or a moment into picks, use suggest_sounds instead.',
   inputSchema: {
@@ -187,6 +213,7 @@ const searchSounds = {
     properties: {
       query: { type: 'string', description: 'Words to look for, e.g. "coin", "button press", "paper shuffle". Optional.' },
       category: CATEGORY_SCHEMA,
+      family: FAMILY_SCHEMA,
       max_duration: { type: 'number', minimum: 0.01, description: 'Longest allowed sound in seconds (the sound\'s declared duration, tail included).' },
       min_duration: { type: 'number', minimum: 0, description: 'Shortest allowed sound in seconds.' },
       loudness: LOUDNESS_SCHEMA,
@@ -220,7 +247,7 @@ const searchSounds = {
 const getSoundTool = {
   name: 'get_sound',
   description:
-    'Read everything about one sound before using it: name, tags, description, duration, every parameter with its range, default and control kind (switch, count, amount, value), ' +
+    'Read everything about one sound before using it: name, family, the moments it was made for, tags, description, duration, every parameter with its range, default, control kind (switch, count, amount, value), what it does and, for switches, its role, ' +
     'levels (peak and RMS in dBFS with the loudness band, marked measured or estimated), the themes that use it, similar sounds, and its self-contained Copy code at the default parameters. ' +
     'Use it after search_sounds or suggest_sounds named an id, especially to see what a parameter can do before tuning it. ' +
     'To get code with specific parameter values baked in, call get_copy; to use several sounds in one project, call build_kit. ' +
@@ -249,13 +276,18 @@ const getSoundTool = {
       .slice(0, 4)
       .map((x) => ({ id: x.o.id, name: x.o.name, why: x.shared.length ? `shares ${x.shared.join(', ')}` : `same category (${s.category})` }));
     const out = {
-      id: s.id, name: s.name, category: s.category, file: s.file, tags: s.tags, desc: s.desc, dur: s.dur,
+      id: s.id, name: s.name, category: s.category, ...declared(s), file: s.file, tags: s.tags, desc: s.desc, dur: s.dur,
       params: paramInfo(s),
       levels: lv ? {
         peak: lv.peak, rms: lv.rms, band: lv.band, source: lv.source,
         ...(lv.peakRange ? { peakAcrossSettings: lv.peakRange } : {}),
+        ...(lv.worstRms != null ? { loudestRms: lv.worstRms } : {}),
+        ...(lv.preLimiter != null ? { preLimiter: lv.preLimiter } : {}),
+        ...(lv.audibleEnd != null ? { audibleEnd: lv.audibleEnd } : {}),
         note: lv.source === 'measured'
-          ? 'measured by the level gate: worst of 3 seeds at the defaults, after the master chain, dBFS' + (lv.stale ? ' (the report is older than the catalog; the sound may have changed)' : '')
+          ? 'measured by the level gate in a browser: worst of 3 seeds at the defaults, after the master chain, dBFS' +
+            (lv.from === 'catalog' ? '; carried in the catalog for this exact version of the sound' : '') +
+            (lv.stale ? ' (the report is older than the catalog; the sound may have changed)' : '')
           : 'estimated offline from the sound\'s recipe at the defaults (about a dB of the browser gate on the seed sounds; reverb and delay tails are left out), after the master chain, dBFS',
       } : null,
       themes: usedBy,
@@ -418,6 +450,7 @@ const buildKit = {
       global_name: { type: 'string', description: 'For format "script": the global to define (default "timbreKit").' },
       vary: { type: 'boolean', description: 'Use a fresh noise seed on every play so repeated sounds are never identical (default false: the gallery\'s sound, every time).' },
       category: CATEGORY_SCHEMA,
+      family: FAMILY_SCHEMA,
       max_duration: { type: 'number', minimum: 0.01, description: 'Longest allowed sound in seconds, for automatic picks.' },
       loudness: LOUDNESS_SCHEMA,
     },
@@ -428,6 +461,7 @@ const buildKit = {
     const c = needCode(ctx);
     const filters = {};
     if (args.category != null) filters.category = args.category;
+    if (args.family != null) filters.family = args.family;
     if (args.max_duration != null) filters.max_duration = args.max_duration;
     if (args.loudness != null) filters.loudness = args.loudness;
     const r = withFilters(() => resolveKit(c, { moments: args.moments, theme: args.theme, mood: args.mood, filters }));
@@ -484,6 +518,7 @@ const suggestSounds = {
       theme: { type: 'string', description: 'Prefer the sounds of this theme where it covers a moment.' },
       limit: { type: 'integer', minimum: 1, maximum: 10, description: 'Candidates per moment (default 3).' },
       category: CATEGORY_SCHEMA,
+      family: FAMILY_SCHEMA,
       max_duration: { type: 'number', minimum: 0.01, description: 'Longest allowed sound in seconds.' },
       loudness: LOUDNESS_SCHEMA,
     },
@@ -499,6 +534,7 @@ const suggestSounds = {
     }
     const filters = {};
     if (args.category != null) filters.category = args.category;
+    if (args.family != null) filters.family = args.family;
     if (args.max_duration != null) filters.max_duration = args.max_duration;
     if (args.loudness != null) filters.loudness = args.loudness;
     const r = withFilters(() => suggest(c, {

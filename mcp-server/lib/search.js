@@ -1,8 +1,8 @@
 // Ranked search over the catalog's own words.
 //
 // Each sound becomes a small document: its tags (the strongest signal, they are written to be
-// searched), its name, the words of its id, its category (with a few plain words for it) and its
-// description. A query is stemmed and matched field by field with a weight per field, scaled by how
+// searched), its name, the moments it was made for, its family, the words of its id, its category
+// (with a few plain words for it) and its description. A query is stemmed and matched field by field with a weight per field, scaled by how
 // rare the word is in this catalog (IDF), with prefix matches at half weight and thesaurus
 // neighbours at 0.4. Every hit records why it matched, so results can explain themselves.
 //
@@ -10,8 +10,10 @@
 import { stems, stemPairs, related, stemMatch } from './text.js';
 import { BAND_NAMES } from './levels.js';
 import { CATEGORIES } from './catalog.js';
+import { FAMILIES } from './moments.js';
 
-const FIELD_WEIGHT = { tag: 6, name: 5, cat: 3, id: 3, desc: 1.5 };
+const FIELD_WEIGHT = { tag: 6, name: 5, moment: 4, family: 4, cat: 3, id: 3, desc: 1.5 };
+const FIELDS = [['tags', 'tag'], ['name', 'name'], ['mom', 'moment'], ['fam', 'family'], ['cat', 'cat'], ['id', 'id'], ['desc', 'desc']];
 const TOKEN_CAP = 14;
 const SYNONYM_FACTOR = 0.4;
 const PREFIX_FACTOR = 0.5;
@@ -46,6 +48,8 @@ export class SearchIndex {
         disp,
         tags: tagStems,
         name: take(s.name),
+        mom: take((s.moments || []).join(' ').replace(/-/g, ' ')),
+        fam: take(s.family || ''),
         id: take(s.id.replace(/-/g, ' ')),
         cat: take((CATEGORY_WORDS[s.category] || [s.category]).join(' ') + ' ' + s.category),
         desc: take(s.desc),
@@ -62,7 +66,7 @@ export class SearchIndex {
     this.n = this.docs.length;
     this.df = new Map();
     for (const d of this.docs) {
-      const all = new Set([...d.tags, ...d.name, ...d.id, ...d.cat, ...d.desc]);
+      const all = new Set([...d.tags, ...d.name, ...d.mom, ...d.fam, ...d.id, ...d.cat, ...d.desc]);
       for (const w of all) this.df.set(w, (this.df.get(w) || 0) + 1);
     }
   }
@@ -75,14 +79,14 @@ export class SearchIndex {
   /** Field hits of one stem in one document: [{ field, kind }]. */
   hits(doc, q) {
     const out = [];
-    for (const field of ['tags', 'name', 'cat', 'id', 'desc']) {
+    for (const [field, label] of FIELDS) {
       let kind = null;
       for (const d of doc[field]) {
         const m = stemMatch(d, q);
         if (m === 'exact') { kind = 'exact'; break; }
         if (m && !kind) kind = m;
       }
-      if (kind) out.push({ field: field === 'tags' ? 'tag' : field, kind });
+      if (kind) out.push({ field: label, kind });
     }
     return out;
   }
@@ -150,10 +154,16 @@ export function applyFilters(catalog, docs, f) {
   if (cats) for (const c of cats) if (!known.has(c)) throw new FilterError(`Unknown category "${c}". Categories: ${[...known].join(', ')}.`, 'bad_category');
   const bands = bandsOf(f.loudness);
   if (bands) for (const b of bands) if (!BAND_NAMES.includes(b)) throw new FilterError(`Unknown loudness band "${b}". Use: ${BAND_NAMES.join(', ')}.`, 'bad_loudness');
+  const fams = f.family == null ? null : (Array.isArray(f.family) ? f.family : [f.family]).map((c) => String(c).toLowerCase());
+  if (fams) {
+    const knownF = new Set([...Object.keys(FAMILIES), ...catalog.sounds.map((s) => s.family).filter(Boolean)]);
+    for (const c of fams) if (!knownF.has(c)) throw new FilterError(`Unknown family "${c}". Families: ${[...knownF].join(', ')}.`, 'bad_family');
+  }
   const needTags = f.tags && f.tags.length ? f.tags.flatMap((t) => stems(String(t).replace(/-/g, ' '))) : null;
   return docs.filter((d) => {
     const s = d.s;
     if (cats && !cats.includes(s.category)) return false;
+    if (fams && !fams.includes(s.family)) return false;
     if (f.max_duration != null && s.dur > f.max_duration) return false;
     if (f.min_duration != null && s.dur < f.min_duration) return false;
     if (bands) {

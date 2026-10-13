@@ -14,6 +14,13 @@ interface.
   proves it for every sound.
 - **Works with whatever the catalog holds.** New categories, tags and themes are picked up with no
   change here; a malformed sound is skipped with a warning instead of taking the server down.
+- **Uses the catalog's own word before guessing.** A sound's family and the moments it was made
+  for, each parameter's description and switch role, the measured levels, the version and the Copy
+  contract all come from the catalog (schema 2) when it has them; inference fills in only what a
+  sound does not declare.
+- **One vocabulary with the build.** The moment names come from the repository's
+  `src/vocabulary.js`, the same list the build checks sounds and themes against, so the server needs
+  that file beside it (it lives in the Timbre checkout).
 
 ## Connect it
 
@@ -67,7 +74,7 @@ If Desktop cannot find `node`, give the full path to it in `command`.
 | Flag | Environment | What it does |
 |---|---|---|
 | `--catalog <dir>` | `TIMBRE_CATALOG` | Catalog directory holding `manifest.json` (a path to the file works too). Default `../catalog`. |
-| `--levels <file>` | `TIMBRE_LEVELS` | Level report from the level gate. Default: `levels.json` beside the catalog, then `../gates/out/levels.json`. `none` ignores any report. |
+| `--levels <file>` | `TIMBRE_LEVELS` | Level report from the level gate, used for sounds the catalog carries no measured levels for. Default: `levels.json` beside the catalog, then `../gates/out/levels.json`. `none` ignores every measured level (the catalog's too), so everything is estimated. |
 | `--no-cache` | `TIMBRE_MCP_CACHE` | Estimated levels are kept between runs in the platform cache directory (or the directory in `TIMBRE_MCP_CACHE`); this turns it off. |
 | `--log-level <lvl>` | `TIMBRE_MCP_LOG_LEVEL` | `debug`, `info`, `warn` (default), `error` or `silent`. Logs go to stderr only. |
 
@@ -81,10 +88,10 @@ Each description tells the agent when to reach for it and which neighbour to use
 
 | Tool | Use it to |
 |---|---|
-| `info` | Start here: version, sounds per category, themes, loudness bands, the moments the suggestion tools understand, where the level numbers come from. |
-| `suggest_sounds` | Turn a plain description of an app or moment into ranked candidates per moment, with reasons, a fit mark (`strong` or `loose`) and loudness. |
-| `search_sounds` | Keyword search over name, tags, description and category, with plurals and near-synonyms, filters (category, `max_duration`, `min_duration`, `loudness`, `tags`) and paging. |
-| `get_sound` | Read one sound: parameters with ranges, defaults and control kind; levels; the themes using it; similar sounds; its Copy code at the defaults. |
+| `info` | Start here: version, sounds per category and per family, themes, loudness bands, the moments the suggestion tools understand, the parameter roles, the Copy contract, where the level numbers come from. |
+| `suggest_sounds` | Turn a plain description of an app or moment into ranked candidates per moment, with reasons, a fit mark (`strong` or `loose`) and loudness. A sound made for the moment (its `moments`) is a strong match and says so. |
+| `search_sounds` | Keyword search over name, tags, moments, family, description and category, with plurals and near-synonyms, filters (category, `family`, `max_duration`, `min_duration`, `loudness`, `tags`) and paging. |
+| `get_sound` | Read one sound: family and moments; parameters with ranges, defaults, control kind, what each does and a switch's role; levels; the themes using it; similar sounds; its Copy code at the defaults. |
 | `get_copy` | Get the self-contained function for one sound with chosen parameter values (and seed) baked in. |
 | `list_themes` / `get_theme` | See the themes (moment-to-sound maps) and one theme's moments with their effective parameters. |
 | `build_kit` | Generate one module for an app: `play(moment, opts)`, every helper once, one shared master chain, lazy AudioContext. |
@@ -140,6 +147,9 @@ pasted Copy function uses, so mixing a kit and a pasted Copy on one context stil
 
 A moment can also set a parameter: `toggle-on` and `toggle-off` set a sound's `on` switch,
 `open` and `close` set its `open` switch, and the `retro` mood turns a sound's `chip` switch on.
+These are parameter roles: the switch is found by its `role` in the catalog, whatever it is called,
+and by its name only in a catalog without roles. A mood also lifts the sounds of its family (calm:
+soft; glassy: glass; retro: chip; ...) the way it lifts sounds carrying its tags.
 How a moment gets its sound, in order: the theme (if you named one, or your `mood` names one such as
 "soft ui"), then your explicit `{ moment, sound, params }`, then the best catalog match for the
 moment, shaped by the mood. Every choice carries its reason; loose matches and anything repaired or
@@ -147,12 +157,16 @@ clamped are listed under `warnings`; moments nothing fits are listed under `unre
 
 ## Levels: measured when possible, estimated otherwise
 
-The catalog has no level data. The level gate (`gates/check_levels.mjs`) measures every sound in a
-browser and writes `gates/out/levels.json`, which is git-ignored. So:
+The level gate (`gates/check_levels.mjs`) measures every sound in a browser and writes
+`catalog/levels.json`; the build embeds each measurement in the manifest while the sound's
+fingerprint still matches what was measured. So, for each sound:
 
-- When the report is found (`--levels`, `TIMBRE_LEVELS`, `levels.json` beside the catalog, or
-  `../gates/out/levels.json`), levels are **measured** and say so.
-- For every sound the report does not cover, the server **estimates**: it runs the sound's own recipe
+- When the catalog carries its levels, they are **measured** (`"source": "measured"`, `"from":
+  "catalog"`), with the loudest and quietest peak over random settings and the audible end.
+- Otherwise, when a report is found (`--levels`, `TIMBRE_LEVELS`, `levels.json` beside the catalog,
+  or the gate's full `../gates/out/levels.json`), its numbers are **measured** too (`"from":
+  "report"`); an entry that names a fingerprint is used only for that version of the sound.
+- For every sound neither covers, the server **estimates**: it runs the sound's own recipe
   against a recording mock of the audio graph, plays that back through a small offline renderer
   (oscillators, the seeded noise, filters, envelopes, shapers) and the master chain's warm steady
   state, and reads peak and RMS the way the gate does. Reverb and delay tails are not simulated.
@@ -174,7 +188,8 @@ npm run smoke       # the server as a child process, real JSON-RPC over stdio
 The suite covers the loader, the Copy parity with the gallery, the offline renderer and the level
 estimate (checked against a stored copy of the gate's report), search, suggestions, kits (generated
 modules are executed against a strict audio mock, as ESM and as a script), every tool, the protocol
-and the stdio framing, and the CLI. Tests that need the Timbre sources next to this package skip
+and the stdio framing, the CLI, and the catalog's own fields (family, moments, roles, measured levels;
+`test/fields.test.js`). Tests that need the Timbre sources next to this package skip
 themselves when it stands alone.
 
 One optional check needs a browser: `npm run check:kit` (`scripts/check_kit.mjs`) builds a kit that
@@ -194,7 +209,7 @@ index.js          the server: JSON-RPC dispatch, stdio transport
 tools/index.js    the eight tools (descriptions, schemas, handlers)
 lib/catalog.js    loads and watches the catalog          lib/copy.js     Copy, rebuilt from the catalog
 lib/search.js     ranked search                          lib/suggest.js  moments and moods to sounds
-lib/moments.js    the moment and mood vocabulary         lib/kit.js      resolve choices, write the module
+lib/moments.js    moods; moments from src/vocabulary.js  lib/kit.js      resolve choices, write the module
 lib/levels.js     measured and estimated levels          lib/render.js   offline renderer for the estimate
 lib/mockaudio.js  recording audio mock                   lib/schema.js   argument checking
 scripts/smoke.js  the stdio smoke run                    test/           node --test suites and fixtures

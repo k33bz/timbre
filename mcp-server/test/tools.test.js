@@ -12,6 +12,7 @@ import { MockContext } from '../lib/mockaudio.js';
 import { HAVE_REPO, REPO, REAL_CATALOG, DASHES, makeServer, call, tmpDir, writeCatalog } from './helper.js';
 import { fixtureDir, fixtureManifest } from './fixture.js';
 import { runCopy } from './mockrun.js';
+import { ROLES } from '../lib/moments.js';
 
 const skip = (t) => {
   if (HAVE_REPO) return false;
@@ -178,7 +179,7 @@ test('get_sound: metadata, parameters with ranges and control kinds, levels, the
   assert.equal(d.category, 'ui');
   assert.equal(d.dur, 0.25);
   const on = d.params.find((p) => p.name === 'on');
-  assert.deepEqual(on, { name: 'on', min: 0, max: 1, default: 1, step: 1, control: 'switch' });
+  assert.deepEqual(on, { name: 'on', min: 0, max: 1, default: 1, step: 1, control: 'switch', desc: s.catalog.get('ui-toggle-switch').params.on.desc, role: 'on', roleMeans: ROLES.on });
   const pitch = d.params.find((p) => p.name === 'pitch');
   assert.equal(pitch.unit, 'Hz');
   assert.equal(pitch.control, 'value');
