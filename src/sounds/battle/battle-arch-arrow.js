@@ -8,6 +8,7 @@ export default {
   tags: ['arrow', 'bow', 'drawn', 'whistle', 'thunk', 'ranged', 'attack', 'battle', 'archetype'],
   desc: 'A bow drawn tight, an arrow whistling in and a thunk where it lands. No twang, dry, so it stacks under any element.',
   dur: 0.96,
+  moments: ['attack'],
   family: 'organic',
   params: {
     draw: { min: 0.08, max: 0.35, def: 0.2, unit: 's', desc: 'How long the bow is drawn: a creak of rising tension before the release' },

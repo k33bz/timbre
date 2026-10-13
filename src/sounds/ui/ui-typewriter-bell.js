@@ -9,7 +9,7 @@ export default {
   desc: 'A typewriter carriage return: a ratcheting slide, a knock at the stop and a bright margin bell. For typed lines finishing and retro text effects.',
   dur: 0.85,
   family: 'mechanical',
-  moments: ['send'],
+  moments: ['type-out'],
   params: {
     slide: { min: 0.12, max: 0.3, def: 0.2, unit: 's', desc: 'How long the carriage takes to run back' },
     pitch: { min: 1800, max: 3200, def: 2400, unit: 'Hz', desc: 'Pitch of the margin bell' },

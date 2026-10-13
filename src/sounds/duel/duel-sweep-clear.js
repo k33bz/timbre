@@ -8,6 +8,7 @@ export default {
   tags: ['ink-duel', 'wipe', 'sweep', 'board-wipe', 'boost', 'swell', 'crash', 'banish', 'control', 'low'],
   desc: 'A board wipe: cards stack up quietly, a low swell rolls across the table and crashes, and the characters on the far side break and fall away.',
   dur: 2.64,
+  moments: ['knockout'],
   family: 'impact',
   params: {
     stacks: { min: 2, max: 4, def: 3, step: 1, desc: 'How many face-down cards slide under before the swell' },

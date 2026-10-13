@@ -8,6 +8,7 @@ export default {
   tags: ['scale', 'autoscaling', 'scale-out', 'scale-in', 'capacity', 'instances', 'grow', 'shrink', 'serverless', 'diagram'],
   desc: 'Scaling out piles up a run of rising blips into a chord, scaling in drops a run of short blips down and away. For auto scaling, capacity and fleet size changes.',
   dur: 0.88,
+  moments: ['scale'],
   family: 'soft',
   params: {
     up: { min: 0, max: 1, def: 1, step: 1, role: 'up', desc: '1 scaling out with blips that rise and stack up, 0 scaling in with blips that fall away' },

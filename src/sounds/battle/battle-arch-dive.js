@@ -8,6 +8,7 @@ export default {
   tags: ['dive', 'plunge', 'whistle', 'dart', 'strike', 'attack', 'battle', 'archetype'],
   desc: 'A fast plunging dive: a falling whistle, a dull landing and optional small airy taps after it. Dry, so it stacks under any element.',
   dur: 0.9,
+  moments: ['attack', 'hit'],
   family: 'air',
   params: {
     drop: { min: 0.15, max: 0.5, def: 0.28, unit: 's', desc: 'Length of the plunge before it lands; longer is a slower, higher dive' },

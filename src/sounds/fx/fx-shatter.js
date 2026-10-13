@@ -10,7 +10,7 @@ export default {
   desc: 'A sharp crack and a burst of splinters, then shards tinkling to the floor. For breaking glass, cracked screens and things smashed apart.',
   dur: 1.45,
   family: 'glass',
-  moments: ['explosion', 'knockout'],
+  moments: ['explosion'],
   params: {
     crack: { min: 0, max: 1, def: 0.6, desc: 'Hardness of the first impact: 0 a soft break, 1 a sharp crack with a thump' },
     shards: { min: 6, max: 20, def: 12, step: 1, desc: 'How many shards land and tinkle after the break' },

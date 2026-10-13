@@ -8,6 +8,7 @@ export default {
   tags: ['palm', 'slam', 'crush', 'sub', 'attack', 'battle', 'archetype'],
   desc: 'A big flat hand coming down: a low swell, then a heavy landing with a deep sub and settling dust. No crack, no ring.',
   dur: 0.9,
+  moments: ['attack', 'hit'],
   family: 'impact',
   params: {
     descent: { min: 0.08, max: 0.35, def: 0.18, unit: 's', desc: 'How long the palm takes to come down; longer is a slower, heavier approach' },

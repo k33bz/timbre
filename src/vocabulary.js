@@ -188,7 +188,7 @@ export const MOMENTS = {
   achievement: {
     about: 'A milestone, badge or reward is earned.',
     tags: ['achievement', 'unlock', 'reward', 'trophy', 'level-up', 'fanfare', 'win', 'bonus'], terms: ['badge', 'unlocked', 'streak', 'milestone', 'celebrate'],
-    categories: ['notify', 'magic', 'game'], avoid: ['error', 'fail'], minDur: 0.3, maxDur: 3.0, loud: ['medium', 'loud'],
+    categories: ['notify', 'magic', 'game', 'fx'], avoid: ['error', 'fail'], minDur: 0.3, maxDur: 3.0, loud: ['medium', 'loud'],
   },
   dismiss: {
     about: 'A notification, toast or chip is dismissed or swiped away.',
@@ -281,6 +281,11 @@ export const MOMENTS = {
     tags: ['failover', 'standby', 'takeover', 'backup', 'switchover', 'recovery'], terms: ['fail over', 'high availability', 'disaster recovery', 'redundancy', 'outage'],
     categories: ['data', 'notify', 'scifi'], avoid: [], maxDur: 2.0, loud: ['medium', 'quiet'],
   },
+  scale: {
+    about: 'Capacity scales out or in: servers added or removed, a cluster grows or shrinks. A sound for it carries an up switch, 1 scales out, 0 scales in.',
+    tags: ['scale', 'autoscale', 'scale-out', 'scale-in', 'capacity', 'cluster'], terms: ['auto scaling', 'scale out', 'scale in', 'add servers', 'serverless', 'capacity'],
+    categories: ['data', 'scifi'], avoid: ['error'], maxDur: 1.5, loud: ['quiet', 'medium'], hints: { up: 1 },
+  },
   // ---- AI and agents
   thinking: {
     about: 'An AI or agent is working or thinking. A sound for it is a loop cell (tag loop-cell), re-triggered on an interval while it works.',
@@ -306,7 +311,7 @@ export const MOMENTS = {
   hit: {
     about: 'A blow lands: a hit, impact or strike.',
     tags: ['hit', 'impact', 'smash', 'punch', 'hammer', 'clank', 'strike'], terms: ['damage', 'attack', 'slam', 'thud', 'bang', 'knock', 'crash'],
-    categories: ['game'], avoid: ['soft'], maxDur: 1.2, loud: ['loud', 'medium'],
+    categories: ['game', 'battle', 'duel'], avoid: ['soft'], maxDur: 1.2, loud: ['loud', 'medium'],
   },
   damage: {
     about: 'The player takes damage.',
@@ -316,7 +321,7 @@ export const MOMENTS = {
   attack: {
     about: 'A melee swing or strike.',
     tags: ['sword', 'swing', 'slash', 'blade', 'attack', 'combat', 'melee'], terms: ['swing sword', 'stab'],
-    categories: ['game'], avoid: ['soft'], maxDur: 0.8, loud: ['medium', 'loud'],
+    categories: ['game', 'battle', 'duel'], avoid: ['soft'], maxDur: 0.8, loud: ['medium', 'loud'],
   },
   pickup: {
     about: 'An item is picked up or collected.',
@@ -326,7 +331,7 @@ export const MOMENTS = {
   coin: {
     about: 'A coin, currency or small reward is gained or spun.',
     tags: ['coin', 'money', 'ping', 'spin', 'flip', 'toss', 'gem', 'score'], terms: ['cash', 'gold', 'currency', 'purchase', 'reward'],
-    categories: ['game'], avoid: ['error'], maxDur: 2.0, loud: ['medium', 'loud'],
+    categories: ['game', 'battle'], avoid: ['error'], maxDur: 2.0, loud: ['medium', 'loud'],
   },
   'level-up': {
     about: 'The player levels up or unlocks something big.',
@@ -346,7 +351,7 @@ export const MOMENTS = {
   victory: {
     about: 'The player wins a round or finishes a level.',
     tags: ['victory', 'win', 'fanfare', 'jingle', 'level-complete', 'stage-clear', 'ta-da', 'celebrate'], terms: ['win', 'you win', 'won', 'finish line', 'triumph', 'celebration', 'complete level', 'stage clear'],
-    categories: ['music', 'game'], avoid: ['error', 'fail', 'defeat'], minDur: 0.6, maxDur: 5.0, loud: ['loud', 'medium'],
+    categories: ['music', 'game', 'duel', 'fx'], avoid: ['error', 'fail', 'defeat'], minDur: 0.6, maxDur: 5.0, loud: ['loud', 'medium'],
   },
   'game-over': {
     about: 'The player loses or the run ends.',
@@ -371,7 +376,7 @@ export const MOMENTS = {
   explosion: {
     about: 'Something blows up.',
     tags: ['explosion', 'boom', 'blast', 'bomb', 'detonate', 'burst'], terms: ['explode', 'destroy', 'destruction', 'crash'],
-    categories: ['game', 'scifi'], avoid: [], minDur: 0.4, maxDur: 3.0, loud: ['loud', 'medium'],
+    categories: ['game', 'scifi', 'fx'], avoid: [], minDur: 0.4, maxDur: 3.0, loud: ['loud', 'medium'],
   },
   countdown: {
     about: 'A countdown beat before a round starts.',
@@ -387,7 +392,7 @@ export const MOMENTS = {
   'card-draw': {
     about: 'A card is drawn, dealt or flicked.',
     tags: ['card', 'draw', 'deal', 'flick', 'pull', 'deck', 'skim'], terms: ['dealt', 'dealing', 'card game', 'deal cards'],
-    categories: ['cards'], avoid: ['shuffle'], maxDur: 1.0, loud: ['quiet', 'medium'],
+    categories: ['cards', 'duel'], avoid: ['shuffle'], maxDur: 1.0, loud: ['quiet', 'medium'],
   },
   'card-flip': {
     about: 'A card is turned face up.',
@@ -438,7 +443,7 @@ export const MOMENTS = {
   knockout: {
     about: 'A creature or character is knocked out: heavier than a hit, the end of one fighter.',
     tags: ['knockout', 'ko', 'faint', 'heavy', 'fallen'], terms: ['fainted', 'faints', 'banished', 'final blow', 'defeated creature'],
-    categories: ['battle', 'game'], avoid: ['heal'], minDur: 0.3, maxDur: 2.0, loud: ['loud', 'medium'],
+    categories: ['battle', 'game', 'duel'], avoid: ['heal'], minDur: 0.3, maxDur: 2.0, loud: ['loud', 'medium'],
   },
   // ---- magic and sci-fi
   sparkle: {
@@ -469,7 +474,7 @@ export const MOMENTS = {
   shield: {
     about: 'A shield or force field goes up or takes a hit.',
     tags: ['shield', 'barrier', 'force-field', 'deflect', 'guard', 'defend', 'block'], terms: ['force field', 'protect', 'forcefield'],
-    categories: ['scifi', 'game', 'magic'], avoid: ['error'], maxDur: 2.5, loud: ['medium'],
+    categories: ['scifi', 'game', 'magic', 'duel'], avoid: ['error'], maxDur: 2.5, loud: ['medium'],
   },
   readout: {
     about: 'A console or HUD prints a readout or acknowledges.',
@@ -479,7 +484,7 @@ export const MOMENTS = {
   scan: {
     about: 'A scanner, radar or sensor sweeps.',
     tags: ['scanner', 'scan', 'sweep', 'radar', 'sensor', 'sonar', 'detect'], terms: ['scanning', 'ping the area'],
-    categories: ['scifi'], avoid: ['error'], maxDur: 3.0, loud: ['quiet', 'medium'],
+    categories: ['scifi', 'fx'], avoid: ['error'], maxDur: 3.0, loud: ['quiet', 'medium'],
   },
   chips: {
     about: 'Poker chips are clicked, stacked or pushed.',
@@ -495,7 +500,7 @@ export const MOMENTS = {
   transform: {
     about: 'Something morphs, evolves or devolves: a sound for it carries an up switch, 1 evolves or grows, 0 devolves or shrinks.',
     tags: ['transform', 'morph', 'evolve', 'devolve', 'shapeshift', 'mutate', 'alchemy'], terms: ['morph', 'evolution', 'devolve', 'transformation', 'shape shift'],
-    categories: ['fx', 'battle', 'magic', 'game'], avoid: ['error'], maxDur: 3.0, loud: ['medium', 'quiet'], hints: { up: 1 },
+    categories: ['fx', 'battle', 'duel', 'magic', 'game'], avoid: ['error'], maxDur: 3.0, loud: ['medium', 'quiet'], hints: { up: 1 },
   },
   glitch: {
     about: 'A digital glitch or corruption burst: an RGB split, a datamosh, a VHS tear.',
@@ -506,6 +511,11 @@ export const MOMENTS = {
     about: 'A neon tube or a bad bulb strikes, flickers and settles into its hum.',
     tags: ['neon', 'flicker', 'tube', 'bulb', 'sign', 'hum'], terms: ['neon sign', 'light flicker', 'fluorescent', 'bad bulb'],
     categories: ['fx', 'scifi', 'ambience'], avoid: [], maxDur: 2.0, loud: ['quiet', 'medium'],
+  },
+  'type-out': {
+    about: 'Text types or decodes onto the screen: a typewriter line and its carriage return, a teletype, a scramble that resolves into words.',
+    tags: ['typewriter', 'teletype', 'decode', 'type-out', 'text-reveal', 'carriage'], terms: ['typewriter effect', 'typing animation', 'text reveal', 'decode text', 'matrix text', 'teletype'],
+    categories: ['fx', 'ui', 'scifi'], avoid: ['error'], maxDur: 1.5, loud: ['quiet', 'medium'],
   },
   // ---- voices
   announce: {

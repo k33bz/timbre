@@ -158,6 +158,7 @@ export function validateSound(entry, kit = T) {
       for (const [k, d] of Object.entries(s.params)) {
         if (!PARAM_NAME.test(k)) E(`param "${k}" must be a camelCase identifier`);
         if (k === 'seed') E('param name "seed" is reserved (Copy uses p.seed)');
+        if (k === 'when' || k === 'dest') E(`param name "${k}" is reserved (an MCP kit's play() takes it as an option)`);
         if (!d || typeof d !== 'object') { E(`param "${k}" must be { min, max, def }`); continue; }
         for (const pk of Object.keys(d)) if (!PARAM_KEYS.includes(pk)) E(`param "${k}" has unknown field "${pk}"`);
         const fin = (v) => typeof v === 'number' && Number.isFinite(v);

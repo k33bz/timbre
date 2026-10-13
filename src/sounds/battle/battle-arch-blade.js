@@ -8,6 +8,7 @@ export default {
   tags: ['shear', 'slash', 'cross', 'cut', 'snap', 'blade', 'attack', 'battle', 'archetype'],
   desc: 'Two crossing cuts that snap shut like shears, with a low chop where they meet. Short and dry, so it stacks under any element.',
   dur: 0.34,
+  moments: ['attack'],
   family: 'metal',
   params: {
     gap: { min: 0.04, max: 0.14, def: 0.075, unit: 's', desc: 'Time between the two cuts; short is one slash, long is two' },

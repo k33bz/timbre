@@ -8,6 +8,7 @@ export default {
   tags: ['crescent', 'whirr', 'twirl', 'arc', 'blades', 'scatter', 'attack', 'battle', 'archetype'],
   desc: 'Up to three spinning blades whirring across in an arc, bursting into bright points at the end. Dry, so it stacks under any element.',
   dur: 0.92,
+  moments: ['attack'],
   family: 'synthetic',
   params: {
     flight: { min: 0.2, max: 0.55, def: 0.36, unit: 's', desc: 'How long the blades fly before they burst' },

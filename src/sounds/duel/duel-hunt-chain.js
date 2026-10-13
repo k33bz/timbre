@@ -9,6 +9,7 @@ export default {
   tags: ['ink-duel', 'challenge', 'chain', 'ping', 'lock-on', 'clash', 'banish', 'ticks', 'metal', 'crackle'],
   desc: 'A ping and quickening ticks lock on to one target, then challengers clash into it one after another, each a step higher, until it shatters.',
   dur: 2.07,
+  moments: ['attack', 'knockout'],
   family: 'metal',
   params: {
     hits: { min: 2, max: 4, def: 3, step: 1, desc: 'How many challengers clash into the target before it breaks' },

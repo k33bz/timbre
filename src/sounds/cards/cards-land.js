@@ -12,12 +12,12 @@ export default {
   family: 'paper',
   moments: ['drop'],
   params: {
-    dest: { min: 0, max: 2, def: 0, step: 1, choices: ['stadium', 'tool', 'discard'], desc: 'Where it lands: stadium a low thunk, tool a clink, discard a dull pat' },
+    onto: { min: 0, max: 2, def: 0, step: 1, choices: ['stadium', 'tool', 'discard'], desc: 'Where it lands: stadium a low thunk, tool a clink, discard a dull pat' },
     weight: { min: 0, max: 1, def: 0.5, desc: 'Heft of the landing: 0 light, 1 heavy and deeper' },
     tone: { min: 0, max: 1, def: 0.5, desc: 'Surface color: 0 dull and dark, 1 bright and hard' },
   },
   play(T, out, t, p) {
-    const d = Math.round(p.dest);
+    const d = Math.round(p.onto);
     const w = 0.6 + 0.8 * p.weight;
     const air = 0.7 + 0.6 * p.tone;
     if (d === 0) {

@@ -9,7 +9,7 @@ export default {
   desc: 'A solid wooden thud with a short metal ring: a blow stopped by a guard. For a Bodyguard stepping in to take an attack.',
   dur: 0.28,
   family: 'wood',
-  moments: ['ability'],
+  moments: ['ability', 'shield'],
   params: {
     pitch: { min: 110, max: 300, def: 175, unit: 'Hz', desc: 'Note of the wooden thud; the metal ring sits well above it' },
     ring: { min: 0, max: 1, def: 0.5, desc: 'How much the guard rings after the knock: 0 a dry thud, 1 a longer metal ring' },

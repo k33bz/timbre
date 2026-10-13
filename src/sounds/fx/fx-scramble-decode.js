@@ -10,7 +10,7 @@ export default {
   desc: 'A shower of random blips that narrows onto one note and locks in with a glassy ring. For text unscrambling, a redaction lifting or a code being cracked.',
   dur: 1.26,
   family: 'synthetic',
-  moments: ['reveal'],
+  moments: ['type-out', 'reveal'],
   params: {
     pitch: { min: 440, max: 1760, def: 880, unit: 'Hz', desc: 'The note the scramble settles on' },
     chars: { min: 8, max: 28, def: 16, step: 1, desc: 'How many scrambled characters flicker by: a sparse patter to a dense shower' },

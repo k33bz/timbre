@@ -8,6 +8,7 @@ export default {
   tags: ['ink-duel', 'evasive', 'slip', 'swoop', 'bounce', 'draw', 'flick', 'quest', 'lore', 'air'],
   desc: 'Two airy attackers sweep past a defender that swings and misses, a swirl bounces it away, small gold chimes pay out and cards flick off the deck.',
   dur: 1.73,
+  moments: ['card-draw'],
   family: 'air',
   params: {
     pitch: { min: 0.7, max: 1.5, def: 1, unit: 'x', desc: 'Pitch of the swoops, the bounce and the chimes: low a heavy glide, high a thin one' },

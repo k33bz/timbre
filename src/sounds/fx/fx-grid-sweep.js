@@ -10,6 +10,7 @@ export default {
   tags: ['grid', 'sweep', 'horizon', 'synthwave', 'retro', 'wash', 'sub', 'pulse', 'neon', 'rise'],
   desc: 'Deep sub pulses under a hollow rising wash that ends on a glass ping at the horizon. For a neon grid scrolling into view or a retro-futuristic scene opening.',
   dur: 1.5,
+  moments: ['scan'],
   family: 'synthetic',
   params: {
     pitch: { min: 35, max: 70, def: 50, unit: 'Hz', desc: 'Note of the sub pulses; the wash is tuned two octaves above' },

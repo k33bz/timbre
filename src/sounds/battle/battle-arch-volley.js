@@ -9,6 +9,7 @@ export default {
   tags: ['volley', 'flurry', 'combo', 'multi-hit', 'rapid', 'barrage', 'attack', 'battle', 'archetype'],
   desc: 'A quick flurry of two to eight light blows ending on a heavier one. Dry and fast, for multi-hit attacks.',
   dur: 0.88,
+  moments: ['attack', 'hit'],
   family: 'impact',
   params: {
     hits: { min: 2, max: 8, def: 5, step: 1, desc: 'How many blows land in the flurry, the last one the finisher' },

@@ -8,6 +8,7 @@ export default {
   tags: ['claw', 'rake', 'tear', 'slash', 'rip', 'attack', 'battle', 'archetype'],
   desc: 'Up to five tearing swipes raked in a row, ending in a low thud. Dry and ragged, so it stacks under any element strike.',
   dur: 0.64,
+  moments: ['attack'],
   family: 'air',
   params: {
     claws: { min: 1, max: 5, def: 3, step: 1, desc: 'How many tearing swipes rake across' },

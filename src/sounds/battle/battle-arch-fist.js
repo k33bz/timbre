@@ -10,6 +10,7 @@ export default {
   tags: ['fist', 'jab', 'strike', 'shockwave', 'attack', 'battle', 'archetype'],
   desc: 'A single driving jab: a rush of air, a dull thud and a deep shockwave rolling out. Dry, so it stacks under any element strike.',
   dur: 0.86,
+  moments: ['attack', 'hit'],
   family: 'impact',
   params: {
     reach: { min: 0.06, max: 0.3, def: 0.15, unit: 's', desc: 'Length of the rush of air and hum before the fist lands' },

@@ -9,7 +9,7 @@ export default {
   desc: 'A glassy bubble forming and ringing, then a tink and a tiny crackle as something bounces off and shatters. For Ward.',
   dur: 0.43,
   family: 'glass',
-  moments: ['ability'],
+  moments: ['ability', 'shield'],
   params: {
     pitch: { min: 300, max: 800, def: 520, unit: 'Hz', desc: 'Start note of the bubble before it bends up; the glass rings well above it' },
     ring: { min: 0, max: 1, def: 0.5, desc: 'How long the glass rings after the bubble forms: 0 a quick pop, 1 a lingering ring' },
