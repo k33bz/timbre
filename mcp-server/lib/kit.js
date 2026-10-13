@@ -41,9 +41,11 @@ export function checkParams(sound, over, where) {
     if (!d) {
       throw new ToolError(`${where}: ${sound.id} has no parameter "${k}". Its parameters: ${Object.keys(sound.params).join(', ') || '(none)'}.`, { code: 'unknown_param', data: { sound: sound.id, valid: Object.keys(sound.params) } });
     }
-    const n = Number(v);
+    // a parameter with named values (a voice) takes its name as well as its number
+    const n = typeof v === 'string' && Array.isArray(d.choices) && d.choices.includes(v) ? d.choices.indexOf(v) : Number(v);
     if (v === null || v === '' || typeof v === 'boolean' || !Number.isFinite(n)) {
-      throw new ToolError(`${where}: parameter "${k}" of ${sound.id} must be a number between ${d.min} and ${d.max}${d.unit ? ' ' + d.unit : ''}, got ${JSON.stringify(v)}.`, { code: 'bad_param_value' });
+      const named = Array.isArray(d.choices) ? ` or one of ${d.choices.map((c) => JSON.stringify(c)).join(', ')}` : '';
+      throw new ToolError(`${where}: parameter "${k}" of ${sound.id} must be a number between ${d.min} and ${d.max}${d.unit ? ' ' + d.unit : ''}${named}, got ${JSON.stringify(v)}.`, { code: 'bad_param_value' });
     }
     const c = Math.min(d.max, Math.max(d.min, n));
     if (c !== n) clamped.push({ param: k, requested: n, used: c, range: [d.min, d.max] });

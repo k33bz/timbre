@@ -55,7 +55,7 @@ function startServer(args, env) {
 
 /** The calls made, one per tool, with what each reply must show. */
 export const TOOL_CALLS = [
-  { name: 'info', args: {}, check: (d) => d.name === 'Timbre' && d.catalog.sounds > 0 && d.categories.length === 8, show: (d) => `${d.catalog.sounds} sounds, ${d.catalog.themes} theme(s), Timbre ${d.version}` },
+  { name: 'info', args: {}, check: (d) => d.name === 'Timbre' && d.catalog.sounds > 0 && d.categories.length === 9, show: (d) => `${d.catalog.sounds} sounds, ${d.catalog.themes} theme(s), Timbre ${d.version}` },
   { name: 'search_sounds', args: { query: 'click', limit: 3 }, check: (d) => d.items.length > 0 && d.items[0].matched.length > 0, show: (d) => d.items.map((x) => x.id).join(', ') },
   { name: 'get_sound', args: { id: '$firstSound' }, check: (d, code) => d.params.length >= 0 && typeof code === 'string' && code.includes('function '), show: (d, code) => `${d.id}, ${d.params.length} params, ${code.length} bytes of code` },
   { name: 'get_copy', args: { id: '$firstSound' }, check: (d, code) => /^\/\/ Usage:/.test(code) && d.functionName && d.bytes === Buffer.byteLength(code), show: (d) => `${d.functionName}(), ${d.bytes} bytes` },
@@ -63,6 +63,7 @@ export const TOOL_CALLS = [
   { name: 'get_theme', args: { id: '$firstTheme' }, check: (d) => d.moments.length > 0, show: (d) => `${d.id}: ${d.moments.map((m) => m.moment).join(', ')}` },
   { name: 'build_kit', args: { moments: ['click', 'success', 'error'], mood: 'calm' }, check: (d, code) => d.moments.length >= 1 && /export \{ play/.test(code), show: (d, code) => `${d.moments.length} moments, ${d.sounds.length} sounds, ${code.length} bytes` },
   { name: 'suggest_sounds', args: { description: 'a meditation timer that rings when done, with gentle taps' }, check: (d) => d.suggestions.length >= 1, show: (d) => d.suggestions.map((g) => `${g.moment}: ${g.candidates[0] ? g.candidates[0].id : '-'}`).join('; ') },
+  { name: 'speak', args: { text: 'System online.' }, check: (d, code) => code.startsWith('// Usage:') && d.functionName === 'saySystemOnline' && d.bytes === Buffer.byteLength(code), show: (d) => `${d.functionName}(), ${d.phonemes}, ${d.bytes} bytes` },
 ];
 
 /**

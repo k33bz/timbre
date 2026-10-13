@@ -4,7 +4,8 @@
 // returns that field as a second text block (raw code reads better than JSON-escaped code).
 import { ToolError } from '../lib/errors.js';
 import { CATEGORIES } from '../lib/catalog.js';
-import { buildCopy, camel, paramsFor, PREROLL } from '../lib/copy.js';
+import { buildCopy, camel, paramsFor, PREROLL, buildSpeechCopy, SPEAK_PARAMS } from '../lib/copy.js';
+import { speechRuntime, closure as speechClosure } from '../lib/speech.js';
 import { BANDS, BAND_NAMES } from '../lib/levels.js';
 import { search, FilterError } from '../lib/search.js';
 import { suggest, indexFor } from '../lib/suggest.js';
@@ -12,7 +13,7 @@ import { MOMENTS, MOODS, FAMILIES, ROLES } from '../lib/moments.js';
 import { resolveKit, buildKitModule, checkParams } from '../lib/kit.js';
 import { SERVER_NAME, SERVER_VERSION } from '../lib/meta.js';
 
-const CATEGORY_LABELS = { ui: 'UI', notify: 'Notify', game: 'Game', cards: 'Cards', magic: 'Magic', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music' };
+const CATEGORY_LABELS = { ui: 'UI', notify: 'Notify', game: 'Game', cards: 'Cards', magic: 'Magic', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music', voice: 'Voice' };
 
 const round = (v, d = 1) => Math.round(v * 10 ** d) / 10 ** d;
 
@@ -92,6 +93,7 @@ function paramInfo(s) {
   return s.paramList.map((p) => ({
     name: p.name, min: p.min, max: p.max, default: p.def,
     ...(p.unit ? { unit: p.unit } : {}), ...(p.step ? { step: p.step } : {}), control: p.kind,
+    ...(p.choices ? { choices: p.choices } : {}),
     ...(p.desc ? { desc: p.desc } : {}),
     ...(p.role ? { role: p.role, ...(ROLES[p.role] ? { roleMeans: ROLES[p.role] } : {}) } : {}),
   }));
@@ -561,6 +563,81 @@ const suggestSounds = {
   },
 };
 
-export const TOOLS = [info, suggestSounds, searchSounds, getSoundTool, getCopyTool, listThemes, getTheme, buildKit];
+const speakTool = {
+  name: 'speak',
+  description:
+    'Get ONE self-contained JavaScript function that says a line of text in a synthesized voice, or babbles it (Animalese style), with the line baked in. ' +
+    'Speech runs the text through the text front end (letter-to-sound rules and a lexicon; numbers and punctuation are understood, and [W EY1 T] in the text spells a word in ARPAbet) and bakes in the phonemes, so the function carries only the formant synthesizer, the voice and the master chain: the same function the gallery\'s Speak rack copies. ' +
+    'Speech voices: announcer (a classic synthesized PA voice, the default), deep and small (robots), whisper, retro (an 8-bit home computer). Babble voices: cute (default), gruff, beep, sprite, elder. ' +
+    'The function keeps the Copy contract, fn(ac, opts, when, dest), returns the end time, and takes pitch, rate and range (speed and spread for babble) and seed in opts at play time. ' +
+    'Use it for a custom line; for ready-made announcements, countdowns and babble, search_sounds with category "voice", then get_copy.',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      text: { type: 'string', minLength: 1, maxLength: 500, description: 'The line, in English, e.g. "Access granted. Welcome back, commander."' },
+      mode: { type: 'string', enum: ['speech', 'babble'], description: '"speech" (default) says the words; "babble" turns each letter or syllable into a short pitched talk blip.' },
+      voice: { type: 'string', description: 'Speech: announcer (default), deep, small, whisper, retro. Babble: cute (default), gruff, beep, sprite, elder.' },
+      pitch: { type: 'number', description: 'Semitones up or down from the voice\'s own pitch, -12 to 12 (default 0).' },
+      rate: { type: 'number', description: 'Speech only: speaking rate, 0.5 to 1.6 (default 1).' },
+      range: { type: 'number', description: 'Speech only: intonation, 0 a monotone to 2 animated (default 1).' },
+      speed: { type: 'number', description: 'Babble only: talking speed, 0.5 to 1.6 (default 1).' },
+      spread: { type: 'number', description: 'Babble only: pitch spread between blips, 0 to 2 (default 1).' },
+      seed: { type: 'integer', minimum: 0, maximum: 4294967295, description: 'Noise seed baked in (default 1): breath, frication and pitch jitter draw from it.' },
+    },
+    required: ['text'],
+    additionalProperties: false,
+  },
+  codeKey: 'code',
+  handler(args, ctx) {
+    const c = needCode(ctx);
+    const rt = speechRuntime(c.helpers);
+    const mode = args.mode === 'babble' ? 'babble' : 'speak';
+    const defs = SPEAK_PARAMS[mode];
+    const other = mode === 'babble' ? ['rate', 'range'] : ['speed', 'spread'];
+    const wrong = other.filter((k) => args[k] != null);
+    if (wrong.length) {
+      throw new ToolError(`${wrong.join(' and ')} ${wrong.length > 1 ? 'apply' : 'applies'} to ${mode === 'babble' ? 'speech' : 'babble'}; ${mode === 'babble' ? 'babble' : 'speech'} takes ${Object.keys(defs).join(', ')}.`, { code: 'bad_params' });
+    }
+    const voices = mode === 'babble' ? rt.babbleVoices() : rt.speechVoices();
+    const voice = args.voice == null ? Object.keys(voices)[0] : String(args.voice).toLowerCase();
+    if (!Object.hasOwn(voices, voice)) {
+      throw new ToolError(`Unknown ${mode === 'babble' ? 'babble' : 'speech'} voice "${args.voice}". Voices: ${Object.keys(voices).join(', ')}.`, { code: 'not_found', data: { voices: Object.keys(voices) } });
+    }
+    if (!/[A-Za-z0-9]/.test(args.text)) throw new ToolError('The text has nothing to say: give it words or numbers.', { code: 'invalid_arguments' });
+    const clamped = [];
+    const cfg = { mode, text: args.text, voice, seed: args.seed == null ? 1 : args.seed };
+    for (const [k, d] of Object.entries(defs)) {
+      if (args[k] == null) continue;
+      const v = Math.min(d.max, Math.max(d.min, args[k]));
+      if (v !== args[k]) clamped.push({ param: k, requested: args[k], used: v, range: [d.min, d.max] });
+      cfg[k] = v;
+    }
+    const r = buildSpeechCopy(c.helpers, rt, speechClosure, cfg);
+    const dur = (mode === 'babble' ? rt.babble : rt.speak)(null, 0, { text: args.text, voice, ...r.values });
+    const v = voices[voice];
+    return {
+      mode: mode === 'babble' ? 'babble' : 'speech',
+      text: args.text,
+      voice: r.voice,
+      voiceName: v.name,
+      voiceDesc: v.desc,
+      ...(mode === 'speak' ? { phonemes: r.line.ph } : {}),
+      functionName: r.fname,
+      signature: `${r.fname}(ac, opts, when, dest)`,
+      params: r.values,
+      ...(clamped.length ? { clamped } : {}),
+      seed: cfg.seed,
+      dur: Math.round(dur * 1000) / 1000,
+      bytes: Buffer.byteLength(r.code),
+      voices: { speech: Object.keys(rt.speechVoices()), babble: Object.keys(rt.babbleVoices()) },
+      usage: `const ac = new AudioContext(); ${r.fname}(ac);  // call from a click or key handler so the browser lets it start; ${r.fname}(ac, { pitch: 2 }) changes it at play time`,
+      returns: `the end time: ${PREROLL} s after the context time on the first call (the master chain warms up), then when + about ${Math.round(dur * 100) / 100} s`,
+      note: mode === 'speak' ? 'phonemes shows how the text was read; to fix a word, put its ARPAbet in brackets in the text, e.g. [W EY1 T].' : 'Babble has no words: each letter or syllable is a blip, and a question mark lifts the last ones.',
+      code: r.code,
+    };
+  },
+};
+
+export const TOOLS = [info, suggestSounds, searchSounds, getSoundTool, getCopyTool, listThemes, getTheme, buildKit, speakTool];
 export function buildTools() { return TOOLS; }
 export { ToolError };

@@ -22,7 +22,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const DEFAULT_CATALOG_DIR = path.resolve(HERE, '..', '..', 'catalog');
 
 /** Every category the build knows (build.mjs, CATEGORIES), in gallery order. */
-export const CATEGORIES = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music'];
+export const CATEGORIES = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music', 'voice'];
 
 export class CatalogError extends Error {
   constructor(message, code = 'catalog_unavailable') {
@@ -35,8 +35,9 @@ export class CatalogError extends Error {
 const isStr = (v) => typeof v === 'string' && v.length > 0;
 const isNum = (v) => typeof v === 'number' && Number.isFinite(v);
 
-/** How a parameter reads on a slider: switch (off/on), count (whole numbers), amount (0..1), value. */
+/** How a parameter reads on a slider: choice (named values), switch (off/on), count (whole numbers), amount (0..1), value. */
 export function paramKind(d) {
+  if (Array.isArray(d.choices) && d.choices.length) return 'choice';
   if (d.step === 1 && d.min === 0 && d.max === 1 && !d.unit) return 'switch';
   if (d.step === 1) return 'count';
   if (!d.unit && d.min === 0 && d.max === 1) return 'amount';
@@ -51,6 +52,8 @@ function normParam(name, d) {
   if (isNum(d.step) && d.step > 0) out.step = d.step;
   if (isStr(d.desc)) out.desc = d.desc;
   if (isStr(d.role)) out.role = d.role;
+  // a stepped parameter that names its values: value i is choices[i]
+  if (Array.isArray(d.choices) && d.choices.length && d.choices.every(isStr)) out.choices = d.choices.slice();
   return out;
 }
 

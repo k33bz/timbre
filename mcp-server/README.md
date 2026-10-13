@@ -3,8 +3,8 @@
 A [Model Context Protocol](https://modelcontextprotocol.io) server over the Timbre sound catalog. An
 agent can describe an app ("a meditation timer that rings when done, gentle taps"), get ranked
 candidate sounds with reasons, read a sound's parameters and levels, and take away working code:
-one self-contained function per sound, or **one JavaScript module** with `play(moment)` for a whole
-interface.
+one self-contained function per sound, **one JavaScript module** with `play(moment)` for a whole
+interface, or one function that says a line of text in a synthesized voice.
 
 - **Zero dependencies.** Plain Node 22, MCP's JSON-RPC 2.0 over stdio (the transport Claude Code and
   Claude Desktop launch), like the Prism server it follows in style.
@@ -47,7 +47,7 @@ project's `.mcp.json`. The same thing by hand, in `.mcp.json` (project) or `~/.c
 }
 ```
 
-Check it with `claude mcp list` or `/mcp` inside Claude Code: `timbre` should show eight tools.
+Check it with `claude mcp list` or `/mcp` inside Claude Code: `timbre` should show nine tools.
 
 ### Claude Desktop
 
@@ -83,7 +83,7 @@ for example `node cli.js call search_sounds '{"query":"coin"}'`.
 
 ## The tools
 
-All eight only read the catalog and compute; none writes anything, and they are marked read-only.
+All nine only read the catalog and compute; none writes anything, and they are marked read-only.
 Each description tells the agent when to reach for it and which neighbour to use instead.
 
 | Tool | Use it to |
@@ -95,6 +95,7 @@ Each description tells the agent when to reach for it and which neighbour to use
 | `get_copy` | Get the self-contained function for one sound with chosen parameter values (and seed) baked in. |
 | `list_themes` / `get_theme` | See the themes (moment-to-sound maps) and one theme's moments with their effective parameters. |
 | `build_kit` | Generate one module for an app: `play(moment, opts)`, every helper once, one shared master chain, lazy AudioContext. |
+| `speak` | Get one function that says a line of text (or babbles it) in a synthesized voice, the line baked in: the gallery's Speak rack Copy. |
 
 Code comes back as its own content block after a short JSON block of facts, so it arrives as plain
 text and not as an escaped string.
@@ -119,6 +120,23 @@ end time as its return value. `test/copy-parity.test.js` compares it with `src/c
 the page runtime assembled the way `build.mjs` assembles it, for every sound at six parameter sets.
 Differences from the gallery, both deliberate: unknown parameter names are an error (the gallery has
 no way to type one), and values outside a range are clamped *and reported*.
+
+### What `speak` gives
+
+`speak { "text": "Containment breach. Evacuate the facility.", "voice": "announcer" }` returns the
+phonemes the text was read as, the line's length and one function,
+`sayContainmentBreachEvacuateThe(ac, opts, when, dest)`, that says it. The text front end ran on the
+server, so the function carries the phonemes and only the synthesizer, the voice and the master chain
+(about 26 KB). Speech voices: announcer (a classic synthesized PA voice), deep and small (robots),
+whisper, retro (an 8-bit home computer); `mode: "babble"` gives Animalese style talk instead (cute,
+gruff, beep, sprite, elder). pitch, rate and range (speed and spread for babble) and the seed are
+baked in and can change in `opts` at play time; values out of range are clamped and reported. A word
+read wrong is fixed in the text with its ARPAbet in brackets: `"Press [S T AA1 R T] to begin."`. The
+engine is compiled from the catalog's own helper sources, so `speak` needs a catalog built with
+voices; `test/speak.test.js` holds its output byte for byte to the gallery's Speak rack.
+
+A parameter with named values (a voice sound's `voice`) is listed with `control: "choice"` and its
+`choices`; `get_copy` and `build_kit` take the name (`{ "voice": "deep" }`) as well as the number.
 
 ### The module `build_kit` writes
 
@@ -206,11 +224,12 @@ machine run it through your browser queue (`TIMBRE_BROWSER` picks the binary).
 ```
 cli.js            start | info | tools | call
 index.js          the server: JSON-RPC dispatch, stdio transport
-tools/index.js    the eight tools (descriptions, schemas, handlers)
+tools/index.js    the nine tools (descriptions, schemas, handlers)
 lib/catalog.js    loads and watches the catalog          lib/copy.js     Copy, rebuilt from the catalog
 lib/search.js     ranked search                          lib/suggest.js  moments and moods to sounds
 lib/moments.js    moods; moments from src/vocabulary.js  lib/kit.js      resolve choices, write the module
 lib/levels.js     measured and estimated levels          lib/render.js   offline renderer for the estimate
+lib/speech.js     the speech runtime, compiled from the catalog's helper sources
 lib/mockaudio.js  recording audio mock                   lib/schema.js   argument checking
 scripts/smoke.js  the stdio smoke run                    test/           node --test suites and fixtures
 scripts/check_kit.mjs  browser check of a generated kit

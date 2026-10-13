@@ -113,3 +113,65 @@ export function buildCopy(sound, helperSrc, over, seedValue) {
   lines.push('}');
   return lines.join('\n') + '\n';
 }
+
+/** The controls of a spoken or babbled line (src/core/copy.js, SPEAK_PARAMS). */
+export const SPEAK_PARAMS = {
+  speak: {
+    pitch: { min: -12, max: 12, def: 0, unit: 'st', desc: 'Pitch of the voice, up or down from its own' },
+    rate: { min: 0.5, max: 1.6, def: 1, unit: 'x', desc: 'Speaking rate: low slow and deliberate, high brisk' },
+    range: { min: 0, max: 2, def: 1, desc: 'Intonation: 0 a flat monotone, 1 the voice\'s own, 2 animated' },
+  },
+  babble: {
+    pitch: { min: -12, max: 12, def: 0, unit: 'st', desc: 'Pitch of the voice, up or down from its own' },
+    speed: { min: 0.5, max: 1.6, def: 1, unit: 'x', desc: 'Talking speed: low drawn out, high rapid fire' },
+    spread: { min: 0, max: 2, def: 1, desc: 'Pitch spread between blips: 0 a monotone, 1 the voice\'s own, 2 wild' },
+  },
+};
+
+// control characters and the two line separators, which a // comment cannot hold
+const NOT_IN_A_COMMENT = new RegExp('[' + String.fromCharCode(0) + '-' + String.fromCharCode(31) + String.fromCharCode(0x2028, 0x2029) + ']+', 'g');
+
+/**
+ * Copy for a spoken or babbled line, as the gallery's Speak rack writes it (src/core/copy.js,
+ * buildSpeechCopy): one function with the line baked in (speech as phonemes) carrying only its
+ * engine. `helperSrc` is manifest.helpers; `rt` the compiled phonemize and voice tables
+ * (lib/speech.js); `closure` the dependency closure over the manifest. cfg: mode, text, voice, the
+ * SPEAK_PARAMS values, seed.
+ */
+export function buildSpeechCopy(helperSrc, rt, closure, cfg) {
+  cfg = cfg || {};
+  const babble = cfg.mode === 'babble';
+  const voices = babble ? rt.babbleVoices() : rt.speechVoices();
+  const vname = Object.hasOwn(voices, cfg.voice) ? cfg.voice : Object.keys(voices)[0];
+  const text = String(cfg.text == null ? '' : cfg.text);
+  const engine = babble ? 'chatter' : 'utter';
+  const vals = paramsFor({ params: SPEAK_PARAMS[babble ? 'babble' : 'speak'] }, cfg);
+  const pairs = Object.keys(vals).map((k) => k + ': ' + fmtNum(vals[k]));
+  pairs.push('seed: ' + ((Number(cfg.seed == null ? 1 : cfg.seed) || 0) >>> 0));
+  const words = (text.match(/[A-Za-z0-9]+/g) || []).slice(0, 4).map((w) => w[0].toUpperCase() + w.slice(1).toLowerCase());
+  const fname = (babble ? 'babble' : 'say') + (words.join('') || 'Line');
+  const lit = (x) => JSON.stringify(x).replace(/</g, '\\u003c');
+  const line = babble ? { text } : { ph: rt.phonemize(text) };
+  const shown = text.replace(NOT_IN_A_COMMENT, ' ').replace(/[<>]/g, '').trim();
+  const quote = shown.length > 60 ? shown.slice(0, 57) + '...' : shown;
+  const lines = [];
+  lines.push('// Usage: const ac = new AudioContext(); ' + fname + '(ac); // "' + quote + '", ' + (babble ? 'babbled' : 'spoken') +
+    ' by the ' + voices[vname].name + ' voice, synthesized (Timbre). Optional: opts { ' + Object.keys(vals).join(', ') +
+    ', seed }, when (s), dest node. Returns the end time.');
+  lines.push('function ' + fname + '(ac, opts, when, dest) {');
+  for (const h of closure([engine, 'seed', 'master'], helperSrc)) lines.push(indent(dedent(helperSrc[h].src), '  '));
+  lines.push('  const LINE = ' + lit(line) + ';');
+  lines.push('  const VOICE = ' + lit(voices[vname]) + ';');
+  lines.push('  const p = Object.assign({ ' + pairs.join(', ') + ' }, opts);');
+  lines.push('  // one master chain per destination, kept on the context; a new one needs ' + PREROLL + ' s to warm up');
+  lines.push('  const chains = ac.timbreChains || (ac.timbreChains = new Map());');
+  lines.push('  const to = dest || ac.destination;');
+  lines.push('  if (!chains.has(to)) chains.set(to, { out: master(ac, to), ready: ac.currentTime + ' + PREROLL + ' });');
+  lines.push('  const chain = chains.get(to);');
+  lines.push('  const out = chain.out;');
+  lines.push('  const t = Math.max(when == null ? 0 : when, ac.currentTime + 0.02, chain.ready);');
+  lines.push('  seed(p.seed);');
+  lines.push('  return ' + engine + '(out, t, Object.assign({}, LINE, { voice: VOICE, ' + Object.keys(vals).map((k) => k + ': p.' + k).join(', ') + ' }));');
+  lines.push('}');
+  return { code: lines.join('\n') + '\n', fname, voice: vname, values: vals, line };
+}

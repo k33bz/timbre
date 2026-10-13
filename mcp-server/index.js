@@ -26,6 +26,7 @@ const TITLES = {
   get_theme: 'Theme details',
   build_kit: 'Build a sound kit',
   suggest_sounds: 'Suggest sounds',
+  speak: 'Speak a line',
 };
 // Every tool only reads the catalog and computes: nothing is written, nothing leaves the machine.
 const ANNOTATIONS = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };

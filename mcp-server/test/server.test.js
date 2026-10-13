@@ -23,7 +23,7 @@ const fixtureServer = (t) => {
 };
 const rpc = (s, method, params, id = 1) => s.handleMessage({ jsonrpc: '2.0', id, method, params });
 
-const TOOL_NAMES = ['info', 'suggest_sounds', 'search_sounds', 'get_sound', 'get_copy', 'list_themes', 'get_theme', 'build_kit'];
+const TOOL_NAMES = ['info', 'suggest_sounds', 'search_sounds', 'get_sound', 'get_copy', 'list_themes', 'get_theme', 'build_kit', 'speak'];
 
 test('the version the server reports is the package version, and the package asks for Node 22', () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(PKG, 'package.json'), 'utf8'));
@@ -79,7 +79,7 @@ test('ping answers with an empty result', async (t) => {
   assert.deepEqual((await rpc(s, 'ping')).result, {});
 });
 
-test('tools/list: the eight tools, each with a title, a schema and read-only annotations', async (t) => {
+test('tools/list: the nine tools, each with a title, a schema and read-only annotations', async (t) => {
   const s = fixtureServer(t);
   if (!s) return;
   const { tools } = (await rpc(s, 'tools/list')).result;
@@ -108,6 +108,7 @@ test('tool descriptions tell an agent when to use the tool, and when to use a ne
   assert.match(by.build_kit, /get_copy/);
   assert.match(by.suggest_sounds, /search_sounds/);
   assert.match(by.suggest_sounds, /build_kit/);
+  assert.match(by.speak, /get_copy/);
   assert.match(by.list_themes, /get_theme/);
   assert.match(by.get_theme, /build_kit/);
   assert.match(by.info, /Start here/);
