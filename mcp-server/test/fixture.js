@@ -50,6 +50,7 @@ export function fixtureManifest() {
   });
   return {
     name: 'Timbre',
+    version: '0.0.0-test',
     schema: 1,
     count: sounds.length,
     categories: ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music'],

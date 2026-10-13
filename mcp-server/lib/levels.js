@@ -20,8 +20,10 @@
 // source: 'measured' | 'estimated' (test/levels.test.js re-checks it against a stored copy of the
 // gate's report).
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
+import crypto from 'node:crypto';
 import { MockContext } from './mockaudio.js';
 import { renderGraph, measureSignal } from './render.js';
 import { dedent, playSource, paramsFor } from './copy.js';
@@ -152,6 +154,26 @@ export function estimateLevels(sound, helperSrc, params, seedValue = 1, { timeou
   }
 }
 
+// ------------------------------------------------------------------ the estimate cache
+
+/** Bump when the estimator changes what it computes, so cached numbers are not trusted. */
+export const ESTIMATOR_VERSION = 1;
+const hashOf = (text) => crypto.createHash('sha1').update(text).digest('hex').slice(0, 16);
+
+/** Where estimates are kept between runs: TIMBRE_MCP_CACHE, else the platform's cache directory. */
+export function defaultCacheDir() {
+  if (process.env.TIMBRE_MCP_CACHE) return path.resolve(process.env.TIMBRE_MCP_CACHE);
+  const base = process.platform === 'win32'
+    ? process.env.LOCALAPPDATA
+    : process.env.XDG_CACHE_HOME || (process.env.HOME ? path.join(process.env.HOME, '.cache') : null);
+  return path.join(base || os.tmpdir(), 'timbre-mcp');
+}
+
+/** The cache file for one catalog directory. */
+export function cacheFileFor(catalogDir, cacheDir = defaultCacheDir()) {
+  return path.join(cacheDir, `levels-${hashOf(path.resolve(catalogDir))}.json`);
+}
+
 // ------------------------------------------------------------------ the level book
 
 /**
@@ -159,13 +181,51 @@ export function estimateLevels(sound, helperSrc, params, seedValue = 1, { timeou
  * Estimates are made on first use and kept until the sound's source changes.
  */
 export class LevelBook {
-  constructor({ catalogDir, explicit = null, catalogMtimeMs = 0, logger = null } = {}) {
+  constructor({ catalogDir, explicit = null, catalogMtimeMs = 0, logger = null, cache = new Map(), cacheFile = null } = {}) {
     this.catalogDir = catalogDir;
     this.explicit = explicit;
     this.logger = logger;
-    this.cache = new Map();
+    this.cache = cache;          // estimates by key; shared across catalog reloads when passed in
+    this.cacheFile = cacheFile;  // where they are kept between runs (null: not kept)
+    this.dirty = false;
+    this.flushTimer = null;
+    this.keys = new WeakMap();
     this.report = null;
+    if (cacheFile) this.loadCache();
     this.reload(catalogMtimeMs);
+  }
+
+  loadCache() {
+    try {
+      const j = JSON.parse(fs.readFileSync(this.cacheFile, 'utf8'));
+      if (j && j.version === ESTIMATOR_VERSION && j.entries && typeof j.entries === 'object') {
+        for (const [k, v] of Object.entries(j.entries)) if (!this.cache.has(k)) this.cache.set(k, v);
+      }
+    } catch (e) { /* no cache yet, or an unreadable one: start empty */ }
+  }
+
+  /** Write the estimates to the cache file now (best effort). */
+  flush() {
+    if (this.flushTimer) { clearTimeout(this.flushTimer); this.flushTimer = null; }
+    if (!this.cacheFile || !this.dirty) return false;
+    try {
+      fs.mkdirSync(path.dirname(this.cacheFile), { recursive: true });
+      const tmp = `${this.cacheFile}.${process.pid}.tmp`;
+      fs.writeFileSync(tmp, JSON.stringify({ version: ESTIMATOR_VERSION, entries: Object.fromEntries(this.cache) }));
+      fs.renameSync(tmp, this.cacheFile);
+      this.dirty = false;
+      return true;
+    } catch (e) {
+      if (this.logger) this.logger.warn(`level cache not written: ${e.message}`);
+      return false;
+    }
+  }
+
+  scheduleFlush() {
+    this.dirty = true;
+    if (!this.cacheFile || this.flushTimer) return;
+    this.flushTimer = setTimeout(() => this.flush(), 1500);
+    this.flushTimer.unref();
   }
 
   /** The first report candidate that exists, as a comparable signature. */
@@ -195,23 +255,48 @@ export class LevelBook {
   /** True when the report is older than the catalog (the sounds may have changed since). */
   get reportStale() { return !!(this.report && this.catalogMtimeMs && this.report.mtimeMs < this.catalogMtimeMs); }
 
+  /** The measured level of a sound, when the report covers it. */
+  measured(sound) {
+    const rep = this.report && this.report.byId.get(sound.id);
+    if (!rep) return null;
+    return {
+      peak: rep.peak, rms: rep.rms, band: bandOf(rep.peak), source: 'measured',
+      ...(rep.pre != null ? { preLimiter: rep.pre } : {}),
+      ...(rep.range ? { peakRange: rep.range } : {}),
+      ...(this.reportStale ? { stale: true } : {}),
+    };
+  }
+
+  /** A key that changes when the sound's recipe, the helpers it uses or the estimator change. */
+  cacheKey(sound, helperSrc) {
+    let k = this.keys.get(sound);
+    if (!k) {
+      k = hashOf([ESTIMATOR_VERSION, sound.id, sound.play, ...sound.helpers.map((h) => (helperSrc[h] ? helperSrc[h].src : ''))].join('\n#\n'));
+      this.keys.set(sound, k);
+    }
+    return k;
+  }
+
+  /** Levels already known (measured, or estimated earlier), without computing anything. */
+  peek(sound, helperSrc) {
+    const m = this.measured(sound);
+    if (m) return m;
+    if (!sound.copyable) return null;
+    const key = this.cacheKey(sound, helperSrc);
+    return this.cache.has(key) ? this.cache.get(key) : undefined;
+  }
+
   /** Levels of one catalog sound: { peak, rms, band, source, ... } or null when unknown. */
   levelOf(sound, helperSrc) {
-    const rep = this.report && this.report.byId.get(sound.id);
-    if (rep) {
-      return {
-        peak: rep.peak, rms: rep.rms, band: bandOf(rep.peak), source: 'measured',
-        ...(rep.pre != null ? { preLimiter: rep.pre } : {}),
-        ...(rep.range ? { peakRange: rep.range } : {}),
-        ...(this.reportStale ? { stale: true } : {}),
-      };
-    }
+    const m = this.measured(sound);
+    if (m) return m;
     if (!sound.copyable) return null;
-    const key = sound.id + '|' + sound.play + '|' + sound.helpers.map((h) => (helperSrc[h] ? helperSrc[h].src.length : 0)).join(',');
+    const key = this.cacheKey(sound, helperSrc);
     if (this.cache.has(key)) return this.cache.get(key);
     const est = estimateLevels(sound, helperSrc);
     const lv = est ? { peak: est.peak, rms: est.rms, band: bandOf(est.peak), source: 'estimated', audibleEnd: est.end } : null;
     this.cache.set(key, lv);
+    this.scheduleFlush();
     return lv;
   }
 }

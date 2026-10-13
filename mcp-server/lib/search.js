@@ -41,7 +41,7 @@ export class SearchIndex {
         return set;
       };
       const tagStems = take(s.tags.map((t) => t.replace(/-/g, ' ')).join(' '));
-      return {
+      const doc = {
         s,
         disp,
         tags: tagStems,
@@ -49,8 +49,15 @@ export class SearchIndex {
         id: take(s.id.replace(/-/g, ' ')),
         cat: take((CATEGORY_WORDS[s.category] || [s.category]).join(' ') + ' ' + s.category),
         desc: take(s.desc),
-        level: levelOf(s),
       };
+      // levels can cost an estimate each: only work them out for a sound when something asks
+      let level;
+      let known = false;
+      Object.defineProperty(doc, 'level', {
+        enumerable: true,
+        get() { if (!known) { level = levelOf(s); known = true; } return level; },
+      });
+      return doc;
     });
     this.n = this.docs.length;
     this.df = new Map();

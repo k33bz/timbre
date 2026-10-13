@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { camel, isIdentifier, paramsFor } from './copy.js';
-import { LevelBook } from './levels.js';
+import { LevelBook, cacheFileFor, defaultCacheDir } from './levels.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const DEFAULT_CATALOG_DIR = path.resolve(HERE, '..', '..', 'catalog');
@@ -108,6 +108,8 @@ export class Catalog {
     this.dir = loc;
     this.logger = opts.logger || null;
     this.levelsPath = opts.levelsPath === false ? false : opts.levelsPath || null;
+    this.cache = opts.cache || false;      // true, or a directory: keep estimated levels between runs
+    this.levelCache = new Map();           // estimates survive a reload of the catalog files
     this.signature = null;
     this.loadedAt = null;
     this.reset();
@@ -124,8 +126,13 @@ export class Catalog {
     this.version = null;
     this.mode = 'empty';
     this.error = null;
-    this.levels = new LevelBook({ catalogDir: this.dir, explicit: this.levelsPath });
+    this.levels = this.makeLevelBook(0);
     this.generation = (this.generation || 0) + 1;
+  }
+
+  makeLevelBook(mtime) {
+    const cacheFile = this.cache ? cacheFileFor(this.dir, typeof this.cache === 'string' ? this.cache : defaultCacheDir()) : null;
+    return new LevelBook({ catalogDir: this.dir, explicit: this.levelsPath, catalogMtimeMs: mtime, logger: this.logger, cache: this.levelCache, cacheFile });
   }
 
   get manifestFile() { return path.join(this.dir, 'manifest.json'); }
@@ -218,7 +225,7 @@ export class Catalog {
     if (this.mode === 'manifest' && man.count != null && man.count !== man.sounds.length) {
       this.warnings.push(`manifest.count says ${man.count} but it lists ${man.sounds.length} sounds: rebuild with \`node build.mjs\``);
     }
-    this.levels = new LevelBook({ catalogDir: this.dir, explicit: this.levelsPath, catalogMtimeMs: this.manifestMtime(), logger: this.logger });
+    this.levels = this.makeLevelBook(this.manifestMtime());
   }
 
   /** The Timbre version: manifest.version, else the repository's package.json beside the catalog. */
@@ -235,6 +242,9 @@ export class Catalog {
 
   /** Levels for a sound (measured when the gate's report covers it, else estimated). */
   levelOf(sound) { return this.levels.levelOf(sound, this.helpers); }
+
+  /** Levels already known for a sound, without computing: a level, null (none possible) or undefined (not yet). */
+  peekLevel(sound) { return this.levels.peek(sound, this.helpers); }
 
   theme(id) { return this.themeById.get(id) || null; }
 
