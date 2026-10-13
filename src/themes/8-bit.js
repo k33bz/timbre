@@ -1,0 +1,56 @@
+// 8-bit: chiptune. Square and triangle voices, bitcrushed blips, and the chip switch turned on
+// wherever a sound offers one.
+// Voicing: key of C major (C E G triads). The beeps sit on C5, G5 and C6 and the jingles are in C.
+// The frequent moments (click, hover, type, scroll) are short square beeps and triangle ticks at or
+// under -23 dBFS. The catalog has no chiptune delete or undo, so those moments are left out, and the
+// game-over is the nearest thing (a dark saw-brass jingle), not a true chip sound.
+export default {
+  id: '8-bit',
+  name: '8-bit',
+  desc: 'Chiptune: square and triangle beeps, bitcrushed blips and arpeggio jingles in C major.',
+  moments: {
+    // a 60 ms square beep at C6
+    click: { sound: 'game-countdown-beep', params: { chip: 1, go: 0, pitch: 1046.5, length: 0.06 } },
+    hover: { sound: 'ui-slider-detent', params: { pitch: 1318.51, pos: 0, edge: 0 } },
+    // a high beep up, a low beep down
+    'toggle-on': { sound: 'game-countdown-beep', params: { chip: 1, go: 0, pitch: 1046.5, length: 0.07 } },
+    'toggle-off': { sound: 'game-countdown-beep', params: { chip: 1, go: 0, pitch: 523.25, length: 0.09 } },
+    type: { sound: 'ui-slider-detent', params: { pitch: 1000, pos: 0, edge: 0.3 } },
+    // a staircase of triangle steps (the console's triangle channel): up to open, down to close
+    open: { sound: 'ui-expand', params: { open: 1, steps: 4, gap: 0.03, pitch: 392 } },
+    close: { sound: 'ui-expand', params: { open: 0, steps: 4, gap: 0.03, pitch: 392 } },
+    transition: { sound: 'scifi-data-stream', params: { ticks: 16, length: 0.3, pitch: 1046.5, spread: 0.4, grit: 0.8 } },
+    scroll: { sound: 'ui-slider-detent', params: { pitch: 784, pos: 0, edge: 0.3 } },
+    copy: { sound: 'game-pickup-item', params: { chip: 1, pitch: 987.77, interval: 7, gap: 0.045 } },
+    send: { sound: 'game-jump', params: { chip: 1, pitch: 523.25, rise: 2, length: 0.1 } },
+    refresh: { sound: 'scifi-data-stream', params: { ticks: 22, length: 0.5, pitch: 1046.5, spread: 0.6, grit: 0.8 } },
+    success: { sound: 'music-menu-confirm', params: { key: 0, notes: 3, speed: 1.5, echo: 0.2 } },
+    // the square buzzer: low, rough and short
+    error: { sound: 'notify-error-buzz', params: { pitch: 120, pulses: 2, rough: 1, tone: 3000 } },
+    // triangle channel, C5 down a fourth to G4
+    warning: { sound: 'notify-warning', params: { pitch: 523.25, drop: 5, tone: 4000 } },
+    info: { sound: 'game-countdown-beep', params: { chip: 1, go: 0, pitch: 783.99, length: 0.12 } },
+    notify: { sound: 'game-combo-ping', params: { chip: 1, pitch: 659.25, streak: 1, ring: 0.35 } },
+    message: { sound: 'game-pickup-item', params: { chip: 1, pitch: 659.25, interval: 5, gap: 0.06 } },
+    reminder: { sound: 'music-menu-confirm', params: { key: 0, notes: 2, speed: 1.1, echo: 0.6 } },
+    timer: { sound: 'game-countdown-beep', params: { chip: 1, go: 1, pitch: 880, length: 0.14 } },
+    countdown: { sound: 'game-countdown-beep', params: { chip: 1, go: 0, pitch: 880, length: 0.14 } },
+    achievement: { sound: 'music-menu-confirm', params: { key: 0, notes: 4, speed: 1.5, echo: 0.7 } },
+    hit: { sound: 'game-hit-light', params: { pitch: 330, snap: 1, body: 0.3 } },
+    damage: { sound: 'game-hurt', params: { chip: 1, pitch: 300, drop: 0.5, length: 0.2 } },
+    pickup: { sound: 'game-pickup-item', params: { chip: 1, pitch: 523.25, interval: 7, gap: 0.05 } },
+    // one short high ping (E6), louder than the two-note pickup blip
+    coin: { sound: 'game-combo-ping', params: { chip: 1, pitch: 1318.5, streak: 1, ring: 0.18 } },
+    'level-up': { sound: 'game-power-up', params: { chip: 1, notes: 8, pitch: 261.63, gap: 0.05 } },
+    'power-up': { sound: 'game-power-up', params: { chip: 1, notes: 5, pitch: 392, gap: 0.04 } },
+    heal: { sound: 'game-heal', params: { pitch: 392, length: 0.4, rise: 4, glow: 0 } },
+    victory: { sound: 'music-victory-jingle', params: { key: 0, crunch: 0.6, bass: 0.6 } },
+    // the nearest thing the catalog has to a chiptune game over: a saw brass kept dark
+    'game-over': { sound: 'music-defeat-jingle', params: { key: 0, tempo: 1.2, droop: 0.5, tone: 0.2 } },
+    jump: { sound: 'game-jump', params: { chip: 1, pitch: 262, rise: 2.6, length: 0.16 } },
+    shoot: { sound: 'scifi-laser-zap', params: { pitch: 2093, drop: 0.85, shots: 1, edge: 0.8 } },
+    explosion: { sound: 'game-explosion-soft', params: { size: 0.5, pitch: 80, soften: 0.7, crackle: 1 } },
+    readout: { sound: 'scifi-terminal-blip', params: { count: 4, pitch: 1046.5, speed: 0.06, grit: 0.8 } },
+    scare: { sound: 'music-alert-sting', params: { key: 0, stabs: 2, edge: 0.8 } },
+  },
+};
