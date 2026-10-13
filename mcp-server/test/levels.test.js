@@ -87,7 +87,8 @@ test('a report beside the catalog is found, and a broken one is skipped', () => 
 test('LevelBook: measured values win and say so; the rest are estimated', (t) => {
   if (skip(t)) return;
   const c = new Catalog(REAL_CATALOG, { levelsPath: false }).load();
-  const sound = c.sounds[0];
+  // the report's turn comes only for sounds the catalog carries no measured levels for
+  const sound = { ...c.sounds[0], levels: null };
   const est = c.levelOf(sound);
   assert.equal(est.source, 'estimated');
   assert.ok(['quiet', 'medium', 'loud'].includes(est.band));
@@ -98,13 +99,16 @@ test('LevelBook: measured values win and say so; the rest are estimated', (t) =>
   assert.equal(m.source, 'measured');
   assert.equal(m.peak, -13.2);
   assert.equal(m.band, 'loud');
-  const other = c.sounds[1];
+  const other = { ...c.sounds[1], levels: null };
   assert.equal(book.levelOf(other, c.helpers).source, 'estimated', 'sounds the report does not cover are estimated');
+  assert.equal(book.levelOf(c.sounds[1], c.helpers).from, 'catalog', 'a sound the catalog measured keeps the catalog numbers');
 });
 
 test('LevelBook: a report older than the catalog is flagged stale, and a rewritten report is re-read', (t) => {
   if (skip(t)) return;
-  const dir = writeCatalog(tmpDir(), realManifest());
+  const man = realManifest();
+  for (const x of man.sounds) delete x.levels;   // a catalog without its own measurements
+  const dir = writeCatalog(tmpDir(), man);
   const rep = path.join(dir, 'levels.json');
   fs.writeFileSync(rep, JSON.stringify({ 'ui-click-soft': { peak: -20, rms: -35 } }));
   const old = new Date(Date.now() - 3600 * 1000);

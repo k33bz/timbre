@@ -1,0 +1,1336 @@
+{
+ "schema": 1,
+ "about": "Written by gates/check_levels.mjs, read by build.mjs (manifest levels) and the MCP server. dBFS after the master chain on a warm chain; see the manifest levels.about for each field. A sound whose fingerprint no longer matches the catalog has changed since it was measured.",
+ "sounds": {
+  "ambience-cave-drips": {
+   "fingerprint": "a8ea7c03856b",
+   "peak": -24.7,
+   "rms": -43.5,
+   "worstPeak": -24,
+   "worstRms": -43.2,
+   "lowestPeak": -26.1,
+   "pre": -29.4,
+   "end": 5.329
+  },
+  "ambience-distant-thunder": {
+   "fingerprint": "6a9038f4d749",
+   "peak": -25.6,
+   "rms": -41.6,
+   "worstPeak": -25.2,
+   "worstRms": -41.2,
+   "lowestPeak": -26.5,
+   "pre": -30.6,
+   "end": 5.81
+  },
+  "ambience-fire-crackle": {
+   "fingerprint": "a828a79cd08f",
+   "peak": -21.4,
+   "rms": -46.8,
+   "worstPeak": -21.4,
+   "worstRms": -45.7,
+   "lowestPeak": -25.8,
+   "pre": -26.8,
+   "end": 5.882
+  },
+  "ambience-forest-birds": {
+   "fingerprint": "543c90cd7f42",
+   "peak": -22,
+   "rms": -40.7,
+   "worstPeak": -22,
+   "worstRms": -39.6,
+   "lowestPeak": -26.2,
+   "pre": -27.3,
+   "end": 5.486
+  },
+  "ambience-ocean-surf": {
+   "fingerprint": "36d19c5f4f99",
+   "peak": -24.7,
+   "rms": -42.5,
+   "worstPeak": -23.5,
+   "worstRms": -39.4,
+   "lowestPeak": -29.2,
+   "pre": -28.9,
+   "end": 6.595
+  },
+  "ambience-rain": {
+   "fingerprint": "b02cb21410ac",
+   "peak": -26.7,
+   "rms": -42.6,
+   "worstPeak": -24.8,
+   "worstRms": -39.7,
+   "lowestPeak": -31,
+   "pre": -30.2,
+   "end": 5.908
+  },
+  "ambience-room-hum": {
+   "fingerprint": "6c9d7baa24c7",
+   "peak": -25.7,
+   "rms": -37.5,
+   "worstPeak": -23,
+   "worstRms": -36,
+   "lowestPeak": -27.7,
+   "pre": -28.4,
+   "end": 5.678
+  },
+  "ambience-space-drone": {
+   "fingerprint": "75e7cec68860",
+   "peak": -26.7,
+   "rms": -38.3,
+   "worstPeak": -23.2,
+   "worstRms": -36,
+   "lowestPeak": -27.6,
+   "pre": -28.6,
+   "end": 6.497
+  },
+  "ambience-wind-gusts": {
+   "fingerprint": "e7a5373484f8",
+   "peak": -29.3,
+   "rms": -44.8,
+   "worstPeak": -24.6,
+   "worstRms": -42,
+   "lowestPeak": -33,
+   "pre": -30,
+   "end": 5.549
+  },
+  "cards-chip-click": {
+   "fingerprint": "d895176ab5a2",
+   "peak": -23.5,
+   "rms": -40.1,
+   "worstPeak": -22.1,
+   "worstRms": -38,
+   "lowestPeak": -26.8,
+   "pre": -27.5,
+   "end": 0.035
+  },
+  "cards-chip-stack": {
+   "fingerprint": "0f2a527ab883",
+   "peak": -24.2,
+   "rms": -46.7,
+   "worstPeak": -24.2,
+   "worstRms": -45.1,
+   "lowestPeak": -27.9,
+   "pre": -29.6,
+   "end": 0.333
+  },
+  "cards-chips-push": {
+   "fingerprint": "b99a0f3f0989",
+   "peak": -19.7,
+   "rms": -39.8,
+   "worstPeak": -18.1,
+   "worstRms": -39,
+   "lowestPeak": -21.3,
+   "pre": -23.3,
+   "end": 0.983
+  },
+  "cards-deal": {
+   "fingerprint": "a9c11853ed9e",
+   "peak": -25.1,
+   "rms": -40.5,
+   "worstPeak": -22.5,
+   "worstRms": -38.8,
+   "lowestPeak": -26.2,
+   "pre": -27.8,
+   "end": 0.21
+  },
+  "cards-deal-hand": {
+   "fingerprint": "c6ca4d16f68b",
+   "peak": -25.5,
+   "rms": -42.4,
+   "worstPeak": -25.4,
+   "worstRms": -40.9,
+   "lowestPeak": -27.6,
+   "pre": -30.8,
+   "end": 0.72
+  },
+  "cards-dice-roll": {
+   "fingerprint": "34a7f92ca364",
+   "peak": -26.8,
+   "rms": -51.3,
+   "worstPeak": -22.7,
+   "worstRms": -49.8,
+   "lowestPeak": -27,
+   "pre": -28.1,
+   "end": 0.713
+  },
+  "cards-dice-shake": {
+   "fingerprint": "55a99e611d26",
+   "peak": -25.1,
+   "rms": -45.6,
+   "worstPeak": -23,
+   "worstRms": -42.9,
+   "lowestPeak": -27.5,
+   "pre": -28.4,
+   "end": 0.601
+  },
+  "cards-discard": {
+   "fingerprint": "a619c44d1a7d",
+   "peak": -24.4,
+   "rms": -40.7,
+   "worstPeak": -24.4,
+   "worstRms": -39,
+   "lowestPeak": -28.9,
+   "pre": -29.8,
+   "end": 0.117
+  },
+  "cards-draw": {
+   "fingerprint": "d9df0e923f61",
+   "peak": -25.2,
+   "rms": -41.2,
+   "worstPeak": -24.6,
+   "worstRms": -40.6,
+   "lowestPeak": -26.7,
+   "pre": -30,
+   "end": 0.149
+  },
+  "cards-fan": {
+   "fingerprint": "d17331d58ff7",
+   "peak": -25.1,
+   "rms": -44.3,
+   "worstPeak": -23.4,
+   "worstRms": -43.8,
+   "lowestPeak": -28.3,
+   "pre": -28.8,
+   "end": 0.298
+  },
+  "cards-flick": {
+   "fingerprint": "7c9694d7fb1c",
+   "peak": -25.8,
+   "rms": -41,
+   "worstPeak": -25,
+   "worstRms": -40.8,
+   "lowestPeak": -28,
+   "pre": -30.3,
+   "end": 0.032
+  },
+  "cards-flip": {
+   "fingerprint": "0ba5286ef025",
+   "peak": -25.9,
+   "rms": -43.5,
+   "worstPeak": -25.3,
+   "worstRms": -43,
+   "lowestPeak": -29.8,
+   "pre": -30.7,
+   "end": 0.187
+  },
+  "cards-piece-capture": {
+   "fingerprint": "ddb56abd1c7a",
+   "peak": -19.7,
+   "rms": -39.6,
+   "worstPeak": -19.3,
+   "worstRms": -38.5,
+   "lowestPeak": -23.3,
+   "pre": -24.6,
+   "end": 0.271
+  },
+  "cards-piece-move": {
+   "fingerprint": "5f5558c659c0",
+   "peak": -24,
+   "rms": -41.1,
+   "worstPeak": -23.1,
+   "worstRms": -39.9,
+   "lowestPeak": -25.8,
+   "pre": -28.5,
+   "end": 0.104
+  },
+  "cards-place": {
+   "fingerprint": "b3f82a51efe2",
+   "peak": -24.2,
+   "rms": -36.9,
+   "worstPeak": -22.4,
+   "worstRms": -34.3,
+   "lowestPeak": -26.7,
+   "pre": -27.7,
+   "end": 0.045
+  },
+  "cards-riffle": {
+   "fingerprint": "73138186b86b",
+   "peak": -26.6,
+   "rms": -44.5,
+   "worstPeak": -23.3,
+   "worstRms": -41.6,
+   "lowestPeak": -27.8,
+   "pre": -28.7,
+   "end": 0.141
+  },
+  "cards-shuffle-overhand": {
+   "fingerprint": "1a98c70dbbe2",
+   "peak": -25.4,
+   "rms": -47.2,
+   "worstPeak": -24.3,
+   "worstRms": -45.4,
+   "lowestPeak": -28.8,
+   "pre": -29.7,
+   "end": 0.685
+  },
+  "cards-slide": {
+   "fingerprint": "3cdc54cc42ac",
+   "peak": -24.4,
+   "rms": -38.8,
+   "worstPeak": -24.4,
+   "worstRms": -38.6,
+   "lowestPeak": -28.1,
+   "pre": -29.8,
+   "end": 0.23
+  },
+  "cards-timer-tick": {
+   "fingerprint": "b233ceceabb6",
+   "peak": -27.1,
+   "rms": -51.1,
+   "worstPeak": -24,
+   "worstRms": -50.5,
+   "lowestPeak": -28.7,
+   "pre": -29.4,
+   "end": 0.43
+  },
+  "cards-your-turn": {
+   "fingerprint": "b5b2e6223fc1",
+   "peak": -20.7,
+   "rms": -34.2,
+   "worstPeak": -20.4,
+   "worstRms": -33.6,
+   "lowestPeak": -20.9,
+   "pre": -25.7,
+   "end": 0.337
+  },
+  "game-arrow-shot": {
+   "fingerprint": "8b8d05c1286b",
+   "peak": -20,
+   "rms": -36.9,
+   "worstPeak": -19.6,
+   "worstRms": -36.7,
+   "lowestPeak": -20.6,
+   "pre": -25,
+   "end": 0.168
+  },
+  "game-bounce": {
+   "fingerprint": "e8043af3a482",
+   "peak": -20.7,
+   "rms": -34.1,
+   "worstPeak": -20.7,
+   "worstRms": -34.1,
+   "lowestPeak": -20.8,
+   "pre": -26,
+   "end": 0.329
+  },
+  "game-checkpoint": {
+   "fingerprint": "de109d22d0e3",
+   "peak": -19.1,
+   "rms": -33.5,
+   "worstPeak": -19.1,
+   "worstRms": -33.5,
+   "lowestPeak": -20.2,
+   "pre": -24.4,
+   "end": 0.653
+  },
+  "game-coin-flip": {
+   "fingerprint": "58d6898ca547",
+   "peak": -15.2,
+   "rms": -34,
+   "worstPeak": -15.2,
+   "worstRms": -33.1,
+   "lowestPeak": -15.3,
+   "pre": -20.3,
+   "end": 0.817
+  },
+  "game-combo-ping": {
+   "fingerprint": "b4eaef0596dd",
+   "peak": -21.4,
+   "rms": -34.6,
+   "worstPeak": -21.3,
+   "worstRms": -34.6,
+   "lowestPeak": -21.5,
+   "pre": -26.7,
+   "end": 0.179
+  },
+  "game-countdown-beep": {
+   "fingerprint": "0962dfb4fdd2",
+   "peak": -23.6,
+   "rms": -26.6,
+   "worstPeak": -18.7,
+   "worstRms": -25.7,
+   "lowestPeak": -23.6,
+   "pre": -24,
+   "end": 0.132
+  },
+  "game-door-open": {
+   "fingerprint": "5106b2eb41c8",
+   "peak": -21.6,
+   "rms": -37.2,
+   "worstPeak": -20.4,
+   "worstRms": -35,
+   "lowestPeak": -22.4,
+   "pre": -25.7,
+   "end": 0.705
+  },
+  "game-double-jump": {
+   "fingerprint": "50f040eb35d4",
+   "peak": -23.4,
+   "rms": -30.7,
+   "worstPeak": -23.4,
+   "worstRms": -30.2,
+   "lowestPeak": -23.4,
+   "pre": -28.8,
+   "end": 0.226
+  },
+  "game-explosion-soft": {
+   "fingerprint": "f1e4fb9008b8",
+   "peak": -13.7,
+   "rms": -30.9,
+   "worstPeak": -13.4,
+   "worstRms": -30.8,
+   "lowestPeak": -15.7,
+   "pre": -18.2,
+   "end": 0.376
+  },
+  "game-footstep-hard": {
+   "fingerprint": "0c45bf4ba526",
+   "peak": -26.6,
+   "rms": -42.2,
+   "worstPeak": -23.8,
+   "worstRms": -40.2,
+   "lowestPeak": -29.6,
+   "pre": -29.1,
+   "end": 0.066
+  },
+  "game-footstep-soft": {
+   "fingerprint": "86e8e25013b5",
+   "peak": -28.7,
+   "rms": -43.6,
+   "worstPeak": -26.1,
+   "worstRms": -40.1,
+   "lowestPeak": -30.8,
+   "pre": -31.4,
+   "end": 0.072
+  },
+  "game-gem-collect": {
+   "fingerprint": "56b5bce94c67",
+   "peak": -19.4,
+   "rms": -35.2,
+   "worstPeak": -19.4,
+   "worstRms": -34.9,
+   "lowestPeak": -20.2,
+   "pre": -24.7,
+   "end": 0.409
+  },
+  "game-hammer-hit": {
+   "fingerprint": "138690d92baa",
+   "peak": -13.6,
+   "rms": -37.2,
+   "worstPeak": -13.6,
+   "worstRms": -34.7,
+   "lowestPeak": -18,
+   "pre": -18.5,
+   "end": 0.438
+  },
+  "game-heal": {
+   "fingerprint": "abb116df5108",
+   "peak": -21.6,
+   "rms": -35.6,
+   "worstPeak": -20.7,
+   "worstRms": -35.4,
+   "lowestPeak": -21.9,
+   "pre": -26,
+   "end": 0.545
+  },
+  "game-hit-heavy": {
+   "fingerprint": "48b584b6856d",
+   "peak": -14.1,
+   "rms": -23.1,
+   "worstPeak": -13.2,
+   "worstRms": -23,
+   "lowestPeak": -15.7,
+   "pre": -18.2,
+   "end": 0.448
+  },
+  "game-hit-light": {
+   "fingerprint": "719b846648e8",
+   "peak": -20.8,
+   "rms": -36.4,
+   "worstPeak": -20.8,
+   "worstRms": -35.1,
+   "lowestPeak": -23.1,
+   "pre": -26.1,
+   "end": 0.052
+  },
+  "game-hurt": {
+   "fingerprint": "0aa629401c91",
+   "peak": -19,
+   "rms": -24.2,
+   "worstPeak": -18.9,
+   "worstRms": -24.1,
+   "lowestPeak": -19.6,
+   "pre": -24.2,
+   "end": 0.156
+  },
+  "game-jump": {
+   "fingerprint": "a8034ef9a463",
+   "peak": -23.5,
+   "rms": -28,
+   "worstPeak": -21.3,
+   "worstRms": -28,
+   "lowestPeak": -23.5,
+   "pre": -26.7,
+   "end": 0.125
+  },
+  "game-key-unlock": {
+   "fingerprint": "9a8d1d9f5d8c",
+   "peak": -20.8,
+   "rms": -42.3,
+   "worstPeak": -19.4,
+   "worstRms": -40.3,
+   "lowestPeak": -23.7,
+   "pre": -24.7,
+   "end": 0.507
+  },
+  "game-land": {
+   "fingerprint": "40eab2c11387",
+   "peak": -22.9,
+   "rms": -38.8,
+   "worstPeak": -21.6,
+   "worstRms": -36.3,
+   "lowestPeak": -27.3,
+   "pre": -27,
+   "end": 0.105
+  },
+  "game-pickup-item": {
+   "fingerprint": "3a8845048ee2",
+   "peak": -23.4,
+   "rms": -36.3,
+   "worstPeak": -23,
+   "worstRms": -36.3,
+   "lowestPeak": -26.7,
+   "pre": -28.4,
+   "end": 0.16
+  },
+  "game-power-up": {
+   "fingerprint": "8ecba97b5724",
+   "peak": -21.7,
+   "rms": -25,
+   "worstPeak": -19.1,
+   "worstRms": -24.9,
+   "lowestPeak": -21.8,
+   "pre": -24.4,
+   "end": 0.404
+  },
+  "game-punch": {
+   "fingerprint": "f8e2d5c7e43e",
+   "peak": -17.8,
+   "rms": -34.5,
+   "worstPeak": -16.4,
+   "worstRms": -34.2,
+   "lowestPeak": -19.7,
+   "pre": -21.6,
+   "end": 0.094
+  },
+  "game-shield-up": {
+   "fingerprint": "fbe6b2760ab5",
+   "peak": -22.9,
+   "rms": -36.7,
+   "worstPeak": -20.3,
+   "worstRms": -34.7,
+   "lowestPeak": -23,
+   "pre": -25.4,
+   "end": 0.59
+  },
+  "game-sword-clash": {
+   "fingerprint": "1c43ef74ce2d",
+   "peak": -15.8,
+   "rms": -38.9,
+   "worstPeak": -15.8,
+   "worstRms": -38.6,
+   "lowestPeak": -18.7,
+   "pre": -20.9,
+   "end": 0.372
+  },
+  "game-sword-swing": {
+   "fingerprint": "9903b4ea80ff",
+   "peak": -21.7,
+   "rms": -38.9,
+   "worstPeak": -20.9,
+   "worstRms": -37.8,
+   "lowestPeak": -26.3,
+   "pre": -26.2,
+   "end": 0.141
+  },
+  "game-whoosh": {
+   "fingerprint": "ee59a91a1bc2",
+   "peak": -24.1,
+   "rms": -40.2,
+   "worstPeak": -21.4,
+   "worstRms": -37.8,
+   "lowestPeak": -25.4,
+   "pre": -26.7,
+   "end": 0.208
+  },
+  "magic-charge-up": {
+   "fingerprint": "295d388faf9a",
+   "peak": -16.6,
+   "rms": -33.7,
+   "worstPeak": -16.6,
+   "worstRms": -33,
+   "lowestPeak": -18,
+   "pre": -21.8,
+   "end": 1.485
+  },
+  "magic-curse-hex": {
+   "fingerprint": "1f877963a624",
+   "peak": -15.9,
+   "rms": -33.8,
+   "worstPeak": -15.1,
+   "worstRms": -31.3,
+   "lowestPeak": -20,
+   "pre": -20.1,
+   "end": 1.328
+  },
+  "magic-enchant": {
+   "fingerprint": "389954c8a380",
+   "peak": -19.2,
+   "rms": -37.2,
+   "worstPeak": -19.2,
+   "worstRms": -35.7,
+   "lowestPeak": -23.2,
+   "pre": -24.7,
+   "end": 1.131
+  },
+  "magic-fire-spell": {
+   "fingerprint": "d32e9f7914c3",
+   "peak": -15.1,
+   "rms": -32.8,
+   "worstPeak": -15.1,
+   "worstRms": -31,
+   "lowestPeak": -17.6,
+   "pre": -20.3,
+   "end": 0.735
+  },
+  "magic-healing-shimmer": {
+   "fingerprint": "6853996b39a5",
+   "peak": -17,
+   "rms": -34.9,
+   "worstPeak": -17,
+   "worstRms": -34.5,
+   "lowestPeak": -20,
+   "pre": -22.2,
+   "end": 1.517
+  },
+  "magic-ice-spell": {
+   "fingerprint": "749134d0771e",
+   "peak": -17.9,
+   "rms": -34.5,
+   "worstPeak": -16.9,
+   "worstRms": -32.9,
+   "lowestPeak": -18.4,
+   "pre": -22.1,
+   "end": 0.977
+  },
+  "magic-lightning": {
+   "fingerprint": "fc8607a4697a",
+   "peak": -17.5,
+   "rms": -37.9,
+   "worstPeak": -15.9,
+   "worstRms": -37.5,
+   "lowestPeak": -18.7,
+   "pre": -21,
+   "end": 0.468
+  },
+  "magic-portal-open": {
+   "fingerprint": "f5083dbd9d4d",
+   "peak": -15.7,
+   "rms": -34.8,
+   "worstPeak": -15.1,
+   "worstRms": -34,
+   "lowestPeak": -17.4,
+   "pre": -20.1,
+   "end": 1.81
+  },
+  "magic-potion-bubble": {
+   "fingerprint": "4770c36570e7",
+   "peak": -19.5,
+   "rms": -37.2,
+   "worstPeak": -19.5,
+   "worstRms": -33.4,
+   "lowestPeak": -21.6,
+   "pre": -24.8,
+   "end": 0.959
+  },
+  "magic-sparkle": {
+   "fingerprint": "7a7608e6728f",
+   "peak": -18.6,
+   "rms": -37.5,
+   "worstPeak": -18.6,
+   "worstRms": -36.1,
+   "lowestPeak": -20.7,
+   "pre": -23.8,
+   "end": 0.615
+  },
+  "magic-spell-cast": {
+   "fingerprint": "4cc8b371117e",
+   "peak": -16.4,
+   "rms": -35.7,
+   "worstPeak": -16.4,
+   "worstRms": -30.7,
+   "lowestPeak": -19.9,
+   "pre": -21.6,
+   "end": 0.991
+  },
+  "magic-teleport": {
+   "fingerprint": "a94020e58ada",
+   "peak": -15.2,
+   "rms": -36.9,
+   "worstPeak": -15,
+   "worstRms": -35.3,
+   "lowestPeak": -18.3,
+   "pre": -20,
+   "end": 1.046
+  },
+  "music-alert-sting": {
+   "fingerprint": "3147562558b1",
+   "peak": -18.6,
+   "rms": -31,
+   "worstPeak": -17.6,
+   "worstRms": -31,
+   "lowestPeak": -18.6,
+   "pre": -22.8,
+   "end": 0.749
+  },
+  "music-defeat-jingle": {
+   "fingerprint": "087732641548",
+   "peak": -21.5,
+   "rms": -33.9,
+   "worstPeak": -21.3,
+   "worstRms": -33.7,
+   "lowestPeak": -22.7,
+   "pre": -26.6,
+   "end": 2.174
+  },
+  "music-fanfare-short": {
+   "fingerprint": "bad46d8f55f2",
+   "peak": -18.1,
+   "rms": -31.9,
+   "worstPeak": -14.8,
+   "worstRms": -29.7,
+   "lowestPeak": -19.4,
+   "pre": -19.8,
+   "end": 1.641
+  },
+  "music-intro-logo": {
+   "fingerprint": "07aa27f6d873",
+   "peak": -16.4,
+   "rms": -33.4,
+   "worstPeak": -15.9,
+   "worstRms": -31.8,
+   "lowestPeak": -18.7,
+   "pre": -21,
+   "end": 2.952
+  },
+  "music-level-complete": {
+   "fingerprint": "57a73343afbf",
+   "peak": -17.9,
+   "rms": -37,
+   "worstPeak": -16.5,
+   "worstRms": -34.4,
+   "lowestPeak": -18.7,
+   "pre": -21.6,
+   "end": 2.063
+  },
+  "music-menu-confirm": {
+   "fingerprint": "8272c2995704",
+   "peak": -22.8,
+   "rms": -34.4,
+   "worstPeak": -21.5,
+   "worstRms": -34,
+   "lowestPeak": -23.2,
+   "pre": -26.8,
+   "end": 0.818
+  },
+  "music-mystery-sting": {
+   "fingerprint": "677b8839fcfb",
+   "peak": -17.8,
+   "rms": -32.7,
+   "worstPeak": -17.8,
+   "worstRms": -32,
+   "lowestPeak": -23.3,
+   "pre": -23,
+   "end": 2.523
+  },
+  "music-ta-da": {
+   "fingerprint": "0aa1c874c1b5",
+   "peak": -16.1,
+   "rms": -34.4,
+   "worstPeak": -16.1,
+   "worstRms": -31.8,
+   "lowestPeak": -18.8,
+   "pre": -21.2,
+   "end": 1.245
+  },
+  "music-victory-jingle": {
+   "fingerprint": "259507f70f41",
+   "peak": -17.5,
+   "rms": -28.4,
+   "worstPeak": -17.4,
+   "worstRms": -28.4,
+   "lowestPeak": -17.5,
+   "pre": -22.7,
+   "end": 0.969
+  },
+  "notify-achievement": {
+   "fingerprint": "3caa91ecd874",
+   "peak": -17.2,
+   "rms": -35.1,
+   "worstPeak": -15.7,
+   "worstRms": -33.8,
+   "lowestPeak": -17.5,
+   "pre": -20.8,
+   "end": 1.084
+  },
+  "notify-alarm": {
+   "fingerprint": "a54baa0b8407",
+   "peak": -18.5,
+   "rms": -37.2,
+   "worstPeak": -18.5,
+   "worstRms": -37.2,
+   "lowestPeak": -19.2,
+   "pre": -23.7,
+   "end": 1.485
+  },
+  "notify-calendar": {
+   "fingerprint": "3babb3e652e3",
+   "peak": -20.8,
+   "rms": -37.5,
+   "worstPeak": -20.8,
+   "worstRms": -37.1,
+   "lowestPeak": -21.6,
+   "pre": -26.1,
+   "end": 0.492
+  },
+  "notify-double-tap": {
+   "fingerprint": "e084ccd43dbe",
+   "peak": -21.1,
+   "rms": -36.5,
+   "worstPeak": -21.1,
+   "worstRms": -35.7,
+   "lowestPeak": -22,
+   "pre": -26.4,
+   "end": 0.198
+  },
+  "notify-download-done": {
+   "fingerprint": "1d417d7cf646",
+   "peak": -20,
+   "rms": -32.2,
+   "worstPeak": -20,
+   "worstRms": -32,
+   "lowestPeak": -21.4,
+   "pre": -25.3,
+   "end": 0.354
+  },
+  "notify-error-buzz": {
+   "fingerprint": "4a9b32dcc861",
+   "peak": -20.9,
+   "rms": -30.3,
+   "worstPeak": -20.9,
+   "worstRms": -30.3,
+   "lowestPeak": -21.2,
+   "pre": -26.3,
+   "end": 0.266
+  },
+  "notify-incoming-call": {
+   "fingerprint": "cc8596e3aa34",
+   "peak": -21.5,
+   "rms": -35.1,
+   "worstPeak": -21.1,
+   "worstRms": -33.9,
+   "lowestPeak": -21.6,
+   "pre": -26.5,
+   "end": 1.111
+  },
+  "notify-info": {
+   "fingerprint": "5699d58cc5b4",
+   "peak": -21.7,
+   "rms": -35.2,
+   "worstPeak": -20.8,
+   "worstRms": -34.7,
+   "lowestPeak": -22,
+   "pre": -26.2,
+   "end": 0.271
+  },
+  "notify-low-battery": {
+   "fingerprint": "6d694a9e4f28",
+   "peak": -19.7,
+   "rms": -35.5,
+   "worstPeak": -19.1,
+   "worstRms": -34.6,
+   "lowestPeak": -19.7,
+   "pre": -24.4,
+   "end": 0.698
+  },
+  "notify-mention": {
+   "fingerprint": "2a0a2aa673e4",
+   "peak": -20,
+   "rms": -39.2,
+   "worstPeak": -19.4,
+   "worstRms": -35.7,
+   "lowestPeak": -20.3,
+   "pre": -24.7,
+   "end": 0.7
+  },
+  "notify-message-in": {
+   "fingerprint": "13ce03f92953",
+   "peak": -20.5,
+   "rms": -34.6,
+   "worstPeak": -20.5,
+   "worstRms": -34.2,
+   "lowestPeak": -21.1,
+   "pre": -25.8,
+   "end": 0.232
+  },
+  "notify-message-out": {
+   "fingerprint": "a6b2523881da",
+   "peak": -20.4,
+   "rms": -36.3,
+   "worstPeak": -19.8,
+   "worstRms": -35.1,
+   "lowestPeak": -20.6,
+   "pre": -25.2,
+   "end": 0.197
+  },
+  "notify-new-mail": {
+   "fingerprint": "3405830f1109",
+   "peak": -21.1,
+   "rms": -37.1,
+   "worstPeak": -20.7,
+   "worstRms": -35.7,
+   "lowestPeak": -21.7,
+   "pre": -26.1,
+   "end": 0.52
+  },
+  "notify-reminder": {
+   "fingerprint": "cf1e78e2dfd4",
+   "peak": -19.7,
+   "rms": -34.1,
+   "worstPeak": -17.7,
+   "worstRms": -31.6,
+   "lowestPeak": -20.4,
+   "pre": -23,
+   "end": 0.827
+  },
+  "notify-success-chime": {
+   "fingerprint": "ed5069f189c8",
+   "peak": -19.1,
+   "rms": -32.5,
+   "worstPeak": -17.3,
+   "worstRms": -32.1,
+   "lowestPeak": -19.3,
+   "pre": -22.5,
+   "end": 0.306
+  },
+  "notify-sync-done": {
+   "fingerprint": "03b55d65c303",
+   "peak": -20.1,
+   "rms": -35.9,
+   "worstPeak": -18.3,
+   "worstRms": -35.6,
+   "lowestPeak": -20.1,
+   "pre": -23.5,
+   "end": 0.531
+  },
+  "notify-task-failed": {
+   "fingerprint": "933de9ec8d26",
+   "peak": -22,
+   "rms": -32.1,
+   "worstPeak": -20.4,
+   "worstRms": -31.6,
+   "lowestPeak": -22.6,
+   "pre": -25.7,
+   "end": 0.61
+  },
+  "notify-upload-done": {
+   "fingerprint": "f24a19659502",
+   "peak": -19.6,
+   "rms": -32.6,
+   "worstPeak": -17,
+   "worstRms": -32.4,
+   "lowestPeak": -19.6,
+   "pre": -22.2,
+   "end": 0.332
+  },
+  "notify-warning": {
+   "fingerprint": "be7030351f60",
+   "peak": -20.2,
+   "rms": -34.1,
+   "worstPeak": -20,
+   "worstRms": -33.5,
+   "lowestPeak": -20.2,
+   "pre": -25.3,
+   "end": 0.372
+  },
+  "scifi-alert-siren": {
+   "fingerprint": "5083c040f6ae",
+   "peak": -20.4,
+   "rms": -27.9,
+   "worstPeak": -19.7,
+   "worstRms": -27.9,
+   "lowestPeak": -20.9,
+   "pre": -25,
+   "end": 1.214
+  },
+  "scifi-blaster-bolt": {
+   "fingerprint": "e0c2c0e98557",
+   "peak": -14.4,
+   "rms": -26.8,
+   "worstPeak": -14.2,
+   "worstRms": -26.8,
+   "lowestPeak": -15.6,
+   "pre": -19,
+   "end": 0.311
+  },
+  "scifi-data-stream": {
+   "fingerprint": "f7bea84b56e9",
+   "peak": -26.3,
+   "rms": -41.3,
+   "worstPeak": -24.8,
+   "worstRms": -40.2,
+   "lowestPeak": -27.3,
+   "pre": -30.2,
+   "end": 0.615
+  },
+  "scifi-hologram-flicker": {
+   "fingerprint": "b400831ec9d7",
+   "peak": -21.8,
+   "rms": -29.6,
+   "worstPeak": -21.8,
+   "worstRms": -28.7,
+   "lowestPeak": -22.1,
+   "pre": -27.1,
+   "end": 0.898
+  },
+  "scifi-laser-zap": {
+   "fingerprint": "f278a89cdd99",
+   "peak": -17.2,
+   "rms": -31.8,
+   "worstPeak": -16.5,
+   "worstRms": -30.1,
+   "lowestPeak": -18.2,
+   "pre": -21.6,
+   "end": 0.133
+  },
+  "scifi-power-down": {
+   "fingerprint": "ecd2f029f1ca",
+   "peak": -19.2,
+   "rms": -34.8,
+   "worstPeak": -19.2,
+   "worstRms": -34.5,
+   "lowestPeak": -21.2,
+   "pre": -24.5,
+   "end": 1.002
+  },
+  "scifi-power-up": {
+   "fingerprint": "17d085b0893c",
+   "peak": -22,
+   "rms": -34.1,
+   "worstPeak": -20.9,
+   "worstRms": -33.4,
+   "lowestPeak": -22,
+   "pre": -26.2,
+   "end": 1.106
+  },
+  "scifi-robot-chirp": {
+   "fingerprint": "ba9908c56cb1",
+   "peak": -20.8,
+   "rms": -27.8,
+   "worstPeak": -20.6,
+   "worstRms": -27.2,
+   "lowestPeak": -20.8,
+   "pre": -26.1,
+   "end": 0.363
+  },
+  "scifi-scanner-sweep": {
+   "fingerprint": "af1b412ca329",
+   "peak": -17,
+   "rms": -28.8,
+   "worstPeak": -16.6,
+   "worstRms": -28.7,
+   "lowestPeak": -18.2,
+   "pre": -21.7,
+   "end": 1.133
+  },
+  "scifi-shield-hum": {
+   "fingerprint": "acc86c6f068f",
+   "peak": -19.5,
+   "rms": -33.6,
+   "worstPeak": -19.5,
+   "worstRms": -33.6,
+   "lowestPeak": -22.4,
+   "pre": -24.8,
+   "end": 1.116
+  },
+  "scifi-terminal-blip": {
+   "fingerprint": "3b0a8c19911f",
+   "peak": -20.9,
+   "rms": -33.4,
+   "worstPeak": -20.5,
+   "worstRms": -32.9,
+   "lowestPeak": -21.5,
+   "pre": -25.8,
+   "end": 0.142
+  },
+  "scifi-warp-jump": {
+   "fingerprint": "c44e41673843",
+   "peak": -15.6,
+   "rms": -34.9,
+   "worstPeak": -14.5,
+   "worstRms": -34.5,
+   "lowestPeak": -16.8,
+   "pre": -19.5,
+   "end": 0.944
+  },
+  "ui-checkbox": {
+   "fingerprint": "7ae026624b5f",
+   "peak": -24.9,
+   "rms": -37.8,
+   "worstPeak": -23.8,
+   "worstRms": -37.5,
+   "lowestPeak": -27.6,
+   "pre": -29.2,
+   "end": 0.127
+  },
+  "ui-click-crisp": {
+   "fingerprint": "8e9cb9390e74",
+   "peak": -23.2,
+   "rms": -39.6,
+   "worstPeak": -22,
+   "worstRms": -37.6,
+   "lowestPeak": -29.5,
+   "pre": -27.3,
+   "end": 0.024
+  },
+  "ui-click-deep": {
+   "fingerprint": "580d19888648",
+   "peak": -21,
+   "rms": -34.2,
+   "worstPeak": -20.9,
+   "worstRms": -34,
+   "lowestPeak": -22.3,
+   "pre": -26.2,
+   "end": 0.073
+  },
+  "ui-click-glass": {
+   "fingerprint": "ff5182549d87",
+   "peak": -26,
+   "rms": -41.3,
+   "worstPeak": -25.7,
+   "worstRms": -41.3,
+   "lowestPeak": -27.3,
+   "pre": -31.2,
+   "end": 0.075
+  },
+  "ui-click-soft": {
+   "fingerprint": "9bc0808c69aa",
+   "peak": -23.5,
+   "rms": -37.8,
+   "worstPeak": -20.3,
+   "worstRms": -36.7,
+   "lowestPeak": -24.2,
+   "pre": -25.6,
+   "end": 0.031
+  },
+  "ui-click-wood": {
+   "fingerprint": "3e844a045da5",
+   "peak": -24.2,
+   "rms": -38.6,
+   "worstPeak": -22.4,
+   "worstRms": -37.8,
+   "lowestPeak": -26.6,
+   "pre": -27.8,
+   "end": 0.056
+  },
+  "ui-copy": {
+   "fingerprint": "78deae537a43",
+   "peak": -25.3,
+   "rms": -40.1,
+   "worstPeak": -25.1,
+   "worstRms": -39.5,
+   "lowestPeak": -25.3,
+   "pre": -30.5,
+   "end": 0.141
+  },
+  "ui-delete": {
+   "fingerprint": "de6958ee06de",
+   "peak": -23.1,
+   "rms": -39.2,
+   "worstPeak": -20.6,
+   "worstRms": -37.4,
+   "lowestPeak": -24.2,
+   "pre": -26,
+   "end": 0.145
+  },
+  "ui-drag-drop": {
+   "fingerprint": "fc7620a7e2e0",
+   "peak": -21.5,
+   "rms": -37.5,
+   "worstPeak": -19.9,
+   "worstRms": -37.2,
+   "lowestPeak": -23.2,
+   "pre": -25.2,
+   "end": 0.109
+  },
+  "ui-drag-pickup": {
+   "fingerprint": "7eda47d8a93d",
+   "peak": -27.4,
+   "rms": -41.5,
+   "worstPeak": -24.8,
+   "worstRms": -39.9,
+   "lowestPeak": -30.5,
+   "pre": -30.2,
+   "end": 0.086
+  },
+  "ui-expand": {
+   "fingerprint": "c3bbea83c192",
+   "peak": -25.3,
+   "rms": -38.9,
+   "worstPeak": -25.1,
+   "worstRms": -38.9,
+   "lowestPeak": -26.1,
+   "pre": -30.5,
+   "end": 0.1
+  },
+  "ui-focus-ring": {
+   "fingerprint": "9d342fc1dca9",
+   "peak": -27.9,
+   "rms": -44.4,
+   "worstPeak": -27.8,
+   "worstRms": -43,
+   "lowestPeak": -28.1,
+   "pre": -33.2,
+   "end": 0.177
+  },
+  "ui-hover-tick": {
+   "fingerprint": "b57468ea0913",
+   "peak": -31.4,
+   "rms": -43.5,
+   "worstPeak": -31.4,
+   "worstRms": -43.5,
+   "lowestPeak": -33.7,
+   "pre": -36.9,
+   "end": 0.021
+  },
+  "ui-key-light": {
+   "fingerprint": "9d0de01efb51",
+   "peak": -26.5,
+   "rms": -39.8,
+   "worstPeak": -25,
+   "worstRms": -38,
+   "lowestPeak": -28.6,
+   "pre": -30.4,
+   "end": 0.033
+  },
+  "ui-key-mechanical": {
+   "fingerprint": "8b0be3d0e78f",
+   "peak": -24.6,
+   "rms": -42.6,
+   "worstPeak": -23.3,
+   "worstRms": -41.4,
+   "lowestPeak": -28.8,
+   "pre": -28.7,
+   "end": 0.102
+  },
+  "ui-menu-slide": {
+   "fingerprint": "8f39a6dea41d",
+   "peak": -26.6,
+   "rms": -41.2,
+   "worstPeak": -25.6,
+   "worstRms": -40.3,
+   "lowestPeak": -30.4,
+   "pre": -31,
+   "end": 0.167
+  },
+  "ui-modal": {
+   "fingerprint": "4e49a639d4d2",
+   "peak": -22.3,
+   "rms": -35.3,
+   "worstPeak": -21.6,
+   "worstRms": -35.2,
+   "lowestPeak": -23.1,
+   "pre": -26.9,
+   "end": 0.185
+  },
+  "ui-page-turn": {
+   "fingerprint": "eba91ba776b3",
+   "peak": -24.3,
+   "rms": -41.1,
+   "worstPeak": -23.5,
+   "worstRms": -40.7,
+   "lowestPeak": -26.5,
+   "pre": -28.9,
+   "end": 0.223
+  },
+  "ui-radio-select": {
+   "fingerprint": "4a53d111bd49",
+   "peak": -23,
+   "rms": -35.7,
+   "worstPeak": -21,
+   "worstRms": -35,
+   "lowestPeak": -23.1,
+   "pre": -26.3,
+   "end": 0.07
+  },
+  "ui-scroll-detent": {
+   "fingerprint": "ddc832817439",
+   "peak": -28.3,
+   "rms": -43.7,
+   "worstPeak": -28.3,
+   "worstRms": -43.6,
+   "lowestPeak": -30.3,
+   "pre": -33.7,
+   "end": 0.029
+  },
+  "ui-slider-detent": {
+   "fingerprint": "a8ccc342950a",
+   "peak": -27.6,
+   "rms": -41,
+   "worstPeak": -25.3,
+   "worstRms": -40.3,
+   "lowestPeak": -30.2,
+   "pre": -30.7,
+   "end": 0.028
+  },
+  "ui-tap": {
+   "fingerprint": "01de86755183",
+   "peak": -24.6,
+   "rms": -36.6,
+   "worstPeak": -22.6,
+   "worstRms": -34.9,
+   "lowestPeak": -27,
+   "pre": -28,
+   "end": 0.04
+  },
+  "ui-toggle-switch": {
+   "fingerprint": "b0a387d97d26",
+   "peak": -21.8,
+   "rms": -39.7,
+   "worstPeak": -20.1,
+   "worstRms": -38.9,
+   "lowestPeak": -23.6,
+   "pre": -25.4,
+   "end": 0.159
+  },
+  "ui-tooltip-pop": {
+   "fingerprint": "f78e6b01be1a",
+   "peak": -27.7,
+   "rms": -39,
+   "worstPeak": -27.3,
+   "worstRms": -39,
+   "lowestPeak": -28.2,
+   "pre": -32.7,
+   "end": 0.053
+  },
+  "ui-undo": {
+   "fingerprint": "de40b58facfb",
+   "peak": -25.2,
+   "rms": -39.7,
+   "worstPeak": -25.2,
+   "worstRms": -39.2,
+   "lowestPeak": -26.9,
+   "pre": -30.6,
+   "end": 0.184
+  }
+ }
+}
