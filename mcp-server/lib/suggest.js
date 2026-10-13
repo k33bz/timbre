@@ -5,7 +5,7 @@
 // sound), the loudness band, the mood, a rule-out list, and a nudge for the sounds a theme already
 // uses. Every factor that moved a score leaves a reason, so an agent can show why a sound was picked.
 import { SearchIndex, applyFilters, queryTokens } from './search.js';
-import { MOMENTS, MOODS, momentsIn, moodsIn } from './moments.js';
+import { MOMENTS, momentsIn, moodsIn } from './moments.js';
 import { stems } from './text.js';
 
 const indexCache = new WeakMap();
@@ -214,7 +214,7 @@ export function suggest(catalog, { description = '', moments = [], mood = '', th
   if (!groups.length || groups.every((g) => !g.candidates.length)) {
     // nothing recognizable: search the description as plain words, with the mood applied
     const text = `${description} ${mood}`.trim();
-    const spec = { ...specFor('match'), name: 'match', tagStems: [], termStems: [] };
+    const spec = specFor('match');
     const idx = indexFor(catalog);
     const docs = applyFilters(catalog, idx.docs, filters);
     const tokens = queryTokens(text);
@@ -230,7 +230,7 @@ export function suggest(catalog, { description = '', moments = [], mood = '', th
         if (fam.length) score *= 1 + (m.tagBoost || 0.18) * Math.min(2, fam.length);
         if (d.level && m.loud && m.loud.indexOf(d.level.band) === 0) score *= 1.1;
       }
-      rows.push({ sound: d.s, score, reasons: [`words match: ${r.why.slice(0, 3).map((w) => w.split(':')[1].split('~')[0]).join(', ')}`], strong: true, level: d.level });
+      rows.push({ sound: d.s, score, reasons: [`words match: ${[...new Set(r.why.slice(0, 4).map((w) => d.disp.get(w.split(':')[1].split('~')[0]) || w.split(':')[1].split('~')[0]))].join(', ')}`], strong: true, level: d.level });
     }
     rows.sort((a, b) => b.score - a.score || a.sound.id.localeCompare(b.sound.id));
     match = { candidates: rows.slice(0, Math.max(limit, 5)).map((r) => candidateOf(r, spec)) };
@@ -240,7 +240,7 @@ export function suggest(catalog, { description = '', moments = [], mood = '', th
 
 /**
  * The best sound for one moment under a theme and mood, for build_kit.
- * Returns { row, spec, source } or null.
+ * Returns { row, spec, alternatives } or null.
  */
 export function pickForMoment(catalog, name, { theme = null, moods = [], used = new Set(), filters = {} } = {}) {
   const spec = specFor(name);
@@ -248,4 +248,3 @@ export function pickForMoment(catalog, name, { theme = null, moods = [], used = 
   return rows.length ? { row: rows[0], spec, alternatives: trimRows(rows, 4).slice(1) } : null;
 }
 
-export { MOODS, MOMENTS };

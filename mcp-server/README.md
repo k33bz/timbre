@@ -1,0 +1,192 @@
+# Timbre MCP server
+
+A [Model Context Protocol](https://modelcontextprotocol.io) server over the Timbre sound catalog. An
+agent can describe an app ("a meditation timer that rings when done, gentle taps"), get ranked
+candidate sounds with reasons, read a sound's parameters and levels, and take away working code:
+one self-contained function per sound, or **one JavaScript module** with `play(moment)` for a whole
+interface.
+
+- **Zero dependencies.** Plain Node 22, MCP's JSON-RPC 2.0 over stdio (the transport Claude Code and
+  Claude Desktop launch), like the Prism server it follows in style.
+- **Reads the catalog the build writes** (`catalog/manifest.json`, default `../catalog`), and re-reads
+  it when it changes, so a rebuilt catalog shows up without a restart.
+- **Same code as the gallery.** `get_copy` reproduces the Copy button's output byte for byte; a test
+  proves it for every sound.
+- **Works with whatever the catalog holds.** New categories, tags and themes are picked up with no
+  change here; a malformed sound is skipped with a warning instead of taking the server down.
+
+## Connect it
+
+You need Node 22 or later. The server lives in `mcp-server/` of the Timbre repository; use the
+absolute path to `cli.js` (forward slashes work on Windows too).
+
+### Claude Code
+
+```
+claude mcp add timbre -- node /absolute/path/to/timbre/mcp-server/cli.js start
+```
+
+Add `--scope user` to make it available in every project, or `--scope project` to write it to the
+project's `.mcp.json`. The same thing by hand, in `.mcp.json` (project) or `~/.claude.json` (user):
+
+```json
+{
+  "mcpServers": {
+    "timbre": {
+      "command": "node",
+      "args": ["/absolute/path/to/timbre/mcp-server/cli.js", "start"]
+    }
+  }
+}
+```
+
+Check it with `claude mcp list` or `/mcp` inside Claude Code: `timbre` should show eight tools.
+
+### Claude Desktop
+
+Edit `claude_desktop_config.json` (Settings, Developer, Edit Config), then restart Claude Desktop:
+
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "timbre": {
+      "command": "node",
+      "args": ["C:/Users/you/timbre/mcp-server/cli.js", "start"]
+    }
+  }
+}
+```
+
+If Desktop cannot find `node`, give the full path to it in `command`.
+
+### Options
+
+| Flag | Environment | What it does |
+|---|---|---|
+| `--catalog <dir>` | `TIMBRE_CATALOG` | Catalog directory holding `manifest.json` (a path to the file works too). Default `../catalog`. |
+| `--levels <file>` | `TIMBRE_LEVELS` | Level report from the level gate. Default: `levels.json` beside the catalog, then `../gates/out/levels.json`. `none` ignores any report. |
+| `--no-cache` | `TIMBRE_MCP_CACHE` | Estimated levels are kept between runs in the platform cache directory (or the directory in `TIMBRE_MCP_CACHE`); this turns it off. |
+| `--log-level <lvl>` | `TIMBRE_MCP_LOG_LEVEL` | `debug`, `info`, `warn` (default), `error` or `silent`. Logs go to stderr only. |
+
+To try it without a client: `node cli.js info`, `node cli.js tools`, or run any tool directly,
+for example `node cli.js call search_sounds '{"query":"coin"}'`.
+
+## The tools
+
+All eight only read the catalog and compute; none writes anything, and they are marked read-only.
+Each description tells the agent when to reach for it and which neighbour to use instead.
+
+| Tool | Use it to |
+|---|---|
+| `info` | Start here: version, sounds per category, themes, loudness bands, the moments the suggestion tools understand, where the level numbers come from. |
+| `suggest_sounds` | Turn a plain description of an app or moment into ranked candidates per moment, with reasons, a fit mark (`strong` or `loose`) and loudness. |
+| `search_sounds` | Keyword search over name, tags, description and category, with plurals and near-synonyms, filters (category, `max_duration`, `min_duration`, `loudness`, `tags`) and paging. |
+| `get_sound` | Read one sound: parameters with ranges, defaults and control kind; levels; the themes using it; similar sounds; its Copy code at the defaults. |
+| `get_copy` | Get the self-contained function for one sound with chosen parameter values (and seed) baked in. |
+| `list_themes` / `get_theme` | See the themes (moment-to-sound maps) and one theme's moments with their effective parameters. |
+| `build_kit` | Generate one module for an app: `play(moment, opts)`, every helper once, one shared master chain, lazy AudioContext. |
+
+Code comes back as its own content block after a short JSON block of facts, so it arrives as plain
+text and not as an escaped string.
+
+### A typical session
+
+```
+suggest_sounds { "description": "a todo app: check things off, delete, a reminder, soft and quiet" }
+   -> toggle-on: ui-checkbox ..., delete: ui-delete ..., reminder: notify-calendar ..., mood: calm
+build_kit { "moments": ["toggle-on", "delete", "reminder"], "mood": "calm" }
+   -> a table of what plays for each moment and why, plus the module
+get_copy { "id": "ui-click-soft", "params": { "pitch": 900 } }
+   -> just that one function, pitch baked in
+```
+
+### What `get_copy` guarantees
+
+The text is what the gallery's Copy button produces for the same values: one function named after
+the sound (`ui-click-soft` becomes `uiClickSoft`), `fn(ac, opts, when, dest)`, only the helpers it
+uses, the shared master chain (gain 0.55, a limiter, a tanh ceiling), the 0.2 s warm-up rule, and the
+end time as its return value. `test/copy-parity.test.js` compares it with `src/core/copy.js` and with
+the page runtime assembled the way `build.mjs` assembles it, for every sound at six parameter sets.
+Differences from the gallery, both deliberate: unknown parameter names are an error (the gallery has
+no way to type one), and values outside a range are clamped *and reported*.
+
+### The module `build_kit` writes
+
+```js
+import { play, prime } from './sounds.js';
+
+document.addEventListener('pointerdown', prime, { once: true });   // optional: warm the limiter early
+button.addEventListener('click', () => play('click'));
+play('coin', { pitch: 1800 });          // override a parameter (clamped to its range)
+play('hit', { when: ctx.currentTime + 0.5, seed: 7 });
+```
+
+| Export | |
+|---|---|
+| `play(moment, opts)` | Plays a moment; returns the end time (AudioContext seconds) or `null`. `opts`: parameter overrides, plus `seed`, `when` (earliest start), `dest` (node to end in). Unknown moments return `null`, never throw. |
+| `prime()` | Creates the context and builds the master chain now. Call it from the first user gesture so the first real sound does not wait 0.2 s. |
+| `has(moment)`, `moments` | Which moments the kit has. |
+| `setMuted(on)` | Silences `play()`. |
+| `getContext()` | The AudioContext, or `null` before first use. |
+
+Details: the AudioContext is created on the first `play()` or `prime()`, never at load. All moments
+share one master chain per destination, kept on the context in `ac.timbreChains`, the same slot a
+pasted Copy function uses, so mixing a kit and a pasted Copy on one context still builds one chain.
+`format: "script"` gives a classic script that defines one global (`global_name`, default
+`timbreKit`). `vary: true` draws a fresh noise seed per play.
+
+How a moment gets its sound, in order: the theme (if you named one, or your `mood` names one such as
+"soft ui"), then your explicit `{ moment, sound, params }`, then the best catalog match for the
+moment, shaped by the mood. Every choice carries its reason; loose matches and anything repaired or
+clamped are listed under `warnings`; moments nothing fits are listed under `unresolved`.
+
+## Levels: measured when possible, estimated otherwise
+
+The catalog has no level data. The level gate (`gates/check_levels.mjs`) measures every sound in a
+browser and writes `gates/out/levels.json`, which is git-ignored. So:
+
+- When the report is found (`--levels`, `TIMBRE_LEVELS`, `levels.json` beside the catalog, or
+  `../gates/out/levels.json`), levels are **measured** and say so.
+- For every sound the report does not cover, the server **estimates**: it runs the sound's own recipe
+  against a recording mock of the audio graph, plays that back through a small offline renderer
+  (oscillators, the seeded noise, filters, envelopes, shapers) and the master chain's warm steady
+  state, and reads peak and RMS the way the gate does. Reverb and delay tails are not simulated.
+  Against the gate on the first 133 sounds: peak within 0.8 dB on average (median 0.4, worst 3.8),
+  the same loudness band for 123 of 133. Estimates carry `"source": "estimated"`.
+
+The bands used by the `loudness` filter, on the default peak after the master chain: `quiet` up to
+-23 dBFS (clicks, ticks, air), `medium` -23 to -17 (ordinary cues), `loud` above -17 (the loudest
+hits; the house range ends at -12). Estimates are made in the background after startup and kept in a
+cache file between runs; a first loudness filter on a cold start may take a few seconds.
+
+## Tests
+
+```
+npm test            # node --test: the whole suite
+npm run smoke       # the server as a child process, real JSON-RPC over stdio
+```
+
+The suite covers the loader, the Copy parity with the gallery, the offline renderer and the level
+estimate (checked against a stored copy of the gate's report), search, suggestions, kits (generated
+modules are executed against a strict audio mock, as ESM and as a script), every tool, the protocol
+and the stdio framing, and the CLI. Tests that need the Timbre sources next to this package skip
+themselves when it stands alone.
+
+`scripts/make-levels-fixture.mjs` refreshes `test/fixtures/levels-gate.json` from a new gate report.
+
+## Layout
+
+```
+cli.js            start | info | tools | call
+index.js          the server: JSON-RPC dispatch, stdio transport
+tools/index.js    the eight tools (descriptions, schemas, handlers)
+lib/catalog.js    loads and watches the catalog          lib/copy.js     Copy, rebuilt from the catalog
+lib/search.js     ranked search                          lib/suggest.js  moments and moods to sounds
+lib/moments.js    the moment and mood vocabulary         lib/kit.js      resolve choices, write the module
+lib/levels.js     measured and estimated levels          lib/render.js   offline renderer for the estimate
+lib/mockaudio.js  recording audio mock                   lib/schema.js   argument checking
+scripts/smoke.js  the stdio smoke run                    test/           node --test suites and fixtures
+```
