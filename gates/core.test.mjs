@@ -5,6 +5,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { T } from '../src/core/t.js';
 import { MockContext } from './lib/mockaudio.mjs';
+import { MASTER_CHAIN } from '../src/core/render.js';
 
 const ctx = () => { const c = new MockContext(48000); const out = c.createGain(); out.connect(c.destination); return { c, out }; };
 
@@ -338,4 +339,16 @@ test('pluck tone darkens the excitation; leaving it out keeps the original pluck
     for (const v of y) { pk = Math.max(pk, Math.abs(v)); sum += v; }
     assert.ok(Math.abs(pk - 1) < 1e-6 && Math.abs(sum / y.length) < 2e-3);
   }
+});
+
+test('MASTER_CHAIN, the catalog copy of the chain, says what master() builds', () => {
+  const { c } = ctx();
+  const inp = T.master(c, c.destination);
+  const lim = inp.outs[0];
+  const sat = lim.outs[0];
+  assert.equal(inp.gain.value, MASTER_CHAIN.gain);
+  for (const k of ['threshold', 'knee', 'ratio', 'attack', 'release']) assert.equal(lim[k].value, MASTER_CHAIN.limiter[k], k);
+  assert.equal(sat.curve.length, MASTER_CHAIN.ceiling.points);
+  assert.equal(sat.oversample, MASTER_CHAIN.ceiling.oversample);
+  assert.ok(Math.abs(20 * Math.log10(sat.curve[sat.curve.length - 1] / Math.tanh(2)) - MASTER_CHAIN.ceiling.maxDbfs) < 0.03);
 });

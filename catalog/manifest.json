@@ -1,6 +1,7 @@
 {
   "name": "Timbre",
-  "schema": 1,
+  "version": "0.1.0",
+  "schema": 2,
   "count": 133,
   "categories": [
     "ui",
@@ -12,6 +13,115 @@
     "ambience",
     "music"
   ],
+  "copy": {
+    "signature": "fn(ac, opts, when, dest)",
+    "returns": "the end time in AudioContext seconds",
+    "preroll": 0.2,
+    "chains": "one master chain per destination, kept on the context in ac.timbreChains",
+    "master": {
+      "gain": 0.55,
+      "limiter": {
+        "threshold": -12,
+        "knee": 6,
+        "ratio": 12,
+        "attack": 0.003,
+        "release": 0.12
+      },
+      "ceiling": {
+        "curve": "0.5 * tanh(2x)",
+        "points": 2048,
+        "oversample": "2x",
+        "maxDbfs": -6
+      }
+    },
+    "sampleRate": 48000
+  },
+  "levels": {
+    "source": "catalog/levels.json",
+    "measured": 0,
+    "about": "Measured by gates/check_levels.mjs in dBFS after the master chain on a warm chain. peak and rms: at the defaults (the worst peak and the mean RMS of 3 seeds). worstPeak, worstRms and lowestPeak: over all 12 renders (the defaults and 3 random parameter sets, 3 seeds each). pre: the highest peak before the limiter over all renders. end: where the default render falls below -60 dBFS, in seconds."
+  },
+  "vocabulary": {
+    "families": {
+      "soft": "Muted, rounded and padded: sine blips, thocks, gentle swells and quiet chimes",
+      "glass": "Bright, clear and ringing: glassy ticks, pings, crystal and glints",
+      "wood": "Knocks, clacks and taps of wood, clay or bone: blocks, clocks, board pieces, chips, dice",
+      "paper": "Cards, pages, crumples and rustles",
+      "metal": "Struck and ringing metal: coins, keys, blades, hammers",
+      "mechanical": "Switches, keys, latches, machines and hum",
+      "air": "Whooshes, breaths, swishes, slides and wind",
+      "chip": "8-bit square and pulse voices: chiptune, arcade and retro computer beeps",
+      "synthetic": "Electronic tones: buzzes, lasers, FM, sweeps, pads, drones and sci-fi machines",
+      "organic": "Natural sources: water, fire, weather, birds, bubbles, footsteps, a bowstring",
+      "orchestral": "Tuned instruments in a phrase: bells, plucks, mallets, harp and brass",
+      "impact": "Blows, thuds and booms: punches, heavy hits, landings and explosions"
+    },
+    "roles": {
+      "on": "Switch: 1 plays the on direction (check, enable, switch on), 0 the off direction",
+      "open": "Switch: 1 plays opening (expand, show, slide in), 0 closing",
+      "chip": "Switch: 1 swaps in an 8-bit square-wave voicing, 0 keeps the softer voice",
+      "go": "Switch: 1 plays the longer, higher go cue that ends a countdown, 0 a count beat"
+    },
+    "moments": {
+      "click": "A button, link or control is pressed.",
+      "hover": "The pointer moves over or focuses a control.",
+      "toggle-on": "A switch, checkbox or setting is turned on.",
+      "toggle-off": "A switch, checkbox or setting is turned off.",
+      "type": "A key is pressed while typing.",
+      "open": "A menu, panel, modal or drawer opens or slides in.",
+      "close": "A menu, panel, modal or drawer closes.",
+      "transition": "A screen, page or scene changes; something sweeps past.",
+      "scroll": "A scroll wheel, picker or slider passes a notch.",
+      "drag": "An item is picked up to be dragged.",
+      "drop": "A dragged item lands on its target.",
+      "tooltip": "A tooltip, hint or popover appears.",
+      "copy": "Something is copied to the clipboard.",
+      "undo": "An action is undone or reverted.",
+      "delete": "Something is removed, trashed or cleared.",
+      "send": "A message or form is sent, submitted or published.",
+      "refresh": "Content reloads or syncs.",
+      "success": "An action finished well: saved, sent, paid, completed.",
+      "error": "An action was rejected or failed: invalid input, denied, failed.",
+      "warning": "Something needs attention but did not fail.",
+      "info": "Neutral news: nothing wrong, nothing won.",
+      "notify": "A notification arrives.",
+      "message": "A message, chat or email arrives.",
+      "reminder": "A calendar event, reminder or due date comes up.",
+      "timer": "A timer, countdown or alarm ends.",
+      "achievement": "A milestone, badge or reward is earned.",
+      "hit": "A blow lands: a hit, impact or strike.",
+      "damage": "The player takes damage.",
+      "attack": "A melee swing or strike.",
+      "pickup": "An item is picked up or collected.",
+      "coin": "A coin, currency or small reward is gained or spun.",
+      "level-up": "The player levels up or unlocks something big.",
+      "power-up": "A power-up, boost or buff is collected.",
+      "heal": "Health is restored.",
+      "victory": "The player wins a round or finishes a level.",
+      "game-over": "The player loses or the run ends.",
+      "jump": "A character jumps or bounces.",
+      "footstep": "A footstep while walking or running.",
+      "shoot": "A weapon fires: a laser, blaster, arrow or shot.",
+      "explosion": "Something blows up.",
+      "countdown": "A countdown beat before a round starts.",
+      "card-draw": "A card is drawn, dealt or flicked.",
+      "card-flip": "A card is turned face up.",
+      "shuffle": "A deck is shuffled or riffled.",
+      "dice": "Dice are shaken and rolled.",
+      "sparkle": "A magical twinkle: a bonus, a reveal.",
+      "spell": "A spell is cast.",
+      "teleport": "A teleport, warp or portal.",
+      "power-down": "A machine, shield or system powers down.",
+      "door": "A door, hatch or chest opens or latches.",
+      "shield": "A shield or force field goes up or takes a hit.",
+      "readout": "A console or HUD prints a readout or acknowledges.",
+      "scan": "A scanner, radar or sensor sweeps.",
+      "chips": "Poker chips are clicked, stacked or pushed.",
+      "scare": "A sting for a scare, a twist or a mystery.",
+      "ambience": "A bed of sound under a scene.",
+      "music": "A short musical phrase, sting or jingle."
+    }
+  },
   "sounds": [
     {
       "id": "ui-checkbox",
@@ -61,7 +171,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "7ae026624b5f"
     },
     {
       "id": "ui-click-crisp",
@@ -110,7 +221,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "8e9cb9390e74"
     },
     {
       "id": "ui-click-deep",
@@ -159,7 +271,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "580d19888648"
     },
     {
       "id": "ui-click-glass",
@@ -209,7 +322,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "ff5182549d87"
     },
     {
       "id": "ui-click-soft",
@@ -253,7 +367,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "9bc0808c69aa"
     },
     {
       "id": "ui-click-wood",
@@ -303,7 +418,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "3e844a045da5"
     },
     {
       "id": "ui-copy",
@@ -353,7 +469,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "78deae537a43"
     },
     {
       "id": "ui-delete",
@@ -405,7 +522,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "de6958ee06de"
     },
     {
       "id": "ui-drag-drop",
@@ -455,7 +573,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "fc7620a7e2e0"
     },
     {
       "id": "ui-drag-pickup",
@@ -504,7 +623,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "7eda47d8a93d"
     },
     {
       "id": "ui-expand",
@@ -562,7 +682,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "c3bbea83c192"
     },
     {
       "id": "ui-focus-ring",
@@ -610,7 +731,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "9d342fc1dca9"
     },
     {
       "id": "ui-hover-tick",
@@ -654,7 +776,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "b57468ea0913"
     },
     {
       "id": "ui-key-light",
@@ -704,7 +827,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "9d0de01efb51"
     },
     {
       "id": "ui-key-mechanical",
@@ -757,7 +881,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "8b0be3d0e78f"
     },
     {
       "id": "ui-menu-slide",
@@ -809,7 +934,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "8f39a6dea41d"
     },
     {
       "id": "ui-modal",
@@ -868,7 +994,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "4e49a639d4d2"
     },
     {
       "id": "ui-page-turn",
@@ -919,7 +1046,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "eba91ba776b3"
     },
     {
       "id": "ui-radio-select",
@@ -968,7 +1096,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "4a53d111bd49"
     },
     {
       "id": "ui-scroll-detent",
@@ -1022,7 +1151,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "ddc832817439"
     },
     {
       "id": "ui-slider-detent",
@@ -1071,7 +1201,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "a8ccc342950a"
     },
     {
       "id": "ui-tap",
@@ -1120,7 +1251,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "01de86755183"
     },
     {
       "id": "ui-toggle-switch",
@@ -1179,7 +1311,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "b0a387d97d26"
     },
     {
       "id": "ui-tooltip-pop",
@@ -1229,7 +1362,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "f78e6b01be1a"
     },
     {
       "id": "ui-undo",
@@ -1281,7 +1415,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "de40b58facfb"
     },
     {
       "id": "notify-achievement",
@@ -1339,7 +1474,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "3caa91ecd874"
     },
     {
       "id": "notify-alarm",
@@ -1393,7 +1529,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "a54baa0b8407"
     },
     {
       "id": "notify-calendar",
@@ -1458,7 +1595,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "3babb3e652e3"
     },
     {
       "id": "notify-double-tap",
@@ -1516,7 +1654,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "e084ccd43dbe"
     },
     {
       "id": "notify-download-done",
@@ -1568,7 +1707,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "1d417d7cf646"
     },
     {
       "id": "notify-error-buzz",
@@ -1621,7 +1761,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "4a9b32dcc861"
     },
     {
       "id": "notify-incoming-call",
@@ -1676,7 +1817,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "cc8596e3aa34"
     },
     {
       "id": "notify-info",
@@ -1726,7 +1868,8 @@
         "rand",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "5699d58cc5b4"
     },
     {
       "id": "notify-low-battery",
@@ -1781,7 +1924,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "6d694a9e4f28"
     },
     {
       "id": "notify-mention",
@@ -1839,7 +1983,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "2a0a2aa673e4"
     },
     {
       "id": "notify-message-in",
@@ -1895,7 +2040,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "13ce03f92953"
     },
     {
       "id": "notify-message-out",
@@ -1947,7 +2093,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "a6b2523881da"
     },
     {
       "id": "notify-new-mail",
@@ -2009,7 +2156,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "3405830f1109"
     },
     {
       "id": "notify-reminder",
@@ -2073,7 +2221,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "cf1e78e2dfd4"
     },
     {
       "id": "notify-success-chime",
@@ -2125,7 +2274,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "ed5069f189c8"
     },
     {
       "id": "notify-sync-done",
@@ -2177,7 +2327,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "03b55d65c303"
     },
     {
       "id": "notify-task-failed",
@@ -2230,7 +2381,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "933de9ec8d26"
     },
     {
       "id": "notify-upload-done",
@@ -2282,7 +2434,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "f24a19659502"
     },
     {
       "id": "notify-warning",
@@ -2337,7 +2490,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "be7030351f60"
     },
     {
       "id": "game-arrow-shot",
@@ -2391,7 +2545,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "8b8d05c1286b"
     },
     {
       "id": "game-bounce",
@@ -2438,7 +2593,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "e8043af3a482"
     },
     {
       "id": "game-checkpoint",
@@ -2493,7 +2649,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "de109d22d0e3"
     },
     {
       "id": "game-coin-flip",
@@ -2545,7 +2702,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "58d6898ca547"
     },
     {
       "id": "game-combo-ping",
@@ -2603,7 +2761,8 @@
         "osc",
         "bell",
         "master"
-      ]
+      ],
+      "fingerprint": "b4eaef0596dd"
     },
     {
       "id": "game-countdown-beep",
@@ -2660,7 +2819,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "0962dfb4fdd2"
     },
     {
       "id": "game-door-open",
@@ -2715,7 +2875,8 @@
         "filter",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "5106b2eb41c8"
     },
     {
       "id": "game-double-jump",
@@ -2777,7 +2938,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "50f040eb35d4"
     },
     {
       "id": "game-explosion-soft",
@@ -2835,7 +2997,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "f1e4fb9008b8"
     },
     {
       "id": "game-footstep-hard",
@@ -2890,7 +3053,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "0c45bf4ba526"
     },
     {
       "id": "game-footstep-soft",
@@ -2942,7 +3106,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "86e8e25013b5"
     },
     {
       "id": "game-gem-collect",
@@ -3001,7 +3166,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "56b5bce94c67"
     },
     {
       "id": "game-hammer-hit",
@@ -3060,7 +3226,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "138690d92baa"
     },
     {
       "id": "game-heal",
@@ -3121,7 +3288,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "abb116df5108"
     },
     {
       "id": "game-hit-heavy",
@@ -3181,7 +3349,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "48b584b6856d"
     },
     {
       "id": "game-hit-light",
@@ -3233,7 +3402,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "719b846648e8"
     },
     {
       "id": "game-hurt",
@@ -3296,7 +3466,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "0aa629401c91"
     },
     {
       "id": "game-jump",
@@ -3351,7 +3522,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "a8034ef9a463"
     },
     {
       "id": "game-key-unlock",
@@ -3411,7 +3583,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "9a8d1d9f5d8c"
     },
     {
       "id": "game-land",
@@ -3462,7 +3635,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "40eab2c11387"
     },
     {
       "id": "game-pickup-item",
@@ -3524,7 +3698,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "3a8845048ee2"
     },
     {
       "id": "game-power-up",
@@ -3581,7 +3756,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "8ecba97b5724"
     },
     {
       "id": "game-punch",
@@ -3640,7 +3816,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "f8e2d5c7e43e"
     },
     {
       "id": "game-shield-up",
@@ -3701,7 +3878,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "fbe6b2760ab5"
     },
     {
       "id": "game-sword-clash",
@@ -3755,7 +3933,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "1c43ef74ce2d"
     },
     {
       "id": "game-sword-swing",
@@ -3807,7 +3986,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "9903b4ea80ff"
     },
     {
       "id": "game-whoosh",
@@ -3856,7 +4036,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "ee59a91a1bc2"
     },
     {
       "id": "cards-chip-click",
@@ -3908,7 +4089,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "d895176ab5a2"
     },
     {
       "id": "cards-chip-stack",
@@ -3961,7 +4143,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "0f2a527ab883"
     },
     {
       "id": "cards-chips-push",
@@ -4020,7 +4203,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "b99a0f3f0989"
     },
     {
       "id": "cards-deal",
@@ -4069,7 +4253,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "a9c11853ed9e"
     },
     {
       "id": "cards-deal-hand",
@@ -4120,7 +4305,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "c6ca4d16f68b"
     },
     {
       "id": "cards-dice-roll",
@@ -4172,7 +4358,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "34a7f92ca364"
     },
     {
       "id": "cards-dice-shake",
@@ -4231,7 +4418,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "55a99e611d26"
     },
     {
       "id": "cards-discard",
@@ -4280,7 +4468,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "a619c44d1a7d"
     },
     {
       "id": "cards-draw",
@@ -4329,7 +4518,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "d9df0e923f61"
     },
     {
       "id": "cards-fan",
@@ -4378,7 +4568,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "d17331d58ff7"
     },
     {
       "id": "cards-flick",
@@ -4428,7 +4619,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "7c9694d7fb1c"
     },
     {
       "id": "cards-flip",
@@ -4477,7 +4669,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "0ba5286ef025"
     },
     {
       "id": "cards-piece-capture",
@@ -4531,7 +4724,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "ddb56abd1c7a"
     },
     {
       "id": "cards-piece-move",
@@ -4586,7 +4780,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "5f5558c659c0"
     },
     {
       "id": "cards-place",
@@ -4635,7 +4830,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "b3f82a51efe2"
     },
     {
       "id": "cards-riffle",
@@ -4685,7 +4881,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "73138186b86b"
     },
     {
       "id": "cards-shuffle-overhand",
@@ -4742,7 +4939,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "1a98c70dbbe2"
     },
     {
       "id": "cards-slide",
@@ -4797,7 +4995,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "3cdc54cc42ac"
     },
     {
       "id": "cards-timer-tick",
@@ -4854,7 +5053,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "b233ceceabb6"
     },
     {
       "id": "cards-your-turn",
@@ -4912,7 +5112,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "b5b2e6223fc1"
     },
     {
       "id": "magic-charge-up",
@@ -4972,7 +5173,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "295d388faf9a"
     },
     {
       "id": "magic-curse-hex",
@@ -5034,7 +5236,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "1f877963a624"
     },
     {
       "id": "magic-enchant",
@@ -5099,7 +5302,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "389954c8a380"
     },
     {
       "id": "magic-fire-spell",
@@ -5155,7 +5359,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "d32e9f7914c3"
     },
     {
       "id": "magic-healing-shimmer",
@@ -5214,7 +5419,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "6853996b39a5"
     },
     {
       "id": "magic-ice-spell",
@@ -5274,7 +5480,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "749134d0771e"
     },
     {
       "id": "magic-lightning",
@@ -5340,7 +5547,8 @@
         "fm",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "fc8607a4697a"
     },
     {
       "id": "magic-portal-open",
@@ -5400,7 +5608,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "f5083dbd9d4d"
     },
     {
       "id": "magic-potion-bubble",
@@ -5460,7 +5669,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "4770c36570e7"
     },
     {
       "id": "magic-sparkle",
@@ -5524,7 +5734,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "7a7608e6728f"
     },
     {
       "id": "magic-spell-cast",
@@ -5584,7 +5795,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "4cc8b371117e"
     },
     {
       "id": "magic-teleport",
@@ -5645,7 +5857,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "a94020e58ada"
     },
     {
       "id": "scifi-alert-siren",
@@ -5709,7 +5922,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "5083c040f6ae"
     },
     {
       "id": "scifi-blaster-bolt",
@@ -5771,7 +5985,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "e0c2c0e98557"
     },
     {
       "id": "scifi-data-stream",
@@ -5836,7 +6051,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "f7bea84b56e9"
     },
     {
       "id": "scifi-hologram-flicker",
@@ -5896,7 +6112,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "b400831ec9d7"
     },
     {
       "id": "scifi-laser-zap",
@@ -5962,7 +6179,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "f278a89cdd99"
     },
     {
       "id": "scifi-power-down",
@@ -6021,7 +6239,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "ecd2f029f1ca"
     },
     {
       "id": "scifi-power-up",
@@ -6075,7 +6294,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "17d085b0893c"
     },
     {
       "id": "scifi-robot-chirp",
@@ -6130,7 +6350,8 @@
         "fm",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "ba9908c56cb1"
     },
     {
       "id": "scifi-scanner-sweep",
@@ -6187,7 +6408,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "af1b412ca329"
     },
     {
       "id": "scifi-shield-hum",
@@ -6241,7 +6463,8 @@
         "env",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "acc86c6f068f"
     },
     {
       "id": "scifi-terminal-blip",
@@ -6298,7 +6521,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "3b0a8c19911f"
     },
     {
       "id": "scifi-warp-jump",
@@ -6359,7 +6583,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "c44e41673843"
     },
     {
       "id": "ambience-cave-drips",
@@ -6420,7 +6645,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "a8ea7c03856b"
     },
     {
       "id": "ambience-distant-thunder",
@@ -6470,7 +6696,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "6a9038f4d749"
     },
     {
       "id": "ambience-fire-crackle",
@@ -6527,7 +6754,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "a828a79cd08f"
     },
     {
       "id": "ambience-forest-birds",
@@ -6587,7 +6815,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "543c90cd7f42"
     },
     {
       "id": "ambience-ocean-surf",
@@ -6643,7 +6872,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "36d19c5f4f99"
     },
     {
       "id": "ambience-rain",
@@ -6694,7 +6924,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "b02cb21410ac"
     },
     {
       "id": "ambience-room-hum",
@@ -6753,7 +6984,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "6c9d7baa24c7"
     },
     {
       "id": "ambience-space-drone",
@@ -6811,7 +7043,8 @@
         "reverb",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "75e7cec68860"
     },
     {
       "id": "ambience-wind-gusts",
@@ -6866,7 +7099,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "e7a5373484f8"
     },
     {
       "id": "music-alert-sting",
@@ -6924,7 +7158,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "3147562558b1"
     },
     {
       "id": "music-defeat-jingle",
@@ -6985,7 +7220,8 @@
         "osc",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "087732641548"
     },
     {
       "id": "music-fanfare-short",
@@ -7049,7 +7285,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "bad46d8f55f2"
     },
     {
       "id": "music-intro-logo",
@@ -7115,7 +7352,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "07aa27f6d873"
     },
     {
       "id": "music-level-complete",
@@ -7181,7 +7419,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "57a73343afbf"
     },
     {
       "id": "music-menu-confirm",
@@ -7239,7 +7478,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "8272c2995704"
     },
     {
       "id": "music-mystery-sting",
@@ -7303,7 +7543,8 @@
         "noise",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "677b8839fcfb"
     },
     {
       "id": "music-ta-da",
@@ -7366,7 +7607,8 @@
         "bell",
         "seed",
         "master"
-      ]
+      ],
+      "fingerprint": "0aa1c874c1b5"
     },
     {
       "id": "music-victory-jingle",
@@ -7423,7 +7665,8 @@
         "glide",
         "osc",
         "master"
-      ]
+      ],
+      "fingerprint": "259507f70f41"
     }
   ],
   "themes": [

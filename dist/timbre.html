@@ -3250,6 +3250,13 @@ const TAIL = 0.25;
 // begin there. Live playback and Copy apply the same rule: a chain never plays before it is
 // PREROLL seconds old.
 const PREROLL = 0.2;
+// The master chain's settings (master.js), as data for the catalog and the docs. master() keeps its
+// own literals so Copy can lift it as one self-contained function; a unit test holds the two equal.
+const MASTER_CHAIN = {
+  gain: 0.55,
+  limiter: { threshold: -12, knee: 6, ratio: 12, attack: 0.003, release: 0.12 },
+  ceiling: { curve: '0.5 * tanh(2x)', points: 2048, oversample: '2x', maxDbfs: -6 },
+};
 
 /** Parameter values for a sound: its defaults, overridden by `over`, clamped to each range. */
 function paramsFor(sound, over) {

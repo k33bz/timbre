@@ -4,9 +4,13 @@
 //   node build.mjs --check  the same validation, then fail if any written file would change
 //
 // Validation is the contract in docs/DESIGN.md and docs/ADDING_SOUNDS.md made executable:
-//   * fields: exactly id, name, category, tags, desc, dur, params, play; ids unique, kebab-case,
-//     prefixed with the category, and the file lives at src/sounds/<category>/<id>.js
-//   * params: each { min, max, def } (plus optional unit, step) with min < max and def in range
+//   * fields: id, name, category, tags, desc, dur, params, play, plus the optional family and
+//     moments; ids unique, kebab-case, prefixed with the category, and the file lives at
+//     src/sounds/<category>/<id>.js
+//   * family, moments, a parameter's role and every theme's moment keys come from ONE vocabulary,
+//     src/vocabulary.js, which the MCP server reads too
+//   * params: each { min, max, def } (plus optional unit, step, desc, role) with min < max and def
+//     in range
 //   * play uses only T.*: it is compiled in an isolated VM context (no window, no document, and
 //     Math.random throws) and run against a mock WebAudio graph at the defaults, at every min, at
 //     every max and at random settings. That catches globals, unknown helpers, invalid automation
@@ -14,16 +18,21 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import crypto from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { T, HELPER_MODULES } from './src/core/t.js';
 import { stripCode, usedHelpers, playSource, splitFunction, copyHelpers, helperDeps, dedent } from './src/core/copy.js';
-import { paramsFor } from './src/core/render.js';
+import { paramsFor, PREROLL, SAMPLE_RATE, MASTER_CHAIN } from './src/core/render.js';
+import { MOMENTS, FAMILIES, ROLES } from './src/vocabulary.js';
 import { MockContext } from './gates/lib/mockaudio.mjs';
 
 export const ROOT = path.dirname(fileURLToPath(import.meta.url));
 export const CATEGORIES = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music'];
 const SOUND_KEYS = ['id', 'name', 'category', 'tags', 'desc', 'dur', 'params', 'play'];
-const PARAM_KEYS = ['min', 'max', 'def', 'unit', 'step'];
+const OPTIONAL_KEYS = ['family', 'moments'];
+const PARAM_KEYS = ['min', 'max', 'def', 'unit', 'step', 'desc', 'role'];
+// U+2013 and U+2014, built from code points so this file never contains one
+const DASH = new RegExp('[' + String.fromCharCode(0x2013, 0x2014) + ']');
 const THEME_KEYS = ['id', 'name', 'desc', 'moments'];
 const KEBAB = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const PARAM_NAME = /^[a-z][a-zA-Z0-9]*$/;
@@ -96,13 +105,20 @@ function isolatedPlay(src) {
   return vm.runInContext('(' + src + ')', ctx, { timeout: 2000 });
 }
 
+/** The vocabulary's moment names that look like m (shared words or prefixes), or the whole list. */
+function nearMoments(m) {
+  const words = String(m).split('-').filter((w) => w.length > 2);
+  const near = Object.keys(MOMENTS).filter((k) => words.some((w) => k.includes(w) || w.startsWith(k.slice(0, 4))));
+  return near.length ? 'near: ' + near.join(', ') : 'known: ' + Object.keys(MOMENTS).join(', ');
+}
+
 /** Validate one sound. Returns a list of error strings (empty = valid). */
 export function validateSound(entry, kit = T) {
   const { file, def: s } = entry;
   const errs = [];
   const E = (m) => errs.push(`${file}: ${m}`);
   if (!s || typeof s !== 'object') { E('must `export default` a sound object'); return errs; }
-  for (const k of Object.keys(s)) if (!SOUND_KEYS.includes(k)) E(`unknown field "${k}" (allowed: ${SOUND_KEYS.join(', ')})`);
+  for (const k of Object.keys(s)) if (!SOUND_KEYS.includes(k) && !OPTIONAL_KEYS.includes(k)) E(`unknown field "${k}" (allowed: ${[...SOUND_KEYS, ...OPTIONAL_KEYS].join(', ')})`);
   for (const k of SOUND_KEYS) if (s[k] == null) E(`missing required field "${k}"`);
   if (typeof s.id !== 'string' || !KEBAB.test(s.id)) E(`id "${s.id}" must be kebab-case`);
   if (!CATEGORIES.includes(s.category)) E(`category "${s.category}" must be one of: ${CATEGORIES.join(', ')}`);
@@ -113,6 +129,15 @@ export function validateSound(entry, kit = T) {
   }
   if (s.name != null && (typeof s.name !== 'string' || !s.name.trim() || s.name.length > 40)) E('name must be a string of 1 to 40 characters');
   if (s.desc != null && (typeof s.desc !== 'string' || s.desc.length < 10 || s.desc.length > 200)) E('desc must be a string of 10 to 200 characters');
+  for (const k of ['name', 'desc']) if (typeof s[k] === 'string' && DASH.test(s[k])) E(`${k} has an en or em dash: use a comma, a colon or "to"`);
+  if (s.family != null && !Object.hasOwn(FAMILIES, s.family)) E(`family "${s.family}" must be one of: ${Object.keys(FAMILIES).join(', ')} (src/vocabulary.js)`);
+  if (s.moments != null) {
+    if (!Array.isArray(s.moments) || !s.moments.length) E('moments must be a non-empty array of moment names (src/vocabulary.js), or left out');
+    else {
+      for (const m of s.moments) if (typeof m !== 'string' || !Object.hasOwn(MOMENTS, m)) E(`moment "${m}" is not in the vocabulary (src/vocabulary.js: ${nearMoments(m)})`);
+      if (new Set(s.moments).size !== s.moments.length) E('moments must be unique');
+    }
+  }
   if (s.tags != null) {
     if (!Array.isArray(s.tags) || !s.tags.length) E('tags must be a non-empty array');
     else {
@@ -135,6 +160,12 @@ export function validateSound(entry, kit = T) {
         if (d.def < d.min || d.def > d.max) E(`param "${k}": def ${d.def} is outside [${d.min}, ${d.max}]`);
         if (d.step != null && !(fin(d.step) && d.step > 0)) E(`param "${k}": step must be a positive number`);
         if (d.unit != null && (typeof d.unit !== 'string' || d.unit.length > 6)) E(`param "${k}": unit must be a short string`);
+        if (d.desc != null && (typeof d.desc !== 'string' || d.desc.length < 3 || d.desc.length > 100 || /[\r\n]/.test(d.desc))) E(`param "${k}": desc must be one line of 3 to 100 characters`);
+        else if (d.desc != null && DASH.test(d.desc)) E(`param "${k}": desc has an en or em dash`);
+        if (d.role != null) {
+          if (!Object.hasOwn(ROLES, d.role)) E(`param "${k}": role "${d.role}" must be one of: ${Object.keys(ROLES).join(', ')} (src/vocabulary.js)`);
+          else if (!(d.step === 1 && d.min === 0 && d.max === 1 && d.unit == null)) E(`param "${k}": role "${d.role}" is a switch, so the param needs min 0, max 1, step 1 and no unit`);
+        }
       }
     }
   }
@@ -196,6 +227,7 @@ export function validateTheme(entry, soundsById) {
   if (!th.moments || typeof th.moments !== 'object' || !Object.keys(th.moments).length) { E('moments must map at least one moment'); return errs; }
   for (const [m, v] of Object.entries(th.moments)) {
     if (!KEBAB.test(m)) E(`moment "${m}" must be kebab-case`);
+    else if (!Object.hasOwn(MOMENTS, m)) E(`moment "${m}" is not in the vocabulary (src/vocabulary.js: ${nearMoments(m)}); add it there once, for every theme`);
     if (!v || typeof v.sound !== 'string') { E(`moment "${m}" needs { sound: '<id>' }`); continue; }
     for (const k of Object.keys(v)) if (k !== 'sound' && k !== 'params') E(`moment "${m}" has unknown field "${k}"`);
     const s = soundsById.get(v.sound);
@@ -237,22 +269,88 @@ export function validateAll(soundEntries, themeEntries, kit = T) {
   return { errors, sounds, themes };
 }
 
-const meta = (s) => ({ id: s.id, name: s.name, category: s.category, tags: s.tags, desc: s.desc, dur: s.dur, params: s.params });
+const optional = (s) => ({ ...(s.family != null ? { family: s.family } : {}), ...(s.moments != null ? { moments: s.moments } : {}) });
+const meta = (s) => ({ id: s.id, name: s.name, category: s.category, tags: s.tags, desc: s.desc, dur: s.dur, ...optional(s), params: s.params });
 const themeMeta = (th) => ({ id: th.id, name: th.name, desc: th.desc, moments: th.moments });
 
-/** catalog/manifest.json: every field, the play source, the helpers it needs, and every helper. */
-export function buildManifest(sounds, themes, kit = T) {
+/** The catalog schema. 2 added version, copy, levels, vocabulary, family, moments, fingerprint and param desc and role. */
+export const SCHEMA = 2;
+
+/** The repository version (package.json), carried by the catalog. */
+export function version() {
+  return JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version;
+}
+
+/**
+ * A short hash of everything that decides how a sound renders: its dur, parameter ranges, play
+ * source and the source of every helper its Copy carries (master included). The level gate stores
+ * it next to each measurement, so the build embeds a level only while it still describes the sound.
+ */
+export function fingerprint(s, kit = T) {
+  const params = Object.entries(s.params || {}).map(([k, d]) => [k, d.min, d.max, d.def, d.step || 0]);
+  const { helpers } = copyHelpers(s, kit);
+  const text = JSON.stringify([s.dur, params, playSource(s.play), helpers.map((h) => [h, kit[h].toString()])]);
+  return crypto.createHash('sha1').update(text).digest('hex').slice(0, 12);
+}
+
+export const LEVELS_FILE = 'catalog/levels.json';
+
+/** catalog/levels.json as the level gate wrote it, or null. */
+export function readLevels(root = ROOT) {
+  try { return JSON.parse(fs.readFileSync(path.join(root, LEVELS_FILE), 'utf8')); } catch (e) { return null; }
+}
+
+export const LEVEL_FIELDS = ['peak', 'rms', 'worstPeak', 'worstRms', 'lowestPeak', 'pre', 'end'];
+
+/** The measured levels of a sound when the report holds a current measurement of it, else null. */
+export function levelsFor(s, report, kit = T) {
+  const m = report && report.sounds && report.sounds[s.id];
+  if (!m || m.fingerprint !== fingerprint(s, kit)) return null;
+  const out = {};
+  for (const k of LEVEL_FIELDS) if (Number.isFinite(m[k])) out[k] = m[k];
+  return Number.isFinite(out.peak) ? out : null;
+}
+
+/**
+ * catalog/manifest.json: every field, the play source, the helpers it needs, every helper, the Copy
+ * contract, the shared vocabulary and, for sounds the level gate measured as they are now, their
+ * measured levels.
+ */
+export function buildManifest(sounds, themes, kit = T, report = null) {
   const helpers = {};
   for (const name of Object.keys(kit).sort()) helpers[name] = { deps: helperDeps(name, kit), src: dedent(kit[name].toString()) };
+  let measured = 0;
+  const list = sounds.map((s) => {
+    const { uses, helpers: need } = copyHelpers(s, kit);
+    const lv = levelsFor(s, report, kit);
+    if (lv) measured++;
+    return { ...meta(s), file: s.file, play: playSource(s.play), uses, helpers: need, fingerprint: fingerprint(s, kit), ...(lv ? { levels: lv } : {}) };
+  });
   return {
     name: 'Timbre',
-    schema: 1,
+    version: version(),
+    schema: SCHEMA,
     count: sounds.length,
     categories: CATEGORIES.filter((c) => sounds.some((s) => s.category === c)),
-    sounds: sounds.map((s) => {
-      const { uses, helpers: need } = copyHelpers(s, kit);
-      return { ...meta(s), file: s.file, play: playSource(s.play), uses, helpers: need };
-    }),
+    copy: {
+      signature: 'fn(ac, opts, when, dest)',
+      returns: 'the end time in AudioContext seconds',
+      preroll: PREROLL,
+      chains: 'one master chain per destination, kept on the context in ac.timbreChains',
+      master: MASTER_CHAIN,
+      sampleRate: SAMPLE_RATE,
+    },
+    levels: {
+      source: LEVELS_FILE,
+      measured,
+      about: 'Measured by gates/check_levels.mjs in dBFS after the master chain on a warm chain. peak and rms: at the defaults (the worst peak and the mean RMS of 3 seeds). worstPeak, worstRms and lowestPeak: over all 12 renders (the defaults and 3 random parameter sets, 3 seeds each). pre: the highest peak before the limiter over all renders. end: where the default render falls below -60 dBFS, in seconds.',
+    },
+    vocabulary: {
+      families: FAMILIES,
+      roles: ROLES,
+      moments: Object.fromEntries(Object.entries(MOMENTS).map(([k, m]) => [k, m.about])),
+    },
+    sounds: list,
     themes: themes.map((th) => ({ ...themeMeta(th), file: th.file })),
     helpers,
   };
@@ -262,9 +360,10 @@ export function buildManifest(sounds, themes, kit = T) {
 export function buildIndex(sounds, themes) {
   return {
     name: 'Timbre',
-    schema: 1,
+    version: version(),
+    schema: SCHEMA,
     count: sounds.length,
-    sounds: sounds.map((s) => ({ id: s.id, name: s.name, category: s.category, tags: s.tags, desc: s.desc, dur: s.dur })),
+    sounds: sounds.map((s) => ({ id: s.id, name: s.name, category: s.category, tags: s.tags, desc: s.desc, dur: s.dur, ...optional(s) })),
     themes: themes.map((th) => ({ id: th.id, name: th.name, desc: th.desc, moments: Object.keys(th.moments) })),
   };
 }
@@ -312,11 +411,27 @@ export async function build() {
   const { errors, sounds, themes } = validateAll(soundEntries, themeEntries, T);
   if (errors.length) return { errors, outputs: {}, sounds, themes };
   const outputs = {
-    'catalog/manifest.json': JSON.stringify(buildManifest(sounds, themes, T), null, 2) + '\n',
+    'catalog/manifest.json': JSON.stringify(buildManifest(sounds, themes, T, readLevels()), null, 2) + '\n',
     'catalog/index.json': JSON.stringify(buildIndex(sounds, themes), null, 2) + '\n',
     'dist/timbre.html': buildHtml(sounds, themes, T),
   };
   return { errors, outputs, sounds, themes };
+}
+
+/**
+ * Write a file whole or not at all: a temporary file beside it, then a rename over it, so a reader
+ * (the MCP server watching the catalog, a browser reloading the page) never sees half a file. On
+ * Windows a rename can fail for a moment while another process holds the target open; it retries.
+ */
+export function writeAtomic(file, text) {
+  const tmp = `${file}.${process.pid}.tmp`;
+  fs.writeFileSync(tmp, text);
+  for (let i = 0; ; i++) {
+    try { fs.renameSync(tmp, file); return; } catch (e) {
+      if (i >= 20 || !['EPERM', 'EACCES', 'EBUSY'].includes(e.code)) { try { fs.rmSync(tmp, { force: true }); } catch (x) { /* gone */ } throw e; }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50);
+    }
+  }
 }
 
 async function main() {
@@ -336,10 +451,15 @@ async function main() {
       continue;
     }
     fs.mkdirSync(path.dirname(p), { recursive: true });
-    if (old !== text) fs.writeFileSync(p, text);
+    if (old !== text) writeAtomic(p, text);
     console.log(`  ${f}  ${(Buffer.byteLength(text) / 1024).toFixed(1)} KB${old === text ? ' (unchanged)' : ''}`);
   }
   console.log(`build: ${sounds.length} sounds, ${themes.length} theme(s) valid${check ? (stale ? '' : '; outputs up to date') : ''}`);
+  const report = readLevels();
+  const current = report ? sounds.filter((s) => levelsFor(s, report)).length : 0;
+  if (current < sounds.length) {
+    console.log(`levels: ${current}/${sounds.length} sounds carry measured levels; ${report ? 'the rest changed since ' + LEVELS_FILE + ' was written, or were never measured' : LEVELS_FILE + ' is missing'} (run node gates/check_levels.mjs, then node build.mjs)`);
+  }
   if (stale) process.exit(1);
 }
 

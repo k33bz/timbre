@@ -10,12 +10,13 @@
 //   tail    <= -60 dBFS after dur (the declared dur covers the whole sound)
 //   never silent, never NaN
 //   node gates/check_levels.mjs [id-filter]
-// Writes gates/out/levels.json. Exit 1 on any failure.
+// Writes gates/out/levels.json (every render) and catalog/levels.json (the measured levels per sound,
+// which the build embeds in the manifest; see levelEntry). Exit 1 on any failure.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { launch, distUrl, OUT, table } from './lib/browser.mjs';
-import { randomParamSets } from '../build.mjs';
+import { launch, distUrl, OUT, ROOT, table } from './lib/browser.mjs';
+import { randomParamSets, writeAtomic, LEVELS_FILE } from '../build.mjs';
 
 export const LIMITS = { peakMax: -12, peakMin: -36, clipMax: -1, preMax: -3, dcMax: -50, tailMax: -60 };
 const SEEDS = [1, 2, 3];
@@ -35,7 +36,57 @@ export function problems(m, L = LIMITS) {
   return p;
 }
 
+/**
+ * One sound's entry in catalog/levels.json, from its 12 renders: peak and rms at the defaults (the
+ * worst peak and the mean RMS of the 3 seeds, as the table shows them), the loudest and quietest
+ * peak and the loudest RMS over every render, the highest pre-limiter peak, the audible end at the
+ * defaults, and the fingerprint of the sound that was measured (build.mjs, fingerprint).
+ */
+export function levelEntry(renders, fp) {
+  const def = renders.filter((m) => m.label === 'defaults');
+  const mx = (k, set) => Math.max(...set.map((m) => m[k]));
+  const r1 = (v) => Math.round(v * 10) / 10;
+  return {
+    fingerprint: fp,
+    peak: mx('peak', def),
+    rms: r1(def.reduce((a, m) => a + m.rms, 0) / def.length),
+    worstPeak: mx('peak', renders),
+    worstRms: mx('rms', renders),
+    lowestPeak: Math.min(...renders.map((m) => m.peak)),
+    pre: mx('pre', renders),
+    end: mx('end', def),
+  };
+}
+
+/**
+ * Merge new entries into catalog/levels.json: a run over some sounds keeps the others' entries, and
+ * sounds no longer in the catalog drop out. Written only when something changed, and atomically.
+ */
+export function updateLevels(entries, ids, file = path.join(ROOT, LEVELS_FILE)) {
+  let old = null;
+  try { old = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { old = null; }
+  const sounds = {};
+  for (const id of [...ids].sort()) {
+    const e = entries[id] || (old && old.sounds && old.sounds[id]);
+    if (e) sounds[id] = e;
+  }
+  const doc = {
+    schema: 1,
+    about: 'Written by gates/check_levels.mjs, read by build.mjs (manifest levels) and the MCP server. dBFS after the master chain on a warm chain; see the manifest levels.about for each field. A sound whose fingerprint no longer matches the catalog has changed since it was measured.',
+    sounds,
+  };
+  const text = JSON.stringify(doc, null, 1) + '\n';
+  let before = null;
+  try { before = fs.readFileSync(file, 'utf8'); } catch (e) { before = null; }
+  if (before === text) return false;
+  writeAtomic(file, text);
+  return true;
+}
+
 async function main() {
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'catalog', 'manifest.json'), 'utf8'));
+  const fps = Object.fromEntries(manifest.sounds.map((s) => [s.id, s.fingerprint]));
+  const entries = {};
   const b = await launch();
   let failed = 0;
   try {
@@ -63,6 +114,7 @@ async function main() {
         `${mn('peak').toFixed(1)}..${mx('peak').toFixed(1)}`, mx('pre').toFixed(1), mx('dc').toFixed(1),
         mx('tail').toFixed(1), mx('end').toFixed(2), bad.length ? 'FAIL' : 'ok']);
       report.push({ id: s.id, dur: s.dur, renders: res, problems: bad });
+      if (fps[s.id]) entries[s.id] = levelEntry(res, fps[s.id]);
       if (bad.length) failed++;
       for (const x of bad.slice(0, 6)) console.error(`  ${s.id}: ${x}`);
       if (bad.length > 6) console.error(`  ${s.id}: ... ${bad.length - 6} more`);
@@ -73,6 +125,10 @@ async function main() {
       `pre <= ${LIMITS.preMax}, dc <= ${LIMITS.dcMax}, tail <= ${LIMITS.tailMax} dBFS)`);
     fs.mkdirSync(OUT, { recursive: true });
     fs.writeFileSync(path.join(OUT, 'levels.json'), JSON.stringify(report, null, 1));
+    const missing = sounds.filter((s) => !fps[s.id]).map((s) => s.id);
+    if (missing.length) console.error(`  not in catalog/manifest.json (run node build.mjs): ${missing.join(', ')}`);
+    const changed = updateLevels(entries, manifest.sounds.map((s) => s.id));
+    console.log(`${LEVELS_FILE}: ${changed ? 'updated; run node build.mjs to embed it in the manifest' : 'unchanged'}`);
     if (b.errors.length) { console.error('page errors:\n  ' + b.errors.join('\n  ')); failed++; }
   } finally {
     await b.close();

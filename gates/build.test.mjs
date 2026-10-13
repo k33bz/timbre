@@ -4,7 +4,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { T } from '../src/core/t.js';
-import { build, loadDir, validateAll, validateSound, validateTheme, buildManifest, buildIndex, buildHtml, ROOT } from '../build.mjs';
+import { build, loadDir, validateAll, validateSound, validateTheme, buildManifest, buildIndex, buildHtml, ROOT, SCHEMA, fingerprint, levelsFor, writeAtomic } from '../build.mjs';
+import { levelEntry, updateLevels } from './check_levels.mjs';
+import { MOMENTS, FAMILIES } from '../src/vocabulary.js';
+import { PREROLL, MASTER_CHAIN } from '../src/core/render.js';
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 const good = () => ({
@@ -130,7 +135,7 @@ test('manifest carries play sources and helper lists; index carries search field
     for (const h of s.helpers) assert.ok(m.helpers[h], `${s.id}: helper ${h} missing from the helper table`);
   }
   const ix = buildIndex(v.sounds, v.themes);
-  for (const s of ix.sounds) assert.deepEqual(Object.keys(s).sort(), ['category', 'desc', 'dur', 'id', 'name', 'tags']);
+  for (const s of ix.sounds) assert.deepEqual(Object.keys(s).filter((k) => k !== 'family' && k !== 'moments').sort(), ['category', 'desc', 'dur', 'id', 'name', 'tags']);
 });
 
 test('the bundle is one page whose script compiles and holds every sound', async () => {
@@ -150,4 +155,114 @@ test('the build is deterministic', async () => {
   const b = await build();
   for (const k of Object.keys(a.outputs)) assert.equal(a.outputs[k], b.outputs[k], k);
   assert.equal(buildHtml(a.sounds, a.themes, T), a.outputs['dist/timbre.html']);
+});
+
+// ---- catalog fields (schema 2)
+
+test('family, moments, a parameter desc and a switch role validate against the shared vocabulary', () => {
+  const a = good(); a.family = 'glass'; a.moments = ['click', 'hover']; a.params.pitch.desc = 'Pitch of the blip';
+  a.params.on = { min: 0, max: 1, def: 1, step: 1, role: 'on', desc: '1 rising, 0 falling' };
+  assert.deepEqual(check(a), []);
+  const b = good(); b.family = 'plastic';
+  expectError(b, /family "plastic" must be one of: soft, glass/);
+  const c = good(); c.moments = ['click', 'boop'];
+  expectError(c, /moment "boop" is not in the vocabulary/);
+  const d = good(); d.moments = [];
+  expectError(d, /moments must be a non-empty array/);
+  const e = good(); e.moments = ['click', 'click'];
+  expectError(e, /moments must be unique/);
+  const f = good(); f.params.pitch.desc = 'x';
+  expectError(f, /desc must be one line of 3 to 100 characters/);
+  const g = good(); g.params.pitch.desc = 'High ' + String.fromCharCode(0x2014) + ' low';
+  expectError(g, /desc has an en or em dash/);
+  const h = good(); h.params.pitch.role = 'on';
+  expectError(h, /role "on" is a switch, so the param needs min 0, max 1, step 1 and no unit/);
+  const i = good(); i.params.on = { min: 0, max: 1, def: 0, step: 1, role: 'direction' };
+  expectError(i, /role "direction" must be one of: on, open, chip, go/);
+  const j = good(); j.desc = 'A fixture ' + String.fromCharCode(0x2013) + ' with a dash.';
+  expectError(j, /desc has an en or em dash/);
+});
+
+test('theme moments come from the vocabulary', async () => {
+  const sd = Object.assign({ file: FILE }, good());
+  const byId = new Map([[sd.id, sd]]);
+  const th = { id: 'test-theme', name: 'Test', desc: 'A fixture theme for tests.', moments: { click: { sound: 'ui-test-blip' }, 'toggle-up': { sound: 'ui-test-blip' } } };
+  const errs = validateTheme({ file: 'src/themes/test-theme.js', def: th }, byId);
+  assert.equal(errs.length, 1, errs.join('\n'));
+  assert.match(errs[0], /moment "toggle-up" is not in the vocabulary \(src\/vocabulary\.js: near: toggle-on, toggle-off\)/);
+  for (const k of Object.keys(MOMENTS)) assert.match(k, /^[a-z0-9]+(-[a-z0-9]+)*$/);
+});
+
+test('the manifest carries the version, the Copy contract, the vocabulary and fingerprints', async () => {
+  const { sounds, themes } = await build();
+  const m = buildManifest(sounds, themes, T);
+  assert.equal(m.schema, SCHEMA);
+  assert.equal(m.version, JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8')).version);
+  assert.equal(m.copy.preroll, PREROLL);
+  assert.deepEqual(m.copy.master, MASTER_CHAIN);
+  assert.deepEqual(Object.keys(m.vocabulary.families), Object.keys(FAMILIES));
+  assert.deepEqual(Object.keys(m.vocabulary.moments), Object.keys(MOMENTS));
+  for (const s of m.sounds) assert.match(s.fingerprint, /^[0-9a-f]{12}$/);
+  assert.equal(new Set(m.sounds.map((s) => s.fingerprint)).size, m.sounds.length, 'fingerprints are distinct');
+});
+
+test('a fingerprint follows what decides the render and nothing else', () => {
+  const a = good();
+  const fp = fingerprint(a, T);
+  const b = good(); b.params.pitch.desc = 'Pitch of the blip'; b.family = 'soft'; b.moments = ['click']; b.tags = ['other'];
+  assert.equal(fingerprint(b, T), fp, 'descriptions and metadata do not change it');
+  const c = good(); c.dur = 0.25;
+  const d = good(); d.params.pitch.max = 2100;
+  const e = good(); e.play = function (T, out, t, p) { T.osc(out, t, { f: p.pitch, dur: 0.1, peak: 0.11 * p.level }); };
+  for (const x of [c, d, e]) assert.notEqual(fingerprint(x, T), fp);
+});
+
+test('measured levels are embedded only while their fingerprint matches the sound', async () => {
+  const { sounds, themes } = await build();
+  const [s1, s2] = sounds;
+  const report = { sounds: {
+    [s1.id]: { fingerprint: fingerprint(s1, T), peak: -20.1, rms: -30.2, worstPeak: -18, worstRms: -28, lowestPeak: -25, pre: -21, end: 0.2, extra: 1 },
+    [s2.id]: { fingerprint: '000000000000', peak: -19 },
+  } };
+  const m = buildManifest(sounds, themes, T, report);
+  assert.deepEqual(m.sounds[0].levels, { peak: -20.1, rms: -30.2, worstPeak: -18, worstRms: -28, lowestPeak: -25, pre: -21, end: 0.2 });
+  assert.equal(m.sounds[1].levels, undefined, 'a stale measurement is left out');
+  assert.equal(m.levels.measured, 1);
+  assert.deepEqual(levelsFor(s1, null, T), null);
+});
+
+test('the level gate keeps catalog/levels.json merged, sorted and unchanged when nothing changed', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'timbre-levels-'));
+  const file = path.join(dir, 'levels.json');
+  try {
+    const renders = [
+      { label: 'defaults', peak: -20, rms: -30, pre: -22, end: 0.1 }, { label: 'defaults', peak: -21, rms: -31, pre: -23, end: 0.12 },
+      { label: 'random 1', peak: -15, rms: -26, pre: -16, end: 0.3 }, { label: 'random 2', peak: -28, rms: -38, pre: -29, end: 0.05 },
+    ];
+    const e = levelEntry(renders, 'abc');
+    assert.deepEqual(e, { fingerprint: 'abc', peak: -20, rms: -30.5, worstPeak: -15, worstRms: -26, lowestPeak: -28, pre: -16, end: 0.12 });
+    assert.equal(updateLevels({ b: e }, ['b', 'a'], file), true);
+    assert.equal(updateLevels({ a: e }, ['b', 'a', 'c'], file), true);
+    const doc = JSON.parse(fs.readFileSync(file, 'utf8'));
+    assert.deepEqual(Object.keys(doc.sounds), ['a', 'b'], 'merged and sorted');
+    assert.equal(updateLevels({ a: e }, ['b', 'a'], file), false, 'same content: not rewritten');
+    assert.equal(updateLevels({}, ['a'], file), true);
+    assert.deepEqual(Object.keys(JSON.parse(fs.readFileSync(file, 'utf8')).sounds), ['a'], 'a sound gone from the catalog drops out');
+    assert.deepEqual(fs.readdirSync(dir), ['levels.json'], 'no temporary file left behind');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('writeAtomic replaces a file whole and leaves no temporary file', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'timbre-atomic-'));
+  try {
+    const f = path.join(dir, 'x.json');
+    writeAtomic(f, 'one');
+    writeAtomic(f, 'two');
+    assert.equal(fs.readFileSync(f, 'utf8'), 'two');
+    assert.deepEqual(fs.readdirSync(dir), ['x.json']);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });

@@ -27,7 +27,7 @@ test('loads the real catalog', (t) => {
   assert.deepEqual(c.warnings, [], 'a built catalog loads without warnings');
   assert.ok(c.themes.length >= 1, 'has a theme');
   assert.equal(c.version, JSON.parse(fs.readFileSync(path.join(REPO, 'package.json'), 'utf8')).version);
-  assert.equal(c.schema, 1);
+  assert.equal(c.schema, 2);
   for (const s of c.sounds) {
     assert.ok(s.copyable, `${s.id} is copyable`);
     assert.match(s.fname, /^[a-z][A-Za-z0-9]*$/);
