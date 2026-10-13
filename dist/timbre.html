@@ -1,0 +1,2167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Timbre</title>
+<meta name="description" content="Timbre: a gallery of synthesized sound effects. WebAudio only, no samples, works offline from one file.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23121518'/%3E%3Cpath d='M4 16h4l3-7 4 14 4-11 3 5 2-1h4' fill='none' stroke='%23ffb648' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<script>
+/* Resolve the color theme before first paint (a saved choice, else the system's). */
+(function () {
+  var m = null;
+  try { m = localStorage.getItem('timbre.mode'); } catch (e) {}
+  if (m !== 'dark' && m !== 'light') m = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', m);
+})();
+</script>
+<style>/* Timbre gallery. A mixing desk, kept quiet: channel strips with a category color bar, a scope
+   per sound, LED-style level readouts and faders. Tokens first; light is the base, dark overrides
+   follow (system preference, or the saved choice in [data-theme]). */
+:root {
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "Cascadia Mono", "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --radius: 12px;
+
+  --bg: #e8e5de;
+  --bg-2: #dedad1;
+  --panel: #f8f6f1;
+  --panel-2: #efece5;
+  --panel-3: #e6e2d9;
+  --line: #d2ccc0;
+  --line-2: #b9b2a4;
+  --ink: #1b1c1e;
+  --ink-2: #3f4246;
+  --muted: #5b5f65;
+  --accent: #985700;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(152, 87, 0, 0.12);
+  --signal: #0b7350;
+  --signal-fill: rgba(11, 115, 80, 0.22);
+  --signal-body: rgba(11, 115, 80, 0.55);
+  --scope: #f2eee3;
+  --scope-edge: #d9d2c2;
+  --scope-grid: rgba(27, 28, 30, 0.07);
+  --scope-ref: rgba(152, 87, 0, 0.6);
+  --cap: #fbfaf7;
+  --led-ok: #0b7350;
+  --led-warn: #a35f00;
+  --led-hot: #c0352b;
+  --focus: #0a5bd0;
+  --shadow: 0 1px 2px rgba(40, 32, 16, 0.08), 0 4px 14px rgba(40, 32, 16, 0.05);
+  --cat-ui: #13808a;
+  --cat-notify: #b06f00;
+  --cat-game: #c2433a;
+  --cat-cards: #6a50c2;
+  --cat-magic: #b2408a;
+  --cat-scifi: #2470c2;
+  --cat-ambience: #3b8436;
+  --cat-music: #8a6a12;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d0f11;
+    --bg-2: #121518;
+    --panel: #16191d;
+    --panel-2: #1c2025;
+    --panel-3: #23282e;
+    --line: #2a3037;
+    --line-2: #3b434c;
+    --ink: #ecebe6;
+    --ink-2: #c9cbcd;
+    --muted: #9ca3ab;
+    --accent: #ffb648;
+    --accent-ink: #1d1404;
+    --accent-soft: rgba(255, 182, 72, 0.13);
+    --signal: #4fe0a6;
+    --signal-fill: rgba(79, 224, 166, 0.16);
+    --signal-body: rgba(79, 224, 166, 0.5);
+    --scope: #0a0c0e;
+    --scope-edge: #23292f;
+    --scope-grid: rgba(236, 235, 230, 0.06);
+    --scope-ref: rgba(255, 182, 72, 0.55);
+    --cap: #d9dcdf;
+    --led-ok: #4fe0a6;
+    --led-warn: #ffb648;
+    --led-hot: #ff6b5e;
+    --focus: #7db6ff;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.25);
+    --cat-ui: #3cc4cc;
+    --cat-notify: #f0b03c;
+    --cat-game: #ff7468;
+    --cat-cards: #a08cff;
+    --cat-magic: #f07ac8;
+    --cat-scifi: #63a9ff;
+    --cat-ambience: #7ccf6e;
+    --cat-music: #d8b44a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d0f11;
+  --bg-2: #121518;
+  --panel: #16191d;
+  --panel-2: #1c2025;
+  --panel-3: #23282e;
+  --line: #2a3037;
+  --line-2: #3b434c;
+  --ink: #ecebe6;
+  --ink-2: #c9cbcd;
+  --muted: #9ca3ab;
+  --accent: #ffb648;
+  --accent-ink: #1d1404;
+  --accent-soft: rgba(255, 182, 72, 0.13);
+  --signal: #4fe0a6;
+  --signal-fill: rgba(79, 224, 166, 0.16);
+  --signal-body: rgba(79, 224, 166, 0.5);
+  --scope: #0a0c0e;
+  --scope-edge: #23292f;
+  --scope-grid: rgba(236, 235, 230, 0.06);
+  --scope-ref: rgba(255, 182, 72, 0.55);
+  --cap: #d9dcdf;
+  --led-ok: #4fe0a6;
+  --led-warn: #ffb648;
+  --led-hot: #ff6b5e;
+  --focus: #7db6ff;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.25);
+  --cat-ui: #3cc4cc;
+  --cat-notify: #f0b03c;
+  --cat-game: #ff7468;
+  --cat-cards: #a08cff;
+  --cat-magic: #f07ac8;
+  --cat-scifi: #63a9ff;
+  --cat-ambience: #7ccf6e;
+  --cat-music: #d8b44a;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.5 var(--sans);
+  overflow-x: hidden;
+}
+h1, h2, h3 { margin: 0; line-height: 1.2; }
+button, input, select, textarea { font: inherit; color: inherit; }
+svg { display: block; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.skip {
+  position: absolute; left: 12px; top: -48px; z-index: 50;
+  background: var(--accent); color: var(--accent-ink); padding: 8px 12px; border-radius: 8px;
+  text-decoration: none; font-weight: 600;
+}
+.skip:focus { top: 12px; }
+
+/* ---- header: brand, search, the desk (output meter, monitor fader, theme) ---- */
+.top {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  backdrop-filter: saturate(1.2) blur(8px);
+  -webkit-backdrop-filter: saturate(1.2) blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.top-in {
+  max-width: 1320px; margin: 0 auto; padding: 10px 20px;
+  display: grid; grid-template-columns: auto auto minmax(180px, 1fr) auto; align-items: center; gap: 18px;
+}
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; }
+.logo { width: 38px; height: 22px; }
+.logo path { fill: none; stroke: var(--accent); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.word { font-weight: 750; font-size: 21px; letter-spacing: 0.01em; }
+.tagline { margin: 0; color: var(--muted); font-size: 13px; white-space: nowrap; }
+.search {
+  position: relative; display: flex; align-items: center;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; height: 38px; padding: 0 10px;
+}
+.search:focus-within { border-color: var(--focus); }
+.search svg { width: 17px; height: 17px; flex: none; }
+.search svg * { fill: none; stroke: var(--muted); stroke-width: 1.8; stroke-linecap: round; }
+.search input {
+  flex: 1; min-width: 0; border: 0; background: transparent; outline: none; padding: 0 8px; height: 100%;
+}
+.search input::placeholder { color: var(--muted); opacity: 1; }
+.search kbd {
+  font: 600 11px/1 var(--mono); color: var(--muted); border: 1px solid var(--line-2); border-radius: 5px; padding: 3px 6px;
+}
+.desk { display: flex; align-items: center; gap: 14px; }
+.vu {
+  position: relative; width: 112px; height: 10px; border-radius: 3px; overflow: hidden;
+  background: repeating-linear-gradient(to right, var(--panel-3) 0 6px, transparent 6px 8px);
+  --lvl: 0; --hold: 0;
+}
+.vu-fill {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(to right, transparent 0 6px, var(--panel) 6px 8px),
+    linear-gradient(to right, var(--led-ok) 0 66%, var(--led-warn) 66% 86%, var(--led-hot) 86%);
+  clip-path: inset(0 calc((1 - var(--lvl)) * 100%) 0 0);
+}
+.vu-hold {
+  position: absolute; top: 0; bottom: 0; width: 2px; left: calc(var(--hold) * 100% - 2px);
+  background: var(--ink-2); opacity: calc(var(--hold) * 4);
+}
+.mon { display: flex; align-items: center; gap: 8px; font: 600 11px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.mon input { width: 92px; }
+
+.cats {
+  max-width: 1320px; margin: 0 auto; padding: 0 20px 10px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.cat {
+  display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 11px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--panel);
+  color: var(--ink-2); font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.cat:hover { border-color: var(--line-2); color: var(--ink); }
+.cat .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--muted)); opacity: 0.45; }
+.cat .n { font: 500 11px/1 var(--mono); color: var(--muted); }
+.cat[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+.cat[aria-pressed="true"] .dot { opacity: 1; box-shadow: 0 0 0 3px color-mix(in srgb, var(--c, var(--accent)) 25%, transparent); }
+
+/* ---- buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  height: 34px; padding: 0 12px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--line-2); background: var(--panel-2); color: var(--ink);
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+}
+.btn:hover { background: var(--panel-3); }
+.btn svg { width: 15px; height: 15px; }
+.btn svg * { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.btn.icon { width: 36px; padding: 0; }
+.btn.ghost { background: transparent; border-color: var(--line); color: var(--ink-2); }
+.btn.ghost:hover { background: var(--panel-2); color: var(--ink); }
+.btn[disabled] { opacity: 0.55; cursor: progress; }
+#mode .i-moon { display: none; }
+:root[data-theme="light"] #mode .i-sun { display: none; }
+:root[data-theme="light"] #mode .i-moon { display: block; }
+#mode .i-moon path { fill: currentColor; stroke: none; }
+
+main { max-width: 1320px; margin: 0 auto; padding: 18px 20px 40px; }
+main:focus { outline: none; }
+
+/* ---- sound theme rack: app moments as pads ---- */
+.rack {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px 16px; box-shadow: var(--shadow);
+}
+.rack-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 12px; }
+.rack-head h2 { font-size: 13px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+.rack select {
+  height: 32px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--panel-2); padding: 0 30px 0 10px;
+  font-weight: 650; appearance: none; -webkit-appearance: none; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 14px, calc(100% - 10px) 14px; background-size: 5px 5px; background-repeat: no-repeat;
+}
+.rack-desc { margin: 0; color: var(--ink-2); font-size: 13px; flex: 1 1 260px; }
+.pads { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.pad {
+  position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left;
+  padding: 10px 12px 10px 14px; border-radius: 10px; cursor: pointer; min-height: 58px;
+  border: 1px solid var(--line-2); background: var(--panel-2); color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--line);
+}
+.pad::before {
+  content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 0 3px 3px 0;
+  background: var(--c, var(--accent)); opacity: 0.8;
+}
+.pad:hover { background: var(--panel-3); }
+.pad:active, .pad.hit { transform: translateY(1px); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.pad-m { font: 700 12px/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+.pad-s { font-size: 12px; color: var(--muted); }
+
+/* ---- grid of channel strips ---- */
+.grid-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin: 26px 0 12px; }
+.grid-head h2 { font-size: 18px; }
+.count { font: 500 13px var(--mono); color: var(--muted); margin-left: 6px; }
+.hint { margin: 0; color: var(--muted); font-size: 12.5px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 16px; }
+.grid:focus { outline: none; }
+.strip {
+  position: relative; display: flex; flex-direction: column; min-width: 0;
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.strip::before { content: ""; height: 3px; background: var(--c, var(--accent)); }
+.strip[hidden] { display: none; }
+.strip-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px 2px; }
+.strip-head h3 { font-size: 16px; font-weight: 700; min-width: 0; }
+.chip {
+  margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 6px;
+  font: 600 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+}
+.chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c, var(--accent)); }
+.desc { margin: 4px 14px 12px; color: var(--ink-2); font-size: 13px; line-height: 1.45; }
+
+.scope {
+  position: relative; margin: 0 14px; height: 92px; border-radius: 8px; overflow: hidden;
+  background: var(--scope); border: 1px solid var(--scope-edge);
+}
+.scope canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scope-msg {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.04em;
+}
+.scope[data-state="ready"] .scope-msg { display: none; }
+.scope-ref {
+  position: absolute; right: 6px; top: 4px; padding: 1px 3px; border-radius: 3px; background: var(--scope);
+  font: 600 9.5px/1 var(--mono); color: var(--scope-ref); pointer-events: none;
+}
+
+.meters { display: flex; flex-wrap: wrap; gap: 6px; margin: 9px 14px 0; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 6px;
+  background: var(--panel-2); border: 1px solid var(--line); font: 500 11.5px/1 var(--mono); color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.badge b { font-weight: 600; color: var(--muted); font-size: 10px; letter-spacing: 0.06em; }
+.badge[hidden] { display: none; }
+.led { width: 7px; height: 7px; border-radius: 50%; background: var(--line-2); }
+.led[data-l="ok"] { background: var(--led-ok); box-shadow: 0 0 6px color-mix(in srgb, var(--led-ok) 60%, transparent); }
+.led[data-l="warn"] { background: var(--led-warn); box-shadow: 0 0 6px color-mix(in srgb, var(--led-warn) 60%, transparent); }
+.led[data-l="hot"] { background: var(--led-hot); box-shadow: 0 0 6px color-mix(in srgb, var(--led-hot) 60%, transparent); }
+
+.transport { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 14px; }
+.transport .spacer { flex: 1; }
+.play { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); min-width: 88px; }
+.play:hover { background: color-mix(in srgb, var(--accent) 88%, var(--ink)); }
+.play svg * { fill: currentColor; stroke: none; }
+.play .on { width: 7px; height: 7px; border-radius: 50%; background: color-mix(in srgb, var(--accent-ink) 30%, transparent); }
+.strip.playing .play .on { background: var(--signal); box-shadow: 0 0 8px var(--signal); }
+.vary { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--ink-2); cursor: pointer; user-select: none; }
+.vary input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.sw {
+  position: relative; width: 30px; height: 18px; border-radius: 9px; background: var(--panel-3); border: 1px solid var(--line-2);
+  transition: background 0.15s;
+}
+.sw::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--muted); transition: transform 0.15s, background 0.15s;
+}
+.vary input:checked + .sw { background: var(--accent-soft); border-color: var(--accent); }
+.vary input:checked + .sw::after { transform: translateX(12px); background: var(--accent); }
+.vary input:focus-visible + .sw { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.params { border-top: 1px dashed var(--line); padding: 10px 14px 4px; display: grid; gap: 4px; }
+.params-head { display: flex; align-items: center; justify-content: space-between; }
+.params-head span { font: 600 10.5px/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.reset { height: 24px; padding: 0 8px; font-size: 12px; border-radius: 6px; }
+.fader { display: grid; grid-template-columns: 62px minmax(0, 1fr) 72px; align-items: center; gap: 10px; min-height: 30px; }
+.fader label { font: 500 12px/1.2 var(--mono); color: var(--ink-2); overflow-wrap: anywhere; }
+.fader output { font: 500 12px/1 var(--mono); text-align: right; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* faders: a thin track, filled to the value, and a rectangular cap with a center groove */
+input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 26px; margin: 0; background: transparent; cursor: pointer;
+  --fill: 50%;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 2px;
+  background: linear-gradient(to right, var(--accent) 0 var(--fill), var(--line-2) var(--fill));
+}
+input[type="range"]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line-2); }
+input[type="range"]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--accent); }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 12px; height: 22px; margin-top: -9px; border-radius: 3px;
+  background: linear-gradient(to bottom, transparent 9px, var(--ink-2) 9px 12px, transparent 12px), var(--cap);
+  border: 1px solid var(--line-2); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 10px; height: 20px; border-radius: 3px;
+  background: linear-gradient(to bottom, transparent 8px, var(--ink-2) 8px 11px, transparent 11px), var(--cap);
+  border: 1px solid var(--line-2); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+input[type="range"]:focus-visible { outline: none; }
+input[type="range"]:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--focus); outline-offset: 2px; }
+input[type="range"]:focus-visible::-moz-range-thumb { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+.strip-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 8px 14px 14px; margin-top: auto; }
+.sid { font: 500 11.5px/1 var(--mono); color: var(--muted); }
+.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 8px; margin: 0; padding: 0; }
+.tags li { font-size: 12px; color: var(--muted); }
+.tags li::before { content: "#"; opacity: 0.6; }
+
+.empty { text-align: center; padding: 40px 0; color: var(--muted); }
+.empty p { margin: 0 0 12px; }
+
+.foot { max-width: 1320px; margin: 0 auto; padding: 0 20px 40px; color: var(--muted); font-size: 13px; }
+.foot p { margin: 0; max-width: 820px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 20px; transform: translate(-50%, 20px); z-index: 60;
+  max-width: calc(100vw - 32px); padding: 10px 14px; border-radius: 10px;
+  background: var(--ink); color: var(--bg); font-size: 13px; font-weight: 600;
+  opacity: 0; pointer-events: none; transition: opacity 0.18s, transform 0.18s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.code {
+  width: min(760px, calc(100vw - 32px)); max-height: calc(100vh - 64px); padding: 0;
+  border: 1px solid var(--line-2); border-radius: var(--radius); background: var(--panel); color: var(--ink);
+  box-shadow: var(--shadow);
+}
+.code::backdrop { background: rgba(0, 0, 0, 0.45); }
+.code-head { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.code-head h2 { font-size: 15px; }
+.code-note { margin: 10px 14px 0; color: var(--ink-2); font-size: 13px; }
+.code textarea {
+  display: block; width: calc(100% - 28px); height: min(60vh, 520px); margin: 10px 14px 14px; padding: 10px;
+  border-radius: 8px; border: 1px solid var(--line); background: var(--scope); color: var(--ink);
+  font: 12px/1.5 var(--mono); resize: vertical; white-space: pre;
+}
+
+/* ---- narrow screens ---- */
+@media (max-width: 1100px) {
+  .tagline { display: none; }
+  .top-in { grid-template-columns: auto minmax(160px, 1fr) auto; }
+}
+@media (max-width: 720px) {
+  /* a long single column: let the header scroll away instead of holding a fifth of the screen */
+  .top { position: relative; }
+  .top-in { grid-template-columns: 1fr auto; gap: 10px 12px; padding: 10px 16px; }
+  .search { grid-column: 1 / -1; grid-row: 2; }
+  .search kbd { display: none; }
+  .vu, .mon { display: none; }
+  .cats { padding: 0 16px 10px; }
+  main { padding: 14px 16px 32px; }
+  .foot { padding: 0 16px 32px; }
+  .rack { padding: 12px; }
+  .pads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-head { margin-top: 20px; }
+}
+@media (max-width: 440px) {
+  .transport { gap: 6px; }
+  .transport .btn { padding: 0 9px; font-size: 12.5px; }
+  .play { min-width: 0; }
+  .play .on { display: none; }
+  .meters { gap: 4px; }
+  .badge { padding: 0 6px; }
+}
+@media (max-width: 380px) {
+  .fader { grid-template-columns: 54px minmax(0, 1fr) 64px; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#sounds">Skip to sounds</a>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#main" aria-label="Timbre, back to top">
+      <svg class="logo" viewBox="0 0 44 24" aria-hidden="true" focusable="false"><path d="M2 12h6l3-8 5 16 5-12 3 6 3-2h15"/></svg>
+      <span class="word">Timbre</span>
+    </a>
+    <p class="tagline">Synthesized sound effects. No samples, nothing fetched.</p>
+    <div class="search">
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
+      <input id="q" type="search" placeholder="Search sounds, tags, moods" aria-label="Search sounds" autocomplete="off" spellcheck="false">
+      <kbd aria-hidden="true">/</kbd>
+    </div>
+    <div class="desk">
+      <div class="vu" id="vu" role="meter" aria-label="Output level" aria-valuemin="-60" aria-valuemax="0" aria-valuenow="-60"><span class="vu-fill"></span><span class="vu-hold"></span></div>
+      <label class="mon"><span>Monitor</span><input id="vol" type="range" min="0" max="1" step="0.01" value="0.8"></label>
+      <button id="mode" class="btn icon" type="button" aria-label="Switch to light theme">
+        <svg class="i-sun" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.4M10 15.8v2.4M1.8 10h2.4M15.8 10h2.4M4.2 4.2l1.7 1.7M14.1 14.1l1.7 1.7M4.2 15.8l1.7-1.7M14.1 5.9l1.7-1.7"/></svg>
+        <svg class="i-moon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M15.5 12.6A6.5 6.5 0 0 1 7.4 4.5a6.5 6.5 0 1 0 8.1 8.1z"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="cats" id="cats" aria-label="Categories"></nav>
+</header>
+<main id="main" tabindex="-1">
+  <section class="rack" id="themes" aria-labelledby="themes-h">
+    <div class="rack-head">
+      <h2 id="themes-h">Sound theme</h2>
+      <select id="theme" aria-label="Sound theme"></select>
+      <p class="rack-desc" id="theme-desc"></p>
+    </div>
+    <div class="pads" id="moments" role="group" aria-label="App moments: press one to hear it"></div>
+  </section>
+  <div class="grid-head">
+    <h2 id="sounds-h">Sounds <span class="count" id="count"></span></h2>
+    <p class="hint">Waveforms are rendered offline through the master chain. Level scale in dBFS; the dashed line is the house ceiling, -12.</p>
+  </div>
+  <section class="grid" id="sounds" aria-labelledby="sounds-h" tabindex="-1"></section>
+  <div class="empty" id="empty" hidden>
+    <p>No sounds match that search.</p>
+    <button class="btn" type="button" id="clear">Clear search</button>
+  </div>
+</main>
+<footer class="foot">
+  <p><strong>Timbre</strong> <span id="foot-count"></span>. Every sound is synthesized in your browser with WebAudio: oscillators, seeded noise, filters, envelopes, waveshapers, delays and generated reverbs. Nothing is downloaded. Copy gives one self-contained function; WAV saves 16-bit PCM at 48 kHz.</p>
+</footer>
+<dialog class="code" id="code" aria-labelledby="code-h">
+  <div class="code-head">
+    <h2 id="code-h">Copy code</h2>
+    <button class="btn icon" type="button" id="code-close" aria-label="Close">
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+  </div>
+  <p class="code-note" id="code-note">Your browser blocked the clipboard. Select the code and copy it.</p>
+  <textarea id="code-text" readonly spellcheck="false" aria-label="Code"></textarea>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>(function () {
+'use strict';
+// ---- core helpers (src/core) ----
+// Seeded noise.
+//
+// Every render seeds this generator first, so a render at fixed parameters is reproducible: the
+// waveform, the level gate and the copy gate all compare like for like. Live playback may pick a
+// fresh seed per play for natural variation.
+//
+// The generator state lives on the function itself (rand.s), not in a module variable. That keeps
+// every helper a single self-contained function, which is what lets Copy lift a helper out with
+// Function.prototype.toString() and paste it anywhere without a hidden dependency.
+
+/** Seed the generator for the next render. Any number works; it is reduced to 32 bits. */
+function seed(s) {
+  rand.s = (Number(s) || 0) >>> 0;
+}
+
+/**
+ * Seeded uniform random number (mulberry32).
+ * rand() is in [0, 1), rand(x) in [0, x), rand(lo, hi) in [lo, hi).
+ * Sounds must use this instead of Math.random so renders stay deterministic.
+ */
+function rand(lo, hi) {
+  let a = (rand.s = ((rand.s | 0) + 0x6d2b79f5) | 0);
+  a = Math.imul(a ^ (a >>> 15), a | 1);
+  a ^= a + Math.imul(a ^ (a >>> 7), a | 61);
+  const u = ((a ^ (a >>> 14)) >>> 0) / 4294967296;
+  if (lo == null) return u;
+  if (hi == null) return u * lo;
+  return lo + (hi - lo) * u;
+}
+
+/**
+ * A fresh buffer of white noise drawn from the seeded stream, dur seconds long.
+ * Each noise voice draws its own buffer, so two voices in one sound are uncorrelated (a shared
+ * buffer would make them sum coherently, several dB hotter than either alone).
+ */
+function noiseBuffer(c, dur) {
+  const n = Math.max(1, Math.ceil(dur * c.sampleRate));
+  const b = c.createBuffer(1, n, c.sampleRate);
+  const d = b.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = rand() * 2 - 1;
+  return b;
+}
+
+// Envelopes and parameter glides.
+
+/**
+ * Shape an AudioParam (usually a voice's gain) from time t. Returns the end time.
+ *   o.peak   level reached at the end of the attack (linear, pre-master; house voices sit <= 0.3)
+ *   o.a      attack seconds (default 0.005, at least 0.002 so nothing clicks)
+ *   o.dur    total length from t, attack included (default 0.2)
+ *   o.curve  'exp' (default) or 'lin' for the decay and release segments
+ *   o.s      sustain as a fraction of peak; 0 or absent = percussive (attack, then decay to silence)
+ *   o.d      decay seconds to the sustain level (default 0.05)
+ *   o.r      release seconds at the end of dur (default 0.05)
+ *
+ * ZERO FIRST. A GainNode passes its own value (1 by default) until its first automation event. A
+ * source whose start time rounds to a frame a hair before t emits its first sample on that frame,
+ * so a voice with an untouched gain clicked at full scale on its first sample. Setting the value to
+ * 0 before scheduling anything closes that gap (found and measured in the Deck Lab reference).
+ */
+function env(param, t, o) {
+  o = o || {};
+  const peak = Math.max(0.0002, o.peak == null ? 0.2 : o.peak);
+  const a = Math.max(0.002, o.a == null ? 0.005 : o.a);
+  const end = t + Math.max(a + 0.01, o.dur == null ? 0.2 : o.dur);
+  const lin = o.curve === 'lin';
+  const floor = 0.0001;
+  param.value = 0;
+  param.setValueAtTime(0, t);
+  param.linearRampToValueAtTime(peak, t + a);
+  if (o.s > 0) {
+    const sus = Math.max(floor * 2, peak * Math.min(1, o.s));
+    const rel = Math.max(0.005, o.r == null ? 0.05 : o.r);
+    const rs = Math.max(t + a + 0.001, end - rel);
+    const ds = Math.min(t + a + Math.max(0.002, o.d == null ? 0.05 : o.d), rs);
+    if (lin) param.linearRampToValueAtTime(sus, ds);
+    else param.exponentialRampToValueAtTime(sus, ds);
+    param.setValueAtTime(sus, rs);
+  }
+  if (lin) param.linearRampToValueAtTime(0, end);
+  else {
+    param.exponentialRampToValueAtTime(floor, end);
+    param.setValueAtTime(0, end);
+  }
+  return end;
+}
+
+/**
+ * Move an AudioParam from `from` (set at t) to `to` over dur seconds.
+ * curve 'exp' (default, natural for pitch and cutoff) or 'lin'. Exponential needs both ends above
+ * zero, so it falls back to linear when either is not.
+ */
+function glide(param, t, from, to, dur, curve) {
+  param.setValueAtTime(from, t);
+  if (to == null || to === from || !(dur > 0)) return;
+  if (curve === 'lin' || from <= 0 || to <= 0) param.linearRampToValueAtTime(to, t + dur);
+  else param.exponentialRampToValueAtTime(to, t + dur);
+}
+
+// Voices. Each takes (out, t, o): the node to play into, the start time, and options, and returns
+// the time its envelope ends. Every voice routes through env(), so every voice's gain is zero
+// before its first automation event, and every source is stopped 50 ms after its envelope ends.
+// Envelope options shared by all voices: peak, a, dur, curve, s, d, r (see env).
+
+/**
+ * Oscillator with an optional pitch glide.
+ *   o.type   'sine' | 'triangle' | 'square' | 'sawtooth' (default 'sine')
+ *   o.f      start frequency in Hz (default 440); o.to end frequency (glide when set)
+ *   o.glide  glide seconds (default 90% of dur); o.glideCurve 'exp' (default) or 'lin'
+ *   o.detune cents
+ *   o.vib    { rate Hz, depth cents }  pitch wobble
+ *   o.trem   { rate Hz, depth 0..1 }   level wobble (1 = the level dips to silence)
+ */
+function osc(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const dur = o.dur == null ? 0.2 : o.dur;
+  const n = c.createOscillator();
+  const g = c.createGain();
+  n.type = o.type || 'sine';
+  const f = Math.max(20, o.f || 440);
+  glide(n.frequency, t, f, o.to ? Math.max(20, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);
+  if (o.detune) n.detune.value = o.detune;
+  const end = env(g.gain, t, o);
+  let src = n;
+  if (o.vib && o.vib.depth) {
+    const lfo = c.createOscillator();
+    const lg = c.createGain();
+    lfo.frequency.value = o.vib.rate || 5;
+    lg.gain.value = o.vib.depth;
+    lfo.connect(lg);
+    lg.connect(n.detune);
+    lfo.start(t);
+    lfo.stop(end + 0.05);
+  }
+  if (o.trem && o.trem.depth > 0) {
+    const depth = Math.min(1, o.trem.depth);
+    const am = c.createGain();
+    const lfo = c.createOscillator();
+    const lg = c.createGain();
+    am.gain.value = 1 - depth / 2;
+    lg.gain.value = depth / 2;
+    lfo.frequency.value = o.trem.rate || 6;
+    lfo.connect(lg);
+    lg.connect(am.gain);
+    n.connect(am);
+    src = am;
+    lfo.start(t);
+    lfo.stop(end + 0.05);
+  }
+  src.connect(g);
+  g.connect(out);
+  n.start(t);
+  n.stop(end + 0.05);
+  return end;
+}
+
+/**
+ * A burst of seeded white noise through a filter that can sweep.
+ *   o.filter 'lowpass' | 'highpass' | 'bandpass' | 'notch' | ... (default 'bandpass'); 'none' = raw
+ *   o.f      cutoff or center in Hz (default 1000); o.to sweep target; o.q resonance (default 1)
+ *   o.glide  sweep seconds (default 90% of dur); o.glideCurve 'exp' (default) or 'lin'
+ * Narrow bands throw most of the noise energy away, so a bandpass voice needs a higher peak than an
+ * oscillator to sound as loud. Measure, do not guess.
+ */
+function noise(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const dur = o.dur == null ? 0.2 : o.dur;
+  const s = c.createBufferSource();
+  const g = c.createGain();
+  s.buffer = noiseBuffer(c, Math.max(dur, (o.a || 0.005) + 0.01) + 0.06);
+  s.loop = true;
+  let head = s;
+  if (o.filter !== 'none') {
+    const b = c.createBiquadFilter();
+    b.type = o.filter || 'bandpass';
+    const f = Math.max(40, o.f || 1000);
+    glide(b.frequency, t, f, o.to ? Math.max(40, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);
+    b.Q.value = o.q == null ? 1 : o.q;
+    s.connect(b);
+    head = b;
+  }
+  const end = env(g.gain, t, o);
+  head.connect(g);
+  g.connect(out);
+  s.start(t);
+  s.stop(end + 0.05);
+  return end;
+}
+
+/**
+ * Two-operator FM: a modulator at f * ratio drives the carrier's frequency.
+ *   o.f, o.to, o.glide, o.glideCurve  carrier pitch and glide (the modulator follows at the ratio)
+ *   o.ratio   modulator / carrier frequency (default 2; non-integer ratios ring like metal)
+ *   o.index   modulation index at the start (default 2); o.index1 at the end (default = index)
+ *   o.type    carrier wave (default 'sine'); o.modType modulator wave (default 'sine')
+ */
+function fm(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const dur = o.dur == null ? 0.3 : o.dur;
+  const car = c.createOscillator();
+  const mod = c.createOscillator();
+  const depth = c.createGain();
+  const g = c.createGain();
+  car.type = o.type || 'sine';
+  mod.type = o.modType || 'sine';
+  const f = Math.max(20, o.f || 440);
+  const to = o.to ? Math.max(20, o.to) : f;
+  const ratio = o.ratio || 2;
+  const gl = o.glide == null ? dur * 0.9 : o.glide;
+  glide(car.frequency, t, f, to, gl, o.glideCurve);
+  glide(mod.frequency, t, f * ratio, to * ratio, gl, o.glideCurve);
+  const i0 = o.index == null ? 2 : o.index;
+  const i1 = o.index1 == null ? i0 : o.index1;
+  const end = env(g.gain, t, o);
+  glide(depth.gain, t, i0 * f * ratio, i1 * to * ratio, end - t, 'lin');
+  mod.connect(depth);
+  depth.connect(car.frequency);
+  car.connect(g);
+  g.connect(out);
+  car.start(t);
+  mod.start(t);
+  car.stop(end + 0.05);
+  mod.stop(end + 0.05);
+  return end;
+}
+
+/**
+ * Karplus-Strong plucked string, computed into a buffer (a DelayNode loop cannot go below one
+ * 128-sample render quantum, which would cap the pitch near 350 Hz).
+ *   o.f       pitch in Hz (default 220)
+ *   o.dur     seconds until the string has rung down 60 dB (default 0.8)
+ *   o.bright  0..1 (default 0.5): how slowly the high partials die
+ *   o.peak    output peak (the buffer is normalized, so this is the true peak pre-master)
+ */
+function pluck(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const sr = c.sampleRate;
+  const dur = Math.max(0.05, o.dur == null ? 0.8 : o.dur);
+  const f = Math.max(30, Math.min(sr / 4, o.f || 220));
+  const len = Math.ceil((dur + 0.06) * sr);
+  const buf = c.createBuffer(1, len, sr);
+  const y = buf.getChannelData(0);
+  const bright = Math.min(1, Math.max(0, o.bright == null ? 0.5 : o.bright));
+  const w = 0.5 - 0.45 * bright;           // weight of the older sample in the loop's averager
+  const P = sr / f;                         // samples per period
+  const D = P - w;                          // the averager itself delays by w samples
+  const N = Math.floor(D);
+  const fr = D - N;
+  const fb = Math.pow(0.001, 1 / (f * dur)); // -60 dB after dur seconds
+  const ex = Math.min(len, Math.round(P));
+  // the excitation: one period of seeded noise with its mean removed (the loop passes DC almost
+  // untouched, so a short burst's random offset would otherwise ride under the whole note)
+  let mean = 0;
+  for (let i = 0; i < ex; i++) { y[i] = rand() * 2 - 1; mean += y[i]; }
+  mean /= ex;
+  for (let i = 0; i < ex; i++) y[i] -= mean;
+  let pk = 0;
+  for (let i = 0; i < len; i++) {
+    let v = y[i];
+    if (i - N - 2 >= 0) {
+      const d0 = y[i - N] + (y[i - N - 1] - y[i - N]) * fr;
+      const d1 = y[i - N - 1] + (y[i - N - 2] - y[i - N - 1]) * fr;
+      v += fb * ((1 - w) * d0 + w * d1);
+    }
+    y[i] = v;
+    const m = v < 0 ? -v : v;
+    if (m > pk) pk = m;
+  }
+  if (pk > 0) for (let i = 0; i < len; i++) y[i] /= pk;
+  const s = c.createBufferSource();
+  const g = c.createGain();
+  s.buffer = buf;
+  const end = env(g.gain, t, {
+    peak: o.peak == null ? 0.2 : o.peak, a: o.a == null ? 0.002 : o.a, dur, s: 1, d: 0.002,
+    r: Math.min(0.05, dur * 0.2),
+  });
+  s.connect(g);
+  g.connect(out);
+  s.start(t);
+  s.stop(end + 0.05);
+  return end;
+}
+
+/**
+ * Additive bell: a set of sine partials, each with its own level and decay.
+ *   o.f         fundamental in Hz (default 880)
+ *   o.partials  [[ratio, level, decay], ...] (level and decay relative to o.peak and o.dur);
+ *               default is a struck-metal set with inharmonic ratios 1, 2.76, 5.40, 8.93
+ *   o.drift     end pitch as a ratio of the start (default 1: none; 0.98 = a slight droop)
+ *   o.peak      level of a partial at level 1; o.dur, o.a, o.curve as in env; o.type wave
+ */
+function bell(out, t, o) {
+  o = o || {};
+  const f = o.f || 880;
+  const dur = o.dur == null ? 1 : o.dur;
+  const peak = o.peak == null ? 0.15 : o.peak;
+  const drift = o.drift == null ? 1 : o.drift;
+  const parts = o.partials || [[1, 1, 1], [2.76, 0.5, 0.6], [5.4, 0.25, 0.4], [8.93, 0.12, 0.25]];
+  let end = t;
+  for (let k = 0; k < parts.length; k++) {
+    const pr = parts[k];
+    const e = osc(out, t, {
+      type: o.type || 'sine', f: f * pr[0], to: f * pr[0] * drift,
+      dur: Math.max(0.03, dur * (pr[2] == null ? 1 : pr[2])), peak: peak * (pr[1] == null ? 1 : pr[1]),
+      a: o.a == null ? 0.002 : o.a, curve: o.curve,
+    });
+    if (e > end) end = e;
+  }
+  return end;
+}
+
+// Effects and routing. Each takes (out, t, o) like a voice, builds its nodes into `out`, and
+// returns the node to play INTO. Chain them by passing one effect's input as the next one's out:
+//   const verb = T.reverb(out, t, { time: 1.2, mix: 0.3 });
+//   const lp = T.filter(verb, t, { type: 'lowpass', f: 3000, to: 400, dur: 0.4 });
+//   T.noise(lp, t, { ... });
+// An effect with a tail (delay, reverb) keeps sounding after the voices stop: the sound's dur must
+// include that tail, and the level gate checks that it does.
+
+/** A plain gain stage (a trim) into out. Returns its input. */
+function gain(out, v) {
+  const g = out.context.createGain();
+  g.gain.value = v == null ? 1 : v;
+  g.connect(out);
+  return g;
+}
+
+/**
+ * A biquad filter with an optional sweep.
+ *   o.type 'lowpass' (default) | 'highpass' | 'bandpass' | 'peaking' | 'lowshelf' | 'highshelf' | 'notch'
+ *   o.f start frequency (default 1000), o.to sweep target, o.dur sweep seconds (default 0.3),
+ *   o.curve 'exp' (default) or 'lin', o.q (default 0.707), o.db gain for peaking and shelf types
+ */
+function filter(out, t, o) {
+  o = o || {};
+  const b = out.context.createBiquadFilter();
+  b.type = o.type || 'lowpass';
+  const f = Math.max(20, o.f || 1000);
+  glide(b.frequency, t, f, o.to ? Math.max(20, o.to) : f, o.dur == null ? 0.3 : o.dur, o.curve);
+  b.Q.value = o.q == null ? 0.707 : o.q;
+  if (o.db) b.gain.value = o.db;
+  b.connect(out);
+  return b;
+}
+
+/**
+ * Waveshaper drive (tanh saturation), level-safe.
+ *   o.amount 0..1 (default 0.5): 0 is nearly clean, 1 is heavy
+ *   o.ref    the input level that comes out unchanged (default 0.25, a typical house voice peak)
+ * Curve: y = ref * tanh(k x / ref) / tanh(k). Quiet material is lifted (that is the drive), but the
+ * output never exceeds about ref, so turning the drive up thickens a sound without making it peak
+ * louder.
+ */
+function drive(out, t, o) {
+  o = o || {};
+  const ws = out.context.createWaveShaper();
+  const k = 1 + 24 * Math.min(1, Math.max(0, o.amount == null ? 0.5 : o.amount));
+  const ref = o.ref || 0.25;
+  const n = 4096;
+  const cur = new Float32Array(n);
+  const norm = Math.tanh(k);
+  for (let i = 0; i < n; i++) {
+    const x = (i * 2) / (n - 1) - 1;
+    cur[i] = (ref * Math.tanh((k * x) / ref)) / norm;
+  }
+  ws.curve = cur;
+  ws.oversample = '2x';
+  ws.connect(out);
+  return ws;
+}
+
+/**
+ * Bitcrush by quantizing the waveform with a waveshaper.
+ *   o.bits 1..16 (default 6): levels per polarity = 2^(bits-1), counted up to o.ref
+ *   o.ref  the level the steps are measured against (default 0.25, a typical house voice peak)
+ * Rounding is symmetric, so it adds no DC; anything quieter than half a step becomes silence, which
+ * is part of the sound (tails gate off in steps).
+ */
+function crush(out, t, o) {
+  o = o || {};
+  const ws = out.context.createWaveShaper();
+  const bits = Math.min(16, Math.max(1, o.bits == null ? 6 : o.bits));
+  const steps = Math.pow(2, bits - 1);
+  const ref = o.ref || 0.25;
+  const n = 8192;
+  const cur = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const x = (i * 2) / (n - 1) - 1;
+    cur[i] = (Math.round((x / ref) * steps) / steps) * ref;
+  }
+  ws.curve = cur;
+  ws.oversample = 'none';
+  ws.connect(out);
+  return ws;
+}
+
+/**
+ * Feedback delay (echo). The dry signal passes at unity; echoes are added on top.
+ *   o.time seconds between echoes (default 0.18, 0.01..2)
+ *   o.fb   feedback 0..0.9 (default 0.35)
+ *   o.mix  echo level (default 0.35)
+ *   o.tone lowpass in the loop in Hz (default 4000): each repeat gets darker
+ */
+function delay(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const inp = c.createGain();
+  const dl = c.createDelay(2);
+  const fbk = c.createGain();
+  const wet = c.createGain();
+  const lp = c.createBiquadFilter();
+  dl.delayTime.value = Math.min(2, Math.max(0.01, o.time == null ? 0.18 : o.time));
+  fbk.gain.value = Math.min(0.9, Math.max(0, o.fb == null ? 0.35 : o.fb));
+  wet.gain.value = o.mix == null ? 0.35 : o.mix;
+  lp.type = 'lowpass';
+  lp.frequency.value = o.tone || 4000;
+  inp.connect(out);
+  inp.connect(dl);
+  dl.connect(lp);
+  lp.connect(fbk);
+  fbk.connect(dl);
+  lp.connect(wet);
+  wet.connect(out);
+  return inp;
+}
+
+/**
+ * Reverb from a generated impulse response: seeded stereo noise under an exponential decay,
+ * darkened by a one-pole lowpass, normalized to unit energy (so a steady input comes back at about
+ * its own power). The dry signal passes at unity; the reverb is added on top.
+ *   o.time seconds for the tail to fall 60 dB (default 1.2, 0.1..6)
+ *   o.mix  reverb level (default 0.3)
+ *   o.tone 0..1 (default 0.5): 0 dark, 1 bright
+ *   o.pre  pre-delay seconds (default 0)
+ */
+function reverb(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const sr = c.sampleRate;
+  const time = Math.min(6, Math.max(0.1, o.time == null ? 1.2 : o.time));
+  const len = Math.ceil(time * sr);
+  const ir = c.createBuffer(2, len, sr);
+  const k = Math.exp(-6.9078 / (time * sr));
+  const tone = Math.min(1, Math.max(0, o.tone == null ? 0.5 : o.tone));
+  const coef = 0.08 + 0.9 * tone;
+  for (let ch = 0; ch < 2; ch++) {
+    const d = ir.getChannelData(ch);
+    let lp = 0;
+    let e = 1;
+    let energy = 0;
+    for (let i = 0; i < len; i++) {
+      lp += (rand() * 2 - 1 - lp) * coef;
+      d[i] = lp * e;
+      e *= k;
+      energy += d[i] * d[i];
+    }
+    const sc = energy > 0 ? 1 / Math.sqrt(energy) : 0;
+    for (let i = 0; i < len; i++) d[i] *= sc;
+  }
+  const inp = c.createGain();
+  const conv = c.createConvolver();
+  const wet = c.createGain();
+  conv.normalize = false;
+  conv.buffer = ir;
+  wet.gain.value = o.mix == null ? 0.3 : o.mix;
+  inp.connect(out);
+  if (o.pre > 0) {
+    const pd = c.createDelay(1);
+    pd.delayTime.value = Math.min(1, o.pre);
+    inp.connect(pd);
+    pd.connect(conv);
+  } else {
+    inp.connect(conv);
+  }
+  conv.connect(wet);
+  wet.connect(out);
+  return inp;
+}
+
+// The master chain every sound plays through, live, offline and in Copy:
+//   gain 0.55 -> DynamicsCompressor used purely as a LIMITER (-12 dB, knee 6, 12:1, 3 ms attack,
+//   120 ms release) -> a tanh WaveShaper as a hard CEILING -> dest.
+// The compressor handles sums of voices. The shaper is instantaneous, so a biquad transient (a fast
+// filter sweep over noise can spike about 8 dB above the voice's own peak) cannot slip past during
+// the compressor's 3 ms attack. y = 0.5 * tanh(2x) has unity slope at zero, so quiet material is
+// untouched, and a hard asymptote at +/-0.5 (-6 dBFS). The ceiling is a guard, never the sound:
+// the level gate fails any sound whose pre-limiter peak comes within 3 dB of full scale.
+// Ported unchanged from the Deck Lab viewer (sfxChain), where these numbers were level-tested.
+
+/** Build the master chain into dest (default c.destination). Returns its input node. */
+function master(c, dest) {
+  const g = c.createGain();
+  const lim = c.createDynamicsCompressor();
+  const sat = c.createWaveShaper();
+  g.gain.value = 0.55;
+  lim.threshold.value = -12;
+  lim.knee.value = 6;
+  lim.ratio.value = 12;
+  lim.attack.value = 0.003;
+  lim.release.value = 0.12;
+  const n = 2048;
+  const cur = new Float32Array(n);
+  for (let k = 0; k < n; k++) {
+    const x = (k * 2) / (n - 1) - 1;
+    cur[k] = 0.5 * Math.tanh(2 * x);
+  }
+  sat.curve = cur;
+  sat.oversample = '2x';
+  g.connect(lim);
+  lim.connect(sat);
+  sat.connect(dest || c.destination);
+  return g;
+}
+
+// Musical pitch.
+
+/**
+ * Frequency in Hz of a note name ('A4', 'C#5', 'Eb3') or of a number of semitones from A4.
+ * note('A4') = 440, note(12) = 880, note('C6') = 1046.5.
+ */
+function note(n) {
+  if (typeof n === 'number') return 440 * Math.pow(2, n / 12);
+  const s = String(n);
+  const base = { C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 }[s.charAt(0).toUpperCase()];
+  if (base == null) return 440;
+  let i = 1;
+  let acc = 0;
+  if (s.charAt(1) === '#') { acc = 1; i = 2; } else if (s.charAt(1) === 'b') { acc = -1; i = 2; }
+  const oct = parseInt(s.slice(i), 10);
+  return 440 * Math.pow(2, (base + acc + ((isNaN(oct) ? 4 : oct) - 4) * 12) / 12);
+}
+
+const T = Object.freeze({ noiseBuffer, rand, seed, env, glide, bell, fm, noise, osc, pluck, crush, delay, drive, filter, gain, reverb, master, note });
+// ---- sounds (src/sounds) ----
+const SOUNDS = [
+{"id":"ui-click-soft","name":"Soft Click","category":"ui","tags":["click","button","tap","tick","press"],"desc":"A short muted tick for button presses: a falling sine blip with a breath of high noise.","dur":0.08,"params":{"pitch":{"min":400,"max":2400,"def":1100,"unit":"Hz"},"tone":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  T.osc(out, t, { f: p.pitch, to: p.pitch * 0.73, dur: 0.035, peak: 0.042, a: 0.002 });
+  T.noise(out, t, {
+    filter: 'highpass', f: 2800 + 2400 * p.tone, to: 2200 + 1800 * p.tone, q: 0.8,
+    dur: 0.022, peak: 0.011 + 0.034 * p.tone, a: 0.001,
+  });
+}},
+{"id":"ui-toggle-switch","name":"Toggle Switch","category":"ui","tags":["toggle","switch","checkbox","on","off","click"],"desc":"A two-stage click-clack for switches: rising when turned on, falling when turned off.","dur":0.25,"params":{"on":{"min":0,"max":1,"def":1,"step":1},"pitch":{"min":1200,"max":3600,"def":2600,"unit":"Hz"},"gap":{"min":0.03,"max":0.12,"def":0.075,"unit":"s"},"body":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const lo = p.pitch * 0.73;
+  const up = p.on >= 0.5;
+  const click = (f, at, level) => {
+    T.bell(out, at, { f, partials: [[1, 1, 1], [2.76, 0.5, 0.67]], drift: 0.98, dur: 0.12, peak: level });
+    T.noise(out, at, { filter: 'highpass', f: 4200, to: 3000, q: 0.8, dur: 0.02, peak: level * 0.6, a: 0.001 });
+  };
+  click(up ? lo : p.pitch, t, 0.024);
+  click(up ? p.pitch : lo, t + p.gap, 0.033);
+  T.osc(out, t + p.gap, { f: 420, to: 300, dur: 0.06, peak: 0.075 * p.body, a: 0.002 });
+}},
+{"id":"notify-error-buzz","name":"Error Buzz","category":"notify","tags":["error","fail","invalid","denied","buzz","negative"],"desc":"A low falling double buzz for a rejected action. Clear without being harsh.","dur":0.45,"params":{"pitch":{"min":90,"max":300,"def":160,"unit":"Hz"},"pulses":{"min":1,"max":3,"def":2,"step":1},"rough":{"min":0,"max":1,"def":0.5},"tone":{"min":500,"max":3000,"def":1200,"unit":"Hz"}},"play":function (T, out, t, p) {
+  const lp = T.filter(out, t, { type: 'lowpass', f: p.tone, q: 0.8 });
+  const n = Math.round(p.pulses);
+  for (let k = 0; k < n; k++) {
+    const f = p.pitch * Math.pow(0.89, k);
+    T.osc(lp, t + k * 0.15, {
+      type: 'square', f, to: f * 0.95, dur: 0.12, peak: 0.075, a: 0.006, s: 0.6, d: 0.03, r: 0.03,
+      trem: { rate: 34, depth: 0.8 * p.rough },
+    });
+  }
+}},
+{"id":"notify-success-chime","name":"Success Chime","category":"notify","tags":["success","done","complete","confirm","chime","positive"],"desc":"A gentle two-note rising chime for a completed action. Not a fanfare; a quiet yes.","dur":0.5,"params":{"pitch":{"min":330,"max":1320,"def":659.25,"unit":"Hz"},"interval":{"min":3,"max":12,"def":7,"step":1,"unit":"st"},"gap":{"min":0.06,"max":0.2,"def":0.12,"unit":"s"},"shimmer":{"min":0,"max":1,"def":0.35}},"play":function (T, out, t, p) {
+  const hi = p.pitch * Math.pow(2, Math.round(p.interval) / 12);
+  T.osc(out, t, { type: 'triangle', f: p.pitch, dur: 0.19, peak: 0.11, a: 0.01 });
+  T.osc(out, t + p.gap, { type: 'triangle', f: hi, dur: 0.26, peak: 0.11, a: 0.01 });
+  T.osc(out, t + p.gap, { f: hi * 2, dur: 0.13, peak: 0.1 * p.shimmer, a: 0.01 });
+}},
+{"id":"game-coin-flip","name":"Coin Flip","category":"game","tags":["coin","flip","toss","spin","money","ping"],"desc":"A coin spun into the air: rising ticks as it turns, then a bright ping when it lands.","dur":1.5,"params":{"spins":{"min":3,"max":8,"def":6,"step":1},"spin":{"min":0.05,"max":0.1,"def":0.075,"unit":"s"},"pitch":{"min":900,"max":2600,"def":1568,"unit":"Hz"},"ring":{"min":0.15,"max":0.6,"def":0.42,"unit":"s"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.spins);
+  const base = p.pitch * 0.574;
+  for (let k = 0; k < n; k++) {
+    T.osc(out, t + k * p.spin, { type: 'triangle', f: base * (1 + 0.078 * k), dur: 0.05, peak: 0.055, a: 0.004 });
+  }
+  const land = t + n * p.spin + 0.07;
+  T.osc(out, land, { f: p.pitch, dur: p.ring, peak: 0.13, a: 0.006 });
+  T.osc(out, land, { f: p.pitch * 2.76, to: p.pitch * 2.7, dur: p.ring * 0.38, peak: 0.05, a: 0.006 });
+}},
+{"id":"game-hammer-hit","name":"Hammer Hit","category":"game","tags":["hammer","hit","impact","metal","clank","anvil","smash"],"desc":"A hammer swung and landing on metal: air, then a clank with a thump under it.","dur":0.95,"params":{"swing":{"min":0,"max":0.5,"def":0.32,"unit":"s"},"pitch":{"min":250,"max":1200,"def":560,"unit":"Hz"},"weight":{"min":0,"max":1,"def":0.5},"ring":{"min":0.06,"max":0.4,"def":0.12,"unit":"s"}},"play":function (T, out, t, p) {
+  const h = t + p.swing;
+  const r = p.pitch / 560;
+  if (p.swing > 0.05) {
+    T.noise(out, t, { filter: 'bandpass', f: 350, to: 1700, q: 1.2, dur: p.swing + 0.02, peak: 0.055, a: p.swing * 0.85 });
+  }
+  T.bell(out, h, { f: p.pitch, partials: [[1, 1, 1], [2.76, 0.5, 0.67]], drift: 0.98, dur: p.ring, peak: 0.065 });
+  T.noise(out, h, { filter: 'highpass', f: 4200, to: 3000, q: 0.8, dur: 0.02, peak: 0.04, a: 0.001 });
+  T.noise(out, h, { filter: 'highpass', f: 3200, to: 2000, q: 0.8, dur: 0.05, peak: 0.037, a: 0.002 });
+  T.osc(out, h, { type: 'triangle', f: 1800 * r, to: 700 * r, dur: 0.09, peak: 0.021, a: 0.002 });
+  T.osc(out, h, { f: 140, to: 60, dur: 0.16, peak: 0.14 * p.weight + 0.01, a: 0.002 });
+}},
+{"id":"game-whoosh","name":"Whoosh","category":"game","tags":["whoosh","swoosh","swing","swipe","dash","air","transition"],"desc":"Air rushing past: a swing, a dash, or a panel sliding across the screen.","dur":0.62,"params":{"length":{"min":0.15,"max":0.6,"def":0.27,"unit":"s"},"pitch":{"min":0.5,"max":2,"def":1,"unit":"x"},"q":{"min":0.6,"max":3,"def":1.1}},"play":function (T, out, t, p) {
+  const s = p.length / 0.27;
+  // a narrower band throws more of the noise away: lift the peak so the loudness holds
+  const lift = Math.sqrt(p.q / 1.1);
+  T.noise(out, t, {
+    filter: 'bandpass', f: 420 * p.pitch, to: 2300 * p.pitch, q: p.q,
+    dur: 0.21 * s, peak: 0.19 * lift, a: 0.045 * s,
+  });
+  T.noise(out, t + 0.1 * s, {
+    filter: 'bandpass', f: 1900 * p.pitch, to: 620 * p.pitch, q: p.q * 1.36,
+    dur: 0.17 * s, peak: 0.105 * lift, a: 0.032 * s,
+  });
+}},
+{"id":"cards-flick","name":"Card Flick","category":"cards","tags":["card","flick","paper","draw","deal","snap"],"desc":"A playing card flicked off the deck, or a short fan of them dealt one after another.","dur":0.65,"params":{"count":{"min":1,"max":6,"def":1,"step":1},"gap":{"min":0.045,"max":0.12,"def":0.07,"unit":"s"},"bright":{"min":0,"max":1,"def":0.3}},"play":function (T, out, t, p) {
+  const n = Math.round(p.count);
+  for (let k = 0; k < n; k++) {
+    const at = t + k * p.gap;
+    const l = 1 - 0.06 * k;
+    const b = Math.min(1, p.bright + k / 12);
+    T.noise(out, at, { filter: 'highpass', f: 2600 + 900 * b, to: 1800, q: 0.9, dur: 0.034, peak: 0.037 * l, a: 0.002 });
+    T.osc(out, at, { type: 'triangle', f: 460 + 160 * b, to: 260, dur: 0.028, peak: 0.011 * l, a: 0.002 });
+  }
+}},
+{"id":"cards-riffle","name":"Deck Riffle","category":"cards","tags":["card","deck","riffle","shuffle","paper","bridge"],"desc":"A deck riffled together: a quick ripple of paper ticks, never two quite alike.","dur":0.55,"params":{"cards":{"min":3,"max":14,"def":6,"step":1},"gap":{"min":0.014,"max":0.035,"def":0.022,"unit":"s"},"pitch":{"min":800,"max":2600,"def":1500,"unit":"Hz"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.cards);
+  for (let k = 0; k < n; k++) {
+    T.noise(out, t + k * p.gap, {
+      filter: 'bandpass', f: p.pitch * T.rand(1, 1.93), to: p.pitch * 0.6, q: 2.2,
+      dur: 0.045, peak: (k === 0 ? 0.135 : 0.104) * T.rand(0.75, 1.25), a: 0.003,
+    });
+  }
+}},
+{"id":"magic-sparkle","name":"Magic Sparkle","category":"magic","tags":["magic","sparkle","shimmer","twinkle","fairy","heal","bonus"],"desc":"A rising twinkle of bright notes over a breath of shimmer, with a little room around it.","dur":1.5,"params":{"notes":{"min":3,"max":7,"def":4,"step":1},"pitch":{"min":600,"max":2000,"def":1046.5,"unit":"Hz"},"gap":{"min":0.025,"max":0.09,"def":0.05,"unit":"s"},"shimmer":{"min":0,"max":1,"def":0.5},"space":{"min":0,"max":0.6,"def":0.3}},"play":function (T, out, t, p) {
+  const steps = [0, 4, 7, 12, 16, 19, 24];
+  const n = Math.round(p.notes);
+  const room = T.reverb(out, t, { time: 0.9, mix: p.space, tone: 0.7 });
+  for (let k = 0; k < n; k++) {
+    const f = p.pitch * Math.pow(2, steps[k] / 12);
+    const at = t + k * p.gap;
+    const l = 1 - 0.08 * k;
+    T.osc(room, at, { type: 'triangle', f, dur: 0.22, peak: 0.06 * l, a: 0.004 });
+    T.osc(room, at, { f: f * 2, to: f * 2.02, dur: 0.12, peak: 0.02 * l, a: 0.004 });
+  }
+  T.noise(room, t, { filter: 'highpass', f: 5000, to: 8000, q: 0.8, dur: n * p.gap + 0.25, peak: 0.06 * p.shimmer, a: 0.06 });
+}}
+];
+// ---- themes (src/themes) ----
+const THEMES = [
+ {
+  "id": "soft-ui",
+  "name": "Soft UI",
+  "desc": "Quiet, rounded feedback for productivity apps: soft ticks, a gentle chime, a low buzz.",
+  "moments": {
+   "click": {
+    "sound": "ui-click-soft"
+   },
+   "toggle-on": {
+    "sound": "ui-toggle-switch",
+    "params": {
+     "on": 1,
+     "body": 0.4
+    }
+   },
+   "toggle-off": {
+    "sound": "ui-toggle-switch",
+    "params": {
+     "on": 0,
+     "body": 0.4
+    }
+   },
+   "success": {
+    "sound": "notify-success-chime",
+    "params": {
+     "shimmer": 0.25
+    }
+   },
+   "error": {
+    "sound": "notify-error-buzz",
+    "params": {
+     "pulses": 2,
+     "rough": 0.35,
+     "tone": 900
+    }
+   },
+   "notify": {
+    "sound": "magic-sparkle",
+    "params": {
+     "notes": 3,
+     "pitch": 880,
+     "gap": 0.07,
+     "space": 0.2
+    }
+   }
+  }
+ }
+];
+// ---- runtime (src/core) ----
+// Offline rendering and measurement: the one code path behind the gallery's waveforms and badges,
+// Save WAV, the level gate and the gallery side of the copy gate. Browser only (OfflineAudioContext).
+
+const SAMPLE_RATE = 48000;
+// Rendered past dur so the level gate can prove the sound is silent by then (see measure().tail).
+const TAIL = 0.25;
+// WARM-UP. Chrome's DynamicsCompressor starts cold: on a new chain its gain ramps from about -8 dB
+// to its steady makeup (+5.4 dB with these settings) over roughly 150 ms (measured offline with a
+// steady sine). A click rendered at t = 0 measured -28.8 dBFS; the same click on a warm chain plays
+// at -15.7. So every render builds the chain at 0 and starts the sound at PREROLL, and the outputs
+// begin there. Live playback and Copy apply the same rule: a chain never plays before it is
+// PREROLL seconds old.
+const PREROLL = 0.2;
+
+/** Parameter values for a sound: its defaults, overridden by `over`, clamped to each range. */
+function paramsFor(sound, over) {
+  const p = {};
+  const defs = sound.params || {};
+  for (const k of Object.keys(defs)) {
+    const d = defs[k];
+    let v = over && over[k] != null ? Number(over[k]) : d.def;
+    if (!isFinite(v)) v = d.def;
+    p[k] = Math.min(d.max, Math.max(d.min, v));
+  }
+  return p;
+}
+
+/**
+ * Render one sound offline through the real master chain (warmed for PREROLL seconds), for dur +
+ * TAIL seconds from the sound's start. Resolves to { id, sr, dur, post: [L, R], pre: [L, R] }:
+ * post is the master chain's output (what you hear), pre is the signal after the master gain and
+ * before the limiter (what the voices sum to). Both start at the sound's start and are forced to
+ * stereo so mono and stereo sounds measure alike.
+ */
+function renderSound(sound, over, seedValue, sampleRate) {
+  const sr = sampleRate || SAMPLE_RATE;
+  const skip = Math.round(PREROLL * sr);
+  const c = new OfflineAudioContext(4, skip + Math.ceil((sound.dur + TAIL) * sr), sr);
+  c.destination.channelInterpretation = 'discrete';
+  const stereo = () => {
+    const g = c.createGain();
+    g.channelCount = 2;
+    g.channelCountMode = 'explicit';
+    g.channelInterpretation = 'speakers';
+    return g;
+  };
+  const postIn = stereo();
+  const preIn = stereo();
+  const out = T.master(c, postIn);
+  out.connect(preIn);
+  const post = c.createChannelSplitter(2);
+  const pre = c.createChannelSplitter(2);
+  const merge = c.createChannelMerger(4);
+  postIn.connect(post);
+  preIn.connect(pre);
+  post.connect(merge, 0, 0);
+  post.connect(merge, 1, 1);
+  pre.connect(merge, 0, 2);
+  pre.connect(merge, 1, 3);
+  merge.connect(c.destination);
+  T.seed(seedValue == null ? 1 : seedValue);
+  sound.play(T, out, skip / sr, paramsFor(sound, over));
+  return c.startRendering().then((b) => ({
+    id: sound.id, sr, dur: sound.dur,
+    post: [b.getChannelData(0).subarray(skip), b.getChannelData(1).subarray(skip)],
+    pre: [b.getChannelData(2).subarray(skip), b.getChannelData(3).subarray(skip)],
+  }));
+}
+
+/**
+ * Levels of a render, in dBFS rounded to 0.1 (-120 stands for silence):
+ *   peak   highest sample after the master chain (either channel)
+ *   rms    RMS over the audible span (first to last sample above -60 dBFS)
+ *   dc     mean over the audible span (an offset would read close to the peak)
+ *   pre    highest sample before the limiter (null when the render has no pre tap)
+ *   tail   highest sample after dur (must be below -60: dur covers the sound)
+ *   start, end  the audible span in seconds; clipped = samples above -1 dBFS; nan = NaN samples
+ * Self-contained on purpose: the copy gate injects this exact function into a blank page.
+ */
+function measure(r) {
+  const sr = r.sr;
+  const L = r.post[0];
+  const R = r.post[1] || r.post[0];
+  const n = L.length;
+  const cut = Math.min(n, Math.round(r.dur * sr));
+  const db = (v) => (v > 0 ? Math.max(-120, Math.round(200 * Math.log10(v)) / 10) : -120);
+  let pk = 0;
+  let i0 = -1;
+  let i1 = -1;
+  let tail = 0;
+  let clipped = 0;
+  let nan = 0;
+  for (let i = 0; i < n; i++) {
+    const x = L[i];
+    const y = R[i];
+    if (x !== x || y !== y) { nan++; continue; }
+    const a = x < 0 ? -x : x;
+    const b = y < 0 ? -y : y;
+    const m = a > b ? a : b;
+    if (m > pk) pk = m;
+    if (m > 0.001) { if (i0 < 0) i0 = i; i1 = i; }
+    if (i >= cut && m > tail) tail = m;
+    if (m > 0.8913) clipped++;
+  }
+  let s = 0;
+  let s2 = 0;
+  const cnt = i0 < 0 ? 0 : i1 - i0 + 1;
+  for (let i = Math.max(0, i0); cnt && i <= i1; i++) {
+    s += (L[i] + R[i]) / 2;
+    s2 += (L[i] * L[i] + R[i] * R[i]) / 2;
+  }
+  let pre = 0;
+  if (r.pre) {
+    for (let c = 0; c < r.pre.length; c++) {
+      const ch = r.pre[c];
+      for (let i = 0; i < ch.length; i++) { const a = ch[i] < 0 ? -ch[i] : ch[i]; if (a > pre) pre = a; }
+    }
+  }
+  return {
+    peak: db(pk), rms: db(cnt ? Math.sqrt(s2 / cnt) : 0), dc: db(cnt ? Math.abs(s / cnt) : 0),
+    pre: r.pre ? db(pre) : null, tail: db(tail),
+    start: i0 < 0 ? 0 : Math.round((1000 * i0) / sr) / 1000,
+    end: i0 < 0 ? 0 : Math.round((1000 * (i1 + 1)) / sr) / 1000,
+    clipped, nan, silent: i0 < 0,
+  };
+}
+
+// WAV export: 16-bit PCM, little endian, the format every editor and engine reads.
+
+/**
+ * Encode channels (an array of Float32Array, all the same length) as a 16-bit PCM WAV file.
+ * Samples are clamped to [-1, 1] and NaN becomes 0. Returns a Uint8Array.
+ */
+function encodeWav(channels, sampleRate) {
+  const nch = channels.length;
+  const len = nch ? channels[0].length : 0;
+  const bytes = len * nch * 2;
+  const buf = new ArrayBuffer(44 + bytes);
+  const v = new DataView(buf);
+  const str = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  str(0, 'RIFF');
+  v.setUint32(4, 36 + bytes, true);
+  str(8, 'WAVE');
+  str(12, 'fmt ');
+  v.setUint32(16, 16, true);             // fmt chunk size
+  v.setUint16(20, 1, true);              // PCM
+  v.setUint16(22, nch, true);
+  v.setUint32(24, sampleRate, true);
+  v.setUint32(28, sampleRate * nch * 2, true);
+  v.setUint16(32, nch * 2, true);        // block align
+  v.setUint16(34, 16, true);             // bits per sample
+  str(36, 'data');
+  v.setUint32(40, bytes, true);
+  let o = 44;
+  for (let i = 0; i < len; i++) {
+    for (let c = 0; c < nch; c++) {
+      let x = channels[c][i];
+      x = x > 1 ? 1 : x < -1 ? -1 : x || 0;
+      v.setInt16(o, x < 0 ? Math.round(x * 32768) : Math.round(x * 32767), true);
+      o += 2;
+    }
+  }
+  return new Uint8Array(buf);
+}
+
+/**
+ * The channels to save from a render: cut at dur (the level gate proves the sound is below -60
+ * dBFS by then), with a 5 ms fade so the cut cannot click, and folded to mono when both channels
+ * are identical (every sound without a stereo effect).
+ */
+function wavChannels(r) {
+  const n = Math.min(r.post[0].length, Math.round(r.dur * r.sr));
+  const L = r.post[0].slice(0, n);
+  const R = r.post[1].slice(0, n);
+  const fade = Math.min(n, Math.round(0.005 * r.sr));
+  for (let i = 0; i < fade; i++) {
+    const g = i / fade;
+    L[n - 1 - i] *= g;
+    R[n - 1 - i] *= g;
+  }
+  for (let i = 0; i < n; i++) if (L[i] !== R[i]) return [L, R];
+  return [L];
+}
+
+// Copy: one self-contained JavaScript function per sound, carrying only the helpers it uses.
+//
+// Helpers are plain top-level functions that call each other by name, so their sources come
+// straight from Function.prototype.toString() (the same text in Node and in the page) and their
+// dependencies from scanning that text. stripCode() removes comments and string contents first, so
+// a helper named in a comment or a string is never pulled in. build.mjs uses the same functions to
+// write each sound's helper list into the catalog, and the unit tests check the result.
+
+/** Remove comments and the contents of string and template literals, keeping the code. */
+function stripCode(src) {
+  let out = '';
+  let i = 0;
+  const n = src.length;
+  while (i < n) {
+    const ch = src[i];
+    const nx = src[i + 1];
+    if (ch === '/' && nx === '/') {
+      while (i < n && src[i] !== '\n') i++;
+      continue;
+    }
+    if (ch === '/' && nx === '*') {
+      const e = src.indexOf('*/', i + 2);
+      i = e < 0 ? n : e + 2;
+      out += ' ';
+      continue;
+    }
+    if (ch === '"' || ch === "'" || ch === '`') {
+      i++;
+      while (i < n && src[i] !== ch) i += src[i] === '\\' ? 2 : 1;
+      i++;
+      out += '""';
+      continue;
+    }
+    out += ch;
+    i++;
+  }
+  return out;
+}
+
+/** The T members a play source uses (T.name), in first-use order. Unknown names included. */
+function usedHelpers(src, T) {
+  const code = stripCode(typeof src === 'function' ? src.toString() : src);
+  const re = /\bT\s*\.\s*([A-Za-z_$][\w$]*)/g;
+  const seen = [];
+  let m;
+  while ((m = re.exec(code))) if (!seen.includes(m[1])) seen.push(m[1]);
+  return seen;
+}
+
+/** The helpers that helper `name` calls, read from its source. */
+function helperDeps(name, T) {
+  const code = stripCode(T[name].toString());
+  return Object.keys(T).filter(
+    (h) => h !== name && new RegExp('(^|[^\\w$.])' + h.replace(/\$/g, '\\$') + '(?![\\w$])(?!\\s*:)').test(code),
+  );
+}
+
+/** `names` plus everything they depend on, dependencies first. */
+function helperClosure(names, T) {
+  const out = [];
+  const busy = new Set();
+  const visit = (n) => {
+    if (out.includes(n) || busy.has(n) || !(n in T)) return;
+    busy.add(n);
+    for (const d of helperDeps(n, T)) visit(d);
+    busy.delete(n);
+    out.push(n);
+  };
+  names.forEach(visit);
+  return out;
+}
+
+/** Remove the indentation the lines after the first share (toString keeps the file's indent). */
+function dedent(s) {
+  const lines = s.split('\n');
+  let min = Infinity;
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i].trim()) continue;
+    const m = lines[i].length - lines[i].trimStart().length;
+    if (m < min) min = m;
+  }
+  if (!isFinite(min) || min === 0) return s;
+  return lines.map((l, i) => (i === 0 ? l : l.slice(Math.min(min, l.length - l.trimStart().length)))).join('\n');
+}
+
+/**
+ * A sound's play as a normalized anonymous function source: 'function (T, out, t, p) { ... }'.
+ * Accepts the method form a sound file uses (play(T, out, t, p) { ... }) and function forms.
+ */
+function playSource(fn) {
+  let s = (typeof fn === 'function' ? fn.toString() : String(fn)).trim();
+  if (/^function\b/.test(s)) s = s.replace(/^function\s*[\w$]*\s*\(/, 'function (');
+  else if (/^[A-Za-z_$][\w$]*\s*\(/.test(s)) s = s.replace(/^[A-Za-z_$][\w$]*\s*\(/, 'function (');
+  else throw new Error('play must be written as a method: play(T, out, t, p) { ... }');
+  return dedent(s);
+}
+
+/** Split 'function (a, b) { body }' into its parameter list and body text. */
+function splitFunction(src) {
+  const open = src.indexOf('(');
+  const close = src.indexOf(')', open);
+  const lb = src.indexOf('{', close);
+  const rb = src.lastIndexOf('}');
+  return { params: src.slice(open + 1, close).trim(), body: src.slice(lb + 1, rb) };
+}
+
+/** 'ui-click-soft' -> 'uiClickSoft' */
+function camel(id) {
+  return String(id).replace(/[-_]+([a-z0-9])/gi, (m, ch) => ch.toUpperCase());
+}
+
+/** The helpers a sound's Copy carries: what play uses, plus seed (with rand) and master. */
+function copyHelpers(sound, T) {
+  const uses = usedHelpers(playSource(sound.play), T).filter((n) => n in T);
+  const want = uses.slice();
+  if (helperClosure(uses, T).includes('rand')) want.push('seed');
+  want.push('master');
+  return { uses, helpers: helperClosure(want, T) };
+}
+
+const fmtNum = (v) => String(Number(Number(v).toPrecision(6)));
+const indent = (s, pad) => s.split('\n').map((l) => (l.trim() ? pad + l : l)).join('\n');
+
+/**
+ * The Copy text for a sound at parameter values `over` (defaults where absent) and a seed.
+ * The result defines one function named after the sound (ui-click-soft -> uiClickSoft):
+ *   uiClickSoft(ac, opts, when, dest) plays through a master chain into dest (default
+ *   ac.destination). The chain is built once per destination and kept on the context; a sound never
+ *   starts before its chain is PREROLL seconds old (the limiter's warm-up, see render.js), nor
+ *   before `when`. Returns the time the sound ends.
+ */
+function buildCopy(sound, T, over, seedValue) {
+  const fname = camel(sound.id);
+  const play = playSource(sound.play);
+  const { uses, helpers } = copyHelpers(sound, T);
+  const seeded = helpers.includes('rand');
+  const vals = paramsFor(sound, over);
+  const pairs = Object.keys(vals).map((k) => k + ': ' + fmtNum(vals[k]));
+  if (seeded) pairs.push('seed: ' + ((Number(seedValue == null ? 1 : seedValue) || 0) >>> 0));
+  const defaults = pairs.length ? '{ ' + pairs.join(', ') + ' }' : '{}';
+  const first = Object.keys(vals)[0];
+  const example = first ? fname + '(ac, { ' + first + ': ' + fmtNum(vals[first]) + ' })' : fname + '(ac)';
+  const { params, body } = splitFunction(play);
+  const lines = [];
+  lines.push('// Usage: const ac = new AudioContext(); ' + example + '; // ' + sound.name +
+    ', synthesized (Timbre). Optional: when (s), dest node. Returns the end time.');
+  lines.push('function ' + fname + '(ac, opts, when, dest) {');
+  for (const h of helpers) lines.push(indent(dedent(T[h].toString()), '  '));
+  lines.push(indent('function play(' + params + ') {' + body.replace(/\s+$/, '') + '\n}', '  '));
+  lines.push('  const T = { ' + uses.join(', ') + ' };');
+  lines.push('  const p = Object.assign(' + defaults + ', opts);');
+  lines.push('  // one master chain per destination, kept on the context; a new one needs ' + PREROLL + ' s to warm up');
+  lines.push('  const chains = ac.timbreChains || (ac.timbreChains = new Map());');
+  lines.push('  const to = dest || ac.destination;');
+  lines.push('  if (!chains.has(to)) chains.set(to, { out: master(ac, to), ready: ac.currentTime + ' + PREROLL + ' });');
+  lines.push('  const chain = chains.get(to);');
+  lines.push('  const out = chain.out;');
+  lines.push('  const t = Math.max(when == null ? 0 : when, ac.currentTime + 0.02, chain.ready);');
+  if (seeded) lines.push('  seed(p.seed);');
+  lines.push('  play(T, out, t, p);');
+  lines.push('  return t + ' + fmtNum(sound.dur) + ';');
+  lines.push('}');
+  return lines.join('\n') + '\n';
+}
+
+// ---- gallery (src/shell/app.js) ----
+// The gallery page. Bundled by build.mjs into the same scope as the core helpers (T, seed, master),
+// the runtime (renderSound, measure, paramsFor, encodeWav, wavChannels, buildCopy), SOUNDS and
+// THEMES. Top-level names here must not reuse those.
+
+const CAT_NAMES = { ui: 'UI', notify: 'Notify', game: 'Game', cards: 'Cards', magic: 'Magic', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music' };
+const CAT_ORDER = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music'];
+const SCOPE_TOP = -6;     // dBFS at the scope's top edge (the master ceiling)
+const SCOPE_FLOOR = -54;  // dBFS at the center line
+const HOUSE_MAX = -12;    // the dashed reference line, and the peak LED's red threshold
+const byId = new Map(SOUNDS.map((s) => [s.id, s]));
+const strips = new Map();
+const view = { cat: 'all', q: '', theme: THEMES.length ? THEMES[0].id : null };
+const stats = { plays: 0, renders: 0, failures: 0 };
+const root = document.documentElement;
+let actx = null;
+let chainIn = null;
+let monitorGain = null;
+let analyser = null;
+let chainReady = 0;
+let monitorLevel = 0.8;
+
+const qs = (sel, el) => (el || document).querySelector(sel);
+const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* private mode: not remembered */ } },
+};
+for (const s of SOUNDS) if (!CAT_ORDER.includes(s.category)) CAT_ORDER.push(s.category);
+
+// ---------------------------------------------------------------- live audio
+/**
+ * The AudioContext, created on the first user gesture (browsers refuse to start one before). The
+ * master chain's limiter starts cold (see PREROLL in render.js), so nothing plays on it until it is
+ * PREROLL seconds old; the context is created on the first pointer or key press anywhere, so that
+ * warm-up usually overlaps the click that asked for a sound.
+ */
+function audio() {
+  if (!actx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    actx = new AC();
+    const tap = actx.createGain();
+    monitorGain = actx.createGain();
+    monitorGain.gain.value = monitorLevel;
+    analyser = actx.createAnalyser();
+    analyser.fftSize = 2048;
+    chainIn = master(actx, tap);
+    chainReady = actx.currentTime + PREROLL;
+    tap.connect(monitorGain);
+    tap.connect(analyser);
+    monitorGain.connect(actx.destination);
+  }
+  if (actx.state === 'suspended') actx.resume().catch(() => {});
+  return actx;
+}
+
+/** Play a sound now. Returns the scheduled start time, or null without WebAudio. */
+function playNow(sound, over, seedValue) {
+  const c = audio();
+  if (!c) { toast('This browser has no WebAudio, so sounds cannot play.'); return null; }
+  const t = Math.max(c.currentTime + 0.03, chainReady);
+  seed(seedValue == null ? 1 : seedValue);
+  sound.play(T, chainIn, t, paramsFor(sound, over));
+  stats.plays++;
+  meterUntil(t + sound.dur + 0.1);
+  return t;
+}
+
+// The output meter: peak of the master chain's output, with a falling hold marker.
+let meterEnd = 0;
+let meterRaf = 0;
+let holdLevel = 0;
+const vuEl = qs('#vu');
+const meterBuf = new Float32Array(2048);
+function meterUntil(end) {
+  meterEnd = Math.max(meterEnd, end);
+  if (!meterRaf) meterRaf = requestAnimationFrame(meterTick);
+}
+function meterTick() {
+  meterRaf = 0;
+  if (!analyser) return;
+  analyser.getFloatTimeDomainData(meterBuf);
+  let pk = 0;
+  for (let i = 0; i < meterBuf.length; i++) { const a = Math.abs(meterBuf[i]); if (a > pk) pk = a; }
+  const dB = pk > 0 ? 20 * Math.log10(pk) : -120;
+  const lvl = Math.max(0, Math.min(1, (dB + 60) / 60));
+  holdLevel = Math.max(lvl, holdLevel - 0.012);
+  vuEl.style.setProperty('--lvl', lvl.toFixed(3));
+  vuEl.style.setProperty('--hold', holdLevel.toFixed(3));
+  vuEl.setAttribute('aria-valuenow', String(Math.round(Math.max(-60, dB))));
+  if (actx.currentTime < meterEnd || holdLevel > 0) meterRaf = requestAnimationFrame(meterTick);
+  else { vuEl.style.setProperty('--lvl', '0'); vuEl.style.setProperty('--hold', '0'); }
+}
+
+// ---------------------------------------------------------------- helpers
+const fmtDb = (v) => (v <= -120 ? '-inf' : v.toFixed(1));
+function stepOf(d) {
+  if (d.step) return d.step;
+  const raw = (d.max - d.min) / 200;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const m = raw / mag;
+  return (m < 1.5 ? 1 : m < 3.5 ? 2 : 5) * mag;
+}
+function decimalsOf(x) {
+  const s = String(x);
+  const i = s.indexOf('.');
+  if (s.includes('e-')) return Number(s.split('e-')[1]);
+  return i < 0 ? 0 : s.length - i - 1;
+}
+function fmtParam(d, v) {
+  const u = d.unit || '';
+  if (d.step === 1 && d.min === 0 && d.max === 1 && !u) return v >= 0.5 ? 'on' : 'off';
+  if (u === 's') return v < 1 ? Math.round(v * 1000) + ' ms' : v.toFixed(2) + ' s';
+  if (u === 'Hz') return v >= 1000 ? (v / 1000).toFixed(v >= 10000 ? 1 : 2) + ' kHz' : Math.round(v) + ' Hz';
+  if (u === 'x') return v.toFixed(2) + 'x';
+  const dec = Math.min(3, decimalsOf(stepOf(d)));
+  return v.toFixed(dec) + (u ? ' ' + u : '');
+}
+let toastTimer = 0;
+function toast(msg) {
+  const el = qs('#toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+}
+const ICON = {
+  play: '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M6 4.2v11.6L15.6 10z"/></svg>',
+  copy: '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 7V5a1.5 1.5 0 0 0-1.5-1.5h-6A1.5 1.5 0 0 0 4 5v6.5A1.5 1.5 0 0 0 5.5 13H7"/></svg>',
+  wav: '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 3v9.5M6 9l4 4 4-4M4 16.5h12"/></svg>',
+};
+
+// ---------------------------------------------------------------- strips (one per sound)
+function buildStrip(s) {
+  const st = {
+    s, params: paramsFor(s, null), seed: 1, vary: false, rendered: false, dirty: true, queued: false,
+    render: null, levels: null, playT: -1, raf: 0,
+    hay: [s.id, s.name, s.category, CAT_NAMES[s.category] || '', s.desc, ...s.tags].join(' ').toLowerCase(),
+  };
+  const el = document.createElement('article');
+  el.className = 'strip';
+  el.id = 's-' + s.id;
+  el.dataset.id = s.id;
+  el.style.setProperty('--c', 'var(--cat-' + s.category + ', var(--accent))');
+  el.setAttribute('aria-labelledby', 'h-' + s.id);
+  const faders = Object.entries(s.params).map(([k, d]) => {
+    const fid = 'p-' + s.id + '-' + k;
+    return '<div class="fader"><label for="' + esc(fid) + '">' + esc(k) + '</label>' +
+      '<input type="range" id="' + esc(fid) + '" data-k="' + esc(k) + '" min="' + d.min + '" max="' + d.max +
+      '" step="' + stepOf(d) + '" value="' + d.def + '">' +
+      '<output for="' + esc(fid) + '"></output></div>';
+  }).join('');
+  el.innerHTML =
+    '<header class="strip-head"><h3 id="h-' + esc(s.id) + '">' + esc(s.name) + '</h3>' +
+      '<span class="chip">' + esc(CAT_NAMES[s.category] || s.category) + '</span></header>' +
+    '<p class="desc">' + esc(s.desc) + '</p>' +
+    '<div class="scope" data-state="idle"><canvas aria-hidden="true"></canvas>' +
+      '<span class="scope-ref" aria-hidden="true">' + HOUSE_MAX + '</span>' +
+      '<span class="scope-msg">rendering when visible</span></div>' +
+    '<div class="meters">' +
+      '<span class="badge" data-k="dur" title="Declared length, tail included"><b>DUR</b><span>' + fmtParam({ unit: 's' }, s.dur) + '</span></span>' +
+      '<span class="badge" data-k="peak" title="Peak after the master chain, dBFS"><i class="led" aria-hidden="true"></i><b>PK</b><span>--</span></span>' +
+      '<span class="badge" data-k="rms" title="RMS over the audible span, dBFS"><b>RMS</b><span>--</span></span>' +
+      '<span class="badge" data-k="seed" title="Noise seed of this render" hidden><b>SEED</b><span>1</span></span>' +
+    '</div>' +
+    '<div class="transport">' +
+      '<button class="btn play" type="button"><span class="on" aria-hidden="true"></span>' + ICON.play + 'Play</button>' +
+      '<label class="vary" title="Draw a new noise seed for every play"><input type="checkbox"><span class="sw" aria-hidden="true"></span>Vary</label>' +
+      '<span class="spacer"></span>' +
+      '<button class="btn ghost copy" type="button">' + ICON.copy + 'Copy</button>' +
+      '<button class="btn ghost wav" type="button">' + ICON.wav + 'WAV</button>' +
+    '</div>' +
+    (faders ? '<div class="params"><div class="params-head"><span>Parameters</span>' +
+      '<button class="btn ghost reset" type="button">Reset</button></div>' + faders + '</div>' : '') +
+    '<footer class="strip-foot"><code class="sid">' + esc(s.id) + '</code><ul class="tags" aria-label="Tags">' +
+      s.tags.map((tg) => '<li>' + esc(tg) + '</li>').join('') + '</ul></footer>';
+  st.el = el;
+  st.canvas = qs('canvas', el);
+  st.scope = qs('.scope', el);
+  const name = s.name;
+  qs('.play', el).setAttribute('aria-label', 'Play ' + name);
+  qs('.copy', el).setAttribute('aria-label', 'Copy ' + name + ' as a JavaScript function');
+  qs('.wav', el).setAttribute('aria-label', 'Save ' + name + ' as a WAV file');
+  qs('.vary input', el).setAttribute('aria-label', 'Vary the noise seed of ' + name + ' on every play');
+  qs('.play', el).addEventListener('click', () => onPlay(st));
+  qs('.copy', el).addEventListener('click', () => onCopy(st));
+  qs('.wav', el).addEventListener('click', (e) => onWav(st, e.currentTarget));
+  qs('.vary input', el).addEventListener('change', (e) => {
+    st.vary = e.currentTarget.checked;
+    qs('[data-k="seed"]', el).hidden = st.seed === 1 && !st.vary;
+  });
+  const reset = qs('.reset', el);
+  if (reset) reset.addEventListener('click', () => {
+    st.params = paramsFor(s, null);
+    for (const inp of el.querySelectorAll('input[type="range"]')) { inp.value = st.params[inp.dataset.k]; syncFader(st, inp); }
+    invalidate(st);
+  });
+  for (const inp of el.querySelectorAll('input[type="range"]')) {
+    syncFader(st, inp);
+    inp.addEventListener('input', () => {
+      st.params[inp.dataset.k] = Number(inp.value);
+      syncFader(st, inp);
+      invalidate(st);
+    });
+  }
+  strips.set(s.id, st);
+  return st;
+}
+
+function syncFader(st, inp) {
+  const d = st.s.params[inp.dataset.k];
+  const v = Number(inp.value);
+  const txt = fmtParam(d, v);
+  inp.nextElementSibling.textContent = txt;
+  inp.setAttribute('aria-valuetext', txt);
+  inp.style.setProperty('--fill', ((100 * (v - d.min)) / (d.max - d.min)).toFixed(1) + '%');
+}
+
+let reRenderTimer = 0;
+const pendingRerender = new Set();
+function invalidate(st) {
+  st.dirty = true;
+  pendingRerender.add(st);
+  clearTimeout(reRenderTimer);
+  reRenderTimer = setTimeout(() => {
+    for (const x of pendingRerender) if (x.rendered) want(x);
+    pendingRerender.clear();
+  }, 140);
+}
+
+function onPlay(st) {
+  if (st.vary) {
+    st.seed = 1 + Math.floor(Math.random() * 99999);
+    st.dirty = true;
+  }
+  const t = playNow(st.s, st.params, st.seed);
+  if (t == null) return;
+  st.playT = t;
+  st.el.classList.add('playing');
+  if (st.dirty) want(st);
+  animatePlayhead(st);
+}
+
+function animatePlayhead(st) {
+  cancelAnimationFrame(st.raf);
+  const step = () => {
+    const pos = (actx.currentTime - st.playT) / st.s.dur;
+    if (pos >= 1) { st.el.classList.remove('playing'); drawScope(st, -1); return; }
+    drawScope(st, Math.max(0, pos));
+    st.raf = requestAnimationFrame(step);
+  };
+  st.raf = requestAnimationFrame(step);
+}
+
+async function copyToClipboard(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return true; }
+  } catch (e) { /* fall through to the selection route */ }
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  ta.remove();
+  return ok;
+}
+
+async function onCopy(st) {
+  const text = buildCopy(st.s, T, st.params, st.seed);
+  const fname = camel(st.s.id);
+  if (await copyToClipboard(text)) toast('Copied ' + fname + '(): one function, ' + (text.length / 1024).toFixed(1) + ' KB, no dependencies.');
+  else showCode(text, st.el.querySelector('.copy'));
+}
+
+function showCode(text, back) {
+  const dlg = qs('#code');
+  const ta = qs('#code-text');
+  ta.value = text;
+  dlg.returnFocusTo = back;
+  if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  ta.focus();
+  ta.select();
+}
+
+async function onWav(st, btn) {
+  btn.disabled = true;
+  try {
+    const r = await renderSound(st.s, st.params, st.seed);
+    const chans = wavChannels(r);
+    const bytes = encodeWav(chans, r.sr);
+    const url = URL.createObjectURL(new Blob([bytes], { type: 'audio/wav' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = st.s.id + (st.seed !== 1 ? '-seed' + st.seed : '') + '.wav';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    toast('Saved ' + a.download + ': ' + (chans.length === 1 ? 'mono' : 'stereo') + ', 16-bit, ' + r.sr / 1000 + ' kHz.');
+  } catch (e) {
+    toast('Could not render the WAV: ' + (e && e.message ? e.message : e));
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ---------------------------------------------------------------- offline renders, one at a time
+const renderQueue = [];
+let rendering = false;
+function want(st) {
+  if (st.queued) return;
+  st.queued = true;
+  renderQueue.push(st);
+  pump();
+}
+async function pump() {
+  if (rendering) return;
+  rendering = true;
+  while (renderQueue.length) {
+    const st = renderQueue.shift();
+    st.queued = false;
+    if (!st.dirty && st.rendered) continue;
+    st.dirty = false;
+    try {
+      const r = await renderSound(st.s, st.params, st.seed);
+      st.render = r;
+      st.levels = measure(r);
+      st.rendered = true;
+      st.el.dataset.rendered = '1';
+      st.scope.dataset.state = 'ready';
+      stats.renders++;
+      showLevels(st);
+      drawScope(st, -1);
+    } catch (e) {
+      stats.failures++;
+      st.scope.dataset.state = 'error';
+      qs('.scope-msg', st.el).textContent = 'offline rendering is unavailable here';
+      st.el.dataset.rendered = 'error';
+    }
+  }
+  rendering = false;
+}
+
+function showLevels(st) {
+  const L = st.levels;
+  const pk = qs('[data-k="peak"]', st.el);
+  qs('span', pk).textContent = fmtDb(L.peak);
+  qs('.led', pk).dataset.l = L.peak > HOUSE_MAX ? 'hot' : L.peak > HOUSE_MAX - 3 ? 'warn' : 'ok';
+  qs('[data-k="rms"] span', st.el).textContent = fmtDb(L.rms);
+  const sb = qs('[data-k="seed"]', st.el);
+  qs('span', sb).textContent = String(st.seed);
+  sb.hidden = st.seed === 1 && !st.vary;
+}
+
+/** Draw the render as a mirrored level envelope on a dB scale: peak outline over an RMS body. */
+function drawScope(st, playPos) {
+  const r = st.render;
+  const cv = st.canvas;
+  if (!r || !cv.clientWidth) return;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const w = Math.max(1, Math.round(cv.clientWidth * dpr));
+  const hgt = Math.max(1, Math.round(cv.clientHeight * dpr));
+  if (cv.width !== w || cv.height !== hgt) { cv.width = w; cv.height = hgt; }
+  const g = cv.getContext('2d');
+  const cs = getComputedStyle(st.el);
+  const col = (n) => cs.getPropertyValue(n).trim();
+  const mid = hgt / 2;
+  const half = mid - 3 * dpr;
+  const yOf = (db) => Math.max(0, Math.min(1, (db - SCOPE_FLOOR) / (SCOPE_TOP - SCOPE_FLOOR))) * half;
+  const toDb = (v) => (v > 1e-7 ? 20 * Math.log10(v) : -140);
+  g.clearRect(0, 0, w, hgt);
+  // time grid: a line at every "nice" interval that gives 4 to 10 divisions
+  const dur = r.dur;
+  const nice = [0.01, 0.02, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2];
+  const div = nice.find((x) => dur / x <= 10) || 2;
+  g.fillStyle = col('--scope-grid');
+  for (let x = div; x < dur - 1e-9; x += div) g.fillRect(Math.round((x / dur) * w), 0, Math.max(1, dpr), hgt);
+  for (const db of [-24, -36]) {
+    const y = yOf(db);
+    g.fillRect(0, Math.round(mid - y), w, Math.max(1, dpr));
+    g.fillRect(0, Math.round(mid + y), w, Math.max(1, dpr));
+  }
+  g.fillRect(0, Math.round(mid), w, Math.max(1, dpr));
+  // envelope columns
+  const L = r.post[0];
+  const R = r.post[1];
+  const n = Math.min(L.length, Math.round(dur * r.sr));
+  const pkY = new Float32Array(w);
+  const rmsY = new Float32Array(w);
+  for (let x = 0; x < w; x++) {
+    const i0 = Math.floor((x * n) / w);
+    const i1 = Math.max(i0 + 1, Math.floor(((x + 1) * n) / w));
+    let pk = 0;
+    let sq = 0;
+    for (let i = i0; i < i1; i++) {
+      const a = Math.abs(L[i]);
+      const b = Math.abs(R[i]);
+      const m = a > b ? a : b;
+      if (m > pk) pk = m;
+      sq += (L[i] * L[i] + R[i] * R[i]) / 2;
+    }
+    pkY[x] = yOf(toDb(pk));
+    rmsY[x] = yOf(toDb(Math.sqrt(sq / (i1 - i0))));
+  }
+  const band = (ys, fill) => {
+    g.beginPath();
+    g.moveTo(0, mid - ys[0]);
+    for (let x = 1; x < w; x++) g.lineTo(x, mid - ys[x]);
+    for (let x = w - 1; x >= 0; x--) g.lineTo(x, mid + ys[x]);
+    g.closePath();
+    g.fillStyle = fill;
+    g.fill();
+  };
+  band(pkY, col('--signal-fill'));
+  band(rmsY, col('--signal-body'));
+  g.strokeStyle = col('--signal');
+  g.lineWidth = Math.max(1, dpr);
+  for (const sgn of [-1, 1]) {
+    g.beginPath();
+    g.moveTo(0, mid + sgn * pkY[0]);
+    for (let x = 1; x < w; x++) g.lineTo(x, mid + sgn * pkY[x]);
+    g.stroke();
+  }
+  // the house ceiling
+  g.strokeStyle = col('--scope-ref');
+  g.setLineDash([4 * dpr, 4 * dpr]);
+  for (const sgn of [-1, 1]) {
+    const y = Math.round(mid + sgn * yOf(HOUSE_MAX)) + 0.5;
+    g.beginPath();
+    g.moveTo(0, y);
+    g.lineTo(w, y);
+    g.stroke();
+  }
+  g.setLineDash([]);
+  if (playPos >= 0) {
+    g.fillStyle = col('--accent');
+    g.fillRect(Math.round(playPos * w), 0, Math.max(2, 2 * dpr), hgt);
+  }
+}
+
+// ---------------------------------------------------------------- filters: category and search
+function buildCats() {
+  const nav = qs('#cats');
+  const counts = {};
+  for (const s of SOUNDS) counts[s.category] = (counts[s.category] || 0) + 1;
+  const mk = (id, label, n) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cat';
+    b.dataset.cat = id;
+    if (id !== 'all') b.style.setProperty('--c', 'var(--cat-' + id + ', var(--accent))');
+    b.innerHTML = '<span class="dot" aria-hidden="true"></span>' + esc(label) + ' <span class="n">' + n + '</span>';
+    b.setAttribute('aria-pressed', String(view.cat === id));
+    b.addEventListener('click', () => { view.cat = id; applyFilter(); });
+    nav.appendChild(b);
+  };
+  mk('all', 'All', SOUNDS.length);
+  for (const c of CAT_ORDER) if (counts[c]) mk(c, CAT_NAMES[c] || c, counts[c]);
+}
+
+function applyFilter() {
+  const terms = view.q.toLowerCase().split(/\s+/).filter(Boolean);
+  let shown = 0;
+  for (const st of strips.values()) {
+    const ok = (view.cat === 'all' || st.s.category === view.cat) && terms.every((x) => st.hay.includes(x));
+    st.el.hidden = !ok;
+    if (ok) shown++;
+  }
+  for (const b of document.querySelectorAll('.cat')) b.setAttribute('aria-pressed', String(b.dataset.cat === view.cat));
+  qs('#count').textContent = shown === SOUNDS.length ? String(SOUNDS.length) : shown + ' of ' + SOUNDS.length;
+  qs('#empty').hidden = shown > 0;
+}
+
+// ---------------------------------------------------------------- sound themes: app moments
+function buildThemes() {
+  const sel = qs('#theme');
+  const sec = qs('#themes');
+  if (!THEMES.length) { sec.hidden = true; return; }
+  const saved = store.get('timbre.theme');
+  if (saved && THEMES.some((th) => th.id === saved)) view.theme = saved;
+  for (const th of THEMES) {
+    const o = document.createElement('option');
+    o.value = th.id;
+    o.textContent = th.name;
+    sel.appendChild(o);
+  }
+  sel.value = view.theme;
+  sel.addEventListener('change', () => { view.theme = sel.value; store.set('timbre.theme', sel.value); showMoments(); });
+  showMoments();
+}
+
+function showMoments() {
+  const th = THEMES.find((x) => x.id === view.theme) || THEMES[0];
+  qs('#theme-desc').textContent = th.desc;
+  const box = qs('#moments');
+  box.textContent = '';
+  for (const [m, v] of Object.entries(th.moments)) {
+    const s = byId.get(v.sound);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pad';
+    b.dataset.moment = m;
+    b.style.setProperty('--c', 'var(--cat-' + s.category + ', var(--accent))');
+    b.innerHTML = '<span class="pad-m">' + esc(m) + '</span><span class="pad-s">' + esc(s.name) + '</span>';
+    b.setAttribute('aria-label', m + ': plays ' + s.name);
+    b.addEventListener('click', () => {
+      if (playNow(s, v.params, 1) == null) return;
+      b.classList.add('hit');
+      setTimeout(() => b.classList.remove('hit'), 160);
+    });
+    box.appendChild(b);
+  }
+}
+
+// ---------------------------------------------------------------- color theme, monitor, keys
+const darkQuery = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+function setMode(mode, remember) {
+  root.setAttribute('data-theme', mode);
+  if (remember) store.set('timbre.mode', mode);
+  const next = mode === 'dark' ? 'light' : 'dark';
+  qs('#mode').setAttribute('aria-label', 'Switch to ' + next + ' theme');
+  qs('#mode').title = 'Switch to ' + next + ' theme';
+  for (const st of strips.values()) if (st.rendered) drawScope(st, -1);
+}
+
+function wire() {
+  const early = () => { audio(); document.removeEventListener('pointerdown', early, true); document.removeEventListener('keydown', early, true); };
+  document.addEventListener('pointerdown', early, true);
+  document.addEventListener('keydown', early, true);
+  setMode(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
+  qs('#mode').addEventListener('click', () => setMode(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true));
+  if (darkQuery && darkQuery.addEventListener) {
+    darkQuery.addEventListener('change', (e) => { if (!store.get('timbre.mode')) setMode(e.matches ? 'dark' : 'light', false); });
+  }
+  const vol = qs('#vol');
+  const savedVol = Number(store.get('timbre.monitor'));
+  if (store.get('timbre.monitor') != null && isFinite(savedVol)) monitorLevel = Math.min(1, Math.max(0, savedVol));
+  vol.value = monitorLevel;
+  const syncVol = () => {
+    monitorLevel = Number(vol.value);
+    vol.style.setProperty('--fill', Math.round(monitorLevel * 100) + '%');
+    vol.setAttribute('aria-valuetext', Math.round(monitorLevel * 100) + ' percent');
+    if (monitorGain) monitorGain.gain.setTargetAtTime(monitorLevel, actx.currentTime, 0.02);
+  };
+  vol.addEventListener('input', () => { syncVol(); store.set('timbre.monitor', String(monitorLevel)); });
+  syncVol();
+  const q = qs('#q');
+  q.addEventListener('input', () => { view.q = q.value; applyFilter(); });
+  q.addEventListener('keydown', (e) => { if (e.key === 'Escape' && q.value) { q.value = ''; view.q = ''; applyFilter(); } });
+  qs('#clear').addEventListener('click', () => { q.value = ''; view.q = ''; view.cat = 'all'; applyFilter(); q.focus(); });
+  document.addEventListener('keydown', (e) => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
+    if (e.key === '/' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); q.focus(); q.select(); }
+  });
+  const dlg = qs('#code');
+  qs('#code-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('close', () => { if (dlg.returnFocusTo) dlg.returnFocusTo.focus(); });
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { for (const st of strips.values()) if (st.rendered) drawScope(st, -1); }, 120);
+  });
+}
+
+// ---------------------------------------------------------------- boot
+function boot() {
+  const grid = qs('#sounds');
+  for (const s of SOUNDS) grid.appendChild(buildStrip(s).el);
+  qs('#foot-count').textContent = '0.1, ' + SOUNDS.length + ' sounds';
+  buildCats();
+  buildThemes();
+  wire();
+  applyFilter();
+  const canRender = typeof OfflineAudioContext !== 'undefined';
+  if (!canRender) {
+    for (const st of strips.values()) qs('.scope-msg', st.el).textContent = 'offline rendering is unavailable here';
+    return;
+  }
+  const seen = (st) => { if (!st.rendered || st.dirty) want(st); };
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const en of entries) if (en.isIntersecting) seen(strips.get(en.target.closest('.strip').dataset.id));
+    }, { rootMargin: '200px 0px' });
+    for (const st of strips.values()) io.observe(st.scope);
+  } else {
+    for (const st of strips.values()) seen(st);
+  }
+}
+
+// The page's programmatic face, used by the gates (and handy in the console).
+window.Timbre = Object.freeze({
+  version: '0.1.0',
+  T, sounds: SOUNDS, themes: THEMES, preroll: PREROLL, sampleRate: SAMPLE_RATE,
+  paramsFor: (id, over) => paramsFor(byId.get(id), over),
+  render: (id, over, seedValue) => renderSound(byId.get(id), over, seedValue),
+  measure,
+  copy: (id, over, seedValue) => buildCopy(byId.get(id), T, over, seedValue),
+  wav: (id, over, seedValue) => renderSound(byId.get(id), over, seedValue).then((r) => encodeWav(wavChannels(r), r.sr)),
+  play: (id, over, seedValue) => playNow(byId.get(id), over, seedValue),
+  audio: () => actx,
+  stats: () => Object.assign({}, stats),
+});
+
+boot();
+
+})();</script>
+</body>
+</html>
