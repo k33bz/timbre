@@ -5,7 +5,7 @@
 //   T.noise(lp, t, { ... });
 // An effect with a tail (delay, reverb) keeps sounding after the voices stop: the sound's dur must
 // include that tail, and the level gate checks that it does.
-import { glide } from './envelope.js';
+import { env, glide } from './envelope.js';
 import { rand } from './random.js';
 
 /** A plain gain stage (a trim) into out. Returns its input. */
@@ -166,4 +166,112 @@ export function reverb(out, t, o) {
   conv.connect(wet);
   wet.connect(out);
   return inp;
+}
+
+/**
+ * Stereo placement with an optional sweep. Returns the node to play into.
+ *   o.x    position, -1 (left) .. 1 (right) (default 0); o.to sweep target; o.dur sweep s (default 0.3)
+ * A balance law: the near side stays at unity and the far side falls linearly to silence, so a
+ * centred voice is exactly the mono signal and placing one never raises its peak (the level gate's
+ * numbers stay valid). Stereo input (a reverb) keeps its width. A sound that never pans stays mono
+ * end to end, and Save WAV writes one channel for it.
+ */
+export function pan(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const inp = c.createGain();
+  const split = c.createChannelSplitter(2);
+  const merge = c.createChannelMerger(2);
+  const gl = c.createGain();
+  const gr = c.createGain();
+  inp.channelCount = 2;
+  inp.channelCountMode = 'explicit';
+  inp.channelInterpretation = 'speakers';
+  const cl = (v) => Math.min(1, Math.max(-1, Number(v) || 0));
+  const x0 = cl(o.x);
+  const x1 = o.to == null ? x0 : cl(o.to);
+  const dur = o.dur == null ? 0.3 : o.dur;
+  // side = 1 shapes the left gain (it falls as x moves right), side = -1 the right one
+  const shape = (param, side) => {
+    const at = (x) => Math.min(1, 1 - side * x);
+    param.value = at(x0);
+    param.setValueAtTime(at(x0), t);
+    if (x1 === x0 || !(dur > 0)) return;
+    if (x0 * x1 < 0) param.linearRampToValueAtTime(1, t + (dur * -x0) / (x1 - x0));
+    param.linearRampToValueAtTime(at(x1), t + dur);
+  };
+  shape(gl.gain, 1);
+  shape(gr.gain, -1);
+  inp.connect(split);
+  split.connect(gl, 0);
+  split.connect(gr, 1);
+  gl.connect(merge, 0, 0);
+  gr.connect(merge, 0, 1);
+  merge.connect(out);
+  return inp;
+}
+
+/**
+ * A DC blocker: a gentle highpass (default 30 Hz, kept within 20..40) in one call. Returns the
+ * node to play into. For waveshaped, crushed or one-sided material whose average drifts off zero
+ * (the level gate fails DC above -50 dBFS). t is not needed: T.dcblock(out) works.
+ *   o.f  cutoff Hz (default 30)
+ */
+export function dcblock(out, t, o) {
+  const b = out.context.createBiquadFilter();
+  b.type = 'highpass';
+  b.frequency.value = Math.min(40, Math.max(20, (o && o.f) || 30));
+  b.Q.value = 0.707;
+  b.connect(out);
+  return b;
+}
+
+/**
+ * A low-frequency oscillator added to one of a node's parameters: tremolo on a T.gain, a wah on a
+ * T.filter's frequency. The parameter keeps its own value and automation; the LFO swings around it.
+ *   node     the node that owns the parameter (what T.gain or T.filter returned)
+ *   o.param  its name: 'frequency' (the default when the node has one), 'gain', 'Q', 'detune'
+ *   o.rate   Hz (default 5); o.to rate at the end (a speed-up or a slow-down)
+ *   o.depth  the swing either way, in the parameter's own units: a gain 0..1, a frequency in Hz,
+ *            detune in cents (default 0.5)
+ *   o.type   wave (default 'sine'); o.dur how long it runs, s (default 1)
+ *   o.a      fade-in s (default 0.005); the depth fades out over the last 10 ms, so stopping never clicks
+ * Keep the swing inside the parameter's sensible range (a gain that swings below zero inverts the
+ * signal). Returns the end time.
+ */
+export function lfo(node, t, o) {
+  o = o || {};
+  const c = node.context;
+  const param = node[o.param || (node.frequency ? 'frequency' : 'gain')];
+  const a = Math.max(0.002, o.a == null ? 0.005 : o.a);
+  const end = t + Math.max(a + 0.02, o.dur == null ? 1 : o.dur);
+  const depth = o.depth == null ? 0.5 : o.depth;
+  const w = c.createOscillator();
+  const d = c.createGain();
+  w.type = o.type || 'sine';
+  const rate = Math.max(0.01, o.rate || 5);
+  glide(w.frequency, t, rate, o.to ? Math.max(0.01, o.to) : rate, end - t, 'exp');
+  d.gain.value = 0;
+  d.gain.setValueAtTime(0, t);
+  d.gain.linearRampToValueAtTime(depth, t + a);
+  d.gain.setValueAtTime(depth, end - 0.01);
+  d.gain.linearRampToValueAtTime(0, end);
+  w.connect(d);
+  d.connect(param);
+  w.start(t);
+  w.stop(end + 0.05);
+  return end;
+}
+
+/**
+ * A group envelope: one gain stage shaped by env that several voices play into, so a chord or a
+ * layered hit swells, holds and fades as one. The voices keep their own envelopes inside it.
+ * Returns the node to play into.
+ *   env options (see env): peak (default 1: the bus only shapes), a, dur, curve, s, d, r, tail, fade
+ */
+export function bus(out, t, o) {
+  const g = out.context.createGain();
+  env(g.gain, t, Object.assign({ peak: 1 }, o));
+  g.connect(out);
+  return g;
 }

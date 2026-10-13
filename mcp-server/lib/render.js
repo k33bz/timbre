@@ -1,15 +1,16 @@
 // A small offline renderer for the recorded mock graph (lib/mockaudio.js), mono, in plain JS.
 //
 // Node has no WebAudio, so to read a sound's level without a browser this module plays the recorded
-// graph back: oscillators (four waves, pitch and detune automation and modulation, so vibrato and FM
-// work), looped or one-shot buffers (the seeded noise the real helpers generated), biquad filters
+// graph back: oscillators (four waves and PeriodicWaves, pitch and detune automation and modulation,
+// so vibrato and FM work), looped or one-shot buffers (the seeded noise the real helpers generated), biquad filters
 // with swept cutoffs, gain envelopes with modulation (tremolo), and waveshapers. It is built for the
 // house helpers, not for all of WebAudio:
 //   * reverb and delay branches are NOT simulated (the dry path is, the wet tail is left out), so a
 //     sound with a loud effect tail reads a little low (lib/levels.js adds an allowance);
 //   * the master chain is modelled as its warm steady state (lib/levels.js), without the limiter,
 //     which only acts above the house range;
-//   * oscillators are naive (not band-limited) and run at the context's sample rate.
+//   * oscillators are naive (not band-limited) and run at the context's sample rate;
+//   * the signal is one channel: a channel merger (T.pan) passes on its louder input.
 //
 // Signals are sparse: { a, d } means the samples d start at index a and everything outside is zero.
 // A grain of noise 20 ms long in an eight second bed costs 20 ms of work and memory, not eight
@@ -107,6 +108,24 @@ function biquadCoefs(type, cutoff, q, gainDb) {
   return [b0 / a0, b1 / a0, b2 / a0, a1 / a0, a2 / a0];
 }
 
+/** One period of a PeriodicWave (real: cosine terms, imag: sine terms), normalized to a peak of 1 as the browser does. */
+function waveTable(w) {
+  const N = 2048;
+  const tab = new Float32Array(N + 1);
+  const n = Math.min(w.real.length, w.imag.length);
+  let pk = 0;
+  for (let i = 0; i < N; i++) {
+    const ph = (TWO_PI * i) / N;
+    let v = 0;
+    for (let k = 1; k < n; k++) v += w.real[k] * Math.cos(k * ph) + w.imag[k] * Math.sin(k * ph);
+    tab[i] = v;
+    if (Math.abs(v) > pk) pk = Math.abs(v);
+  }
+  if (pk > 0) for (let i = 0; i < N; i++) tab[i] /= pk;
+  tab[N] = tab[0];
+  return tab;
+}
+
 function wave(type, ph) {
   const f = ph - Math.floor(ph);
   switch (type) {
@@ -157,9 +176,14 @@ export function renderGraph(ctx, seconds) {
     const f = paramWindow(node.frequency, i0, i1, sr, nodeOut);
     const det = paramWindow(node.detune, i0, i1, sr, nodeOut);
     const d = new Float32Array(i1 - i0);
+    const tab = node.type === 'custom' && node.wave ? waveTable(node.wave) : null;
     let ph = 0;
     for (let i = 0; i < d.length; i++) {
-      d[i] = wave(node.type, ph);
+      if (tab) {
+        const x = (ph - Math.floor(ph)) * 2048;
+        const k = Math.floor(x);
+        d[i] = tab[k] + (tab[k + 1] - tab[k]) * (x - k);
+      } else d[i] = wave(node.type, ph);
       ph += (f[i] * (det[i] ? Math.pow(2, det[i] / 1200) : 1)) / sr;
     }
     return { a: i0, d };
@@ -203,6 +227,26 @@ export function renderGraph(ctx, seconds) {
     return { a, d: last + 1 < len ? y.subarray(0, last + 1) : y };
   }
 
+  /**
+   * A channel merger, read as one channel: the louder input, sample by sample. T.pan's balance law
+   * keeps one side at unity, so this is the panned voice's peak, as the gate (either channel) reads it.
+   */
+  function renderMerger(node) {
+    const list = (ins.get(node) || []).map(nodeOut).filter((s) => s.d.length);
+    if (!list.length) return EMPTY;
+    let a = Infinity;
+    let b = -Infinity;
+    for (const s of list) { if (s.a < a) a = s.a; if (end(s) > b) b = end(s); }
+    const d = new Float32Array(b - a);
+    for (const s of list) {
+      for (let i = 0; i < s.d.length; i++) {
+        const k = s.a - a + i;
+        if (Math.abs(s.d[i]) > Math.abs(d[k])) d[k] = s.d[i];
+      }
+    }
+    return { a, d };
+  }
+
   function renderShaper(node) {
     const x = sumIn(node);
     const cur = node.curve;
@@ -238,6 +282,7 @@ export function renderGraph(ctx, seconds) {
       case 'biquad': sig = renderBiquad(node); break;
       case 'shaper': sig = renderShaper(node); break;
       case 'gain': sig = renderGain(node); break;
+      case 'merger': sig = renderMerger(node); break;
       case 'delay':
       case 'convolver': sig = EMPTY; break; // wet branches are left out
       default: sig = sumIn(node);

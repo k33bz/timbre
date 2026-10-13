@@ -7483,9 +7483,33 @@
       ],
       "src": "function bell(out, t, o) {\n  o = o || {};\n  const f = o.f || 880;\n  const dur = o.dur == null ? 1 : o.dur;\n  const peak = o.peak == null ? 0.15 : o.peak;\n  const drift = o.drift == null ? 1 : o.drift;\n  const parts = o.partials || [[1, 1, 1], [2.76, 0.5, 0.6], [5.4, 0.25, 0.4], [8.93, 0.12, 0.25]];\n  let end = t;\n  for (let k = 0; k < parts.length; k++) {\n    const pr = parts[k];\n    const e = osc(out, t, {\n      type: o.type || 'sine', f: f * pr[0], to: f * pr[0] * drift,\n      dur: Math.max(0.03, dur * (pr[2] == null ? 1 : pr[2])), peak: peak * (pr[1] == null ? 1 : pr[1]),\n      a: o.a == null ? 0.002 : o.a, curve: o.curve,\n    });\n    if (e > end) end = e;\n  }\n  return end;\n}"
     },
+    "bus": {
+      "deps": [
+        "env"
+      ],
+      "src": "function bus(out, t, o) {\n  const g = out.context.createGain();\n  env(g.gain, t, Object.assign({ peak: 1 }, o));\n  g.connect(out);\n  return g;\n}"
+    },
+    "chord": {
+      "deps": [
+        "osc",
+        "note"
+      ],
+      "src": "function chord(out, t, o) {\n  o = o || {};\n  const voice = o.voice || osc;\n  const root = o.root == null ? null : typeof o.root === 'number' ? o.root : note(o.root);\n  const hz = (n) => (typeof n === 'string' ? note(n) : root != null ? root * Math.pow(2, n / 12) : n);\n  const list = (o.notes || ['C4', 'E4', 'G4']).map(hz);\n  const k = list.length;\n  const peak = (o.peak == null ? 0.2 : o.peak) / Math.max(1, k);\n  const strum = o.strum || 0;\n  let end = t;\n  for (let i = 0; i < k; i++) {\n    const v = Object.assign({}, o, { f: list[i], peak });\n    if (o.bend) v.to = list[i] * o.bend;\n    if (o.spread && k > 1) v.detune = (o.detune || 0) + o.spread * (i / (k - 1) - 0.5);\n    const e = voice(out, t + (strum < 0 ? (k - 1 - i) * -strum : i * strum), v);\n    if (e > end) end = e;\n  }\n  return end;\n}"
+    },
+    "crackle": {
+      "deps": [
+        "noiseBuffer",
+        "rand"
+      ],
+      "src": "function crackle(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const len = Math.min(0.05, Math.max(0.002, o.len == null ? 0.006 : o.len));\n  const span = Math.max(len + 0.002, o.dur == null ? 1 : o.dur);\n  const rate = Math.max(1, o.rate == null ? 30 : o.rate);\n  const f0 = Math.max(40, o.f || 2500);\n  const f1 = o.to ? Math.max(40, o.to) : f0;\n  const spread = o.spread == null ? 0.5 : o.spread;\n  const vary = Math.min(1, Math.max(0, o.vary == null ? 0.7 : o.vary));\n  const bend = o.bend > 0 ? o.bend : 1;\n  const peak = o.peak == null ? 0.2 : o.peak;\n  const top = c.sampleRate * 0.45;\n  const s = c.createBufferSource();\n  const b = c.createBiquadFilter();\n  const g = c.createGain();\n  s.buffer = noiseBuffer(c, 0.5);\n  s.loop = true;\n  b.type = 'bandpass';\n  b.Q.value = o.q == null ? 1.2 : o.q;\n  b.frequency.setValueAtTime(f0, t);\n  g.gain.value = 0;\n  g.gain.setValueAtTime(0, t);\n  let at = t + rand() * Math.min(1 / rate, span - len);\n  let end = t;\n  while (at + len <= t + span + 1e-9) {\n    const fc = Math.min(top, f0 * Math.pow(f1 / f0, (at - t) / span) * Math.pow(2, spread * (rand() * 2 - 1)));\n    const lv = Math.max(0.0002, peak * (1 - vary * rand()));\n    b.frequency.setValueAtTime(fc, at);\n    if (bend !== 1) b.frequency.exponentialRampToValueAtTime(Math.min(top, fc * bend), at + len);\n    g.gain.setValueAtTime(0, at);\n    g.gain.linearRampToValueAtTime(lv, at + 0.0005);\n    g.gain.exponentialRampToValueAtTime(0.0001, at + len);\n    g.gain.setValueAtTime(0, at + len);\n    end = at + len;\n    // the next burst: an exponential gap (a Poisson process) after this one ends\n    at = end + 0.001 - Math.log(1 - rand()) / rate;\n  }\n  s.connect(b);\n  b.connect(g);\n  g.connect(out);\n  s.start(t);\n  s.stop(end + 0.05);\n  return end;\n}"
+    },
     "crush": {
       "deps": [],
       "src": "function crush(out, t, o) {\n  o = o || {};\n  const ws = out.context.createWaveShaper();\n  const bits = Math.min(16, Math.max(1, o.bits == null ? 6 : o.bits));\n  const steps = Math.pow(2, bits - 1);\n  const ref = o.ref || 0.25;\n  const n = 8192;\n  const cur = new Float32Array(n);\n  for (let i = 0; i < n; i++) {\n    const x = (i * 2) / (n - 1) - 1;\n    cur[i] = (Math.round((x / ref) * steps) / steps) * ref;\n  }\n  ws.curve = cur;\n  ws.oversample = 'none';\n  ws.connect(out);\n  return ws;\n}"
+    },
+    "dcblock": {
+      "deps": [],
+      "src": "function dcblock(out, t, o) {\n  const b = out.context.createBiquadFilter();\n  b.type = 'highpass';\n  b.frequency.value = Math.min(40, Math.max(20, (o && o.f) || 30));\n  b.Q.value = 0.707;\n  b.connect(out);\n  return b;\n}"
     },
     "delay": {
       "deps": [],
@@ -7497,7 +7521,7 @@
     },
     "env": {
       "deps": [],
-      "src": "function env(param, t, o) {\n  o = o || {};\n  const peak = Math.max(0.0002, o.peak == null ? 0.2 : o.peak);\n  const a = Math.max(0.002, o.a == null ? 0.005 : o.a);\n  const end = t + Math.max(a + 0.01, o.dur == null ? 0.2 : o.dur);\n  const lin = o.curve === 'lin';\n  const floor = 0.0001;\n  param.value = 0;\n  param.setValueAtTime(0, t);\n  param.linearRampToValueAtTime(peak, t + a);\n  if (o.s > 0) {\n    const sus = Math.max(floor * 2, peak * Math.min(1, o.s));\n    const rel = Math.max(0.005, o.r == null ? 0.05 : o.r);\n    const rs = Math.max(t + a + 0.001, end - rel);\n    const ds = Math.min(t + a + Math.max(0.002, o.d == null ? 0.05 : o.d), rs);\n    if (lin) param.linearRampToValueAtTime(sus, ds);\n    else param.exponentialRampToValueAtTime(sus, ds);\n    param.setValueAtTime(sus, rs);\n  }\n  if (lin) param.linearRampToValueAtTime(0, end);\n  else {\n    param.exponentialRampToValueAtTime(floor, end);\n    param.setValueAtTime(0, end);\n  }\n  return end;\n}"
+      "src": "function env(param, t, o) {\n  o = o || {};\n  const peak = Math.max(0.0002, o.peak == null ? 0.2 : o.peak);\n  const a = Math.max(0.002, o.a == null ? 0.005 : o.a);\n  const end = t + Math.max(a + 0.01, o.dur == null ? 0.2 : o.dur);\n  const lin = o.curve === 'lin';\n  const floor = 0.0001;\n  param.value = 0;\n  param.setValueAtTime(0, t);\n  param.linearRampToValueAtTime(peak, t + a);\n  let from = peak;\n  let start = t + a;\n  if (o.s > 0) {\n    const sus = Math.max(floor * 2, peak * Math.min(1, o.s));\n    const rel = Math.max(0.005, o.r == null ? 0.05 : o.r);\n    const rs = Math.max(t + a + 0.001, end - rel);\n    const ds = Math.min(t + a + Math.max(0.002, o.d == null ? 0.05 : o.d), rs);\n    if (lin) param.linearRampToValueAtTime(sus, ds);\n    else param.exponentialRampToValueAtTime(sus, ds);\n    param.setValueAtTime(sus, rs);\n    from = sus;\n    start = rs;\n  }\n  if (lin) param.linearRampToValueAtTime(0, end);\n  else if (o.tail > 0) {\n    const fade = Math.min(Math.max(0.005, o.fade == null ? 0.02 : o.fade), (end - start) / 2);\n    param.exponentialRampToValueAtTime(Math.max(floor, from * Math.min(1, o.tail)), end - fade);\n    param.linearRampToValueAtTime(0, end);\n  } else {\n    param.exponentialRampToValueAtTime(floor, end);\n    param.setValueAtTime(0, end);\n  }\n  return end;\n}"
     },
     "filter": {
       "deps": [
@@ -7520,6 +7544,18 @@
       "deps": [],
       "src": "function glide(param, t, from, to, dur, curve) {\n  param.setValueAtTime(from, t);\n  if (to == null || to === from || !(dur > 0)) return;\n  if (curve === 'lin' || from <= 0 || to <= 0) param.linearRampToValueAtTime(to, t + dur);\n  else param.exponentialRampToValueAtTime(to, t + dur);\n}"
     },
+    "jitter": {
+      "deps": [
+        "rand"
+      ],
+      "src": "function jitter(x, o) {\n  const j = typeof o === 'number' ? { amt: o } : o || {};\n  if (typeof x === 'number') {\n    const r = rand() * 2 - 1;\n    return x * (1 + r * (j.amt || 0)) * Math.pow(2, (r * (j.cents || 0)) / 1200) * Math.pow(10, (r * (j.db || 0)) / 20);\n  }\n  const v = Object.assign({}, x);\n  const pr = Math.pow(2, ((rand() * 2 - 1) * (j.cents || 0)) / 1200);\n  const lr = Math.pow(10, ((rand() * 2 - 1) * (j.db || 0)) / 20);\n  if (v.f != null) v.f *= pr;\n  if (v.to != null) v.to *= pr;\n  if (v.peak != null) v.peak *= lr;\n  return v;\n}"
+    },
+    "lfo": {
+      "deps": [
+        "glide"
+      ],
+      "src": "function lfo(node, t, o) {\n  o = o || {};\n  const c = node.context;\n  const param = node[o.param || (node.frequency ? 'frequency' : 'gain')];\n  const a = Math.max(0.002, o.a == null ? 0.005 : o.a);\n  const end = t + Math.max(a + 0.02, o.dur == null ? 1 : o.dur);\n  const depth = o.depth == null ? 0.5 : o.depth;\n  const w = c.createOscillator();\n  const d = c.createGain();\n  w.type = o.type || 'sine';\n  const rate = Math.max(0.01, o.rate || 5);\n  glide(w.frequency, t, rate, o.to ? Math.max(0.01, o.to) : rate, end - t, 'exp');\n  d.gain.value = 0;\n  d.gain.setValueAtTime(0, t);\n  d.gain.linearRampToValueAtTime(depth, t + a);\n  d.gain.setValueAtTime(depth, end - 0.01);\n  d.gain.linearRampToValueAtTime(0, end);\n  w.connect(d);\n  d.connect(param);\n  w.start(t);\n  w.stop(end + 0.05);\n  return end;\n}"
+    },
     "master": {
       "deps": [],
       "src": "function master(c, dest) {\n  const g = c.createGain();\n  const lim = c.createDynamicsCompressor();\n  const sat = c.createWaveShaper();\n  g.gain.value = 0.55;\n  lim.threshold.value = -12;\n  lim.knee.value = 6;\n  lim.ratio.value = 12;\n  lim.attack.value = 0.003;\n  lim.release.value = 0.12;\n  const n = 2048;\n  const cur = new Float32Array(n);\n  for (let k = 0; k < n; k++) {\n    const x = (k * 2) / (n - 1) - 1;\n    cur[k] = 0.5 * Math.tanh(2 * x);\n  }\n  sat.curve = cur;\n  sat.oversample = '2x';\n  g.connect(lim);\n  lim.connect(sat);\n  sat.connect(dest || c.destination);\n  return g;\n}"
@@ -7530,7 +7566,7 @@
         "env",
         "glide"
       ],
-      "src": "function noise(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const dur = o.dur == null ? 0.2 : o.dur;\n  const s = c.createBufferSource();\n  const g = c.createGain();\n  s.buffer = noiseBuffer(c, Math.max(dur, (o.a || 0.005) + 0.01) + 0.06);\n  s.loop = true;\n  let head = s;\n  if (o.filter !== 'none') {\n    const b = c.createBiquadFilter();\n    b.type = o.filter || 'bandpass';\n    const f = Math.max(40, o.f || 1000);\n    glide(b.frequency, t, f, o.to ? Math.max(40, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);\n    b.Q.value = o.q == null ? 1 : o.q;\n    s.connect(b);\n    head = b;\n  }\n  const end = env(g.gain, t, o);\n  head.connect(g);\n  g.connect(out);\n  s.start(t);\n  s.stop(end + 0.05);\n  return end;\n}"
+      "src": "function noise(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const dur = o.dur == null ? 0.2 : o.dur;\n  const s = c.createBufferSource();\n  const g = c.createGain();\n  s.buffer = noiseBuffer(c, Math.max(dur, (o.a || 0.005) + 0.01) + 0.06);\n  s.loop = true;\n  let head = s;\n  if (o.filter !== 'none') {\n    const b = c.createBiquadFilter();\n    b.type = o.filter || 'bandpass';\n    const f = Math.max(40, o.f || 1000);\n    glide(b.frequency, t, f, o.to ? Math.max(40, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);\n    b.Q.value = o.q == null ? 1 : o.q;\n    s.connect(b);\n    head = b;\n  }\n  for (const k of ['lp', 'hp']) {\n    if (!o[k]) continue;\n    const fo = typeof o[k] === 'number' ? { f: o[k] } : o[k];\n    const b = c.createBiquadFilter();\n    const fc = Math.max(20, fo.f || 1000);\n    b.type = k === 'lp' ? 'lowpass' : 'highpass';\n    glide(b.frequency, t, fc, fo.to ? Math.max(20, fo.to) : fc, fo.glide == null ? dur * 0.9 : fo.glide, fo.curve);\n    b.Q.value = fo.q == null ? 0.707 : fo.q;\n    head.connect(b);\n    head = b;\n  }\n  const end = env(g.gain, t, o);\n  head.connect(g);\n  g.connect(out);\n  s.start(t);\n  s.stop(end + 0.05);\n  return end;\n}"
     },
     "noiseBuffer": {
       "deps": [
@@ -7547,14 +7583,24 @@
         "env",
         "glide"
       ],
-      "src": "function osc(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const dur = o.dur == null ? 0.2 : o.dur;\n  const n = c.createOscillator();\n  const g = c.createGain();\n  n.type = o.type || 'sine';\n  const f = Math.max(20, o.f || 440);\n  glide(n.frequency, t, f, o.to ? Math.max(20, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);\n  if (o.detune) n.detune.value = o.detune;\n  const end = env(g.gain, t, o);\n  let src = n;\n  if (o.vib && o.vib.depth) {\n    const lfo = c.createOscillator();\n    const lg = c.createGain();\n    lfo.frequency.value = o.vib.rate || 5;\n    lg.gain.value = o.vib.depth;\n    lfo.connect(lg);\n    lg.connect(n.detune);\n    lfo.start(t);\n    lfo.stop(end + 0.05);\n  }\n  if (o.trem && o.trem.depth > 0) {\n    const depth = Math.min(1, o.trem.depth);\n    const am = c.createGain();\n    const lfo = c.createOscillator();\n    const lg = c.createGain();\n    am.gain.value = 1 - depth / 2;\n    lg.gain.value = depth / 2;\n    lfo.frequency.value = o.trem.rate || 6;\n    lfo.connect(lg);\n    lg.connect(am.gain);\n    n.connect(am);\n    src = am;\n    lfo.start(t);\n    lfo.stop(end + 0.05);\n  }\n  src.connect(g);\n  g.connect(out);\n  n.start(t);\n  n.stop(end + 0.05);\n  return end;\n}"
+      "src": "function osc(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const dur = o.dur == null ? 0.2 : o.dur;\n  const n = c.createOscillator();\n  const g = c.createGain();\n  n.type = o.type || 'sine';\n  if (o.wave) n.setPeriodicWave(o.wave);\n  const f = Math.max(20, o.f || 440);\n  glide(n.frequency, t, f, o.to ? Math.max(20, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);\n  if (o.detune) n.detune.value = o.detune;\n  const end = env(g.gain, t, o);\n  let src = n;\n  if (o.vib && o.vib.depth) {\n    const wob = c.createOscillator();\n    const lg = c.createGain();\n    wob.frequency.value = o.vib.rate || 5;\n    lg.gain.value = o.vib.depth;\n    wob.connect(lg);\n    lg.connect(n.detune);\n    wob.start(t);\n    wob.stop(end + 0.05);\n  }\n  if (o.trem && o.trem.depth > 0) {\n    const depth = Math.min(1, o.trem.depth);\n    const am = c.createGain();\n    const wob = c.createOscillator();\n    const lg = c.createGain();\n    am.gain.value = 1 - depth / 2;\n    lg.gain.value = depth / 2;\n    wob.frequency.value = o.trem.rate || 6;\n    wob.connect(lg);\n    lg.connect(am.gain);\n    n.connect(am);\n    src = am;\n    wob.start(t);\n    wob.stop(end + 0.05);\n  }\n  for (const k of ['lp', 'hp']) {\n    if (!o[k]) continue;\n    const fo = typeof o[k] === 'number' ? { f: o[k] } : o[k];\n    const b = c.createBiquadFilter();\n    const fc = Math.max(20, fo.f || 1000);\n    b.type = k === 'lp' ? 'lowpass' : 'highpass';\n    glide(b.frequency, t, fc, fo.to ? Math.max(20, fo.to) : fc, fo.glide == null ? dur * 0.9 : fo.glide, fo.curve);\n    b.Q.value = fo.q == null ? 0.707 : fo.q;\n    src.connect(b);\n    src = b;\n  }\n  src.connect(g);\n  g.connect(out);\n  n.start(t);\n  n.stop(end + 0.05);\n  return end;\n}"
+    },
+    "pan": {
+      "deps": [],
+      "src": "function pan(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const inp = c.createGain();\n  const split = c.createChannelSplitter(2);\n  const merge = c.createChannelMerger(2);\n  const gl = c.createGain();\n  const gr = c.createGain();\n  inp.channelCount = 2;\n  inp.channelCountMode = 'explicit';\n  inp.channelInterpretation = 'speakers';\n  const cl = (v) => Math.min(1, Math.max(-1, Number(v) || 0));\n  const x0 = cl(o.x);\n  const x1 = o.to == null ? x0 : cl(o.to);\n  const dur = o.dur == null ? 0.3 : o.dur;\n  // side = 1 shapes the left gain (it falls as x moves right), side = -1 the right one\n  const shape = (param, side) => {\n    const at = (x) => Math.min(1, 1 - side * x);\n    param.value = at(x0);\n    param.setValueAtTime(at(x0), t);\n    if (x1 === x0 || !(dur > 0)) return;\n    if (x0 * x1 < 0) param.linearRampToValueAtTime(1, t + (dur * -x0) / (x1 - x0));\n    param.linearRampToValueAtTime(at(x1), t + dur);\n  };\n  shape(gl.gain, 1);\n  shape(gr.gain, -1);\n  inp.connect(split);\n  split.connect(gl, 0);\n  split.connect(gr, 1);\n  gl.connect(merge, 0, 0);\n  gr.connect(merge, 0, 1);\n  merge.connect(out);\n  return inp;\n}"
     },
     "pluck": {
       "deps": [
         "rand",
         "env"
       ],
-      "src": "function pluck(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const sr = c.sampleRate;\n  const dur = Math.max(0.05, o.dur == null ? 0.8 : o.dur);\n  const f = Math.max(30, Math.min(sr / 4, o.f || 220));\n  const len = Math.ceil((dur + 0.06) * sr);\n  const buf = c.createBuffer(1, len, sr);\n  const y = buf.getChannelData(0);\n  const bright = Math.min(1, Math.max(0, o.bright == null ? 0.5 : o.bright));\n  const w = 0.5 - 0.45 * bright;           // weight of the older sample in the loop's averager\n  const P = sr / f;                         // samples per period\n  const D = P - w;                          // the averager itself delays by w samples\n  const N = Math.floor(D);\n  const fr = D - N;\n  const fb = Math.pow(0.001, 1 / (f * dur)); // -60 dB after dur seconds\n  const ex = Math.min(len, Math.round(P));\n  // the excitation: one period of seeded noise with its mean removed (the loop passes DC almost\n  // untouched, so a short burst's random offset would otherwise ride under the whole note)\n  let mean = 0;\n  for (let i = 0; i < ex; i++) { y[i] = rand() * 2 - 1; mean += y[i]; }\n  mean /= ex;\n  for (let i = 0; i < ex; i++) y[i] -= mean;\n  let pk = 0;\n  for (let i = 0; i < len; i++) {\n    let v = y[i];\n    if (i - N - 2 >= 0) {\n      const d0 = y[i - N] + (y[i - N - 1] - y[i - N]) * fr;\n      const d1 = y[i - N - 1] + (y[i - N - 2] - y[i - N - 1]) * fr;\n      v += fb * ((1 - w) * d0 + w * d1);\n    }\n    y[i] = v;\n    const m = v < 0 ? -v : v;\n    if (m > pk) pk = m;\n  }\n  if (pk > 0) for (let i = 0; i < len; i++) y[i] /= pk;\n  const s = c.createBufferSource();\n  const g = c.createGain();\n  s.buffer = buf;\n  const end = env(g.gain, t, {\n    peak: o.peak == null ? 0.2 : o.peak, a: o.a == null ? 0.002 : o.a, dur, s: 1, d: 0.002,\n    r: Math.min(0.05, dur * 0.2),\n  });\n  s.connect(g);\n  g.connect(out);\n  s.start(t);\n  s.stop(end + 0.05);\n  return end;\n}"
+      "src": "function pluck(out, t, o) {\n  o = o || {};\n  const c = out.context;\n  const sr = c.sampleRate;\n  const dur = Math.max(0.05, o.dur == null ? 0.8 : o.dur);\n  const f = Math.max(30, Math.min(sr / 4, o.f || 220));\n  const len = Math.ceil((dur + 0.06) * sr);\n  const buf = c.createBuffer(1, len, sr);\n  const y = buf.getChannelData(0);\n  const bright = Math.min(1, Math.max(0, o.bright == null ? 0.5 : o.bright));\n  const w = 0.5 - 0.45 * bright;           // weight of the older sample in the loop's averager\n  const P = sr / f;                         // samples per period\n  const D = P - w;                          // the averager itself delays by w samples\n  const N = Math.floor(D);\n  const fr = D - N;\n  const fb = Math.pow(0.001, 1 / (f * dur)); // -60 dB after dur seconds\n  const ex = Math.min(len, Math.round(P));\n  // the excitation: one period of seeded noise with its mean removed (the loop passes DC almost\n  // untouched, so a short burst's random offset would otherwise ride under the whole note)\n  let mean = 0;\n  for (let i = 0; i < ex; i++) { y[i] = rand() * 2 - 1; mean += y[i]; }\n  if (o.tone != null && o.tone < 1) {\n    // a darker excitation: two passes of a one-pole lowpass, run twice around the period so the\n    // filter has settled where the loop wraps\n    const k = 1 - Math.exp((-2 * Math.PI * 120 * Math.pow(sr / 240, Math.max(0, o.tone))) / sr);\n    for (let pass = 0; pass < 2; pass++) {\n      let z = 0;\n      for (let i = 0; i < 2 * ex; i++) { z += (y[i % ex] - z) * k; if (i >= ex) y[i - ex] = z; }\n    }\n    mean = 0;\n    for (let i = 0; i < ex; i++) mean += y[i];\n  }\n  mean /= ex;\n  for (let i = 0; i < ex; i++) y[i] -= mean;\n  let pk = 0;\n  for (let i = 0; i < len; i++) {\n    let v = y[i];\n    if (i - N - 2 >= 0) {\n      const d0 = y[i - N] + (y[i - N - 1] - y[i - N]) * fr;\n      const d1 = y[i - N - 1] + (y[i - N - 2] - y[i - N - 1]) * fr;\n      v += fb * ((1 - w) * d0 + w * d1);\n    }\n    y[i] = v;\n    const m = v < 0 ? -v : v;\n    if (m > pk) pk = m;\n  }\n  if (pk > 0) for (let i = 0; i < len; i++) y[i] /= pk;\n  const s = c.createBufferSource();\n  const g = c.createGain();\n  s.buffer = buf;\n  const end = env(g.gain, t, {\n    peak: o.peak == null ? 0.2 : o.peak, a: o.a == null ? 0.002 : o.a, dur, s: 1, d: 0.002,\n    r: Math.min(0.05, dur * 0.2),\n  });\n  s.connect(g);\n  g.connect(out);\n  s.start(t);\n  s.stop(end + 0.05);\n  return end;\n}"
+    },
+    "pulse": {
+      "deps": [
+        "osc"
+      ],
+      "src": "function pulse(out, t, o) {\n  o = o || {};\n  const duty = Math.min(0.95, Math.max(0.05, o.duty == null ? 0.25 : o.duty));\n  const n = 128;\n  const re = new Float32Array(n + 1);\n  const im = new Float32Array(n + 1);\n  for (let k = 1; k <= n; k++) {\n    re[k] = Math.sin(2 * Math.PI * k * duty) / (Math.PI * k);\n    im[k] = (1 - Math.cos(2 * Math.PI * k * duty)) / (Math.PI * k);\n  }\n  return osc(out, t, Object.assign({}, o, { wave: out.context.createPeriodicWave(re, im) }));\n}"
     },
     "rand": {
       "deps": [],
@@ -7571,6 +7617,14 @@
         "rand"
       ],
       "src": "function seed(s) {\n  rand.s = (Number(s) || 0) >>> 0;\n}"
+    },
+    "tick": {
+      "deps": [
+        "rand",
+        "noise",
+        "osc"
+      ],
+      "src": "function tick(out, t, o) {\n  o = o || {};\n  const j = Math.min(1, Math.max(0, o.jitter || 0));\n  const fr = 1 + 0.25 * j * (rand() * 2 - 1);\n  const lv = Math.pow(10, (3 * j * (rand() * 2 - 1)) / 20);\n  const br = Math.pow(2, (50 * j * (rand() * 2 - 1)) / 1200);\n  const peak = (o.peak == null ? 0.1 : o.peak) * lv;\n  let end = noise(out, t, {\n    filter: o.filter || 'bandpass', f: (o.f || 3000) * fr, q: o.q == null ? 1.5 : o.q,\n    dur: o.dur == null ? 0.012 : o.dur, peak, a: 0.002, lp: o.lp, hp: o.hp,\n  });\n  if (o.blip) {\n    const bf = o.blip * br;\n    const e = osc(out, t, {\n      type: o.blipType || 'sine', f: bf, to: o.blipTo ? o.blipTo * br : bf, a: 0.002,\n      dur: o.blipDur == null ? 0.03 : o.blipDur, peak: o.blipPeak == null ? peak / 2 : o.blipPeak * lv,\n    });\n    if (e > end) end = e;\n  }\n  return end;\n}"
     }
   }
 }

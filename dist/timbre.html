@@ -554,6 +554,31 @@ function noiseBuffer(c, dur) {
   return b;
 }
 
+/**
+ * Seeded variation for repeated sounds, so the tenth footstep is not a copy of the first.
+ *   jitter(x, amt)                x times a random factor in [1 - amt, 1 + amt)
+ *   jitter(x, { cents })          a pitch in Hz moved up to +/- cents
+ *   jitter(x, { db })             a level moved up to +/- db decibels
+ *   jitter(opts, { cents, db })   a copy of a voice's options with f and to moved together by up
+ *                                 to +/- cents and peak (when given) by up to +/- db
+ * It draws a fixed number of values (one for a number, two for options), so changing an amount
+ * never reshuffles the noise that follows.
+ */
+function jitter(x, o) {
+  const j = typeof o === 'number' ? { amt: o } : o || {};
+  if (typeof x === 'number') {
+    const r = rand() * 2 - 1;
+    return x * (1 + r * (j.amt || 0)) * Math.pow(2, (r * (j.cents || 0)) / 1200) * Math.pow(10, (r * (j.db || 0)) / 20);
+  }
+  const v = Object.assign({}, x);
+  const pr = Math.pow(2, ((rand() * 2 - 1) * (j.cents || 0)) / 1200);
+  const lr = Math.pow(10, ((rand() * 2 - 1) * (j.db || 0)) / 20);
+  if (v.f != null) v.f *= pr;
+  if (v.to != null) v.to *= pr;
+  if (v.peak != null) v.peak *= lr;
+  return v;
+}
+
 // Envelopes and parameter glides.
 
 /**
@@ -565,6 +590,9 @@ function noiseBuffer(c, dur) {
  *   o.s      sustain as a fraction of peak; 0 or absent = percussive (attack, then decay to silence)
  *   o.d      decay seconds to the sustain level (default 0.05)
  *   o.r      release seconds at the end of dur (default 0.05)
+ *   o.tail   a slower tail: the exponential decay (or release) only falls to tail x its starting
+ *            level (0.05 = -26 dB) and a linear fade of o.fade seconds (default 0.02) takes it to
+ *            silence at the end. Leave it out for the full exponential decay. Ignored with 'lin'.
  *
  * ZERO FIRST. A GainNode passes its own value (1 by default) until its first automation event. A
  * source whose start time rounds to a frame a hair before t emits its first sample on that frame,
@@ -581,6 +609,8 @@ function env(param, t, o) {
   param.value = 0;
   param.setValueAtTime(0, t);
   param.linearRampToValueAtTime(peak, t + a);
+  let from = peak;
+  let start = t + a;
   if (o.s > 0) {
     const sus = Math.max(floor * 2, peak * Math.min(1, o.s));
     const rel = Math.max(0.005, o.r == null ? 0.05 : o.r);
@@ -589,9 +619,15 @@ function env(param, t, o) {
     if (lin) param.linearRampToValueAtTime(sus, ds);
     else param.exponentialRampToValueAtTime(sus, ds);
     param.setValueAtTime(sus, rs);
+    from = sus;
+    start = rs;
   }
   if (lin) param.linearRampToValueAtTime(0, end);
-  else {
+  else if (o.tail > 0) {
+    const fade = Math.min(Math.max(0.005, o.fade == null ? 0.02 : o.fade), (end - start) / 2);
+    param.exponentialRampToValueAtTime(Math.max(floor, from * Math.min(1, o.tail)), end - fade);
+    param.linearRampToValueAtTime(0, end);
+  } else {
     param.exponentialRampToValueAtTime(floor, end);
     param.setValueAtTime(0, end);
   }
@@ -623,6 +659,9 @@ function glide(param, t, from, to, dur, curve) {
  *   o.detune cents
  *   o.vib    { rate Hz, depth cents }  pitch wobble
  *   o.trem   { rate Hz, depth 0..1 }   level wobble (1 = the level dips to silence)
+ *   o.lp, o.hp  built-in lowpass / highpass after the oscillator: a cutoff in Hz, or
+ *            { f, to, q, glide, curve } to sweep it (default q 0.707, glide as the pitch's)
+ *   o.wave   a PeriodicWave to use instead of type (T.pulse builds one)
  */
 function osc(out, t, o) {
   o = o || {};
@@ -631,35 +670,47 @@ function osc(out, t, o) {
   const n = c.createOscillator();
   const g = c.createGain();
   n.type = o.type || 'sine';
+  if (o.wave) n.setPeriodicWave(o.wave);
   const f = Math.max(20, o.f || 440);
   glide(n.frequency, t, f, o.to ? Math.max(20, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);
   if (o.detune) n.detune.value = o.detune;
   const end = env(g.gain, t, o);
   let src = n;
   if (o.vib && o.vib.depth) {
-    const lfo = c.createOscillator();
+    const wob = c.createOscillator();
     const lg = c.createGain();
-    lfo.frequency.value = o.vib.rate || 5;
+    wob.frequency.value = o.vib.rate || 5;
     lg.gain.value = o.vib.depth;
-    lfo.connect(lg);
+    wob.connect(lg);
     lg.connect(n.detune);
-    lfo.start(t);
-    lfo.stop(end + 0.05);
+    wob.start(t);
+    wob.stop(end + 0.05);
   }
   if (o.trem && o.trem.depth > 0) {
     const depth = Math.min(1, o.trem.depth);
     const am = c.createGain();
-    const lfo = c.createOscillator();
+    const wob = c.createOscillator();
     const lg = c.createGain();
     am.gain.value = 1 - depth / 2;
     lg.gain.value = depth / 2;
-    lfo.frequency.value = o.trem.rate || 6;
-    lfo.connect(lg);
+    wob.frequency.value = o.trem.rate || 6;
+    wob.connect(lg);
     lg.connect(am.gain);
     n.connect(am);
     src = am;
-    lfo.start(t);
-    lfo.stop(end + 0.05);
+    wob.start(t);
+    wob.stop(end + 0.05);
+  }
+  for (const k of ['lp', 'hp']) {
+    if (!o[k]) continue;
+    const fo = typeof o[k] === 'number' ? { f: o[k] } : o[k];
+    const b = c.createBiquadFilter();
+    const fc = Math.max(20, fo.f || 1000);
+    b.type = k === 'lp' ? 'lowpass' : 'highpass';
+    glide(b.frequency, t, fc, fo.to ? Math.max(20, fo.to) : fc, fo.glide == null ? dur * 0.9 : fo.glide, fo.curve);
+    b.Q.value = fo.q == null ? 0.707 : fo.q;
+    src.connect(b);
+    src = b;
   }
   src.connect(g);
   g.connect(out);
@@ -673,6 +724,8 @@ function osc(out, t, o) {
  *   o.filter 'lowpass' | 'highpass' | 'bandpass' | 'notch' | ... (default 'bandpass'); 'none' = raw
  *   o.f      cutoff or center in Hz (default 1000); o.to sweep target; o.q resonance (default 1)
  *   o.glide  sweep seconds (default 90% of dur); o.glideCurve 'exp' (default) or 'lin'
+ *   o.lp, o.hp  extra lowpass / highpass stages after the filter, as on osc (a cutoff in Hz, or
+ *            { f, to, q, glide, curve })
  * Narrow bands throw most of the noise energy away, so a bandpass voice needs a higher peak than an
  * oscillator to sound as loud. Measure, do not guess.
  */
@@ -692,6 +745,17 @@ function noise(out, t, o) {
     glide(b.frequency, t, f, o.to ? Math.max(40, o.to) : f, o.glide == null ? dur * 0.9 : o.glide, o.glideCurve);
     b.Q.value = o.q == null ? 1 : o.q;
     s.connect(b);
+    head = b;
+  }
+  for (const k of ['lp', 'hp']) {
+    if (!o[k]) continue;
+    const fo = typeof o[k] === 'number' ? { f: o[k] } : o[k];
+    const b = c.createBiquadFilter();
+    const fc = Math.max(20, fo.f || 1000);
+    b.type = k === 'lp' ? 'lowpass' : 'highpass';
+    glide(b.frequency, t, fc, fo.to ? Math.max(20, fo.to) : fc, fo.glide == null ? dur * 0.9 : fo.glide, fo.curve);
+    b.Q.value = fo.q == null ? 0.707 : fo.q;
+    head.connect(b);
     head = b;
   }
   const end = env(g.gain, t, o);
@@ -746,6 +810,9 @@ function fm(out, t, o) {
  *   o.f       pitch in Hz (default 220)
  *   o.dur     seconds until the string has rung down 60 dB (default 0.8)
  *   o.bright  0..1 (default 0.5): how slowly the high partials die
+ *   o.tone    0..1: how bright the pluck itself is (the excitation is lowpassed, two poles, cutoff
+ *             from about 120 Hz at 0 to open at 1): low is a soft, round thumb or nylon pluck, high
+ *             a hard pick. Leave it out for the original unfiltered excitation.
  *   o.peak    output peak (the buffer is normalized, so this is the true peak pre-master)
  */
 function pluck(out, t, o) {
@@ -769,6 +836,17 @@ function pluck(out, t, o) {
   // untouched, so a short burst's random offset would otherwise ride under the whole note)
   let mean = 0;
   for (let i = 0; i < ex; i++) { y[i] = rand() * 2 - 1; mean += y[i]; }
+  if (o.tone != null && o.tone < 1) {
+    // a darker excitation: two passes of a one-pole lowpass, run twice around the period so the
+    // filter has settled where the loop wraps
+    const k = 1 - Math.exp((-2 * Math.PI * 120 * Math.pow(sr / 240, Math.max(0, o.tone))) / sr);
+    for (let pass = 0; pass < 2; pass++) {
+      let z = 0;
+      for (let i = 0; i < 2 * ex; i++) { z += (y[i % ex] - z) * k; if (i >= ex) y[i - ex] = z; }
+    }
+    mean = 0;
+    for (let i = 0; i < ex; i++) mean += y[i];
+  }
   mean /= ex;
   for (let i = 0; i < ex; i++) y[i] -= mean;
   let pk = 0;
@@ -823,6 +901,119 @@ function bell(out, t, o) {
     });
     if (e > end) end = e;
   }
+  return end;
+}
+
+/**
+ * Pulse wave with a variable duty cycle (the classic 8-bit voice), built as a PeriodicWave so it is
+ * band-limited like the built-in waves. Every osc option applies (f, to, glide, vib, trem, lp, hp
+ * and the envelope).
+ *   o.duty  fraction of each period spent high, 0.05..0.95 (default 0.25; 0.5 is a square, 0.125
+ *           thin and nasal)
+ * The wave is normalized like the built-in ones, so a pulse at a given peak sits near a square.
+ */
+function pulse(out, t, o) {
+  o = o || {};
+  const duty = Math.min(0.95, Math.max(0.05, o.duty == null ? 0.25 : o.duty));
+  const n = 128;
+  const re = new Float32Array(n + 1);
+  const im = new Float32Array(n + 1);
+  for (let k = 1; k <= n; k++) {
+    re[k] = Math.sin(2 * Math.PI * k * duty) / (Math.PI * k);
+    im[k] = (1 - Math.cos(2 * Math.PI * k * duty)) / (Math.PI * k);
+  }
+  return osc(out, t, Object.assign({}, o, { wave: out.context.createPeriodicWave(re, im) }));
+}
+
+/**
+ * A tick: a short burst of band-passed seeded noise with an optional pitched blip under it, and
+ * seeded jitter so a repeated tick never sounds stamped. Clicks, keys, ratchets, clocks, grains.
+ *   o.f        band center Hz (default 3000); o.q (default 1.5); o.filter (default 'bandpass')
+ *   o.dur      burst length s (default 0.012); o.peak (default 0.1); o.lp, o.hp as on noise
+ *   o.blip     Hz of a sine blip under the burst (default 0: none); o.blipTo its end pitch;
+ *              o.blipPeak (default peak / 2); o.blipDur (default 0.03); o.blipType (default 'sine')
+ *   o.jitter   0..1 (default 0): seeded variation of the band center (up to +/- 25%), the level
+ *              (up to +/- 3 dB) and the blip pitch (up to +/- 50 cents)
+ * It always draws three values for the jitter, so changing the amount never reshuffles the noise.
+ * Returns the end time.
+ */
+function tick(out, t, o) {
+  o = o || {};
+  const j = Math.min(1, Math.max(0, o.jitter || 0));
+  const fr = 1 + 0.25 * j * (rand() * 2 - 1);
+  const lv = Math.pow(10, (3 * j * (rand() * 2 - 1)) / 20);
+  const br = Math.pow(2, (50 * j * (rand() * 2 - 1)) / 1200);
+  const peak = (o.peak == null ? 0.1 : o.peak) * lv;
+  let end = noise(out, t, {
+    filter: o.filter || 'bandpass', f: (o.f || 3000) * fr, q: o.q == null ? 1.5 : o.q,
+    dur: o.dur == null ? 0.012 : o.dur, peak, a: 0.002, lp: o.lp, hp: o.hp,
+  });
+  if (o.blip) {
+    const bf = o.blip * br;
+    const e = osc(out, t, {
+      type: o.blipType || 'sine', f: bf, to: o.blipTo ? o.blipTo * br : bf, a: 0.002,
+      dur: o.blipDur == null ? 0.03 : o.blipDur, peak: o.blipPeak == null ? peak / 2 : o.blipPeak * lv,
+    });
+    if (e > end) end = e;
+  }
+  return end;
+}
+
+/**
+ * Crackle: bursts of band-passed seeded noise at random moments, each at a random level and a
+ * center that drifts over the span. Fire, static, vinyl, sparks, frying. One noise source, one
+ * filter and one gain carry every burst, so a long crackle stays cheap.
+ *   o.dur     span the bursts fill, s (default 1); o.rate bursts per second on average (default 30)
+ *   o.f       band center at the start, Hz (default 2500); o.to center at the end (default f)
+ *   o.spread  random spread of each burst's center, in octaves either way (default 0.5); o.q (default 1.2)
+ *   o.len     burst length s (default 0.006, 0.002..0.05); o.peak level of the loudest burst (default 0.2)
+ *   o.vary    0..1 (default 0.7): how far burst levels fall below peak at random
+ *   o.bend    pitch drift inside each burst, end center / start center (default 1: none)
+ * Bursts never overlap. Returns the end of the last burst.
+ */
+function crackle(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const len = Math.min(0.05, Math.max(0.002, o.len == null ? 0.006 : o.len));
+  const span = Math.max(len + 0.002, o.dur == null ? 1 : o.dur);
+  const rate = Math.max(1, o.rate == null ? 30 : o.rate);
+  const f0 = Math.max(40, o.f || 2500);
+  const f1 = o.to ? Math.max(40, o.to) : f0;
+  const spread = o.spread == null ? 0.5 : o.spread;
+  const vary = Math.min(1, Math.max(0, o.vary == null ? 0.7 : o.vary));
+  const bend = o.bend > 0 ? o.bend : 1;
+  const peak = o.peak == null ? 0.2 : o.peak;
+  const top = c.sampleRate * 0.45;
+  const s = c.createBufferSource();
+  const b = c.createBiquadFilter();
+  const g = c.createGain();
+  s.buffer = noiseBuffer(c, 0.5);
+  s.loop = true;
+  b.type = 'bandpass';
+  b.Q.value = o.q == null ? 1.2 : o.q;
+  b.frequency.setValueAtTime(f0, t);
+  g.gain.value = 0;
+  g.gain.setValueAtTime(0, t);
+  let at = t + rand() * Math.min(1 / rate, span - len);
+  let end = t;
+  while (at + len <= t + span + 1e-9) {
+    const fc = Math.min(top, f0 * Math.pow(f1 / f0, (at - t) / span) * Math.pow(2, spread * (rand() * 2 - 1)));
+    const lv = Math.max(0.0002, peak * (1 - vary * rand()));
+    b.frequency.setValueAtTime(fc, at);
+    if (bend !== 1) b.frequency.exponentialRampToValueAtTime(Math.min(top, fc * bend), at + len);
+    g.gain.setValueAtTime(0, at);
+    g.gain.linearRampToValueAtTime(lv, at + 0.0005);
+    g.gain.exponentialRampToValueAtTime(0.0001, at + len);
+    g.gain.setValueAtTime(0, at + len);
+    end = at + len;
+    // the next burst: an exponential gap (a Poisson process) after this one ends
+    at = end + 0.001 - Math.log(1 - rand()) / rate;
+  }
+  s.connect(b);
+  b.connect(g);
+  g.connect(out);
+  s.start(t);
+  s.stop(end + 0.05);
   return end;
 }
 
@@ -994,6 +1185,114 @@ function reverb(out, t, o) {
   return inp;
 }
 
+/**
+ * Stereo placement with an optional sweep. Returns the node to play into.
+ *   o.x    position, -1 (left) .. 1 (right) (default 0); o.to sweep target; o.dur sweep s (default 0.3)
+ * A balance law: the near side stays at unity and the far side falls linearly to silence, so a
+ * centred voice is exactly the mono signal and placing one never raises its peak (the level gate's
+ * numbers stay valid). Stereo input (a reverb) keeps its width. A sound that never pans stays mono
+ * end to end, and Save WAV writes one channel for it.
+ */
+function pan(out, t, o) {
+  o = o || {};
+  const c = out.context;
+  const inp = c.createGain();
+  const split = c.createChannelSplitter(2);
+  const merge = c.createChannelMerger(2);
+  const gl = c.createGain();
+  const gr = c.createGain();
+  inp.channelCount = 2;
+  inp.channelCountMode = 'explicit';
+  inp.channelInterpretation = 'speakers';
+  const cl = (v) => Math.min(1, Math.max(-1, Number(v) || 0));
+  const x0 = cl(o.x);
+  const x1 = o.to == null ? x0 : cl(o.to);
+  const dur = o.dur == null ? 0.3 : o.dur;
+  // side = 1 shapes the left gain (it falls as x moves right), side = -1 the right one
+  const shape = (param, side) => {
+    const at = (x) => Math.min(1, 1 - side * x);
+    param.value = at(x0);
+    param.setValueAtTime(at(x0), t);
+    if (x1 === x0 || !(dur > 0)) return;
+    if (x0 * x1 < 0) param.linearRampToValueAtTime(1, t + (dur * -x0) / (x1 - x0));
+    param.linearRampToValueAtTime(at(x1), t + dur);
+  };
+  shape(gl.gain, 1);
+  shape(gr.gain, -1);
+  inp.connect(split);
+  split.connect(gl, 0);
+  split.connect(gr, 1);
+  gl.connect(merge, 0, 0);
+  gr.connect(merge, 0, 1);
+  merge.connect(out);
+  return inp;
+}
+
+/**
+ * A DC blocker: a gentle highpass (default 30 Hz, kept within 20..40) in one call. Returns the
+ * node to play into. For waveshaped, crushed or one-sided material whose average drifts off zero
+ * (the level gate fails DC above -50 dBFS). t is not needed: T.dcblock(out) works.
+ *   o.f  cutoff Hz (default 30)
+ */
+function dcblock(out, t, o) {
+  const b = out.context.createBiquadFilter();
+  b.type = 'highpass';
+  b.frequency.value = Math.min(40, Math.max(20, (o && o.f) || 30));
+  b.Q.value = 0.707;
+  b.connect(out);
+  return b;
+}
+
+/**
+ * A low-frequency oscillator added to one of a node's parameters: tremolo on a T.gain, a wah on a
+ * T.filter's frequency. The parameter keeps its own value and automation; the LFO swings around it.
+ *   node     the node that owns the parameter (what T.gain or T.filter returned)
+ *   o.param  its name: 'frequency' (the default when the node has one), 'gain', 'Q', 'detune'
+ *   o.rate   Hz (default 5); o.to rate at the end (a speed-up or a slow-down)
+ *   o.depth  the swing either way, in the parameter's own units: a gain 0..1, a frequency in Hz,
+ *            detune in cents (default 0.5)
+ *   o.type   wave (default 'sine'); o.dur how long it runs, s (default 1)
+ *   o.a      fade-in s (default 0.005); the depth fades out over the last 10 ms, so stopping never clicks
+ * Keep the swing inside the parameter's sensible range (a gain that swings below zero inverts the
+ * signal). Returns the end time.
+ */
+function lfo(node, t, o) {
+  o = o || {};
+  const c = node.context;
+  const param = node[o.param || (node.frequency ? 'frequency' : 'gain')];
+  const a = Math.max(0.002, o.a == null ? 0.005 : o.a);
+  const end = t + Math.max(a + 0.02, o.dur == null ? 1 : o.dur);
+  const depth = o.depth == null ? 0.5 : o.depth;
+  const w = c.createOscillator();
+  const d = c.createGain();
+  w.type = o.type || 'sine';
+  const rate = Math.max(0.01, o.rate || 5);
+  glide(w.frequency, t, rate, o.to ? Math.max(0.01, o.to) : rate, end - t, 'exp');
+  d.gain.value = 0;
+  d.gain.setValueAtTime(0, t);
+  d.gain.linearRampToValueAtTime(depth, t + a);
+  d.gain.setValueAtTime(depth, end - 0.01);
+  d.gain.linearRampToValueAtTime(0, end);
+  w.connect(d);
+  d.connect(param);
+  w.start(t);
+  w.stop(end + 0.05);
+  return end;
+}
+
+/**
+ * A group envelope: one gain stage shaped by env that several voices play into, so a chord or a
+ * layered hit swells, holds and fades as one. The voices keep their own envelopes inside it.
+ * Returns the node to play into.
+ *   env options (see env): peak (default 1: the bus only shapes), a, dur, curve, s, d, r, tail, fade
+ */
+function bus(out, t, o) {
+  const g = out.context.createGain();
+  env(g.gain, t, Object.assign({ peak: 1 }, o));
+  g.connect(out);
+  return g;
+}
+
 // The master chain every sound plays through, live, offline and in Copy:
 //   gain 0.55 -> DynamicsCompressor used purely as a LIMITER (-12 dB, knee 6, 12:1, 3 ms attack,
 //   120 ms release) -> a tanh WaveShaper as a hard CEILING -> dest.
@@ -1029,7 +1328,7 @@ function master(c, dest) {
   return g;
 }
 
-// Musical pitch.
+// Musical pitch and chords.
 
 /**
  * Frequency in Hz of a note name ('A4', 'C#5', 'Eb3') or of a number of semitones from A4.
@@ -1047,7 +1346,39 @@ function note(n) {
   return 440 * Math.pow(2, (base + acc + ((isNaN(oct) ? 4 : oct) - 4) * 12) / 12);
 }
 
-const T = Object.freeze({ noiseBuffer, rand, seed, env, glide, bell, fm, noise, osc, pluck, crush, delay, drive, filter, gain, reverb, master, note });
+/**
+ * Several notes at once through one voice, the level split so the notes together never peak above
+ * o.peak. Returns the latest end time.
+ *   o.notes   note names ('C4'), Hz, or with o.root semitones above it ([0, 4, 7]) (default C major)
+ *   o.root    a note name or Hz; makes numeric notes semitone offsets from it
+ *   o.voice   the voice for each note (default T.osc; T.pulse, T.pluck, T.bell and T.fm work)
+ *   o.strum   seconds between note onsets, low to high (default 0); negative strums from the top down
+ *   o.peak    the whole chord's level (default 0.2), split evenly between the notes
+ *   o.spread  detune spread across the notes in cents (default 0), for a wider, chorused chord
+ *   o.bend    end pitch / start pitch for every note (default 1: none)
+ *   any other option goes to the voice as it is (type, dur, a, s, r, lp, bright, duty, ...)
+ */
+function chord(out, t, o) {
+  o = o || {};
+  const voice = o.voice || osc;
+  const root = o.root == null ? null : typeof o.root === 'number' ? o.root : note(o.root);
+  const hz = (n) => (typeof n === 'string' ? note(n) : root != null ? root * Math.pow(2, n / 12) : n);
+  const list = (o.notes || ['C4', 'E4', 'G4']).map(hz);
+  const k = list.length;
+  const peak = (o.peak == null ? 0.2 : o.peak) / Math.max(1, k);
+  const strum = o.strum || 0;
+  let end = t;
+  for (let i = 0; i < k; i++) {
+    const v = Object.assign({}, o, { f: list[i], peak });
+    if (o.bend) v.to = list[i] * o.bend;
+    if (o.spread && k > 1) v.detune = (o.detune || 0) + o.spread * (i / (k - 1) - 0.5);
+    const e = voice(out, t + (strum < 0 ? (k - 1 - i) * -strum : i * strum), v);
+    if (e > end) end = e;
+  }
+  return end;
+}
+
+const T = Object.freeze({ jitter, noiseBuffer, rand, seed, env, glide, bell, crackle, fm, noise, osc, pluck, pulse, tick, bus, crush, dcblock, delay, drive, filter, gain, lfo, pan, reverb, master, chord, note });
 // ---- sounds (src/sounds) ----
 const SOUNDS = [
 {"id":"ui-checkbox","name":"Checkbox","category":"ui","tags":["checkbox","check","uncheck","select","tick","soft"],"desc":"A bright two-note pluck when a box is checked and a short muted drop when it is cleared.","dur":0.17,"params":{"on":{"min":0,"max":1,"def":1,"step":1},"pitch":{"min":440,"max":1200,"def":880,"unit":"Hz"},"bright":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {

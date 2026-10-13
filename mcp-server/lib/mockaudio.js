@@ -91,7 +91,13 @@ export class MockContext {
   }
   resume() { this.state = 'running'; return Promise.resolve(); }
   createGain() { return new Node(this, 'gain', { gain: 1 }); }
-  createOscillator() { const n = new Source(this, 'osc', { frequency: 440, detune: 0 }); n.type = 'sine'; return n; }
+  createOscillator() {
+    const n = new Source(this, 'osc', { frequency: 440, detune: 0 });
+    n.type = 'sine';
+    n.setPeriodicWave = (w) => { n.type = 'custom'; n.wave = w; };
+    return n;
+  }
+  createPeriodicWave(real, imag) { return { real: Float32Array.from(real), imag: Float32Array.from(imag) }; }
   createBufferSource() { const n = new Source(this, 'buffer', { playbackRate: 1, detune: 0 }); n.buffer = null; n.loop = false; return n; }
   createBiquadFilter() { const n = new Node(this, 'biquad', { frequency: 350, Q: 1, gain: 0, detune: 0 }); n.type = 'lowpass'; return n; }
   createWaveShaper() { const n = new Node(this, 'shaper'); n.curve = null; n.oversample = 'none'; return n; }

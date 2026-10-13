@@ -54,6 +54,10 @@ class Source extends Node {
   }
 }
 
+class PeriodicWave {
+  constructor(real, imag) { this.real = Float32Array.from(real); this.imag = Float32Array.from(imag); }
+}
+
 class Buffer {
   constructor(ch, len, sr) {
     if (!(len > 0) || !(sr > 0) || !(ch > 0)) throw new RangeError('createBuffer: bad size');
@@ -74,7 +78,16 @@ export class MockContext {
   num(v, what) { if (typeof v !== 'number' || !Number.isFinite(v)) throw new TypeError(what + ' is not a finite number: ' + v); }
   time(t) { this.num(t, 'time'); if (t < 0) throw new RangeError('negative time ' + t); }
   createGain() { return new Node(this, { gain: 1 }); }
-  createOscillator() { const n = new Source(this, { frequency: 440, detune: 0 }); n.type = 'sine'; return n; }
+  createOscillator() {
+    const n = new Source(this, { frequency: 440, detune: 0 });
+    n.type = 'sine';
+    n.setPeriodicWave = (w) => { if (!(w instanceof PeriodicWave)) throw new TypeError('setPeriodicWave: not a PeriodicWave'); n.type = 'custom'; n.wave = w; };
+    return n;
+  }
+  createPeriodicWave(real, imag) {
+    if (!real || !imag || real.length !== imag.length || real.length < 2) throw new RangeError('createPeriodicWave: real and imag must be arrays of the same length, at least 2');
+    return new PeriodicWave(real, imag);
+  }
   createBufferSource() { const n = new Source(this, { playbackRate: 1, detune: 0 }); n.buffer = null; n.loop = false; return n; }
   createBiquadFilter() { const n = new Node(this, { frequency: 350, Q: 1, gain: 0, detune: 0 }); n.type = 'lowpass'; return n; }
   createWaveShaper() { const n = new Node(this); n.curve = null; n.oversample = 'none'; return n; }
