@@ -4,7 +4,7 @@ export default {
   id: 'ui-click-soft',
   name: 'Soft Click',
   category: 'ui',
-  tags: ['click', 'button', 'tap', 'tick', 'press'],
+  tags: ['click', 'button', 'tap', 'tick', 'press', 'soft'],
   desc: 'A short muted tick for button presses: a falling sine blip with a breath of high noise.',
   dur: 0.08,
   params: {

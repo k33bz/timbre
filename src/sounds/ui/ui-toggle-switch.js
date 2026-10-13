@@ -4,7 +4,7 @@ export default {
   id: 'ui-toggle-switch',
   name: 'Toggle Switch',
   category: 'ui',
-  tags: ['toggle', 'switch', 'checkbox', 'on', 'off', 'click'],
+  tags: ['toggle', 'switch', 'checkbox', 'on', 'off', 'click', 'mechanical'],
   desc: 'A two-stage click-clack for switches: rising when turned on, falling when turned off.',
   dur: 0.25,
   params: {
