@@ -39,25 +39,62 @@ export default {
   category: 'ui',                 // ui, notify, game, cards, magic, scifi, ambience, music
   tags: ['click', 'button', 'tap'],
   desc: 'A short muted tick for button presses.',
-  dur: 0.08,                      // seconds the render needs, tail included
+  dur: 0.08,                      // seconds the render needs, tail included, at ANY parameter values
   params: {                       // live controls; defaults are what the gallery and gates use
-    pitch: { min: 200, max: 2000, def: 900, unit: 'Hz' },
+    pitch: { min: 400, max: 2400, def: 1100, unit: 'Hz' },   // optional: unit, step
     tone:  { min: 0, max: 1, def: 0.4 },
   },
   play(T, out, t, p) {            // T = core helpers, out = destination node, t = start time,
-    T.osc(out, t, { type: 'triangle', f: p.pitch, dur: 0.05, peak: 0.5 });  // p = parameter values
+    T.osc(out, t, { f: p.pitch, to: p.pitch * 0.73, dur: 0.035, peak: 0.042 });  // p = parameter values
   },
 };
 ```
 `play` may only use `T.*`, its arguments and plain JS; the build reads its source for Copy and for
-the catalog, so it must stand alone.
+the catalog, so it must stand alone. It is written as a method, `play(T, out, t, p) { ... }`, and
+uses `T.rand()` for anything random (never `Math.random`). `seed` is not a parameter name: Copy uses
+`p.seed`. The build enforces all of this (see docs/ADDING_SOUNDS.md for the helper API).
 
 ## Themes
 A theme maps app moments (`click`, `toggle-on`, `success`, `error`, `notify`, `hit`, `pickup`,
 `coin`, `level-up`...) to a sound id and parameter overrides, so the same moment can be swapped as a
 set: for example Soft UI, 8-bit, Arcade, Sci-fi, Glass, Wood.
 
+## Master chain and warm-up
+Every sound plays through the same chain, live, offline and in Copy: gain 0.55, a
+DynamicsCompressor used as a limiter (-12 dB threshold, knee 6, 12:1, 3 ms attack, 120 ms release)
+and a `0.5 * tanh(2x)` waveshaper as a hard ceiling (-6 dBFS). All three are ported unchanged from the
+Deck Lab viewer; the ceiling is kept because a fast filter sweep over noise can spike past the
+compressor's 3 ms attack.
+
+Chrome's DynamicsCompressor starts cold: on a new chain its gain ramps from about -8 dB to its
+steady makeup (+5.4 dB with these settings) over roughly 150 ms. So every offline render builds the
+chain and starts the sound 0.2 s later (`PREROLL`), and live playback and Copy never start a sound
+on a chain younger than 0.2 s. With the warm chain, quiet material passes at about unity
+(0.55 x makeup).
+
+## Copy
+Copy gives one function named after the sound (`ui-click-soft` -> `uiClickSoft`) that carries only
+the helpers it uses plus the master chain: `uiClickSoft(ac, opts, when, dest)`. `opts` overrides the
+parameter values baked in at copy time (and `seed`), `when` is the earliest start, `dest` the node
+the chain ends in (default `ac.destination`); it returns the end time. One chain per destination
+is kept on the context.
+
 ## Level range (dBFS, worst of several seeds)
 Peak at most -12 for the loudest hits, typically -15 to -25 for effects, -21 to -28 for small
 textures; RMS reported; no sample above -1 dBFS through the master chain; DC at or below -50 dBFS;
 never silent. These match the Deck Lab sound pass the seed sounds come from.
+
+The level gate (`gates/check_levels.mjs`) renders each sound on a warm chain at its defaults and at
+3 random parameter sets, each with 3 seeds, and fails any render with: peak above -12 or below -36;
+a sample above -1; a pre-limiter peak (the voices' own sum after the 0.55 gain) above -3 (the
+ceiling is a guard, never the sound); DC above -50; anything above -60 after `dur`; silence or NaN.
+Because random settings are tested, every parameter range must be safe end to end.
+
+## Changes to this contract
+- 2026-10-13, foundation build: added "Master chain and warm-up" (the measured cold start would
+  otherwise make every gate underestimate short sounds by up to 13 dB: a click rendered at t = 0
+  read -28.8 dBFS and plays at -15.7), "Copy" (the function signature the catalog and the MCP
+  server will rely on) and the gate's exact thresholds under "Level range". The sound-file example
+  now uses values that pass the gate (`peak: 0.5` would not), and the file rules spell out what the
+  build enforces (method form, `T.rand`, reserved `seed`, `dur` covering every parameter value,
+  optional `unit` and `step`).
