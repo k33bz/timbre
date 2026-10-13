@@ -12,6 +12,12 @@ gallery.
 - **Save WAV** renders offline to 16-bit PCM at 48 kHz.
 - **Sound themes** map app moments (click, toggle-on, success, error, ...) to sounds, so a whole set
   can be swapped at once. The first theme is Soft UI.
+- **Voices**: a formant speech synthesizer (Klatt's cascade/parallel design, computed sample by sample,
+  so it renders the same everywhere) with an English text front end (the NRL letter-to-sound rules and a
+  lexicon). Five voices (a classic synthesized PA announcer, a deep and a small robot, a whisper, a
+  retro computer), five Animalese style babble voices, and a `voice` category of announcements,
+  countdowns, robot lines and babble. The **Speak** rack says any typed line, and its Copy bakes the
+  line into one function that carries only the engine.
 - **Measured levels**: every sound is rendered through the same master chain (gain, a limiter, a
   ceiling) and gated to the house range, at its defaults and at random settings. The numbers are
   kept in `catalog/levels.json` and carried in the catalog.
@@ -40,7 +46,7 @@ warms up; later calls play at once.
 `mcp-server/` is a zero-dependency MCP server over the catalog (Node 22, stdio). An agent can search
 sounds, turn "a meditation timer with gentle taps" into ranked picks with reasons, read parameters
 and levels, get the exact Copy function for one sound, or get **one module** with `play('click')` for
-a whole app (`build_kit`). Run `node build.mjs` first so `catalog/` is current, then:
+a whole app (`build_kit`), or one function that says a line of text in a synthesized voice (`speak`). Run `node build.mjs` first so `catalog/` is current, then:
 
 ```
 # Claude Code (add --scope user for every project)
@@ -57,6 +63,7 @@ options are in [mcp-server/README.md](mcp-server/README.md).
 ## Add a sound in three steps
 1. Write `src/sounds/<category>/<id>.js`: id, name, category, tags, desc, dur, params and a
    `play(T, out, t, p)` that uses the helper kit `T`. Start from a seed sound in the same category.
+   A spoken line uses `T.speak` (`node build.mjs --say "Your line."` prints its phonemes and length).
 2. Run `node build.mjs`. It validates every sound (fields, parameter ranges, `play` run in isolation
    at the defaults, the extremes and random settings) and rebuilds `dist/timbre.html` and the
    catalog.
@@ -68,13 +75,14 @@ The full contract, the helper API and the level targets are in
 ## Run the gates
 ```
 node build.mjs --check          # sources valid, dist/ and catalog/ up to date
-node --test gates/*.test.mjs    # unit tests: build validation, Copy tree-shaking, core helpers, WAV
+node --test gates/*.test.mjs    # unit tests: build validation, Copy tree-shaking, core helpers, WAV, voices
 npm test --prefix mcp-server    # the MCP server's tests
 node gates/check_levels.mjs     # every sound, 12 renders each, against the house level range; writes catalog/levels.json
 node gates/check_page.mjs       # the page: cards, Play, keyboard, filters, theme, WAV, Copy, phone width
 node gates/check_copy.mjs       # each Copy pasted into a blank page matches the gallery within 0.5 dB
 node mcp-server/scripts/check_kit.mjs   # a build_kit module renders what each Copy renders
 bash gates/run_all.sh           # all of the above, browser gates one at a time
+node gates/voice_wavs.mjs       # a listening pass: every voice as WAV files in gates/out/voice/
 ```
 The browser gates need Edge or Chrome (set `TIMBRE_BROWSER` to use another Chromium-family
 binary). Each launches one headless browser with muted audio and kills its whole process tree when
@@ -84,8 +92,9 @@ prefix and `run_all.sh` runs each browser gate through it. Screenshots and `leve
 
 ## Layout
 ```
-src/core/          synth library (T): seeded noise, envelopes, voices, effects, master chain;
-                   offline render and measurement, WAV encoder, Copy builder
+src/core/          synth library (T): seeded noise, envelopes, voices, effects, master chain; the
+                   speech engine and its text front end; offline render and measurement, WAV
+                   encoder, Copy builder
 src/sounds/<category>/<id>.js   one sound per file
 src/themes/<id>.js              sound themes: moment -> sound + parameter overrides
 src/vocabulary.js  the one list of moments, families and parameter roles (build, themes, MCP server)

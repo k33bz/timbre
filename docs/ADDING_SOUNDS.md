@@ -19,7 +19,7 @@ ready. Read `docs/DESIGN.md` for the why.
 export default {
   id: 'game-laser-zap',                 // kebab-case, unique, starts with its category
   name: 'Laser Zap',                    // 1 to 40 characters, Title Case
-  category: 'game',                     // ui, notify, game, cards, magic, scifi, ambience, music
+  category: 'game',                     // ui, notify, game, cards, magic, scifi, ambience, music, voice
   tags: ['laser', 'zap', 'shoot'],      // lowercase kebab-case words people would search for
   desc: 'A bright falling zap for a shot fired.',  // 10 to 200 characters, one or two sentences
   dur: 0.4,                             // seconds, tail included, at ANY parameter values
@@ -43,7 +43,7 @@ Rules the build checks:
   hide.
 - `family` is one of the families and every entry of `moments` one of the moments in
   `src/vocabulary.js`, the one list the build, the themes and the MCP server share. Families: soft,
-  glass, wood, paper, metal, mechanical, air, chip, synthetic, organic, orchestral, impact (pick the
+  glass, wood, paper, metal, mechanical, air, chip, synthetic, organic, orchestral, impact, voice (pick the
   character of the source; follow the material tags the sound carries). List only the moments the
   sound is really made for: the MCP server treats them as the catalog's own word ("made for
   toggle-on"), ahead of anything it infers from tags.
@@ -84,6 +84,11 @@ reader would question (why a peak is higher, why a filter is narrow).
 - Units: `Hz` (shows as Hz or kHz), `s` (shows as ms below one second), `st` (semitones), `x` (a
   ratio). Leave `unit` out for 0..1 amounts.
 - `step: 1` for counts; a 0..1 parameter with `step: 1` and no unit shows as off and on.
+- A stepped parameter that picks one of several named things (a voice) carries `choices`: kebab-case
+  names for the values 0, 1, 2, ... (`{ min: 0, max: 4, def: 0, step: 1, choices: ['announcer', 'deep',
+  'small', 'whisper', 'retro'] }`). The gallery shows the name, the MCP server lists them and takes a
+  name for the number. The build checks min 0, max one less than the count, step 1, no unit and no role;
+  `play` maps the number to the name itself (`['announcer', ...][Math.round(p.voice)]`).
 - `def` is the sound people hear first and the one the gallery draws: make it the best version.
 - The whole range must be safe. The level gate renders random settings, so a range that can push the
   peak over -12 or under -36, or a tail past `dur`, fails. Prefer ranges that stay musical end to end
@@ -120,6 +125,12 @@ envelope ends; effects return the node to play into (chain by passing it as the 
 | `T.rand(lo, hi)` | Seeded random: `rand()` in [0, 1), `rand(x)` in [0, x), `rand(lo, hi)` |
 | `T.jitter(x, o)` | Seeded variation for repeated sounds: `jitter(x, 0.1)` is x within 10%, `jitter(f, { cents: 30 })` a pitch, `jitter(peak, { db: 2 })` a level, `jitter(opts, { cents, db })` a copy of a voice's options with `f`, `to` and `peak` moved. Draws a fixed number of values (one for a number, two for options) |
 | `T.note(n)` | Hz of a note name ('A4', 'C#5', 'Eb3') or of semitones from A4 |
+| `T.speak(out, t, o)` | Speech (see Voices): `text` (English; `[W EY1 T]` spells a word in ARPAbet) or `ph` (phonemes), `voice` ('announcer', 'deep', 'small', 'whisper', 'retro', or a voice object), `pitch` (semitones from the voice's own), `rate` and `range` (times the voice's), `peak` (default 0.18), `fx` (false: no effect chain). Returns the end time; `T.speak(null, 0, o)` schedules nothing and returns the line's length |
+| `T.babble(out, t, o)` | Animalese style talk: a pitched vowel blip per letter or syllable. `text`, `voice` ('cute', 'gruff', 'beep', 'sprite', 'elder'), `pitch` (semitones), `speed` and `spread` (times the voice's speed and pitch spread), `peak`, `fx`. Returns the end time; with `out = null` the length |
+| `T.phonemize(text)` | The text front end: English to ARPAbet with stress, `/` between words, punctuation kept ("Access denied." is `AE1 K S EH2 S / D IH0 N AY1 D .`) |
+| `T.utter`, `T.chatter` | The engines under speak and babble: phonemes (or a line) and a whole voice object, no front end or voice table. What a baked Copy carries |
+| `T.speechVoices()`, `T.babbleVoices()` | The voice tables (name, desc, f0, rate, range, formant, source shape, effect chain) |
+| `T.speechPlan`, `T.babblePlan`, `T.klatt`, `T.voiceOut`, `T.phones` | The engine's parts: the planner (durations, targets, pitch as key frames), the synthesizer, the output stage (effects, level, the buffer source) and the phoneme inventory. A sound does not need them |
 | `T.seed`, `T.noiseBuffer`, `T.master` | Used by the runtime; a sound does not need them |
 
 Envelope options on every voice: `peak` (linear level before the master chain), `a` (attack s,
@@ -132,6 +143,60 @@ takes it to silence at the end. A tail ends loud, so keep the 10 ms of `dur` mar
 
 Every new option is a branch that only runs when it is given: a sound that does not use `lp`,
 `hp`, `wave`, `tail` or `tone` builds exactly the graph it built before they existed.
+
+## Voices
+The `voice` category holds spoken lines and talk babble. Speech is synthesized, never sampled: a
+formant synthesizer (`src/core/speech.js`) computes the line sample by sample into one buffer, so it
+renders the same everywhere, and the text front end (`src/core/phonetics.js`) turns English into
+phonemes. A text cannot be a slider, so each voice sound says one fixed line:
+```js
+export default {
+  id: 'voice-access-denied',
+  ...
+  dur: 3.2,                       // the slowest rate in the slowest voice, tail included
+  family: 'voice',
+  moments: ['announce'],
+  params: {
+    voice: { min: 0, max: 4, def: 0, step: 1, choices: ['announcer', 'deep', 'small', 'whisper', 'retro'], desc: 'Who speaks' },
+    pitch: { min: -6, max: 6, def: 0, unit: 'st', desc: 'Pitch shift from the voice, down or up' },
+    rate: { min: 0.75, max: 1.3, def: 1, unit: 'x', desc: 'Slow and deliberate to brisk' },
+  },
+  play(T, out, t, p) {
+    const voice = ['announcer', 'deep', 'small', 'whisper', 'retro'][Math.round(p.voice)];
+    T.speak(out, t, { text: 'Access denied.', voice, pitch: p.pitch, rate: p.rate });
+  },
+};
+```
+- **The line.** Plain English: numbers ("3, 2, 1", "42%", "1st"), punctuation (`.` falls, `?` rises,
+  `,` lifts a little and pauses, `...` holds a long pause, `!` is emphatic), contractions and
+  acronyms without vowels ("TV", spelled). A word the front end gets wrong is fixed in place with its
+  ARPAbet in brackets: `'Press [S T AA1 R T] to begin.'`. A word many lines need belongs in the
+  lexicon in `src/core/phonetics.js`.
+- **Phonemes.** `T.speak` also takes `ph`, ARPAbet separated by spaces: vowels carry their stress
+  (0 none, 1 primary, 2 secondary), `/` separates words, the punctuation above makes pauses, and
+  `AA1*3` holds a phoneme three times its length.
+- **Its length.** `node build.mjs --say "Access denied."` prints the phonemes and the length in each
+  voice at three rates (`--babble` for babble, `--voice <name>` for one); `dur` must cover the
+  slowest setting the parameters allow, and the build reports the time a voice is still sounding
+  past it. In a sound, `T.speak(null, t, o)` returns the end time without playing, to place
+  something after the line; the countdown speaks each number with its own call, on a beat.
+- **Level.** Every line is normalized to its `peak` (default 0.18), so it measures -15 dBFS after the
+  master chain at any voice, rate or pitch; leave `peak` alone unless the sound layers other voices
+  under the speech.
+- **Babble.** `T.babble(out, t, { text, voice, pitch, speed, spread })`: each letter (cute, beep,
+  sprite) or syllable (gruff, elder) becomes a blip that sings the vowel of the letter's name after
+  its consonant; sentence ends pause, a question mark lifts the last blips. Its length never depends
+  on the seed, so `T.babble(null, ...)` is exact.
+- **Moments.** `announce` for spoken alerts and status lines, `dialogue` for talk; a line made for
+  another moment (a whispered scare) may list that one instead.
+- **Copy** of a voice sound carries the text front end and the voice table (about 45 KB); the
+  gallery's Speak rack and the MCP server's `speak` tool bake a line in as phonemes and carry the
+  engine only (about 26 KB).
+- `gates/voice.test.mjs` measures the engine (formants by LPC, fricative bands, stop bursts, nasal
+  murmur, intonation, determinism) and holds the front end to the reviewed table in
+  `gates/fixtures/phonemes.tsv`: after changing the rules or the lexicon, review the changed rows and
+  update the table. `node gates/voice_wavs.mjs` writes WAVs of every voice to `gates/out/voice/` for a
+  listening pass.
 
 ## Levels
 The level gate writes what it measures to `catalog/levels.json` (peak and RMS at the defaults, the
@@ -150,6 +215,7 @@ and at 3 random parameter sets:
 | Loudest hits | -15 to -12 | hammer hit (-15.0), coin flip (-15.2) |
 | Effects | -25 to -15 | success chime (-19.1), magic sparkle (-20.0), error buzz (-20.9) |
 | Small textures | -28 to -21 | soft click (-23.7), whoosh (-25.2), card flick (-25.8), deck riffle (-26.6) |
+| Voices | -15 | every spoken or babbled line is normalized to its peak: access denied (-15.0), cute babble (-15.0) |
 
 Hard limits (the gate fails): peak above -12 or below -36, any sample above -1, the voices' own sum
 above -3 before the limiter, DC above -50, anything above -60 after `dur`, silence, NaN.
