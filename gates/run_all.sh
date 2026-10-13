@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Run every Timbre gate: the build check, the unit tests, then the three browser gates, one at a
+# time (each launches one headless browser and closes its whole process tree when done).
+#
+#   bash gates/run_all.sh
+#
+# On a machine where browser jobs must queue, set TIMBRE_BROWSER_WRAP to a command prefix that
+# waits for the queue and then runs the command, for example:
+#   TIMBRE_BROWSER_WRAP="node /path/to/guard_wait.mjs 1800 600" bash gates/run_all.sh
+set -u
+cd "$(dirname "$0")/.."
+WRAP=${TIMBRE_BROWSER_WRAP:-}
+fail=0
+step() {
+  echo
+  echo "== $*"
+  "$@" || { echo "!! failed: $*"; fail=1; }
+}
+step node build.mjs --check
+step node --test --test-reporter=spec gates/build.test.mjs gates/copy.test.mjs gates/core.test.mjs gates/wav.test.mjs
+for g in check_levels check_page check_copy; do
+  # shellcheck disable=SC2086  # WRAP is a command prefix and must split into words
+  step $WRAP node "gates/$g.mjs"
+done
+echo
+if [ "$fail" -eq 0 ]; then echo "all gates passed"; else echo "some gates FAILED"; fi
+exit "$fail"
