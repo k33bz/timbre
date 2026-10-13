@@ -302,6 +302,17 @@ export const MOMENTS = {
     tags: ['scare', 'spooky', 'eerie', 'suspense', 'mystery', 'stinger', 'sting', 'clue'], terms: ['jump scare', 'horror', 'creepy', 'twist', 'dread'],
     categories: ['music'], avoid: ['cheerful', 'win'], minDur: 0.5, maxDur: 6, loud: ['medium'],
   },
+  // ---- voices
+  announce: {
+    about: 'A voice announces something: an alert, a status, a result.',
+    tags: ['announcer', 'announcement', 'speech', 'spoken', 'callout', 'pa'], terms: ['announcer voice', 'voice line', 'voice alert', 'spoken alert', 'computer voice', 'pa system', 'intercom', 'narrator', 'voiceover', 'callout'],
+    categories: ['voice'], avoid: ['babble'], minDur: 0.4, maxDur: 8, loud: ['loud', 'medium'],
+  },
+  dialogue: {
+    about: 'A character talks: babble under a text box or a speech bubble.',
+    tags: ['babble', 'dialogue', 'talk', 'chatter', 'gibberish', 'animalese'], terms: ['dialog', 'text box', 'speech bubble', 'npc', 'character talks', 'talking', 'conversation', 'typewriter text'],
+    categories: ['voice'], avoid: ['announcer'], minDur: 0.3, maxDur: 8, loud: ['medium', 'loud'],
+  },
   // ---- beds and phrases
   ambience: {
     about: 'A bed of sound under a scene.',
@@ -333,6 +344,7 @@ export const FAMILIES = {
   organic: 'Natural sources: water, fire, weather, birds, bubbles, footsteps, a bowstring',
   orchestral: 'Tuned instruments in a phrase: bells, plucks, mallets, harp and brass',
   impact: 'Blows, thuds and booms: punches, heavy hits, landings and explosions',
+  voice: 'Speech and talk: synthesized announcers and robots, whispers, character babble',
 };
 
 /**

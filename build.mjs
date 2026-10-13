@@ -27,10 +27,10 @@ import { MOMENTS, FAMILIES, ROLES } from './src/vocabulary.js';
 import { MockContext } from './gates/lib/mockaudio.mjs';
 
 export const ROOT = path.dirname(fileURLToPath(import.meta.url));
-export const CATEGORIES = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music'];
+export const CATEGORIES = ['ui', 'notify', 'game', 'cards', 'magic', 'scifi', 'ambience', 'music', 'voice'];
 const SOUND_KEYS = ['id', 'name', 'category', 'tags', 'desc', 'dur', 'params', 'play'];
 const OPTIONAL_KEYS = ['family', 'moments'];
-const PARAM_KEYS = ['min', 'max', 'def', 'unit', 'step', 'desc', 'role'];
+const PARAM_KEYS = ['min', 'max', 'def', 'unit', 'step', 'desc', 'role', 'choices'];
 // U+2013 and U+2014, built from code points so this file never contains one
 const DASH = new RegExp('[' + String.fromCharCode(0x2013, 0x2014) + ']');
 const THEME_KEYS = ['id', 'name', 'desc', 'moments'];
@@ -165,6 +165,13 @@ export function validateSound(entry, kit = T) {
         if (d.role != null) {
           if (!Object.hasOwn(ROLES, d.role)) E(`param "${k}": role "${d.role}" must be one of: ${Object.keys(ROLES).join(', ')} (src/vocabulary.js)`);
           else if (!(d.step === 1 && d.min === 0 && d.max === 1 && d.unit == null)) E(`param "${k}": role "${d.role}" is a switch, so the param needs min 0, max 1, step 1 and no unit`);
+        }
+        if (d.choices != null) {
+          // a stepped parameter that names its values (a voice): value i is choices[i]
+          const ok = Array.isArray(d.choices) && d.choices.length >= 2 && d.choices.every((c) => typeof c === 'string' && KEBAB.test(c)) &&
+            new Set(d.choices).size === d.choices.length;
+          if (!ok) E(`param "${k}": choices must be two or more unique kebab-case names`);
+          else if (!(d.step === 1 && d.min === 0 && d.max === d.choices.length - 1 && d.unit == null && d.role == null)) E(`param "${k}": choices name the values 0 to ${d.choices.length - 1}, so the param needs min 0, max ${d.choices.length - 1}, step 1, no unit and no role`);
         }
       }
     }
@@ -440,7 +447,27 @@ export function writeAtomic(file, text) {
   }
 }
 
+/**
+ * node build.mjs --say "Access denied." [--voice announcer] [--babble]: the phonemes of a line and
+ * how long it lasts in each voice at three rates (speed for babble), tail included, to set a
+ * voice sound's dur (it must cover the slowest setting its parameters allow).
+ */
+function say(args) {
+  const opt = (name) => { const i = args.indexOf('--' + name); return i >= 0 ? args[i + 1] : null; };
+  const text = opt('say') || '';
+  const babble = args.includes('--babble');
+  const voices = babble ? T.babbleVoices() : T.speechVoices();
+  const names = opt('voice') ? [opt('voice')] : Object.keys(voices);
+  if (!babble) console.log('phonemes: ' + T.phonemize(text));
+  for (const v of names) {
+    if (!voices[v]) { console.error(`unknown voice "${v}" (${Object.keys(voices).join(', ')})`); process.exit(1); }
+    const lens = [0.75, 1, 1.3].map((r) => (babble ? T.babble(null, 0, { text, voice: v, speed: r }) : T.speak(null, 0, { text, voice: v, rate: r })).toFixed(2));
+    console.log(`  ${v.padEnd(10)} ${lens.join(' s, ')} s at ${babble ? 'speed' : 'rate'} 0.75, 1, 1.3`);
+  }
+}
+
 async function main() {
+  if (process.argv.includes('--say')) { say(process.argv); return; }
   const check = process.argv.includes('--check');
   const { errors, outputs, sounds, themes } = await build();
   if (errors.length) {
