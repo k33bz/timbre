@@ -9934,6 +9934,13 @@
         "click": {
           "sound": "ui-click-soft"
         },
+        "hover": {
+          "sound": "ui-hover-tick",
+          "params": {
+            "pitch": 2093,
+            "air": 0.2
+          }
+        },
         "toggle-on": {
           "sound": "ui-toggle-switch",
           "params": {
@@ -9946,6 +9953,107 @@
           "params": {
             "on": 0,
             "body": 0.4
+          }
+        },
+        "type": {
+          "sound": "ui-key-light",
+          "params": {
+            "pitch": 262,
+            "bright": 0.25
+          }
+        },
+        "open": {
+          "sound": "ui-modal",
+          "params": {
+            "open": 1,
+            "air": 0.3,
+            "shine": 0.3
+          }
+        },
+        "close": {
+          "sound": "ui-modal",
+          "params": {
+            "open": 0,
+            "air": 0.3,
+            "shine": 0.3
+          }
+        },
+        "transition": {
+          "sound": "game-whoosh",
+          "params": {
+            "length": 0.22,
+            "pitch": 0.8,
+            "q": 0.8
+          }
+        },
+        "scroll": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 659.25,
+            "pos": 0,
+            "edge": 0.25
+          }
+        },
+        "drag": {
+          "sound": "ui-drag-pickup",
+          "params": {
+            "pitch": 392,
+            "lift": 0.4,
+            "air": 0.3
+          }
+        },
+        "drop": {
+          "sound": "ui-tap",
+          "params": {
+            "pitch": 261.63,
+            "pat": 0.3,
+            "soft": 0.9
+          }
+        },
+        "tooltip": {
+          "sound": "ui-tooltip-pop",
+          "params": {
+            "pitch": 1046.5,
+            "rise": 0.3,
+            "shimmer": 0.2
+          }
+        },
+        "copy": {
+          "sound": "ui-copy",
+          "params": {
+            "pitch": 1567.98,
+            "scoop": 0.3,
+            "ring": 0.3
+          }
+        },
+        "undo": {
+          "sound": "ui-undo",
+          "params": {
+            "pitch": 659.25,
+            "settle": 0.4
+          }
+        },
+        "delete": {
+          "sound": "ui-delete",
+          "params": {
+            "crunch": 3,
+            "pitch": 130.81,
+            "weight": 0.4
+          }
+        },
+        "send": {
+          "sound": "notify-message-out",
+          "params": {
+            "pitch": 1046.5,
+            "air": 0.35
+          }
+        },
+        "refresh": {
+          "sound": "notify-sync-done",
+          "params": {
+            "pitch": 523.25,
+            "cycles": 1,
+            "shimmer": 0.25
           }
         },
         "success": {
@@ -9962,6 +10070,22 @@
             "tone": 900
           }
         },
+        "warning": {
+          "sound": "notify-warning",
+          "params": {
+            "pitch": 523.25,
+            "drop": 3,
+            "tone": 1400
+          }
+        },
+        "info": {
+          "sound": "notify-info",
+          "params": {
+            "pitch": 880,
+            "decay": 0.3,
+            "bright": 0.2
+          }
+        },
         "notify": {
           "sound": "magic-sparkle",
           "params": {
@@ -9970,9 +10094,2175 @@
             "gap": 0.07,
             "space": 0.2
           }
+        },
+        "message": {
+          "sound": "notify-message-in",
+          "params": {
+            "pitch": 659.25,
+            "interval": 5,
+            "pop": 0.3
+          }
+        },
+        "reminder": {
+          "sound": "notify-reminder",
+          "params": {
+            "pitch": 659.25,
+            "drop": 4,
+            "ring": 0.5,
+            "space": 0.15
+          }
+        },
+        "timer": {
+          "sound": "notify-alarm",
+          "params": {
+            "pitch": 523.25,
+            "rounds": 2,
+            "swell": 0.8
+          }
+        },
+        "achievement": {
+          "sound": "notify-achievement",
+          "params": {
+            "pitch": 523.25,
+            "sparkle": 0.3,
+            "space": 0.25
+          }
         }
       },
       "file": "src/themes/soft-ui.js"
+    },
+    {
+      "id": "8-bit",
+      "name": "8-bit",
+      "desc": "Chiptune: square and triangle beeps, bitcrushed blips and arpeggio jingles in C major.",
+      "moments": {
+        "click": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 1,
+            "go": 0,
+            "pitch": 1046.5,
+            "length": 0.06
+          }
+        },
+        "hover": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 1318.51,
+            "pos": 0,
+            "edge": 0
+          }
+        },
+        "toggle-on": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 1,
+            "go": 0,
+            "pitch": 1046.5,
+            "length": 0.07
+          }
+        },
+        "toggle-off": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 1,
+            "go": 0,
+            "pitch": 523.25,
+            "length": 0.09
+          }
+        },
+        "type": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 1000,
+            "pos": 0,
+            "edge": 0.3
+          }
+        },
+        "open": {
+          "sound": "ui-expand",
+          "params": {
+            "open": 1,
+            "steps": 4,
+            "gap": 0.03,
+            "pitch": 392
+          }
+        },
+        "close": {
+          "sound": "ui-expand",
+          "params": {
+            "open": 0,
+            "steps": 4,
+            "gap": 0.03,
+            "pitch": 392
+          }
+        },
+        "transition": {
+          "sound": "scifi-data-stream",
+          "params": {
+            "ticks": 16,
+            "length": 0.3,
+            "pitch": 1046.5,
+            "spread": 0.4,
+            "grit": 0.8
+          }
+        },
+        "scroll": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 784,
+            "pos": 0,
+            "edge": 0.3
+          }
+        },
+        "copy": {
+          "sound": "game-pickup-item",
+          "params": {
+            "chip": 1,
+            "pitch": 987.77,
+            "interval": 7,
+            "gap": 0.045
+          }
+        },
+        "send": {
+          "sound": "game-jump",
+          "params": {
+            "chip": 1,
+            "pitch": 523.25,
+            "rise": 2,
+            "length": 0.1
+          }
+        },
+        "refresh": {
+          "sound": "scifi-data-stream",
+          "params": {
+            "ticks": 22,
+            "length": 0.5,
+            "pitch": 1046.5,
+            "spread": 0.6,
+            "grit": 0.8
+          }
+        },
+        "success": {
+          "sound": "music-menu-confirm",
+          "params": {
+            "key": 0,
+            "notes": 3,
+            "speed": 1.5,
+            "echo": 0.2
+          }
+        },
+        "error": {
+          "sound": "notify-error-buzz",
+          "params": {
+            "pitch": 120,
+            "pulses": 2,
+            "rough": 1,
+            "tone": 3000
+          }
+        },
+        "warning": {
+          "sound": "notify-warning",
+          "params": {
+            "pitch": 523.25,
+            "drop": 5,
+            "tone": 4000
+          }
+        },
+        "info": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 1,
+            "go": 0,
+            "pitch": 783.99,
+            "length": 0.12
+          }
+        },
+        "notify": {
+          "sound": "game-combo-ping",
+          "params": {
+            "chip": 1,
+            "pitch": 659.25,
+            "streak": 1,
+            "ring": 0.35
+          }
+        },
+        "message": {
+          "sound": "game-pickup-item",
+          "params": {
+            "chip": 1,
+            "pitch": 659.25,
+            "interval": 5,
+            "gap": 0.06
+          }
+        },
+        "reminder": {
+          "sound": "music-menu-confirm",
+          "params": {
+            "key": 0,
+            "notes": 2,
+            "speed": 1.1,
+            "echo": 0.6
+          }
+        },
+        "timer": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 1,
+            "go": 1,
+            "pitch": 880,
+            "length": 0.14
+          }
+        },
+        "countdown": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 1,
+            "go": 0,
+            "pitch": 880,
+            "length": 0.14
+          }
+        },
+        "achievement": {
+          "sound": "music-menu-confirm",
+          "params": {
+            "key": 0,
+            "notes": 4,
+            "speed": 1.5,
+            "echo": 0.7
+          }
+        },
+        "hit": {
+          "sound": "game-hit-light",
+          "params": {
+            "pitch": 330,
+            "snap": 1,
+            "body": 0.3
+          }
+        },
+        "damage": {
+          "sound": "game-hurt",
+          "params": {
+            "chip": 1,
+            "pitch": 300,
+            "drop": 0.5,
+            "length": 0.2
+          }
+        },
+        "pickup": {
+          "sound": "game-pickup-item",
+          "params": {
+            "chip": 1,
+            "pitch": 523.25,
+            "interval": 7,
+            "gap": 0.05
+          }
+        },
+        "coin": {
+          "sound": "game-combo-ping",
+          "params": {
+            "chip": 1,
+            "pitch": 1318.5,
+            "streak": 1,
+            "ring": 0.18
+          }
+        },
+        "level-up": {
+          "sound": "game-power-up",
+          "params": {
+            "chip": 1,
+            "notes": 8,
+            "pitch": 261.63,
+            "gap": 0.05
+          }
+        },
+        "power-up": {
+          "sound": "game-power-up",
+          "params": {
+            "chip": 1,
+            "notes": 5,
+            "pitch": 392,
+            "gap": 0.04
+          }
+        },
+        "heal": {
+          "sound": "game-heal",
+          "params": {
+            "pitch": 392,
+            "length": 0.4,
+            "rise": 4,
+            "glow": 0
+          }
+        },
+        "victory": {
+          "sound": "music-victory-jingle",
+          "params": {
+            "key": 0,
+            "crunch": 0.6,
+            "bass": 0.6
+          }
+        },
+        "game-over": {
+          "sound": "music-defeat-jingle",
+          "params": {
+            "key": 0,
+            "tempo": 1.2,
+            "droop": 0.5,
+            "tone": 0.2
+          }
+        },
+        "jump": {
+          "sound": "game-jump",
+          "params": {
+            "chip": 1,
+            "pitch": 262,
+            "rise": 2.6,
+            "length": 0.16
+          }
+        },
+        "shoot": {
+          "sound": "scifi-laser-zap",
+          "params": {
+            "pitch": 2093,
+            "drop": 0.85,
+            "shots": 1,
+            "edge": 0.8
+          }
+        },
+        "explosion": {
+          "sound": "game-explosion-soft",
+          "params": {
+            "size": 0.5,
+            "pitch": 80,
+            "soften": 0.7,
+            "crackle": 1
+          }
+        },
+        "readout": {
+          "sound": "scifi-terminal-blip",
+          "params": {
+            "count": 4,
+            "pitch": 1046.5,
+            "speed": 0.06,
+            "grit": 0.8
+          }
+        },
+        "scare": {
+          "sound": "music-alert-sting",
+          "params": {
+            "key": 0,
+            "stabs": 2,
+            "edge": 0.8
+          }
+        }
+      },
+      "file": "src/themes/8-bit.js"
+    },
+    {
+      "id": "arcade",
+      "name": "Arcade",
+      "desc": "Punchy, bright game feedback and big wins: sharp clicks, ringing pings, brass fanfares, a real boom.",
+      "moments": {
+        "click": {
+          "sound": "ui-radio-select",
+          "params": {
+            "pitch": 783.99,
+            "bloop": 0.8,
+            "round": 0.2
+          }
+        },
+        "hover": {
+          "sound": "ui-hover-tick",
+          "params": {
+            "pitch": 5200,
+            "air": 0.6
+          }
+        },
+        "toggle-on": {
+          "sound": "ui-toggle-switch",
+          "params": {
+            "on": 1,
+            "pitch": 3000,
+            "gap": 0.06,
+            "body": 0.6
+          }
+        },
+        "toggle-off": {
+          "sound": "ui-toggle-switch",
+          "params": {
+            "on": 0,
+            "pitch": 3000,
+            "gap": 0.06,
+            "body": 0.6
+          }
+        },
+        "type": {
+          "sound": "ui-key-mechanical",
+          "params": {
+            "pitch": 3520,
+            "click": 0.9,
+            "thock": 0.5
+          }
+        },
+        "open": {
+          "sound": "ui-expand",
+          "params": {
+            "open": 1,
+            "steps": 5,
+            "gap": 0.025,
+            "pitch": 523.25
+          }
+        },
+        "close": {
+          "sound": "ui-expand",
+          "params": {
+            "open": 0,
+            "steps": 3,
+            "gap": 0.025,
+            "pitch": 523.25
+          }
+        },
+        "transition": {
+          "sound": "game-whoosh",
+          "params": {
+            "length": 0.3,
+            "pitch": 1.2,
+            "q": 1.4
+          }
+        },
+        "scroll": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 880,
+            "pos": 0,
+            "edge": 0.7
+          }
+        },
+        "success": {
+          "sound": "notify-success-chime",
+          "params": {
+            "pitch": 523.25,
+            "interval": 12,
+            "gap": 0.08,
+            "shimmer": 0.6
+          }
+        },
+        "error": {
+          "sound": "notify-error-buzz",
+          "params": {
+            "pitch": 130,
+            "pulses": 3,
+            "rough": 0.9,
+            "tone": 2200
+          }
+        },
+        "warning": {
+          "sound": "scifi-alert-siren",
+          "params": {
+            "pitch": 698.46,
+            "cycles": 1,
+            "interval": 7,
+            "rate": 0.2,
+            "tone": 2500
+          }
+        },
+        "notify": {
+          "sound": "notify-mention",
+          "params": {
+            "pitch": 1318.5,
+            "glass": 0.8,
+            "ring": 0.35,
+            "echo": 0.35
+          }
+        },
+        "message": {
+          "sound": "notify-message-in",
+          "params": {
+            "pitch": 659.25,
+            "interval": 7,
+            "gap": 0.08,
+            "pop": 0.8
+          }
+        },
+        "timer": {
+          "sound": "notify-alarm",
+          "params": {
+            "pitch": 880,
+            "rounds": 3,
+            "pace": 0.12,
+            "swell": 0.2
+          }
+        },
+        "countdown": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 0,
+            "go": 0,
+            "pitch": 880,
+            "length": 0.12
+          }
+        },
+        "achievement": {
+          "sound": "music-ta-da",
+          "params": {
+            "key": 0,
+            "tempo": 1.2,
+            "sparkle": 0.9,
+            "weight": 0.7
+          }
+        },
+        "level-up": {
+          "sound": "game-power-up",
+          "params": {
+            "chip": 0,
+            "notes": 8,
+            "pitch": 261.63,
+            "gap": 0.045
+          }
+        },
+        "power-up": {
+          "sound": "game-power-up",
+          "params": {
+            "chip": 0,
+            "notes": 5,
+            "pitch": 523.25,
+            "gap": 0.035
+          }
+        },
+        "victory": {
+          "sound": "music-fanfare-short",
+          "params": {
+            "key": 0,
+            "tempo": 1.1,
+            "brass": 0.8,
+            "weight": 0.8
+          }
+        },
+        "game-over": {
+          "sound": "music-defeat-jingle",
+          "params": {
+            "key": 0,
+            "tempo": 1,
+            "droop": 0.8,
+            "tone": 0.6
+          }
+        },
+        "hit": {
+          "sound": "game-punch",
+          "params": {
+            "hits": 2,
+            "pitch": 150,
+            "snap": 0.8,
+            "gap": 0.07
+          }
+        },
+        "damage": {
+          "sound": "game-hurt",
+          "params": {
+            "chip": 0,
+            "pitch": 300,
+            "drop": 0.5,
+            "length": 0.2
+          }
+        },
+        "attack": {
+          "sound": "game-sword-swing",
+          "params": {
+            "length": 0.15,
+            "pitch": 1.3,
+            "edge": 0.7
+          }
+        },
+        "pickup": {
+          "sound": "game-pickup-item",
+          "params": {
+            "chip": 0,
+            "pitch": 784,
+            "interval": 12,
+            "gap": 0.05
+          }
+        },
+        "coin": {
+          "sound": "game-coin-flip",
+          "params": {
+            "spins": 3,
+            "pitch": 1567.98,
+            "ring": 0.45
+          }
+        },
+        "heal": {
+          "sound": "game-heal",
+          "params": {
+            "pitch": 523.25,
+            "length": 0.5,
+            "rise": 4,
+            "glow": 0.8
+          }
+        },
+        "jump": {
+          "sound": "game-jump",
+          "params": {
+            "chip": 0,
+            "pitch": 262,
+            "rise": 3,
+            "length": 0.16
+          }
+        },
+        "footstep": {
+          "sound": "game-footstep-hard",
+          "params": {
+            "surface": 0.8,
+            "weight": 0.3,
+            "pitch": 1.1
+          }
+        },
+        "shoot": {
+          "sound": "scifi-laser-zap",
+          "params": {
+            "pitch": 2400,
+            "drop": 0.85,
+            "shots": 1,
+            "edge": 0.7
+          }
+        },
+        "explosion": {
+          "sound": "game-explosion-soft",
+          "params": {
+            "size": 0.6,
+            "pitch": 60,
+            "soften": 0.8,
+            "crackle": 0.6
+          }
+        },
+        "shield": {
+          "sound": "game-shield-up",
+          "params": {
+            "pitch": 196,
+            "length": 0.4,
+            "shimmer": 0.8,
+            "lock": 0.8
+          }
+        },
+        "teleport": {
+          "sound": "magic-teleport",
+          "params": {
+            "pitch": 800,
+            "gap": 0.12,
+            "reach": 1.6,
+            "space": 0.2
+          }
+        },
+        "scare": {
+          "sound": "music-alert-sting",
+          "params": {
+            "key": 0,
+            "stabs": 3,
+            "edge": 0.6,
+            "tempo": 1.2
+          }
+        },
+        "music": {
+          "sound": "music-menu-confirm",
+          "params": {
+            "key": 0,
+            "notes": 4,
+            "speed": 1.3,
+            "echo": 0.8
+          }
+        }
+      },
+      "file": "src/themes/arcade.js"
+    },
+    {
+      "id": "fantasy",
+      "name": "Fantasy",
+      "desc": "Spells, chimes and parchment for game menus and role-playing games: harps, bells, a quill and a fireball.",
+      "moments": {
+        "click": {
+          "sound": "ui-click-wood",
+          "params": {
+            "pitch": 587.33,
+            "ring": 0.5,
+            "hollow": 0.5
+          }
+        },
+        "hover": {
+          "sound": "ui-hover-tick",
+          "params": {
+            "pitch": 2349.32,
+            "air": 0.8
+          }
+        },
+        "toggle-on": {
+          "sound": "ui-checkbox",
+          "params": {
+            "on": 1,
+            "pitch": 587.33,
+            "bright": 0.7
+          }
+        },
+        "toggle-off": {
+          "sound": "ui-checkbox",
+          "params": {
+            "on": 0,
+            "pitch": 587.33,
+            "bright": 0.7
+          }
+        },
+        "type": {
+          "sound": "ui-key-light",
+          "params": {
+            "pitch": 293.66,
+            "bright": 0.8,
+            "size": 0
+          }
+        },
+        "open": {
+          "sound": "ui-page-turn",
+          "params": {
+            "length": 0.3,
+            "rustle": 0.8,
+            "bright": 0.6
+          }
+        },
+        "close": {
+          "sound": "ui-page-turn",
+          "params": {
+            "length": 0.16,
+            "rustle": 0.3,
+            "bright": 0.2
+          }
+        },
+        "transition": {
+          "sound": "game-whoosh",
+          "params": {
+            "length": 0.4,
+            "pitch": 0.7,
+            "q": 1.6
+          }
+        },
+        "scroll": {
+          "sound": "ui-scroll-detent",
+          "params": {
+            "pitch": 587.33,
+            "ticks": 1
+          }
+        },
+        "drag": {
+          "sound": "ui-drag-pickup",
+          "params": {
+            "pitch": 293.66,
+            "lift": 0.4,
+            "air": 0.4
+          }
+        },
+        "drop": {
+          "sound": "ui-drag-drop",
+          "params": {
+            "pitch": 146.83,
+            "bounce": 0.2,
+            "snap": 0.2
+          }
+        },
+        "delete": {
+          "sound": "ui-delete",
+          "params": {
+            "crunch": 4,
+            "pitch": 146.83,
+            "weight": 0.3
+          }
+        },
+        "success": {
+          "sound": "game-checkpoint",
+          "params": {
+            "pitch": 293.66,
+            "spread": 0.07,
+            "ring": 0.6
+          }
+        },
+        "error": {
+          "sound": "magic-curse-hex",
+          "params": {
+            "pitch": 73.42,
+            "dread": 0.3,
+            "whisper": 0.2,
+            "space": 0.2
+          }
+        },
+        "warning": {
+          "sound": "notify-warning",
+          "params": {
+            "pitch": 440,
+            "drop": 7,
+            "gap": 0.2,
+            "tone": 1500
+          }
+        },
+        "notify": {
+          "sound": "notify-reminder",
+          "params": {
+            "pitch": 587.33,
+            "drop": 7,
+            "ring": 0.8,
+            "space": 0.45
+          }
+        },
+        "message": {
+          "sound": "notify-new-mail",
+          "params": {
+            "pitch": 587.33,
+            "interval": 7,
+            "swish": 0.6,
+            "ring": 0.5
+          }
+        },
+        "reminder": {
+          "sound": "notify-calendar",
+          "params": {
+            "pitch": 440,
+            "interval": 5,
+            "gap": 0.18,
+            "bright": 0.3,
+            "tick": 0.4
+          }
+        },
+        "achievement": {
+          "sound": "notify-achievement",
+          "params": {
+            "pitch": 587.33,
+            "sparkle": 0.8,
+            "space": 0.5
+          }
+        },
+        "level-up": {
+          "sound": "magic-enchant",
+          "params": {
+            "pitch": 293.66,
+            "notes": 7,
+            "speed": 0.06,
+            "glow": 0.7,
+            "space": 0.4
+          }
+        },
+        "power-up": {
+          "sound": "magic-charge-up",
+          "params": {
+            "length": 0.8,
+            "pitch": 293.66,
+            "shimmer": 0.6,
+            "space": 0.3
+          }
+        },
+        "heal": {
+          "sound": "magic-healing-shimmer",
+          "params": {
+            "pitch": 293.66,
+            "swell": 0.35,
+            "sparkle": 0.7,
+            "space": 0.45
+          }
+        },
+        "victory": {
+          "sound": "music-fanfare-short",
+          "params": {
+            "key": 2,
+            "tempo": 0.95,
+            "brass": 0.6,
+            "weight": 0.7
+          }
+        },
+        "game-over": {
+          "sound": "music-defeat-jingle",
+          "params": {
+            "key": 2,
+            "tempo": 0.9,
+            "droop": 0.7,
+            "tone": 0.4
+          }
+        },
+        "hit": {
+          "sound": "game-sword-clash",
+          "params": {
+            "pitch": 1174.66,
+            "ring": 0.5,
+            "scrape": 0.3
+          }
+        },
+        "attack": {
+          "sound": "game-sword-swing",
+          "params": {
+            "length": 0.17,
+            "pitch": 1,
+            "edge": 0.5
+          }
+        },
+        "damage": {
+          "sound": "game-punch",
+          "params": {
+            "hits": 1,
+            "pitch": 110,
+            "snap": 0.4
+          }
+        },
+        "pickup": {
+          "sound": "game-gem-collect",
+          "params": {
+            "pitch": 1174.66,
+            "ring": 0.5,
+            "gap": 0.08,
+            "sparkle": 0.6
+          }
+        },
+        "coin": {
+          "sound": "game-coin-flip",
+          "params": {
+            "spins": 4,
+            "pitch": 1174.66,
+            "ring": 0.4
+          }
+        },
+        "footstep": {
+          "sound": "game-footstep-soft",
+          "params": {
+            "weight": 0.4,
+            "surface": 0.3,
+            "length": 0.1
+          }
+        },
+        "shoot": {
+          "sound": "game-arrow-shot",
+          "params": {
+            "pitch": 146.83,
+            "flight": 0.22,
+            "twang": 0.7
+          }
+        },
+        "explosion": {
+          "sound": "magic-fire-spell",
+          "params": {
+            "heat": 0.6,
+            "length": 0.8,
+            "crackle": 0.6,
+            "weight": 0.5
+          }
+        },
+        "door": {
+          "sound": "game-door-open",
+          "params": {
+            "pitch": 146.83,
+            "length": 0.8,
+            "creak": 0.6
+          }
+        },
+        "spell": {
+          "sound": "magic-spell-cast",
+          "params": {
+            "pitch": 587.33,
+            "gather": 0.2,
+            "bloom": 0.7,
+            "space": 0.4
+          }
+        },
+        "sparkle": {
+          "sound": "magic-sparkle",
+          "params": {
+            "notes": 5,
+            "pitch": 1174.66,
+            "gap": 0.05,
+            "shimmer": 0.6,
+            "space": 0.35
+          }
+        },
+        "teleport": {
+          "sound": "magic-teleport",
+          "params": {
+            "pitch": 587.33,
+            "gap": 0.16,
+            "reach": 1.5,
+            "space": 0.4
+          }
+        },
+        "scare": {
+          "sound": "music-mystery-sting",
+          "params": {
+            "key": 2,
+            "eerie": 0.6
+          }
+        },
+        "dice": {
+          "sound": "cards-dice-roll",
+          "params": {
+            "surface": 0.5
+          }
+        },
+        "ambience": {
+          "sound": "ambience-fire-crackle",
+          "params": {
+            "length": 6,
+            "crackle": 0.6,
+            "roar": 0.4,
+            "tone": 0.4
+          }
+        },
+        "music": {
+          "sound": "music-intro-logo",
+          "params": {
+            "key": 2,
+            "shine": 0.8,
+            "space": 0.55
+          }
+        }
+      },
+      "file": "src/themes/fantasy.js"
+    },
+    {
+      "id": "glass",
+      "name": "Glass",
+      "desc": "Bright, bell-like and airy: struck-glass ticks, high chimes and sparkle. Clean and a little cold.",
+      "moments": {
+        "click": {
+          "sound": "ui-click-glass",
+          "params": {
+            "pitch": 3135.96,
+            "ring": 0.35,
+            "bright": 0.45
+          }
+        },
+        "hover": {
+          "sound": "ui-hover-tick",
+          "params": {
+            "pitch": 4186,
+            "air": 0.5
+          }
+        },
+        "toggle-on": {
+          "sound": "ui-toggle-switch",
+          "params": {
+            "on": 1,
+            "pitch": 3135.96,
+            "gap": 0.06,
+            "body": 0
+          }
+        },
+        "toggle-off": {
+          "sound": "ui-toggle-switch",
+          "params": {
+            "on": 0,
+            "pitch": 3135.96,
+            "gap": 0.06,
+            "body": 0
+          }
+        },
+        "type": {
+          "sound": "ui-click-glass",
+          "params": {
+            "pitch": 4186,
+            "ring": 0.05,
+            "bright": 0.2
+          }
+        },
+        "open": {
+          "sound": "ui-menu-slide",
+          "params": {
+            "open": 1,
+            "size": 0.3,
+            "tone": 0.8
+          }
+        },
+        "close": {
+          "sound": "ui-menu-slide",
+          "params": {
+            "open": 0,
+            "size": 0.3,
+            "tone": 0.8
+          }
+        },
+        "transition": {
+          "sound": "game-whoosh",
+          "params": {
+            "length": 0.3,
+            "pitch": 1.5,
+            "q": 1.5
+          }
+        },
+        "scroll": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 1318.51,
+            "pos": 0,
+            "edge": 0.15
+          }
+        },
+        "drag": {
+          "sound": "ui-drag-pickup",
+          "params": {
+            "pitch": 659.25,
+            "lift": 0.8,
+            "air": 0.35
+          }
+        },
+        "drop": {
+          "sound": "ui-click-glass",
+          "params": {
+            "pitch": 2093,
+            "ring": 0.4,
+            "bright": 0.4
+          }
+        },
+        "tooltip": {
+          "sound": "ui-tooltip-pop",
+          "params": {
+            "pitch": 1567.98,
+            "rise": 0.4,
+            "shimmer": 0.6
+          }
+        },
+        "copy": {
+          "sound": "ui-copy",
+          "params": {
+            "pitch": 2093,
+            "scoop": 0.4,
+            "ring": 0.5
+          }
+        },
+        "undo": {
+          "sound": "ui-undo",
+          "params": {
+            "pitch": 1046.5,
+            "settle": 0.8
+          }
+        },
+        "delete": {
+          "sound": "ui-delete",
+          "params": {
+            "crunch": 2,
+            "pitch": 196,
+            "weight": 0.25
+          }
+        },
+        "send": {
+          "sound": "notify-message-out",
+          "params": {
+            "pitch": 1318.51,
+            "speed": 0.1,
+            "air": 0.4
+          }
+        },
+        "refresh": {
+          "sound": "notify-sync-done",
+          "params": {
+            "pitch": 659.25,
+            "cycles": 1,
+            "speed": 0.07,
+            "shimmer": 0.8
+          }
+        },
+        "success": {
+          "sound": "magic-sparkle",
+          "params": {
+            "notes": 4,
+            "pitch": 1046.5,
+            "gap": 0.05,
+            "shimmer": 0.6,
+            "space": 0.25
+          }
+        },
+        "error": {
+          "sound": "notify-reminder",
+          "params": {
+            "pitch": 698.46,
+            "drop": 6,
+            "gap": 0.2,
+            "ring": 0.5,
+            "space": 0.2
+          }
+        },
+        "warning": {
+          "sound": "notify-warning",
+          "params": {
+            "pitch": 698.46,
+            "drop": 5,
+            "tone": 4000
+          }
+        },
+        "info": {
+          "sound": "notify-info",
+          "params": {
+            "pitch": 1046.5,
+            "decay": 0.4,
+            "bright": 0.8
+          }
+        },
+        "notify": {
+          "sound": "notify-mention",
+          "params": {
+            "pitch": 1046.5,
+            "glass": 0.8,
+            "ring": 0.35,
+            "echo": 0.3
+          }
+        },
+        "message": {
+          "sound": "notify-new-mail",
+          "params": {
+            "pitch": 783.99,
+            "interval": 5,
+            "swish": 0.3,
+            "ring": 0.35
+          }
+        },
+        "reminder": {
+          "sound": "notify-reminder",
+          "params": {
+            "pitch": 783.99,
+            "drop": 3,
+            "ring": 0.8,
+            "space": 0.35
+          }
+        },
+        "timer": {
+          "sound": "notify-alarm",
+          "params": {
+            "pitch": 880,
+            "rounds": 2,
+            "pace": 0.14,
+            "swell": 0.5
+          }
+        },
+        "achievement": {
+          "sound": "notify-achievement",
+          "params": {
+            "pitch": 523.25,
+            "sparkle": 0.9,
+            "space": 0.5
+          }
+        },
+        "sparkle": {
+          "sound": "magic-sparkle",
+          "params": {
+            "notes": 6,
+            "pitch": 1318.51,
+            "gap": 0.04,
+            "shimmer": 0.8,
+            "space": 0.4
+          }
+        },
+        "heal": {
+          "sound": "magic-healing-shimmer",
+          "params": {
+            "pitch": 523.25,
+            "swell": 0.3,
+            "sparkle": 0.8,
+            "space": 0.45
+          }
+        },
+        "pickup": {
+          "sound": "game-gem-collect",
+          "params": {
+            "pitch": 1567.98,
+            "ring": 0.45,
+            "gap": 0.08,
+            "sparkle": 0.7
+          }
+        },
+        "teleport": {
+          "sound": "magic-teleport",
+          "params": {
+            "pitch": 1046.5,
+            "gap": 0.12,
+            "reach": 1.5,
+            "space": 0.45
+          }
+        },
+        "music": {
+          "sound": "music-intro-logo",
+          "params": {
+            "key": 0,
+            "shine": 0.9,
+            "space": 0.5
+          }
+        }
+      },
+      "file": "src/themes/glass.js"
+    },
+    {
+      "id": "mechanical",
+      "name": "Mechanical",
+      "desc": "Switches, ratchets, relays and a typewriter bell: clicky, dry and precise.",
+      "moments": {
+        "click": {
+          "sound": "ui-click-crisp",
+          "params": {
+            "pitch": 3200,
+            "snap": 0.4,
+            "body": 0.2
+          }
+        },
+        "hover": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 1500,
+            "pos": 0,
+            "edge": 0.1
+          }
+        },
+        "toggle-on": {
+          "sound": "ui-toggle-switch",
+          "params": {
+            "on": 1,
+            "pitch": 2800,
+            "gap": 0.07,
+            "body": 0.35
+          }
+        },
+        "toggle-off": {
+          "sound": "ui-toggle-switch",
+          "params": {
+            "on": 0,
+            "pitch": 2800,
+            "gap": 0.07,
+            "body": 0.35
+          }
+        },
+        "type": {
+          "sound": "ui-key-mechanical",
+          "params": {
+            "pitch": 3520,
+            "click": 0.8,
+            "thock": 0.6
+          }
+        },
+        "open": {
+          "sound": "ui-expand",
+          "params": {
+            "open": 1,
+            "steps": 4,
+            "gap": 0.025,
+            "pitch": 523.25
+          }
+        },
+        "close": {
+          "sound": "ui-expand",
+          "params": {
+            "open": 0,
+            "steps": 3,
+            "gap": 0.025,
+            "pitch": 523.25
+          }
+        },
+        "transition": {
+          "sound": "ui-menu-slide",
+          "params": {
+            "open": 1,
+            "size": 0.9,
+            "tone": 0.25
+          }
+        },
+        "scroll": {
+          "sound": "ui-scroll-detent",
+          "params": {
+            "pitch": 800,
+            "ticks": 1
+          }
+        },
+        "drag": {
+          "sound": "ui-click-crisp",
+          "params": {
+            "pitch": 1800,
+            "snap": 0.3,
+            "body": 0.8
+          }
+        },
+        "drop": {
+          "sound": "ui-click-deep",
+          "params": {
+            "pitch": 140,
+            "click": 0.6,
+            "length": 0.3
+          }
+        },
+        "tooltip": {
+          "sound": "ui-hover-tick",
+          "params": {
+            "pitch": 2600,
+            "air": 0.1
+          }
+        },
+        "copy": {
+          "sound": "cards-chip-click",
+          "params": {
+            "pitch": 2500,
+            "ring": 0.05,
+            "weight": 0.4
+          }
+        },
+        "undo": {
+          "sound": "ui-undo",
+          "params": {
+            "pitch": 1000,
+            "speed": 46,
+            "settle": 0.7
+          }
+        },
+        "delete": {
+          "sound": "ui-click-deep",
+          "params": {
+            "pitch": 95,
+            "click": 1,
+            "length": 0.7
+          }
+        },
+        "send": {
+          "sound": "cards-fan",
+          "params": {
+            "cards": 8,
+            "length": 0.22,
+            "bright": 0.8
+          }
+        },
+        "refresh": {
+          "sound": "cards-timer-tick",
+          "params": {
+            "beats": 3,
+            "gap": 0.25,
+            "pitch": 1900,
+            "tone": 0.9
+          }
+        },
+        "success": {
+          "sound": "game-key-unlock",
+          "params": {
+            "jingles": 2,
+            "pitch": 3000,
+            "clunk": 0.4,
+            "ding": 0.8
+          }
+        },
+        "error": {
+          "sound": "notify-error-buzz",
+          "params": {
+            "pitch": 110,
+            "pulses": 2,
+            "rough": 1,
+            "tone": 2500
+          }
+        },
+        "warning": {
+          "sound": "notify-warning",
+          "params": {
+            "pitch": 523.25,
+            "drop": 5,
+            "tone": 3000
+          }
+        },
+        "info": {
+          "sound": "notify-info",
+          "params": {
+            "pitch": 1046.5,
+            "decay": 0.5,
+            "bright": 0.9
+          }
+        },
+        "notify": {
+          "sound": "notify-reminder",
+          "params": {
+            "pitch": 880,
+            "drop": 7,
+            "gap": 0.2,
+            "ring": 0.5,
+            "space": 0
+          }
+        },
+        "reminder": {
+          "sound": "notify-calendar",
+          "params": {
+            "pitch": 440,
+            "interval": 5,
+            "gap": 0.14,
+            "bright": 0.6,
+            "tick": 1
+          }
+        },
+        "timer": {
+          "sound": "notify-incoming-call",
+          "params": {
+            "pitch": 783.99,
+            "rate": 14,
+            "rings": 1,
+            "tone": 3000
+          }
+        },
+        "countdown": {
+          "sound": "cards-timer-tick",
+          "params": {
+            "beats": 1,
+            "pitch": 2000,
+            "tone": 1
+          }
+        },
+        "power-up": {
+          "sound": "scifi-power-up",
+          "params": {
+            "length": 0.6,
+            "pitch": 130,
+            "ticks": 8,
+            "bright": 0.5
+          }
+        },
+        "power-down": {
+          "sound": "scifi-power-down",
+          "params": {
+            "length": 0.6,
+            "ticks": 6
+          }
+        },
+        "door": {
+          "sound": "game-key-unlock",
+          "params": {
+            "jingles": 3,
+            "pitch": 2400,
+            "clunk": 1,
+            "ding": 0.1
+          }
+        },
+        "hit": {
+          "sound": "game-hammer-hit",
+          "params": {
+            "swing": 0.15,
+            "pitch": 800,
+            "weight": 0.2,
+            "ring": 0.1
+          }
+        },
+        "chips": {
+          "sound": "cards-chip-stack",
+          "params": {
+            "chips": 5,
+            "pace": 0.06,
+            "pitch": 2300
+          }
+        },
+        "dice": {
+          "sound": "cards-dice-shake",
+          "params": {
+            "shakes": 3,
+            "dice": 2,
+            "pitch": 1.1
+          }
+        },
+        "ambience": {
+          "sound": "ambience-room-hum",
+          "params": {
+            "length": 6,
+            "pitch": 60,
+            "buzz": 0.5,
+            "air": 0.3
+          }
+        }
+      },
+      "file": "src/themes/mechanical.js"
+    },
+    {
+      "id": "sci-fi-console",
+      "name": "Sci-fi Console",
+      "desc": "Terminal blips, scanner sweeps and synthetic confirmations: bitcrushed beeps and clean digital tones.",
+      "moments": {
+        "click": {
+          "sound": "ui-click-crisp",
+          "params": {
+            "pitch": 3800,
+            "snap": 0.3,
+            "body": 0.1
+          }
+        },
+        "hover": {
+          "sound": "ui-hover-tick",
+          "params": {
+            "pitch": 3520,
+            "air": 0.3
+          }
+        },
+        "toggle-on": {
+          "sound": "ui-checkbox",
+          "params": {
+            "on": 1,
+            "pitch": 1174.66,
+            "bright": 0.9
+          }
+        },
+        "toggle-off": {
+          "sound": "ui-checkbox",
+          "params": {
+            "on": 0,
+            "pitch": 880,
+            "bright": 0.9
+          }
+        },
+        "type": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 1500,
+            "pos": 0,
+            "edge": 0.1
+          }
+        },
+        "open": {
+          "sound": "ui-modal",
+          "params": {
+            "open": 1,
+            "pitch": 130.81,
+            "air": 0.3,
+            "shine": 0.8
+          }
+        },
+        "close": {
+          "sound": "ui-modal",
+          "params": {
+            "open": 0,
+            "pitch": 130.81,
+            "air": 0.3,
+            "shine": 0.8
+          }
+        },
+        "transition": {
+          "sound": "scifi-data-stream",
+          "params": {
+            "ticks": 14,
+            "length": 0.35,
+            "pitch": 1200,
+            "spread": 0.5,
+            "grit": 0.6
+          }
+        },
+        "scroll": {
+          "sound": "ui-slider-detent",
+          "params": {
+            "pitch": 880,
+            "pos": 0.5,
+            "edge": 0.3
+          }
+        },
+        "drag": {
+          "sound": "ui-drag-pickup",
+          "params": {
+            "pitch": 523.25,
+            "lift": 0.8,
+            "air": 0.2
+          }
+        },
+        "drop": {
+          "sound": "ui-drag-drop",
+          "params": {
+            "pitch": 130.81,
+            "bounce": 0,
+            "snap": 0.8
+          }
+        },
+        "tooltip": {
+          "sound": "ui-tooltip-pop",
+          "params": {
+            "pitch": 1760,
+            "rise": 0.6,
+            "shimmer": 1
+          }
+        },
+        "copy": {
+          "sound": "scifi-data-stream",
+          "params": {
+            "ticks": 10,
+            "length": 0.3,
+            "pitch": 1567.98,
+            "spread": 0.3,
+            "grit": 0.5
+          }
+        },
+        "undo": {
+          "sound": "ui-undo",
+          "params": {
+            "pitch": 880,
+            "speed": 40,
+            "settle": 0.5
+          }
+        },
+        "delete": {
+          "sound": "scifi-power-down",
+          "params": {
+            "length": 0.5,
+            "pitch": 160,
+            "ticks": 3,
+            "bright": 0.5
+          }
+        },
+        "send": {
+          "sound": "notify-upload-done",
+          "params": {
+            "pitch": 659.25,
+            "rise": 0.1,
+            "ring": 0.2,
+            "shimmer": 0.7
+          }
+        },
+        "refresh": {
+          "sound": "notify-sync-done",
+          "params": {
+            "pitch": 523.25,
+            "cycles": 2,
+            "speed": 0.07,
+            "shimmer": 0.6
+          }
+        },
+        "success": {
+          "sound": "notify-success-chime",
+          "params": {
+            "pitch": 880,
+            "interval": 7,
+            "gap": 0.12,
+            "shimmer": 0.4
+          }
+        },
+        "error": {
+          "sound": "notify-error-buzz",
+          "params": {
+            "pitch": 150,
+            "pulses": 3,
+            "rough": 0.9,
+            "tone": 1800
+          }
+        },
+        "warning": {
+          "sound": "scifi-alert-siren",
+          "params": {
+            "pitch": 440,
+            "cycles": 1,
+            "interval": 7,
+            "rate": 0.2,
+            "tone": 2000
+          }
+        },
+        "info": {
+          "sound": "scifi-terminal-blip",
+          "params": {
+            "count": 1,
+            "pitch": 1174.66,
+            "grit": 0.3
+          }
+        },
+        "notify": {
+          "sound": "scifi-hologram-flicker",
+          "params": {
+            "pitch": 880,
+            "flickers": 3,
+            "glitch": 0.3,
+            "length": 0.55
+          }
+        },
+        "message": {
+          "sound": "scifi-robot-chirp",
+          "params": {
+            "pitch": 880,
+            "chirps": 2,
+            "mood": 0.8,
+            "speed": 0.08
+          }
+        },
+        "reminder": {
+          "sound": "notify-mention",
+          "params": {
+            "pitch": 880,
+            "glass": 0.2,
+            "ring": 0.3,
+            "echo": 0.5
+          }
+        },
+        "timer": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 1,
+            "go": 1,
+            "pitch": 880,
+            "length": 0.14
+          }
+        },
+        "countdown": {
+          "sound": "game-countdown-beep",
+          "params": {
+            "chip": 1,
+            "go": 0,
+            "pitch": 880,
+            "length": 0.1
+          }
+        },
+        "power-up": {
+          "sound": "scifi-power-up",
+          "params": {
+            "length": 0.8,
+            "pitch": 110,
+            "ticks": 9,
+            "bright": 0.5
+          }
+        },
+        "power-down": {
+          "sound": "scifi-power-down",
+          "params": {
+            "length": 0.8,
+            "pitch": 110,
+            "ticks": 7,
+            "bright": 0.5
+          }
+        },
+        "shield": {
+          "sound": "scifi-shield-hum",
+          "params": {
+            "pitch": 110,
+            "pulse": 5,
+            "bright": 0.5,
+            "length": 1
+          }
+        },
+        "shoot": {
+          "sound": "scifi-laser-zap",
+          "params": {
+            "pitch": 2400,
+            "drop": 0.85,
+            "shots": 1,
+            "edge": 0.5
+          }
+        },
+        "teleport": {
+          "sound": "scifi-warp-jump",
+          "params": {
+            "charge": 0.5,
+            "pitch": 90,
+            "boom": 0.6,
+            "tail": 0.5
+          }
+        },
+        "readout": {
+          "sound": "scifi-terminal-blip",
+          "params": {
+            "count": 3,
+            "pitch": 1174.66,
+            "speed": 0.055,
+            "grit": 0.5
+          }
+        },
+        "scan": {
+          "sound": "scifi-scanner-sweep",
+          "params": {
+            "pitch": 440,
+            "sweeps": 1,
+            "length": 0.5,
+            "wobble": 0.5
+          }
+        },
+        "scare": {
+          "sound": "music-mystery-sting",
+          "params": {
+            "key": 0,
+            "eerie": 0.6
+          }
+        },
+        "ambience": {
+          "sound": "ambience-space-drone",
+          "params": {
+            "length": 6,
+            "pitch": 55,
+            "tone": 0.4,
+            "shimmer": 0.4
+          }
+        },
+        "music": {
+          "sound": "music-intro-logo",
+          "params": {
+            "key": 0,
+            "shine": 0.7,
+            "space": 0.5
+          }
+        }
+      },
+      "file": "src/themes/sci-fi-console.js"
+    },
+    {
+      "id": "wood-and-paper",
+      "name": "Wood and Paper",
+      "desc": "Warm, tactile and organic: wood knocks, cards and paper, a ticking clock, a creaking drawer.",
+      "moments": {
+        "click": {
+          "sound": "ui-click-wood",
+          "params": {
+            "pitch": 783.99,
+            "ring": 0.25,
+            "hollow": 0.4
+          }
+        },
+        "hover": {
+          "sound": "cards-place",
+          "params": {
+            "weight": 0,
+            "tone": 0.6,
+            "drop": 0
+          }
+        },
+        "toggle-on": {
+          "sound": "cards-piece-move",
+          "params": {
+            "pitch": 659.25,
+            "hollow": 0.6,
+            "slide": 0.03
+          }
+        },
+        "toggle-off": {
+          "sound": "cards-piece-move",
+          "params": {
+            "pitch": 440,
+            "hollow": 0.6,
+            "slide": 0.03
+          }
+        },
+        "type": {
+          "sound": "ui-key-light",
+          "params": {
+            "pitch": 220,
+            "bright": 0.3,
+            "size": 0
+          }
+        },
+        "open": {
+          "sound": "game-door-open",
+          "params": {
+            "pitch": 130,
+            "length": 0.4,
+            "creak": 0.3
+          }
+        },
+        "close": {
+          "sound": "ui-drag-drop",
+          "params": {
+            "pitch": 130,
+            "bounce": 0,
+            "snap": 0.7
+          }
+        },
+        "transition": {
+          "sound": "ui-page-turn",
+          "params": {
+            "length": 0.3,
+            "rustle": 0.6,
+            "bright": 0.4
+          }
+        },
+        "scroll": {
+          "sound": "ui-scroll-detent",
+          "params": {
+            "pitch": 523.25,
+            "ticks": 1
+          }
+        },
+        "drag": {
+          "sound": "ui-drag-pickup",
+          "params": {
+            "pitch": 330,
+            "lift": 0.3,
+            "air": 0.25
+          }
+        },
+        "drop": {
+          "sound": "ui-drag-drop",
+          "params": {
+            "pitch": 220,
+            "bounce": 0.5,
+            "snap": 0.2
+          }
+        },
+        "tooltip": {
+          "sound": "ui-tap",
+          "params": {
+            "pitch": 500,
+            "pat": 0.2,
+            "soft": 0.5
+          }
+        },
+        "copy": {
+          "sound": "cards-flick",
+          "params": {
+            "count": 2,
+            "gap": 0.07,
+            "bright": 0
+          }
+        },
+        "undo": {
+          "sound": "cards-slide",
+          "params": {
+            "rise": 1,
+            "length": 0.2,
+            "pitch": 1,
+            "grit": 0.3
+          }
+        },
+        "delete": {
+          "sound": "ui-delete",
+          "params": {
+            "crunch": 4,
+            "pitch": 130.81,
+            "weight": 0.6
+          }
+        },
+        "send": {
+          "sound": "cards-discard",
+          "params": {
+            "toss": 0.6,
+            "pile": 0.3,
+            "weight": 0.4
+          }
+        },
+        "refresh": {
+          "sound": "cards-riffle",
+          "params": {
+            "cards": 6
+          }
+        },
+        "success": {
+          "sound": "cards-your-turn",
+          "params": {
+            "pitch": 523.25,
+            "interval": 7,
+            "bright": 0.35,
+            "ring": 0.35
+          }
+        },
+        "error": {
+          "sound": "ui-click-deep",
+          "params": {
+            "pitch": 100,
+            "click": 0.8,
+            "length": 0.8
+          }
+        },
+        "warning": {
+          "sound": "notify-warning",
+          "params": {
+            "pitch": 392,
+            "drop": 3,
+            "tone": 1200
+          }
+        },
+        "info": {
+          "sound": "ui-click-wood",
+          "params": {
+            "pitch": 880,
+            "ring": 0.7,
+            "hollow": 0.7
+          }
+        },
+        "notify": {
+          "sound": "notify-double-tap",
+          "params": {
+            "pitch": 330,
+            "taps": 2
+          }
+        },
+        "message": {
+          "sound": "cards-deal",
+          "params": {
+            "reach": 0.2,
+            "tone": 0.5,
+            "land": 0.5
+          }
+        },
+        "reminder": {
+          "sound": "notify-calendar",
+          "params": {
+            "pitch": 392,
+            "interval": 5,
+            "gap": 0.18,
+            "bright": 0.3,
+            "tick": 0.6
+          }
+        },
+        "timer": {
+          "sound": "notify-reminder",
+          "params": {
+            "pitch": 659.25,
+            "drop": 4,
+            "ring": 0.6,
+            "space": 0.1
+          }
+        },
+        "achievement": {
+          "sound": "music-level-complete",
+          "params": {
+            "key": 0,
+            "tempo": 1.2,
+            "sparkle": 0.3,
+            "space": 0.25
+          }
+        },
+        "pickup": {
+          "sound": "cards-piece-move",
+          "params": {
+            "pitch": 520,
+            "hollow": 0.5,
+            "slide": 0.08
+          }
+        },
+        "hit": {
+          "sound": "cards-piece-capture",
+          "params": {
+            "pitch": 450,
+            "force": 0.5,
+            "scatter": 0.3
+          }
+        },
+        "footstep": {
+          "sound": "game-footstep-hard",
+          "params": {
+            "surface": 0.2,
+            "weight": 0.4,
+            "pitch": 0.9
+          }
+        },
+        "door": {
+          "sound": "game-door-open",
+          "params": {
+            "pitch": 110,
+            "length": 0.8,
+            "creak": 0.6
+          }
+        },
+        "card-draw": {
+          "sound": "cards-draw"
+        },
+        "card-flip": {
+          "sound": "cards-flip"
+        },
+        "shuffle": {
+          "sound": "cards-shuffle-overhand"
+        },
+        "dice": {
+          "sound": "cards-dice-roll",
+          "params": {
+            "surface": 0.6
+          }
+        },
+        "chips": {
+          "sound": "cards-chip-stack",
+          "params": {
+            "chips": 4,
+            "pace": 0.07,
+            "pitch": 1800
+          }
+        },
+        "ambience": {
+          "sound": "ambience-fire-crackle",
+          "params": {
+            "length": 6,
+            "crackle": 0.5,
+            "roar": 0.3,
+            "tone": 0.4
+          }
+        }
+      },
+      "file": "src/themes/wood-and-paper.js"
     }
   ],
   "helpers": {
