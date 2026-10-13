@@ -995,7 +995,7 @@
   "scifi-facility-klaxon": {
    "fingerprint": "ee9e0d7c4e49",
    "peak": -15.8,
-   "rms": -26.8,
+   "rms": -27,
    "worstPeak": -15.4,
    "worstRms": -25.9,
    "lowestPeak": -17.5,
@@ -1341,6 +1341,196 @@
    "lowestPeak": -26.9,
    "pre": -30.6,
    "end": 0.184
+  },
+  "voice-access-denied": {
+   "fingerprint": "2cbc28ab53df",
+   "peak": -15,
+   "rms": -27.4,
+   "worstPeak": -15,
+   "worstRms": -27.4,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 1.566
+  },
+  "voice-access-granted": {
+   "fingerprint": "6cf46e8de22b",
+   "peak": -15,
+   "rms": -27.7,
+   "worstPeak": -15,
+   "worstRms": -27.7,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 1.576
+  },
+  "voice-babble-beep": {
+   "fingerprint": "b47299c87bfb",
+   "peak": -15,
+   "rms": -22.1,
+   "worstPeak": -15,
+   "worstRms": -22.1,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 2.256
+  },
+  "voice-babble-cute": {
+   "fingerprint": "f59c896ac0f5",
+   "peak": -15,
+   "rms": -32.3,
+   "worstPeak": -15,
+   "worstRms": -30.2,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 2.197
+  },
+  "voice-babble-elder": {
+   "fingerprint": "56e4722ae498",
+   "peak": -15,
+   "rms": -31.6,
+   "worstPeak": -15,
+   "worstRms": -29.7,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 2.949
+  },
+  "voice-babble-gruff": {
+   "fingerprint": "3391eced5dca",
+   "peak": -15,
+   "rms": -27.9,
+   "worstPeak": -15,
+   "worstRms": -27,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 2.704
+  },
+  "voice-babble-sprite": {
+   "fingerprint": "06ffd817b7db",
+   "peak": -15,
+   "rms": -33.3,
+   "worstPeak": -15,
+   "worstRms": -32.1,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 1.778
+  },
+  "voice-containment-breach": {
+   "fingerprint": "b23eccaae325",
+   "peak": -15,
+   "rms": -30.2,
+   "worstPeak": -15,
+   "worstRms": -29.2,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 3.761
+  },
+  "voice-countdown": {
+   "fingerprint": "79b485365ec0",
+   "peak": -15,
+   "rms": -27,
+   "worstPeak": -15,
+   "worstRms": -25.9,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 2.89
+  },
+  "voice-game-over": {
+   "fingerprint": "3f7eea9de654",
+   "peak": -15,
+   "rms": -28.7,
+   "worstPeak": -15,
+   "worstRms": -27.2,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 0.844
+  },
+  "voice-level-complete": {
+   "fingerprint": "b08a5b306135",
+   "peak": -15,
+   "rms": -27.3,
+   "worstPeak": -15,
+   "worstRms": -26.8,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 1.482
+  },
+  "voice-mission-complete": {
+   "fingerprint": "5c8af860c22d",
+   "peak": -15,
+   "rms": -26,
+   "worstPeak": -15,
+   "worstRms": -25.9,
+   "lowestPeak": -15.1,
+   "pre": -20.1,
+   "end": 1.543
+  },
+  "voice-ready-go": {
+   "fingerprint": "596292bc2d52",
+   "peak": -15,
+   "rms": -27.5,
+   "worstPeak": -15,
+   "worstRms": -27.5,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 2.046
+  },
+  "voice-retro-greetings": {
+   "fingerprint": "0f109f0c7dba",
+   "peak": -15,
+   "rms": -28.9,
+   "worstPeak": -15,
+   "worstRms": -28.9,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 3.864
+  },
+  "voice-robot-affirmative": {
+   "fingerprint": "bec7e0f3d869",
+   "peak": -15,
+   "rms": -31.5,
+   "worstPeak": -15,
+   "worstRms": -31.5,
+   "lowestPeak": -15.1,
+   "pre": -20.1,
+   "end": 2.748
+  },
+  "voice-robot-processing": {
+   "fingerprint": "92eb06ddd4e2",
+   "peak": -15,
+   "rms": -33.1,
+   "worstPeak": -15,
+   "worstRms": -30.4,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 2.087
+  },
+  "voice-system-online": {
+   "fingerprint": "79e53ff54c89",
+   "peak": -15,
+   "rms": -28.3,
+   "worstPeak": -15,
+   "worstRms": -28.2,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 1.641
+  },
+  "voice-warning": {
+   "fingerprint": "5ed8ae863ce2",
+   "peak": -15,
+   "rms": -26.8,
+   "worstPeak": -15,
+   "worstRms": -25.5,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 0.98
+  },
+  "voice-whisper-behind-you": {
+   "fingerprint": "413e96cebe6e",
+   "peak": -15,
+   "rms": -32.9,
+   "worstPeak": -15,
+   "worstRms": -31.7,
+   "lowestPeak": -15,
+   "pre": -20.1,
+   "end": 0.973
   }
  }
 }

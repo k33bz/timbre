@@ -2,7 +2,7 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 134,
+  "count": 153,
   "sounds": [
     {
       "id": "ui-checkbox",
@@ -2738,6 +2738,405 @@
         "level-up",
         "music"
       ]
+    },
+    {
+      "id": "voice-access-denied",
+      "name": "Access Denied",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "access",
+        "denied",
+        "error",
+        "security",
+        "locked",
+        "rejected"
+      ],
+      "desc": "A synthesized announcer says \"Access denied.\" with a firm falling close: for a locked door, a wrong password, a refused action.",
+      "dur": 3.2,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-access-granted",
+      "name": "Access Granted",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "access",
+        "granted",
+        "success",
+        "security",
+        "unlocked",
+        "approved"
+      ],
+      "desc": "A synthesized announcer says \"Access granted.\" for an unlocked door, an accepted password or an approved request.",
+      "dur": 3.3,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-babble-beep",
+      "name": "Robot Beep Babble",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "babble",
+        "talk",
+        "dialogue",
+        "robot",
+        "beep",
+        "chiptune",
+        "8-bit",
+        "retro"
+      ],
+      "desc": "Square-wave talk beeps on a pentatonic scale, a letter at a time: a robot or an 8-bit hero talking in a text box.",
+      "dur": 3.7,
+      "family": "voice",
+      "moments": [
+        "dialogue"
+      ]
+    },
+    {
+      "id": "voice-babble-cute",
+      "name": "Cute Babble",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "babble",
+        "talk",
+        "dialogue",
+        "cute",
+        "animal",
+        "villager",
+        "cozy",
+        "high"
+      ],
+      "desc": "Animalese-style talk: a high, quick blip for every letter of \"Oh, hi there! Are you new in town?\", with a question lilt at the end.",
+      "dur": 3.55,
+      "family": "voice",
+      "moments": [
+        "dialogue"
+      ]
+    },
+    {
+      "id": "voice-babble-elder",
+      "name": "Elder Babble",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "babble",
+        "talk",
+        "dialogue",
+        "elder",
+        "old",
+        "wise",
+        "sage",
+        "slow",
+        "breathy"
+      ],
+      "desc": "Slow, breathy, trembling talk syllables with a little room: a wise elder telling an old story.",
+      "dur": 4.65,
+      "family": "voice",
+      "moments": [
+        "dialogue"
+      ]
+    },
+    {
+      "id": "voice-babble-gruff",
+      "name": "Gruff Babble",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "babble",
+        "talk",
+        "dialogue",
+        "gruff",
+        "grumpy",
+        "low",
+        "rough",
+        "shopkeeper"
+      ],
+      "desc": "Low, slow, rough talk blips, a syllable at a time: a grumpy shopkeeper or a guard brushing you off.",
+      "dur": 3.9,
+      "family": "voice",
+      "moments": [
+        "dialogue"
+      ]
+    },
+    {
+      "id": "voice-babble-sprite",
+      "name": "Sprite Babble",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "babble",
+        "talk",
+        "dialogue",
+        "fairy",
+        "sprite",
+        "tiny",
+        "magic",
+        "squeaky"
+      ],
+      "desc": "A tiny, very fast, very high chatter: a fairy or a sprite talking, a blip per letter.",
+      "dur": 2.8,
+      "family": "voice",
+      "moments": [
+        "dialogue"
+      ]
+    },
+    {
+      "id": "voice-containment-breach",
+      "name": "Containment Breach",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "breach",
+        "evacuate",
+        "alarm",
+        "facility",
+        "lockdown",
+        "warning",
+        "sci-fi"
+      ],
+      "desc": "A facility PA voice says \"Containment breach. Evacuate the facility.\" To play with scifi-facility-klaxon in a lockdown.",
+      "dur": 6.1,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-countdown",
+      "name": "Countdown",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "countdown",
+        "three-two-one",
+        "start",
+        "launch",
+        "race"
+      ],
+      "desc": "A synthesized announcer counts down \"Three. Two. One.\" on a steady beat, for a launch, a race start or a timer.",
+      "dur": 6.9,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-game-over",
+      "name": "Game Over",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "game-over",
+        "defeat",
+        "lose",
+        "arcade",
+        "game"
+      ],
+      "desc": "A deep robot voice says \"Game over.\" with a slow falling close, for the end of a run.",
+      "dur": 2.65,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-level-complete",
+      "name": "Level Complete",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "level-complete",
+        "victory",
+        "stage-clear",
+        "win",
+        "game"
+      ],
+      "desc": "A synthesized announcer says \"Level complete.\" at the end of a stage.",
+      "dur": 3.1,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-mission-complete",
+      "name": "Mission Complete",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "mission",
+        "complete",
+        "victory",
+        "success",
+        "objective"
+      ],
+      "desc": "A synthesized announcer says \"Mission complete.\" when an objective is done.",
+      "dur": 3.1,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-ready-go",
+      "name": "Ready Go",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "ready",
+        "go",
+        "start",
+        "countdown",
+        "race",
+        "round"
+      ],
+      "desc": "A synthesized announcer says \"Ready... go!\" with a held breath between the words: the start of a round or a race.",
+      "dur": 3.65,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-retro-greetings",
+      "name": "Retro Computer",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "retro",
+        "computer",
+        "8-bit",
+        "loading",
+        "terminal",
+        "lo-fi"
+      ],
+      "desc": "A flat, buzzy home computer voice through an 8-bit converter says \"Greetings, user. Loading program. Please wait.\"",
+      "dur": 7.05,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-robot-affirmative",
+      "name": "Robot Affirmative",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "robot",
+        "affirmative",
+        "confirm",
+        "command",
+        "accepted",
+        "mech"
+      ],
+      "desc": "A deep metallic robot says \"Affirmative. Command accepted.\" for a confirmed order.",
+      "dur": 4.95,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-robot-processing",
+      "name": "Robot Processing",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "robot",
+        "processing",
+        "computer",
+        "beep",
+        "cute",
+        "loading"
+      ],
+      "desc": "A small bright robot says \"Beep boop. Processing request.\" in a tin-box voice: a helper bot thinking.",
+      "dur": 5.05,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-system-online",
+      "name": "System Online",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "system",
+        "online",
+        "boot",
+        "startup",
+        "power-up",
+        "ready"
+      ],
+      "desc": "A synthesized announcer says \"System online.\" for a boot, a power-up or a reconnect.",
+      "dur": 3.25,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-warning",
+      "name": "Warning",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "warning",
+        "alert",
+        "caution"
+      ],
+      "desc": "A synthesized announcer says \"Warning.\" through a PA horn into a hall: the classic computer voice of an alert.",
+      "dur": 2.55,
+      "family": "voice",
+      "moments": [
+        "announce"
+      ]
+    },
+    {
+      "id": "voice-whisper-behind-you",
+      "name": "Whisper Behind You",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "whisper",
+        "horror",
+        "eerie",
+        "creepy",
+        "ghost",
+        "scare"
+      ],
+      "desc": "A breathy whisper says \"Behind you...\" close to the ear: a horror sting.",
+      "dur": 3.35,
+      "family": "voice",
+      "moments": [
+        "scare"
+      ]
     }
   ],
   "themes": [
@@ -2814,7 +3213,8 @@
         "shoot",
         "explosion",
         "readout",
-        "scare"
+        "scare",
+        "dialogue"
       ]
     },
     {
@@ -3023,7 +3423,8 @@
         "scan",
         "scare",
         "ambience",
-        "music"
+        "music",
+        "announce"
       ]
     },
     {
