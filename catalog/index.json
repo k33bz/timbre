@@ -2,7 +2,7 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 133,
+  "count": 134,
   "sounds": [
     {
       "id": "ui-checkbox",
@@ -2146,6 +2146,31 @@
       "family": "synthetic",
       "moments": [
         "readout"
+      ]
+    },
+    {
+      "id": "scifi-facility-klaxon",
+      "name": "Facility Klaxon",
+      "category": "scifi",
+      "tags": [
+        "klaxon",
+        "alarm",
+        "alert",
+        "horn",
+        "siren",
+        "industrial",
+        "facility",
+        "lockdown",
+        "breach",
+        "warning",
+        "dystopian"
+      ],
+      "desc": "A raspy industrial alarm horn: buzzing blasts that swoop up into pitch and ring out in a concrete hall. For lockdowns, breaches and red alerts.",
+      "dur": 7,
+      "family": "synthetic",
+      "moments": [
+        "warning",
+        "scare"
       ]
     },
     {

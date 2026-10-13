@@ -2,7 +2,7 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 133,
+  "count": 134,
   "categories": [
     "ui",
     "notify",
@@ -38,7 +38,7 @@
   },
   "levels": {
     "source": "catalog/levels.json",
-    "measured": 133,
+    "measured": 134,
     "about": "Measured by gates/check_levels.mjs in dBFS after the master chain on a warm chain. peak and rms: at the defaults (the worst peak and the mean RMS of 3 seeds). worstPeak, worstRms and lowestPeak: over all 12 renders (the defaults and 3 random parameter sets, 3 seeds each). pre: the highest peak before the limiter over all renders. end: where the default render falls below -60 dBFS, in seconds."
   },
   "vocabulary": {
@@ -7840,6 +7840,95 @@
         "lowestPeak": -27.3,
         "pre": -30.2,
         "end": 0.615
+      }
+    },
+    {
+      "id": "scifi-facility-klaxon",
+      "name": "Facility Klaxon",
+      "category": "scifi",
+      "tags": [
+        "klaxon",
+        "alarm",
+        "alert",
+        "horn",
+        "siren",
+        "industrial",
+        "facility",
+        "lockdown",
+        "breach",
+        "warning",
+        "dystopian"
+      ],
+      "desc": "A raspy industrial alarm horn: buzzing blasts that swoop up into pitch and ring out in a concrete hall. For lockdowns, breaches and red alerts.",
+      "dur": 7,
+      "family": "synthetic",
+      "moments": [
+        "warning",
+        "scare"
+      ],
+      "params": {
+        "pitch": {
+          "min": 180,
+          "max": 420,
+          "def": 290,
+          "unit": "Hz",
+          "desc": "Horn note each blast swoops up into: low a heavy facility horn, high a thinner buzzer"
+        },
+        "pulses": {
+          "min": 1,
+          "max": 4,
+          "def": 3,
+          "step": 1,
+          "desc": "How many blasts sound"
+        },
+        "length": {
+          "min": 0.3,
+          "max": 0.9,
+          "def": 0.55,
+          "unit": "s",
+          "desc": "Length of each blast; the breath between blasts stays the same"
+        },
+        "rasp": {
+          "min": 0,
+          "max": 1,
+          "def": 0.6,
+          "desc": "Mechanical buzz and distortion: 0 a clean horn, 1 a ragged, rattling one"
+        },
+        "space": {
+          "min": 0,
+          "max": 1,
+          "def": 0.5,
+          "desc": "How much of the concrete hall rings after each blast"
+        }
+      },
+      "file": "src/sounds/scifi/scifi-facility-klaxon.js",
+      "play": "function (T, out, t, p) {\n  const room = T.reverb(out, t, { time: 1.8, mix: 0.12 + 0.38 * p.space, tone: 0.35, pre: 0.02 });\n  // the horn's nasal honk, then a lowpass so the drive's fizz stays out of the top end\n  const honk = T.filter(room, t, { type: 'peaking', f: 1150, q: 1.3, db: 6 });\n  const lp = T.filter(honk, t, { type: 'lowpass', f: 3200, q: 0.6 });\n  // ref sets the horn's loudness: the drive never passes more than about this, whatever the rasp\n  const rasp = T.drive(lp, t, { amount: 0.35 + 0.55 * p.rasp, ref: 0.045 });\n  const hp = T.filter(rasp, t, { type: 'highpass', f: 70, q: 0.7 });\n  const n = Math.round(p.pulses), gap = 0.3;\n  const rattle = { rate: 46, depth: 0.15 + 0.5 * p.rasp };\n  for (let k = 0; k < n; k++) {\n    const at = t + k * (p.length + gap);\n    // the swoop: up from about a minor third below over the first third, then a slight sag\n    const env = { dur: p.length, a: 0.025, d: 0.06, s: 0.9, r: 0.07, glide: p.length * 0.35 };\n    for (const det of [-9, 9]) {\n      T.osc(hp, at, { ...env, type: 'sawtooth', f: p.pitch * 0.82, to: p.pitch, detune: det, peak: 0.05, trem: rattle });\n    }\n    T.osc(hp, at, { ...env, type: 'square', f: p.pitch * 0.41, to: p.pitch * 0.5, peak: 0.035, trem: rattle });\n  }\n}",
+      "uses": [
+        "reverb",
+        "filter",
+        "drive",
+        "osc"
+      ],
+      "helpers": [
+        "rand",
+        "reverb",
+        "glide",
+        "filter",
+        "drive",
+        "env",
+        "osc",
+        "seed",
+        "master"
+      ],
+      "fingerprint": "6a8665becc27",
+      "levels": {
+        "peak": -14.1,
+        "rms": -28,
+        "worstPeak": -13.4,
+        "worstRms": -26,
+        "lowestPeak": -17.1,
+        "pre": -18.2,
+        "end": 3.418
       }
     },
     {
