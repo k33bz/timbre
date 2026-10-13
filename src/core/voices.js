@@ -155,9 +155,15 @@ export function pluck(out, t, o) {
   const fr = D - N;
   const fb = Math.pow(0.001, 1 / (f * dur)); // -60 dB after dur seconds
   const ex = Math.min(len, Math.round(P));
+  // the excitation: one period of seeded noise with its mean removed (the loop passes DC almost
+  // untouched, so a short burst's random offset would otherwise ride under the whole note)
+  let mean = 0;
+  for (let i = 0; i < ex; i++) { y[i] = rand() * 2 - 1; mean += y[i]; }
+  mean /= ex;
+  for (let i = 0; i < ex; i++) y[i] -= mean;
   let pk = 0;
   for (let i = 0; i < len; i++) {
-    let v = i < ex ? rand() * 2 - 1 : 0;
+    let v = y[i];
     if (i - N - 2 >= 0) {
       const d0 = y[i - N] + (y[i - N - 1] - y[i - N]) * fr;
       const d1 = y[i - N - 1] + (y[i - N - 2] - y[i - N - 1]) * fr;
