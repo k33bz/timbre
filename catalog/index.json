@@ -1,8 +1,68 @@
 {
   "name": "Timbre",
   "schema": 1,
-  "count": 10,
+  "count": 133,
   "sounds": [
+    {
+      "id": "ui-checkbox",
+      "name": "Checkbox",
+      "category": "ui",
+      "tags": [
+        "checkbox",
+        "check",
+        "uncheck",
+        "select",
+        "tick",
+        "soft"
+      ],
+      "desc": "A bright two-note pluck when a box is checked and a short muted drop when it is cleared.",
+      "dur": 0.17
+    },
+    {
+      "id": "ui-click-crisp",
+      "name": "Crisp Click",
+      "category": "ui",
+      "tags": [
+        "click",
+        "button",
+        "press",
+        "snap",
+        "mouse",
+        "mechanical"
+      ],
+      "desc": "A dry, snappy click for primary buttons: a bandpassed noise transient over a stiff triangle tick, gone in 30 ms.",
+      "dur": 0.04
+    },
+    {
+      "id": "ui-click-deep",
+      "name": "Deep Click",
+      "category": "ui",
+      "tags": [
+        "click",
+        "button",
+        "press",
+        "thock",
+        "low",
+        "soft"
+      ],
+      "desc": "A low, padded thock for heavy buttons and primary actions: a falling sine body with a soft knock on top.",
+      "dur": 0.16
+    },
+    {
+      "id": "ui-click-glass",
+      "name": "Glass Click",
+      "category": "ui",
+      "tags": [
+        "click",
+        "button",
+        "press",
+        "ting",
+        "glass",
+        "bright"
+      ],
+      "desc": "A bright, glassy tick for buttons: a few high inharmonic partials with a short ring, light and clean.",
+      "dur": 0.21
+    },
     {
       "id": "ui-click-soft",
       "name": "Soft Click",
@@ -12,10 +72,278 @@
         "button",
         "tap",
         "tick",
-        "press"
+        "press",
+        "soft"
       ],
       "desc": "A short muted tick for button presses: a falling sine blip with a breath of high noise.",
       "dur": 0.08
+    },
+    {
+      "id": "ui-click-wood",
+      "name": "Wooden Click",
+      "category": "ui",
+      "tags": [
+        "click",
+        "button",
+        "press",
+        "knock",
+        "tap",
+        "wood"
+      ],
+      "desc": "A warm wooden knock for buttons: a short damped block tone with a dull knuckle thud, calm enough to repeat all day.",
+      "dur": 0.15
+    },
+    {
+      "id": "ui-copy",
+      "name": "Copy to Clipboard",
+      "category": "ui",
+      "tags": [
+        "copy",
+        "clipboard",
+        "duplicate",
+        "confirm",
+        "ping",
+        "glass"
+      ],
+      "desc": "A quick rising scoop and a bright ping to confirm a copy to the clipboard.",
+      "dur": 0.3
+    },
+    {
+      "id": "ui-delete",
+      "name": "Delete to Trash",
+      "category": "ui",
+      "tags": [
+        "delete",
+        "trash",
+        "remove",
+        "bin",
+        "crumple",
+        "discard",
+        "air"
+      ],
+      "desc": "A short paper crumple that drops into a bin with a dull thud, for deleting or discarding an item.",
+      "dur": 0.27
+    },
+    {
+      "id": "ui-drag-drop",
+      "name": "Drag Drop",
+      "category": "ui",
+      "tags": [
+        "drop",
+        "drag",
+        "place",
+        "land",
+        "drag-end",
+        "thud",
+        "wood"
+      ],
+      "desc": "A soft landing thud for dropping an item on its target, with an optional small bounce as it settles.",
+      "dur": 0.14
+    },
+    {
+      "id": "ui-drag-pickup",
+      "name": "Drag Pickup",
+      "category": "ui",
+      "tags": [
+        "drag",
+        "grab",
+        "pickup",
+        "lift",
+        "drag-start",
+        "air"
+      ],
+      "desc": "A soft lift for grabbing an item to drag: a small grip tick and a short rising breath.",
+      "dur": 0.12
+    },
+    {
+      "id": "ui-expand",
+      "name": "Expand and Collapse",
+      "category": "ui",
+      "tags": [
+        "expand",
+        "collapse",
+        "accordion",
+        "disclosure",
+        "unfold",
+        "section",
+        "soft"
+      ],
+      "desc": "A quick stepped run of soft blips: rising when a section expands, falling and a touch quieter when it collapses.",
+      "dur": 0.26
+    },
+    {
+      "id": "ui-focus-ring",
+      "name": "Focus Ring",
+      "category": "ui",
+      "tags": [
+        "focus",
+        "tab",
+        "keyboard",
+        "navigate",
+        "accessibility",
+        "ring",
+        "glass"
+      ],
+      "desc": "A soft pip with a few fading echoes for keyboard focus landing on a control, like a ring spreading outward.",
+      "dur": 0.4
+    },
+    {
+      "id": "ui-hover-tick",
+      "name": "Hover Tick",
+      "category": "ui",
+      "tags": [
+        "hover",
+        "pointer",
+        "mouseover",
+        "tick",
+        "cursor",
+        "glass"
+      ],
+      "desc": "A barely-there high tick for the pointer entering a button or row. Very quiet, meant to repeat.",
+      "dur": 0.03
+    },
+    {
+      "id": "ui-key-light",
+      "name": "Light Keypress",
+      "category": "ui",
+      "tags": [
+        "keypress",
+        "key",
+        "typing",
+        "keyboard",
+        "type",
+        "wood"
+      ],
+      "desc": "A light, quiet keypress for typing: a soft thump and tap that varies a little each press; size reaches the spacebar.",
+      "dur": 0.08
+    },
+    {
+      "id": "ui-key-mechanical",
+      "name": "Mechanical Keypress",
+      "category": "ui",
+      "tags": [
+        "keypress",
+        "key",
+        "typing",
+        "keyboard",
+        "switch",
+        "clicky",
+        "mechanical"
+      ],
+      "desc": "A mechanical keyboard keypress: a bright click, a bottom-out thock and a faint release tick, different every time.",
+      "dur": 0.11
+    },
+    {
+      "id": "ui-menu-slide",
+      "name": "Menu Slide",
+      "category": "ui",
+      "tags": [
+        "menu",
+        "drawer",
+        "dropdown",
+        "sidebar",
+        "panel",
+        "open",
+        "close",
+        "slide",
+        "air"
+      ],
+      "desc": "An airy slide for a menu or drawer opening (rising, soft landing) and closing (falling, latch tick); size runs from dropdown to drawer.",
+      "dur": 0.34
+    },
+    {
+      "id": "ui-modal",
+      "name": "Modal Open and Close",
+      "category": "ui",
+      "tags": [
+        "modal",
+        "dialog",
+        "popup",
+        "overlay",
+        "open",
+        "close",
+        "sheet",
+        "soft"
+      ],
+      "desc": "A soft low swell for a dialog opening, with a small glint on arrival, and a quick falling sigh for it closing.",
+      "dur": 0.23
+    },
+    {
+      "id": "ui-page-turn",
+      "name": "Page Turn",
+      "category": "ui",
+      "tags": [
+        "page",
+        "turn",
+        "paper",
+        "next",
+        "book",
+        "swipe",
+        "air"
+      ],
+      "desc": "A paper page turned: a soft sweep of air, light rustles and a quiet landing. For pagers, carousels and readers.",
+      "dur": 0.35
+    },
+    {
+      "id": "ui-radio-select",
+      "name": "Radio Select",
+      "category": "ui",
+      "tags": [
+        "radio",
+        "select",
+        "choose",
+        "option",
+        "bloop",
+        "soft"
+      ],
+      "desc": "A soft rounded bloop for picking one option from a group: a sine that bends upward over a quiet low body.",
+      "dur": 0.1
+    },
+    {
+      "id": "ui-scroll-detent",
+      "name": "Scroll Detent",
+      "category": "ui",
+      "tags": [
+        "scroll",
+        "detent",
+        "notch",
+        "wheel",
+        "ratchet",
+        "picker",
+        "wood"
+      ],
+      "desc": "A tiny dry wooden tick for one notch of a scroll wheel or picker; raise ticks for a quick flick through several.",
+      "dur": 0.32
+    },
+    {
+      "id": "ui-slider-detent",
+      "name": "Slider Detent",
+      "category": "ui",
+      "tags": [
+        "slider",
+        "detent",
+        "notch",
+        "stop",
+        "tick",
+        "mechanical"
+      ],
+      "desc": "A small pitched tick for a slider thumb crossing a notch; set pos from the thumb position and a drag climbs a scale.",
+      "dur": 0.04
+    },
+    {
+      "id": "ui-tap",
+      "name": "Tap",
+      "category": "ui",
+      "tags": [
+        "tap",
+        "touch",
+        "finger",
+        "press",
+        "row",
+        "soft"
+      ],
+      "desc": "A soft fingertip tap for touch screens and list rows: a muffled pat over a short mid thud, rounder than a click.",
+      "dur": 0.06
     },
     {
       "id": "ui-toggle-switch",
@@ -27,10 +355,122 @@
         "checkbox",
         "on",
         "off",
-        "click"
+        "click",
+        "mechanical"
       ],
       "desc": "A two-stage click-clack for switches: rising when turned on, falling when turned off.",
       "dur": 0.25
+    },
+    {
+      "id": "ui-tooltip-pop",
+      "name": "Tooltip Pop",
+      "category": "ui",
+      "tags": [
+        "tooltip",
+        "popover",
+        "hint",
+        "pop",
+        "bubble",
+        "appear",
+        "glass"
+      ],
+      "desc": "A tiny glassy bubble pop for a tooltip or popover appearing: a bright pip that bends up and settles.",
+      "dur": 0.08
+    },
+    {
+      "id": "ui-undo",
+      "name": "Undo",
+      "category": "ui",
+      "tags": [
+        "undo",
+        "revert",
+        "rewind",
+        "back",
+        "restore",
+        "soft"
+      ],
+      "desc": "A short rewind flutter that falls and settles with a soft tick, for undoing the last action.",
+      "dur": 0.22
+    },
+    {
+      "id": "notify-achievement",
+      "name": "Achievement Unlocked",
+      "category": "notify",
+      "tags": [
+        "achievement",
+        "unlock",
+        "reward",
+        "trophy",
+        "level-up",
+        "fanfare",
+        "win"
+      ],
+      "desc": "A quick rising run into a warm bell chord with a few glints. A small celebration for something earned.",
+      "dur": 1.5
+    },
+    {
+      "id": "notify-alarm",
+      "name": "Gentle Alarm",
+      "category": "notify",
+      "tags": [
+        "alarm",
+        "wake",
+        "timer",
+        "beep",
+        "gentle",
+        "morning",
+        "swell"
+      ],
+      "desc": "Soft rounded beeps in rising pairs that swell round by round. Wakes you without startling you.",
+      "dur": 2.3
+    },
+    {
+      "id": "notify-calendar",
+      "name": "Calendar Event",
+      "category": "notify",
+      "tags": [
+        "calendar",
+        "event",
+        "meeting",
+        "schedule",
+        "agenda",
+        "pluck",
+        "appointment"
+      ],
+      "desc": "A tiny page-flip tick and two soft plucked notes rising a fourth. An event is starting; warm and organized, not urgent.",
+      "dur": 0.8
+    },
+    {
+      "id": "notify-double-tap",
+      "name": "Attention Double Tap",
+      "category": "notify",
+      "tags": [
+        "tap",
+        "knock",
+        "double",
+        "attention",
+        "nudge",
+        "soft",
+        "wood"
+      ],
+      "desc": "Two soft wooden knocks, each a touch lower and quieter. A gentle \"excuse me\" that is barely a sound.",
+      "dur": 0.55
+    },
+    {
+      "id": "notify-download-done",
+      "name": "Download Complete",
+      "category": "notify",
+      "tags": [
+        "download",
+        "done",
+        "complete",
+        "finished",
+        "drop",
+        "success",
+        "saved"
+      ],
+      "desc": "A soft downward glide that settles with a gentle thump and a small ting. The file is in place.",
+      "dur": 0.8
     },
     {
       "id": "notify-error-buzz",
@@ -48,6 +488,134 @@
       "dur": 0.45
     },
     {
+      "id": "notify-incoming-call",
+      "name": "Incoming Call Ring",
+      "category": "notify",
+      "tags": [
+        "call",
+        "ring",
+        "phone",
+        "incoming",
+        "telephone",
+        "trill",
+        "ringtone"
+      ],
+      "desc": "A short bell-like phone ring: bursts of fast alternating notes with a pause between. Loops cleanly if you repeat it.",
+      "dur": 2
+    },
+    {
+      "id": "notify-info",
+      "name": "Info Ping",
+      "category": "notify",
+      "tags": [
+        "info",
+        "notice",
+        "ping",
+        "neutral",
+        "heads-up",
+        "bell",
+        "fyi"
+      ],
+      "desc": "One soft bell tap for neutral news: nothing wrong and nothing won, just a heads-up. Made to be heard all day.",
+      "dur": 0.8
+    },
+    {
+      "id": "notify-low-battery",
+      "name": "Low Battery",
+      "category": "notify",
+      "tags": [
+        "battery",
+        "low",
+        "power",
+        "drain",
+        "warning",
+        "falling",
+        "charge"
+      ],
+      "desc": "Three slow falling notes under a closing filter, the last one sagging. Power is running out.",
+      "dur": 1.4
+    },
+    {
+      "id": "notify-mention",
+      "name": "Mention Ping",
+      "category": "notify",
+      "tags": [
+        "mention",
+        "ping",
+        "at",
+        "tag",
+        "highlight",
+        "ding",
+        "attention"
+      ],
+      "desc": "A quick grace note into a glassy bell ting with a soft echo. Stands out from ordinary messages without shouting.",
+      "dur": 1.2
+    },
+    {
+      "id": "notify-message-in",
+      "name": "Message Received",
+      "category": "notify",
+      "tags": [
+        "message",
+        "chat",
+        "received",
+        "incoming",
+        "dm",
+        "pop",
+        "bubble"
+      ],
+      "desc": "Two quick bubbly pops rising a fourth, like a chat bubble arriving. Friendly and short enough for a busy channel.",
+      "dur": 0.4
+    },
+    {
+      "id": "notify-message-out",
+      "name": "Message Sent",
+      "category": "notify",
+      "tags": [
+        "message",
+        "send",
+        "sent",
+        "whoosh",
+        "blip",
+        "outgoing",
+        "post"
+      ],
+      "desc": "A soft rising whoosh into a tiny blip: your message is on its way. Quiet enough to play on every send.",
+      "dur": 0.35
+    },
+    {
+      "id": "notify-new-mail",
+      "name": "New Mail",
+      "category": "notify",
+      "tags": [
+        "mail",
+        "email",
+        "inbox",
+        "new",
+        "letter",
+        "ding",
+        "incoming"
+      ],
+      "desc": "A soft falling swish into a short-long two-bell \"tu-ding\". A letter has landed in the inbox.",
+      "dur": 0.95
+    },
+    {
+      "id": "notify-reminder",
+      "name": "Reminder Chime",
+      "category": "notify",
+      "tags": [
+        "reminder",
+        "chime",
+        "ding-dong",
+        "doorbell",
+        "due",
+        "nudge",
+        "bell"
+      ],
+      "desc": "A soft two-bell \"ding-dong\" with a little room around it. A polite nudge that something is due.",
+      "dur": 1.6
+    },
+    {
       "id": "notify-success-chime",
       "name": "Success Chime",
       "category": "notify",
@@ -63,6 +631,120 @@
       "dur": 0.5
     },
     {
+      "id": "notify-sync-done",
+      "name": "Sync Done",
+      "category": "notify",
+      "tags": [
+        "sync",
+        "done",
+        "complete",
+        "refresh",
+        "backup",
+        "success",
+        "cycle"
+      ],
+      "desc": "A quick back-and-forth of two notes that settles on the octave. Everything is in step again.",
+      "dur": 1.1
+    },
+    {
+      "id": "notify-task-failed",
+      "name": "Task Failed",
+      "category": "notify",
+      "tags": [
+        "fail",
+        "failed",
+        "error",
+        "task",
+        "build",
+        "broken",
+        "negative"
+      ],
+      "desc": "A run of low falling buzzes that sags on the last one. Something you were waiting on did not work out; firm, not harsh.",
+      "dur": 0.85
+    },
+    {
+      "id": "notify-upload-done",
+      "name": "Upload Complete",
+      "category": "notify",
+      "tags": [
+        "upload",
+        "done",
+        "complete",
+        "finished",
+        "rise",
+        "success",
+        "cloud"
+      ],
+      "desc": "A soft upward glide that lands on a bright chime note. The file has arrived.",
+      "dur": 0.75
+    },
+    {
+      "id": "notify-warning",
+      "name": "Warning Tone",
+      "category": "notify",
+      "tags": [
+        "warning",
+        "caution",
+        "alert",
+        "uh-oh",
+        "attention",
+        "careful"
+      ],
+      "desc": "A two-note falling \"uh-oh\" in a round triangle tone. Cautions without scolding; milder than the error buzz.",
+      "dur": 0.65
+    },
+    {
+      "id": "game-arrow-shot",
+      "name": "Arrow Shot",
+      "category": "game",
+      "tags": [
+        "arrow",
+        "bow",
+        "shot",
+        "shoot",
+        "twang",
+        "archer",
+        "ranged",
+        "projectile"
+      ],
+      "desc": "A bowstring twang and the zip of an arrow leaving. For archers and ranged attacks.",
+      "dur": 0.55
+    },
+    {
+      "id": "game-bounce",
+      "name": "Bounce",
+      "category": "game",
+      "tags": [
+        "bounce",
+        "boing",
+        "spring",
+        "rubber",
+        "ball",
+        "trampoline",
+        "jump-pad",
+        "cartoon"
+      ],
+      "desc": "A rubbery boing: a quick spring up, then a wobble that settles. For jump pads, springs and balls.",
+      "dur": 0.66
+    },
+    {
+      "id": "game-checkpoint",
+      "name": "Checkpoint",
+      "category": "game",
+      "tags": [
+        "checkpoint",
+        "save",
+        "flag",
+        "respawn",
+        "progress",
+        "reached",
+        "banner",
+        "chime"
+      ],
+      "desc": "A soft thump and three bells fanning up that ring together: progress saved. Warmer than a success chime.",
+      "dur": 1.17
+    },
+    {
       "id": "game-coin-flip",
       "name": "Coin Flip",
       "category": "game",
@@ -76,6 +758,144 @@
       ],
       "desc": "A coin spun into the air: rising ticks as it turns, then a bright ping when it lands.",
       "dur": 1.5
+    },
+    {
+      "id": "game-combo-ping",
+      "name": "Combo Ping",
+      "category": "game",
+      "tags": [
+        "combo",
+        "streak",
+        "chain",
+        "multiplier",
+        "ping",
+        "score",
+        "hit-streak",
+        "arcade"
+      ],
+      "desc": "A short bright ping that rises one scale step per streak count, so a combo plays a rising tune. Chip makes it a square ping.",
+      "dur": 0.52
+    },
+    {
+      "id": "game-countdown-beep",
+      "name": "Countdown Beep",
+      "category": "game",
+      "tags": [
+        "countdown",
+        "beep",
+        "timer",
+        "start",
+        "go",
+        "race",
+        "ready",
+        "8-bit",
+        "chiptune"
+      ],
+      "desc": "The beep for 3, 2, 1 in a race or round start; turn Go on for the longer, higher start tone.",
+      "dur": 0.62
+    },
+    {
+      "id": "game-door-open",
+      "name": "Door Open",
+      "category": "game",
+      "tags": [
+        "door",
+        "open",
+        "creak",
+        "hinge",
+        "latch",
+        "wood",
+        "squeak",
+        "entrance"
+      ],
+      "desc": "A latch clicks and a wooden hinge creaks open. Use a short length for a quick door, long for a spooky one.",
+      "dur": 1.1
+    },
+    {
+      "id": "game-double-jump",
+      "name": "Double Jump",
+      "category": "game",
+      "tags": [
+        "double-jump",
+        "jump",
+        "flip",
+        "air",
+        "platformer",
+        "8-bit",
+        "chiptune",
+        "retro"
+      ],
+      "desc": "Two hops in a row, the second higher and quicker, for a mid-air jump. Chip is square; off is soft triangle.",
+      "dur": 0.34
+    },
+    {
+      "id": "game-explosion-soft",
+      "name": "Explosion Soft",
+      "category": "game",
+      "tags": [
+        "explosion",
+        "boom",
+        "blast",
+        "bomb",
+        "cartoon",
+        "poof",
+        "burst",
+        "detonate"
+      ],
+      "desc": "A big but friendly boom: a round blast with a pop on the front and crackles after. Cartoon, not harsh.",
+      "dur": 1.05
+    },
+    {
+      "id": "game-footstep-hard",
+      "name": "Footstep Hard",
+      "category": "game",
+      "tags": [
+        "footstep",
+        "step",
+        "walk",
+        "run",
+        "stone",
+        "wood",
+        "floor",
+        "heel",
+        "hard"
+      ],
+      "desc": "A step on wood, tile or stone: a crisp tap with a knock under it. Use Vary for a walking rhythm.",
+      "dur": 0.2
+    },
+    {
+      "id": "game-footstep-soft",
+      "name": "Footstep Soft",
+      "category": "game",
+      "tags": [
+        "footstep",
+        "step",
+        "walk",
+        "run",
+        "grass",
+        "carpet",
+        "sand",
+        "soft"
+      ],
+      "desc": "A quiet step on carpet, grass or sand. Use Vary so a walk never repeats exactly.",
+      "dur": 0.22
+    },
+    {
+      "id": "game-gem-collect",
+      "name": "Gem Collect",
+      "category": "game",
+      "tags": [
+        "gem",
+        "crystal",
+        "jewel",
+        "collect",
+        "treasure",
+        "glass",
+        "sparkle",
+        "reward"
+      ],
+      "desc": "A crystalline two-strike ring for a gem or treasure: bright, glassy and a little longer than a coin.",
+      "dur": 0.95
     },
     {
       "id": "game-hammer-hit",
@@ -94,6 +914,229 @@
       "dur": 0.95
     },
     {
+      "id": "game-heal",
+      "name": "Heal",
+      "category": "game",
+      "tags": [
+        "heal",
+        "health",
+        "restore",
+        "regen",
+        "recover",
+        "potion",
+        "warm",
+        "soft"
+      ],
+      "desc": "A warm rising swell with a soft glow on top, for health restored. Gentle by design; it can repeat.",
+      "dur": 0.95
+    },
+    {
+      "id": "game-hit-heavy",
+      "name": "Hit Heavy",
+      "category": "game",
+      "tags": [
+        "hit",
+        "heavy",
+        "slam",
+        "smash",
+        "boss",
+        "impact",
+        "thump",
+        "crit",
+        "combat"
+      ],
+      "desc": "A heavy blow landing: deep sub, a body of rumble and a hard crack. For bosses, crits and slams.",
+      "dur": 0.78
+    },
+    {
+      "id": "game-hit-light",
+      "name": "Hit Light",
+      "category": "game",
+      "tags": [
+        "hit",
+        "light",
+        "tap",
+        "slap",
+        "combat",
+        "impact",
+        "strike",
+        "attack"
+      ],
+      "desc": "A quick, light strike landing: a short knock with a crisp crack. Small enough to chain in a fight.",
+      "dur": 0.16
+    },
+    {
+      "id": "game-hurt",
+      "name": "Hurt",
+      "category": "game",
+      "tags": [
+        "hurt",
+        "damage",
+        "ouch",
+        "hit",
+        "pain",
+        "player",
+        "8-bit",
+        "chiptune",
+        "retro"
+      ],
+      "desc": "A falling, wobbling \"ow\" with a crunch on the hit, for the player taking damage. Chip is square; off is a softer saw.",
+      "dur": 0.32
+    },
+    {
+      "id": "game-jump",
+      "name": "Jump",
+      "category": "game",
+      "tags": [
+        "jump",
+        "hop",
+        "platformer",
+        "player",
+        "8-bit",
+        "chiptune",
+        "retro"
+      ],
+      "desc": "The classic platformer hop: a quick rising sweep. Chip is a stepped square wave; off is a soft triangle.",
+      "dur": 0.27
+    },
+    {
+      "id": "game-key-unlock",
+      "name": "Key Unlock",
+      "category": "game",
+      "tags": [
+        "key",
+        "unlock",
+        "lock",
+        "door",
+        "chest",
+        "jingle",
+        "clunk",
+        "latch"
+      ],
+      "desc": "A key jingles, turns and the lock gives: tiny metal ticks, a bolt clunk and a small ding.",
+      "dur": 0.85
+    },
+    {
+      "id": "game-land",
+      "name": "Land",
+      "category": "game",
+      "tags": [
+        "land",
+        "landing",
+        "thud",
+        "fall",
+        "step",
+        "platformer",
+        "impact"
+      ],
+      "desc": "A character landing after a jump or fall: a soft thump with a scuff of grit. Heavier settings hit longer.",
+      "dur": 0.3
+    },
+    {
+      "id": "game-pickup-item",
+      "name": "Pickup Item",
+      "category": "game",
+      "tags": [
+        "pickup",
+        "item",
+        "grab",
+        "collect",
+        "loot",
+        "blip",
+        "pop",
+        "inventory"
+      ],
+      "desc": "A soft two-note blip for picking up an item. Quiet enough to repeat. Chip switches to square notes.",
+      "dur": 0.25
+    },
+    {
+      "id": "game-power-up",
+      "name": "Power Up",
+      "category": "game",
+      "tags": [
+        "power-up",
+        "powerup",
+        "upgrade",
+        "level-up",
+        "bonus",
+        "boost",
+        "8-bit",
+        "chiptune",
+        "retro"
+      ],
+      "desc": "A quick rising scale that lands on a held note: you got stronger. Chip is square; off is soft triangle.",
+      "dur": 0.72
+    },
+    {
+      "id": "game-punch",
+      "name": "Punch",
+      "category": "game",
+      "tags": [
+        "punch",
+        "fist",
+        "hit",
+        "smack",
+        "brawler",
+        "fight",
+        "combat",
+        "impact"
+      ],
+      "desc": "A fist landing with a thump and a smack. Up to three in a flurry, each slightly softer.",
+      "dur": 0.46
+    },
+    {
+      "id": "game-shield-up",
+      "name": "Shield Up",
+      "category": "game",
+      "tags": [
+        "shield",
+        "barrier",
+        "defend",
+        "guard",
+        "charge",
+        "activate",
+        "energy",
+        "buff"
+      ],
+      "desc": "An energy field charging up: a humming rise that opens and locks in with a ping. For shields and buffs.",
+      "dur": 0.95
+    },
+    {
+      "id": "game-sword-clash",
+      "name": "Sword Clash",
+      "category": "game",
+      "tags": [
+        "sword",
+        "clash",
+        "clang",
+        "parry",
+        "block",
+        "steel",
+        "metal",
+        "blades",
+        "duel"
+      ],
+      "desc": "Steel meeting steel: a hard clang that rings, with an optional scrape. For parries and duels.",
+      "dur": 1
+    },
+    {
+      "id": "game-sword-swing",
+      "name": "Sword Swing",
+      "category": "game",
+      "tags": [
+        "sword",
+        "swing",
+        "slash",
+        "blade",
+        "swish",
+        "melee",
+        "attack",
+        "whoosh"
+      ],
+      "desc": "A blade cutting the air: a quick bright swish with a thin edge of steel. Sharper than the generic whoosh.",
+      "dur": 0.38
+    },
+    {
       "id": "game-whoosh",
       "name": "Whoosh",
       "category": "game",
@@ -108,6 +1151,162 @@
       ],
       "desc": "Air rushing past: a swing, a dash, or a panel sliding across the screen.",
       "dur": 0.62
+    },
+    {
+      "id": "cards-chip-click",
+      "name": "Chip Click",
+      "category": "cards",
+      "tags": [
+        "chip",
+        "poker",
+        "click",
+        "clay",
+        "bet",
+        "casino",
+        "tap"
+      ],
+      "desc": "A single poker chip clicked down: a crisp clay tick with a short ring and a hint of felt underneath.",
+      "dur": 0.12
+    },
+    {
+      "id": "cards-chip-stack",
+      "name": "Chip Stack",
+      "category": "cards",
+      "tags": [
+        "chip",
+        "poker",
+        "stack",
+        "pile",
+        "bet",
+        "casino",
+        "count"
+      ],
+      "desc": "Poker chips stacked one by one: uneven clay clicks climbing a little as the stack grows.",
+      "dur": 0.8
+    },
+    {
+      "id": "cards-chips-push",
+      "name": "Chips Push All-In",
+      "category": "cards",
+      "tags": [
+        "chip",
+        "poker",
+        "all-in",
+        "push",
+        "bet",
+        "shove",
+        "pot",
+        "casino"
+      ],
+      "desc": "A pile of chips pushed forward for an all-in: a swelling rattle of clay clicks that ends in a thud and a few settling chips.",
+      "dur": 1.27
+    },
+    {
+      "id": "cards-deal",
+      "name": "Card Deal",
+      "category": "cards",
+      "tags": [
+        "card",
+        "deal",
+        "skim",
+        "felt",
+        "table",
+        "toss"
+      ],
+      "desc": "One card dealt across the table: a flick off the deck, a soft skim over felt and a quiet landing.",
+      "dur": 0.39
+    },
+    {
+      "id": "cards-deal-hand",
+      "name": "Deal a Hand",
+      "category": "cards",
+      "tags": [
+        "card",
+        "deal",
+        "hand",
+        "round",
+        "seats",
+        "start"
+      ],
+      "desc": "A hand dealt round the table, one card per seat, each landing a little differently.",
+      "dur": 1.47
+    },
+    {
+      "id": "cards-dice-roll",
+      "name": "Dice Roll",
+      "category": "cards",
+      "tags": [
+        "dice",
+        "roll",
+        "throw",
+        "bounce",
+        "land",
+        "table",
+        "board-game"
+      ],
+      "desc": "A die thrown and tumbling to rest: bounces that close up and soften, then a last rocking tick.",
+      "dur": 1.04
+    },
+    {
+      "id": "cards-dice-shake",
+      "name": "Dice Shake",
+      "category": "cards",
+      "tags": [
+        "dice",
+        "shake",
+        "rattle",
+        "cup",
+        "roll",
+        "craps",
+        "board-game"
+      ],
+      "desc": "Dice shaken in a cup: bursts of hard little clacks at each stroke, swelling and fading.",
+      "dur": 1
+    },
+    {
+      "id": "cards-discard",
+      "name": "Card Discard",
+      "category": "cards",
+      "tags": [
+        "card",
+        "discard",
+        "toss",
+        "pile",
+        "throw-away",
+        "muck"
+      ],
+      "desc": "A card tossed onto the discard pile: a flick, a short flight and a papery landing on the stack.",
+      "dur": 0.23
+    },
+    {
+      "id": "cards-draw",
+      "name": "Card Draw",
+      "category": "cards",
+      "tags": [
+        "card",
+        "draw",
+        "pull",
+        "deck",
+        "top",
+        "pick-up"
+      ],
+      "desc": "A card drawn off the top of the deck: a rising paper rub that ends in a small snap as it comes free.",
+      "dur": 0.27
+    },
+    {
+      "id": "cards-fan",
+      "name": "Fan Out Hand",
+      "category": "cards",
+      "tags": [
+        "card",
+        "fan",
+        "spread",
+        "hand",
+        "ratchet",
+        "show"
+      ],
+      "desc": "A hand of cards fanned open: a quick climbing ratchet of paper ticks over a breath of air.",
+      "dur": 0.57
     },
     {
       "id": "cards-flick",
@@ -125,6 +1324,71 @@
       "dur": 0.65
     },
     {
+      "id": "cards-flip",
+      "name": "Card Flip",
+      "category": "cards",
+      "tags": [
+        "card",
+        "flip",
+        "turn",
+        "reveal",
+        "face-up",
+        "show"
+      ],
+      "desc": "A card turned face up: a small scrape, a crisp snap at the turn and a light landing.",
+      "dur": 0.32
+    },
+    {
+      "id": "cards-piece-capture",
+      "name": "Piece Capture",
+      "category": "cards",
+      "tags": [
+        "board",
+        "piece",
+        "capture",
+        "take",
+        "knock",
+        "wood",
+        "chess",
+        "hit"
+      ],
+      "desc": "One wooden piece knocking another off its square: a sharp clack, then the lost piece skittering away.",
+      "dur": 0.49
+    },
+    {
+      "id": "cards-piece-move",
+      "name": "Board Piece Move",
+      "category": "cards",
+      "tags": [
+        "board",
+        "piece",
+        "move",
+        "wood",
+        "chess",
+        "tok",
+        "pawn",
+        "token"
+      ],
+      "desc": "A wooden piece slid a little and set down on a board with a hollow, polite tok.",
+      "dur": 0.26
+    },
+    {
+      "id": "cards-place",
+      "name": "Card Place",
+      "category": "cards",
+      "tags": [
+        "card",
+        "place",
+        "pat",
+        "set-down",
+        "felt",
+        "table",
+        "land"
+      ],
+      "desc": "A single card set down on the table with a soft pat, felt-dark or wood-bright.",
+      "dur": 0.09
+    },
+    {
       "id": "cards-riffle",
       "name": "Deck Riffle",
       "category": "cards",
@@ -138,6 +1402,213 @@
       ],
       "desc": "A deck riffled together: a quick ripple of paper ticks, never two quite alike.",
       "dur": 0.55
+    },
+    {
+      "id": "cards-shuffle-overhand",
+      "name": "Overhand Shuffle",
+      "category": "cards",
+      "tags": [
+        "card",
+        "shuffle",
+        "overhand",
+        "paper",
+        "deck",
+        "chunks"
+      ],
+      "desc": "An overhand shuffle: separate short ripples of paper as chunks drop off the deck, then a pat to square it.",
+      "dur": 1.31
+    },
+    {
+      "id": "cards-slide",
+      "name": "Card Slide",
+      "category": "cards",
+      "tags": [
+        "card",
+        "slide",
+        "push",
+        "drag",
+        "swap",
+        "felt",
+        "move"
+      ],
+      "desc": "A card slid across the felt: a soft breathy glide that falls away from you or rises toward you.",
+      "dur": 0.52
+    },
+    {
+      "id": "cards-timer-tick",
+      "name": "Turn Timer Tick",
+      "category": "cards",
+      "tags": [
+        "timer",
+        "tick",
+        "clock",
+        "countdown",
+        "turn",
+        "tock",
+        "wood"
+      ],
+      "desc": "A quiet wooden clock tick-tock for a turn timer, small enough to repeat every second.",
+      "dur": 1.06
+    },
+    {
+      "id": "cards-your-turn",
+      "name": "Your Turn",
+      "category": "cards",
+      "tags": [
+        "turn",
+        "your-turn",
+        "cue",
+        "notify",
+        "mallet",
+        "chime",
+        "game"
+      ],
+      "desc": "A gentle two-note mallet cue that says it is your move, with a soft tap of a card underneath.",
+      "dur": 0.65
+    },
+    {
+      "id": "magic-charge-up",
+      "name": "Arcane Charge",
+      "category": "magic",
+      "tags": [
+        "charge",
+        "gather",
+        "channel",
+        "build",
+        "windup",
+        "power",
+        "spell"
+      ],
+      "desc": "Energy gathering: a glowing swell climbs in pitch with shimmering overtones and ends in a ready ping.",
+      "dur": 2.1
+    },
+    {
+      "id": "magic-curse-hex",
+      "name": "Curse Hex",
+      "category": "magic",
+      "tags": [
+        "curse",
+        "hex",
+        "dark",
+        "debuff",
+        "evil",
+        "dread",
+        "malice"
+      ],
+      "desc": "A sinister low toll with a sour interval, a sagging drone and creeping whispers. For debuffs and dark spells.",
+      "dur": 1.8
+    },
+    {
+      "id": "magic-enchant",
+      "name": "Enchant",
+      "category": "magic",
+      "tags": [
+        "enchant",
+        "imbue",
+        "infuse",
+        "harp",
+        "glissando",
+        "upgrade",
+        "blessing"
+      ],
+      "desc": "A harp-like run of plucked notes over a glowing pad, closing on a bell. For enchanting an item.",
+      "dur": 1.9
+    },
+    {
+      "id": "magic-fire-spell",
+      "name": "Fire Spell",
+      "category": "magic",
+      "tags": [
+        "fire",
+        "fireball",
+        "flame",
+        "burn",
+        "spell",
+        "crackle",
+        "roar"
+      ],
+      "desc": "A rushing fireball: a warm thump at the cast, a roar that swells and fades, and crackling embers.",
+      "dur": 1.3
+    },
+    {
+      "id": "magic-healing-shimmer",
+      "name": "Healing Shimmer",
+      "category": "magic",
+      "tags": [
+        "heal",
+        "restore",
+        "shimmer",
+        "bloom",
+        "buff",
+        "blessing",
+        "glow"
+      ],
+      "desc": "A warm chord that swells and blooms with a few falling sparkles. For healing, a blessing or a buff.",
+      "dur": 2
+    },
+    {
+      "id": "magic-ice-spell",
+      "name": "Ice Spell",
+      "category": "magic",
+      "tags": [
+        "ice",
+        "frost",
+        "freeze",
+        "crystal",
+        "glass",
+        "shatter",
+        "spell"
+      ],
+      "desc": "A crystalline freeze: a glassy ring over a frosty hiss, then icy shards tinkling away downward.",
+      "dur": 1.4
+    },
+    {
+      "id": "magic-lightning",
+      "name": "Lightning Bolt",
+      "category": "magic",
+      "tags": [
+        "lightning",
+        "thunder",
+        "bolt",
+        "shock",
+        "storm",
+        "electric",
+        "spell"
+      ],
+      "desc": "A bright crack of electricity that forks into crackling arcs and rolls away as low thunder.",
+      "dur": 1.4
+    },
+    {
+      "id": "magic-portal-open",
+      "name": "Portal Open",
+      "category": "magic",
+      "tags": [
+        "portal",
+        "gateway",
+        "dimension",
+        "vortex",
+        "summon",
+        "rift",
+        "open"
+      ],
+      "desc": "A swirling gateway tears open: a resonant vortex whirls up, then a deep shimmering chord settles.",
+      "dur": 2.5
+    },
+    {
+      "id": "magic-potion-bubble",
+      "name": "Potion Bubble",
+      "category": "magic",
+      "tags": [
+        "potion",
+        "bubble",
+        "brew",
+        "cauldron",
+        "liquid",
+        "bloop",
+        "alchemy"
+      ],
+      "desc": "A bubbling cauldron of glassy bloops with a faint magical glimmer. For potions, brewing and alchemy.",
+      "dur": 1.6
     },
     {
       "id": "magic-sparkle",
@@ -154,6 +1625,533 @@
       ],
       "desc": "A rising twinkle of bright notes over a breath of shimmer, with a little room around it.",
       "dur": 1.5
+    },
+    {
+      "id": "magic-spell-cast",
+      "name": "Spell Cast",
+      "category": "magic",
+      "tags": [
+        "spell",
+        "cast",
+        "magic",
+        "conjure",
+        "wand",
+        "release",
+        "bloom"
+      ],
+      "desc": "Magic gathered and let go: a quick rising swirl, then a bright bell bloom opening in a soft room.",
+      "dur": 1.5
+    },
+    {
+      "id": "magic-teleport",
+      "name": "Teleport",
+      "category": "magic",
+      "tags": [
+        "teleport",
+        "blink",
+        "warp",
+        "vanish",
+        "appear",
+        "phase",
+        "travel"
+      ],
+      "desc": "A vanishing rush upward, a beat of silence, then a soft bell where you reappear.",
+      "dur": 1.4
+    },
+    {
+      "id": "scifi-alert-siren",
+      "name": "Soft Alert Siren",
+      "category": "scifi",
+      "tags": [
+        "alert",
+        "siren",
+        "alarm",
+        "warning",
+        "caution",
+        "klaxon",
+        "notification"
+      ],
+      "desc": "A gentle two-tone siren that swoops between notes: a warning that gets attention without startling.",
+      "dur": 2.3
+    },
+    {
+      "id": "scifi-blaster-bolt",
+      "name": "Blaster Bolt",
+      "category": "scifi",
+      "tags": [
+        "blaster",
+        "bolt",
+        "plasma",
+        "cannon",
+        "gun",
+        "shot",
+        "heavy"
+      ],
+      "desc": "A heavy plasma shot: a gritty falling snarl with a bright crack on top and a thump underneath.",
+      "dur": 0.45
+    },
+    {
+      "id": "scifi-data-stream",
+      "name": "Data Stream",
+      "category": "scifi",
+      "tags": [
+        "data",
+        "stream",
+        "transfer",
+        "download",
+        "digital",
+        "packets",
+        "chatter"
+      ],
+      "desc": "A rapid patter of tiny bitcrushed ticks and chirps, like data pouring through a channel.",
+      "dur": 1.1
+    },
+    {
+      "id": "scifi-hologram-flicker",
+      "name": "Hologram Flicker",
+      "category": "scifi",
+      "tags": [
+        "hologram",
+        "flicker",
+        "glitch",
+        "projection",
+        "unstable",
+        "digital",
+        "static"
+      ],
+      "desc": "A glassy digital tone that stutters and drops out as a projection flickers, with static in the gaps.",
+      "dur": 1.3
+    },
+    {
+      "id": "scifi-laser-zap",
+      "name": "Laser Zap",
+      "category": "scifi",
+      "tags": [
+        "laser",
+        "zap",
+        "pew",
+        "shoot",
+        "ray",
+        "shot",
+        "retro"
+      ],
+      "desc": "A bright falling pew for a laser shot. Fire it once, or in a quick burst of up to four.",
+      "dur": 0.8
+    },
+    {
+      "id": "scifi-power-down",
+      "name": "Power Down",
+      "category": "scifi",
+      "tags": [
+        "power-down",
+        "shutdown",
+        "deactivate",
+        "off",
+        "spin-down",
+        "fail",
+        "engine"
+      ],
+      "desc": "A machine spinning down: a falling whine closes under a slowing patter of ticks and ends in a soft clunk.",
+      "dur": 1.6
+    },
+    {
+      "id": "scifi-power-up",
+      "name": "Power Up",
+      "category": "scifi",
+      "tags": [
+        "power-up",
+        "charge",
+        "boot",
+        "startup",
+        "energize",
+        "spin-up",
+        "engine"
+      ],
+      "desc": "A machine spinning up: accelerating ticks climb into a rising whine that locks on at full power.",
+      "dur": 1.65
+    },
+    {
+      "id": "scifi-robot-chirp",
+      "name": "Robot Chirp",
+      "category": "scifi",
+      "tags": [
+        "robot",
+        "droid",
+        "chirp",
+        "bleep",
+        "chatter",
+        "android",
+        "talk"
+      ],
+      "desc": "A quick burst of FM chirps that swoop up and down like a small, expressive droid.",
+      "dur": 1.05
+    },
+    {
+      "id": "scifi-scanner-sweep",
+      "name": "Scanner Sweep",
+      "category": "scifi",
+      "tags": [
+        "scanner",
+        "scan",
+        "sweep",
+        "radar",
+        "sensor",
+        "detect",
+        "sonar"
+      ],
+      "desc": "A narrow beam sweeping up and back with a wobble, ending on a two-blip confirm.",
+      "dur": 2.3
+    },
+    {
+      "id": "scifi-shield-hum",
+      "name": "Shield Hum",
+      "category": "scifi",
+      "tags": [
+        "shield",
+        "force-field",
+        "hum",
+        "barrier",
+        "energy",
+        "activate",
+        "deflect"
+      ],
+      "desc": "A throbbing energy hum that swells in as a shield powers up, then settles into a slow pulse.",
+      "dur": 1.6
+    },
+    {
+      "id": "scifi-terminal-blip",
+      "name": "Terminal Blip",
+      "category": "scifi",
+      "tags": [
+        "terminal",
+        "blip",
+        "beep",
+        "computer",
+        "console",
+        "readout",
+        "retro"
+      ],
+      "desc": "A quick run of bitcrushed computer beeps, like a console printing a readout or acknowledging a command.",
+      "dur": 0.45
+    },
+    {
+      "id": "scifi-warp-jump",
+      "name": "Warp Jump",
+      "category": "scifi",
+      "tags": [
+        "warp",
+        "jump",
+        "hyperspace",
+        "ftl",
+        "engine",
+        "lightspeed",
+        "transition"
+      ],
+      "desc": "An engine whine winds up, then the ship leaps: a stretched streak and a deep thump as it vanishes.",
+      "dur": 1.95
+    },
+    {
+      "id": "ambience-cave-drips",
+      "name": "Cave Drips",
+      "category": "ambience",
+      "tags": [
+        "cave",
+        "drip",
+        "water",
+        "dungeon",
+        "echo",
+        "underground",
+        "damp",
+        "bed"
+      ],
+      "desc": "Slow drips falling in a damp stone chamber, each one ringing in the echo, over a low draft of air.",
+      "dur": 8
+    },
+    {
+      "id": "ambience-distant-thunder",
+      "name": "Distant Thunder",
+      "category": "ambience",
+      "tags": [
+        "thunder",
+        "storm",
+        "rumble",
+        "weather",
+        "low",
+        "distant",
+        "rolling"
+      ],
+      "desc": "A storm miles away: a muffled crack and a long low rumble that rolls and fades out.",
+      "dur": 8
+    },
+    {
+      "id": "ambience-fire-crackle",
+      "name": "Fire Crackle",
+      "category": "ambience",
+      "tags": [
+        "fire",
+        "crackle",
+        "campfire",
+        "fireplace",
+        "flame",
+        "wood",
+        "cozy",
+        "bed"
+      ],
+      "desc": "A hearth or campfire: a soft roar of flame with random snaps, pops and the odd log settling.",
+      "dur": 8
+    },
+    {
+      "id": "ambience-forest-birds",
+      "name": "Forest Birds",
+      "category": "ambience",
+      "tags": [
+        "birds",
+        "birdsong",
+        "chirp",
+        "tweet",
+        "forest",
+        "morning",
+        "nature",
+        "bed"
+      ],
+      "desc": "Morning birdsong in the trees: tweets, trills and whistles from near and far over a faint breeze.",
+      "dur": 8
+    },
+    {
+      "id": "ambience-ocean-surf",
+      "name": "Ocean Surf",
+      "category": "ambience",
+      "tags": [
+        "ocean",
+        "sea",
+        "surf",
+        "waves",
+        "beach",
+        "shore",
+        "water",
+        "bed"
+      ],
+      "desc": "Waves building and breaking on a beach, each with a hiss of foam, over a low swell. Fades in and out.",
+      "dur": 8
+    },
+    {
+      "id": "ambience-rain",
+      "name": "Rain",
+      "category": "ambience",
+      "tags": [
+        "rain",
+        "drizzle",
+        "downpour",
+        "weather",
+        "water",
+        "outdoor",
+        "bed"
+      ],
+      "desc": "Rain on leaves and puddles, from a drizzle to a steady downpour. Fades in and out.",
+      "dur": 8
+    },
+    {
+      "id": "ambience-room-hum",
+      "name": "Room Tone Hum",
+      "category": "ambience",
+      "tags": [
+        "room-tone",
+        "hum",
+        "electrical",
+        "mains",
+        "hvac",
+        "indoor",
+        "office",
+        "bed"
+      ],
+      "desc": "A quiet indoor bed: electrical hum with its buzzing harmonics over a breath of ventilation hiss.",
+      "dur": 8
+    },
+    {
+      "id": "ambience-space-drone",
+      "name": "Space Drone",
+      "category": "ambience",
+      "tags": [
+        "space",
+        "drone",
+        "pad",
+        "ambient",
+        "sci-fi",
+        "dark",
+        "deep",
+        "bed"
+      ],
+      "desc": "A slow, deep drone for a ship or a void: a dark pad that opens up, with a faint shimmer far above.",
+      "dur": 8
+    },
+    {
+      "id": "ambience-wind-gusts",
+      "name": "Wind Gusts",
+      "category": "ambience",
+      "tags": [
+        "wind",
+        "gust",
+        "breeze",
+        "storm",
+        "outdoor",
+        "bed",
+        "loop"
+      ],
+      "desc": "An open-air wind bed: steady air with slow gusts rolling through and a faint whistle. Fades in and out.",
+      "dur": 8
+    },
+    {
+      "id": "music-alert-sting",
+      "name": "Alert Sting",
+      "category": "music",
+      "tags": [
+        "alert",
+        "warning",
+        "danger",
+        "alarm",
+        "urgent",
+        "boss",
+        "8-bit",
+        "stinger"
+      ],
+      "desc": "Short minor stabs and a long tense chord with a sub thump, for danger, a boss entrance or a hard warning.",
+      "dur": 1.8
+    },
+    {
+      "id": "music-defeat-jingle",
+      "name": "Defeat Jingle",
+      "category": "music",
+      "tags": [
+        "defeat",
+        "lose",
+        "fail",
+        "game-over",
+        "sad",
+        "trombone",
+        "jingle",
+        "stinger"
+      ],
+      "desc": "A falling four-note sad-brass wah for a lost round: three short steps down and one long sagging note.",
+      "dur": 3.4
+    },
+    {
+      "id": "music-fanfare-short",
+      "name": "Short Fanfare",
+      "category": "music",
+      "tags": [
+        "fanfare",
+        "brass",
+        "trumpet",
+        "announce",
+        "royal",
+        "win",
+        "proud",
+        "stinger"
+      ],
+      "desc": "Three stabs and a long chord on synth brass: an announcement or a proud arrival in two seconds.",
+      "dur": 2.2
+    },
+    {
+      "id": "music-intro-logo",
+      "name": "Intro Logo Sting",
+      "category": "music",
+      "tags": [
+        "intro",
+        "logo",
+        "brand",
+        "title",
+        "opening",
+        "reveal",
+        "shimmer",
+        "stinger"
+      ],
+      "desc": "A rising sweep that opens into a warm, ringing major-seventh chord with a glint on top. A calm logo reveal.",
+      "dur": 4.2
+    },
+    {
+      "id": "music-level-complete",
+      "name": "Level Complete",
+      "category": "music",
+      "tags": [
+        "level-complete",
+        "stage-clear",
+        "win",
+        "success",
+        "pluck",
+        "bell",
+        "arpeggio",
+        "stinger"
+      ],
+      "desc": "A warm plucked arpeggio climbing into a ringing bell chord. For finishing a stage, not a whole game.",
+      "dur": 3.4
+    },
+    {
+      "id": "music-menu-confirm",
+      "name": "Menu Confirm Melody",
+      "category": "music",
+      "tags": [
+        "menu",
+        "confirm",
+        "select",
+        "start",
+        "melody",
+        "8-bit",
+        "chiptune",
+        "stinger"
+      ],
+      "desc": "Two to four quick rising notes with an echo, for pressing Start or confirming a menu choice.",
+      "dur": 1.7
+    },
+    {
+      "id": "music-mystery-sting",
+      "name": "Mystery Sting",
+      "category": "music",
+      "tags": [
+        "mystery",
+        "suspense",
+        "eerie",
+        "clue",
+        "reveal",
+        "spooky",
+        "fm",
+        "stinger"
+      ],
+      "desc": "Two hanging bell tones a tritone apart over a dark swell. For a clue, a twist or a door that should not open.",
+      "dur": 4.2
+    },
+    {
+      "id": "music-ta-da",
+      "name": "Ta-da",
+      "category": "music",
+      "tags": [
+        "ta-da",
+        "tada",
+        "reveal",
+        "cheerful",
+        "achievement",
+        "surprise",
+        "celebrate",
+        "stinger"
+      ],
+      "desc": "A cheerful two-chord reveal: a quick staccato hit and a bright held chord with a sparkle on top.",
+      "dur": 2
+    },
+    {
+      "id": "music-victory-jingle",
+      "name": "Victory Jingle",
+      "category": "music",
+      "tags": [
+        "victory",
+        "win",
+        "jingle",
+        "8-bit",
+        "chiptune",
+        "square",
+        "arcade",
+        "stinger"
+      ],
+      "desc": "A chiptune win: a quick rising arpeggio into a held major chord. Bright, short and proud.",
+      "dur": 1.7
     }
   ],
   "themes": [

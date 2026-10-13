@@ -1050,14 +1050,182 @@ function note(n) {
 const T = Object.freeze({ noiseBuffer, rand, seed, env, glide, bell, fm, noise, osc, pluck, crush, delay, drive, filter, gain, reverb, master, note });
 // ---- sounds (src/sounds) ----
 const SOUNDS = [
-{"id":"ui-click-soft","name":"Soft Click","category":"ui","tags":["click","button","tap","tick","press"],"desc":"A short muted tick for button presses: a falling sine blip with a breath of high noise.","dur":0.08,"params":{"pitch":{"min":400,"max":2400,"def":1100,"unit":"Hz"},"tone":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+{"id":"ui-checkbox","name":"Checkbox","category":"ui","tags":["checkbox","check","uncheck","select","tick","soft"],"desc":"A bright two-note pluck when a box is checked and a short muted drop when it is cleared.","dur":0.17,"params":{"on":{"min":0,"max":1,"def":1,"step":1},"pitch":{"min":440,"max":1200,"def":880,"unit":"Hz"},"bright":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const note = (at, f, level) => {
+    T.osc(out, at, { f, dur: 0.1, peak: level, a: 0.002 });
+    T.osc(out, at, { f: f * 2, dur: 0.05, peak: level * 0.6 * p.bright, a: 0.002 });
+  };
+  if (p.on >= 0.5) {
+    note(t, p.pitch, 0.04);
+    note(t + 0.055, p.pitch * 1.5, 0.05);
+    T.noise(out, t, { filter: 'highpass', f: 4500, q: 0.7, dur: 0.01, peak: 0.01 + 0.01 * p.bright, a: 0.002 });
+  } else {
+    T.osc(out, t, { f: p.pitch * 1.5, to: p.pitch * 0.9, dur: 0.07, peak: 0.04, a: 0.002 });
+    T.noise(out, t, { filter: 'lowpass', f: 1800, q: 0.7, dur: 0.012, peak: 0.03, a: 0.002 });
+  }
+}},
+{"id":"ui-click-crisp","name":"Crisp Click","category":"ui","tags":["click","button","press","snap","mouse","mechanical"],"desc":"A dry, snappy click for primary buttons: a bandpassed noise transient over a stiff triangle tick, gone in 30 ms.","dur":0.04,"params":{"pitch":{"min":1500,"max":4000,"def":2600,"unit":"Hz"},"snap":{"min":0,"max":1,"def":0.6},"body":{"min":0,"max":1,"def":0.35}},"play":function (T, out, t, p) {
+  T.noise(out, t, { filter: 'bandpass', f: p.pitch * 1.5, to: p.pitch, q: 1.1, dur: 0.018, peak: 0.05 + 0.08 * p.snap, a: 0.002 });
+  T.osc(out, t, { type: 'triangle', f: p.pitch * 0.5, to: p.pitch * 0.3, dur: 0.026, peak: 0.012 + 0.04 * p.body, a: 0.002 });
+}},
+{"id":"ui-click-deep","name":"Deep Click","category":"ui","tags":["click","button","press","thock","low","soft"],"desc":"A low, padded thock for heavy buttons and primary actions: a falling sine body with a soft knock on top.","dur":0.16,"params":{"pitch":{"min":90,"max":320,"def":165,"unit":"Hz"},"click":{"min":0,"max":1,"def":0.4},"length":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  T.osc(out, t, { f: p.pitch * 1.6, to: p.pitch * 0.7, dur: 0.05 + 0.1 * p.length, peak: 0.07, a: 0.003 });
+  // an octave above the body, so the click still reads on small speakers that cannot play 100 Hz
+  T.osc(out, t, { f: p.pitch * 3.2, to: p.pitch * 1.4, dur: 0.03 + 0.04 * p.length, peak: 0.025, a: 0.003 });
+  T.noise(out, t, { filter: 'lowpass', f: 1400, to: 500, q: 0.8, dur: 0.02, peak: 0.02 + 0.1 * p.click, a: 0.002 });
+}},
+{"id":"ui-click-glass","name":"Glass Click","category":"ui","tags":["click","button","press","ting","glass","bright"],"desc":"A bright, glassy tick for buttons: a few high inharmonic partials with a short ring, light and clean.","dur":0.21,"params":{"pitch":{"min":2000,"max":4600,"def":3136,"unit":"Hz"},"ring":{"min":0,"max":1,"def":0.4},"bright":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  T.bell(out, t, {
+    f: p.pitch, partials: [[1, 1, 1], [2.32, 0.4, 0.55], [3.9, 0.18 + 0.2 * p.bright, 0.3]],
+    dur: 0.05 + 0.15 * p.ring, peak: 0.028, a: 0.002,
+  });
+  T.noise(out, t, { filter: 'highpass', f: 6500, q: 0.7, dur: 0.008, peak: 0.004 + 0.012 * p.bright, a: 0.002 });
+}},
+{"id":"ui-click-soft","name":"Soft Click","category":"ui","tags":["click","button","tap","tick","press","soft"],"desc":"A short muted tick for button presses: a falling sine blip with a breath of high noise.","dur":0.08,"params":{"pitch":{"min":400,"max":2400,"def":1100,"unit":"Hz"},"tone":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
   T.osc(out, t, { f: p.pitch, to: p.pitch * 0.73, dur: 0.035, peak: 0.042, a: 0.002 });
   T.noise(out, t, {
     filter: 'highpass', f: 2800 + 2400 * p.tone, to: 2200 + 1800 * p.tone, q: 0.8,
     dur: 0.022, peak: 0.011 + 0.034 * p.tone, a: 0.001,
   });
 }},
-{"id":"ui-toggle-switch","name":"Toggle Switch","category":"ui","tags":["toggle","switch","checkbox","on","off","click"],"desc":"A two-stage click-clack for switches: rising when turned on, falling when turned off.","dur":0.25,"params":{"on":{"min":0,"max":1,"def":1,"step":1},"pitch":{"min":1200,"max":3600,"def":2600,"unit":"Hz"},"gap":{"min":0.03,"max":0.12,"def":0.075,"unit":"s"},"body":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+{"id":"ui-click-wood","name":"Wooden Click","category":"ui","tags":["click","button","press","knock","tap","wood"],"desc":"A warm wooden knock for buttons: a short damped block tone with a dull knuckle thud, calm enough to repeat all day.","dur":0.15,"params":{"pitch":{"min":500,"max":1600,"def":880,"unit":"Hz"},"ring":{"min":0,"max":1,"def":0.35},"hollow":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  // The second overtone is what reads as hollow; the fundamental droops a little like a struck block.
+  T.bell(out, t, {
+    f: p.pitch, partials: [[1, 1, 1], [2.35, 0.25 + 0.4 * p.hollow, 0.55], [4.1, 0.12, 0.3]],
+    drift: 0.96, dur: 0.04 + 0.1 * p.ring, peak: 0.04, a: 0.002,
+  });
+  T.noise(out, t, { filter: 'lowpass', f: 2200, q: 0.7, dur: 0.012, peak: 0.04, a: 0.002 });
+}},
+{"id":"ui-copy","name":"Copy to Clipboard","category":"ui","tags":["copy","clipboard","duplicate","confirm","ping","glass"],"desc":"A quick rising scoop and a bright ping to confirm a copy to the clipboard.","dur":0.3,"params":{"pitch":{"min":1200,"max":3200,"def":2093,"unit":"Hz"},"scoop":{"min":0.1,"max":1,"def":0.5},"ring":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  T.noise(out, t, { filter: 'bandpass', f: 1200, to: 4200, q: 1.4, dur: 0.045, a: 0.012, peak: 0.03 + 0.1 * p.scoop });
+  T.bell(out, t + 0.04, { f: p.pitch, partials: [[1, 1, 1], [2.76, 0.4, 0.5]], dur: 0.08 + 0.17 * p.ring, peak: 0.04, a: 0.002 });
+}},
+{"id":"ui-delete","name":"Delete to Trash","category":"ui","tags":["delete","trash","remove","bin","crumple","discard","air"],"desc":"A short paper crumple that drops into a bin with a dull thud, for deleting or discarding an item.","dur":0.27,"params":{"crunch":{"min":2,"max":6,"def":4,"step":1},"pitch":{"min":90,"max":260,"def":147,"unit":"Hz"},"weight":{"min":0.2,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const n = Math.round(p.crunch);
+  let at = t;
+  for (let k = 0; k < n; k++) {
+    const f = (3400 - k * 220) * T.rand(0.8, 1.2);
+    T.noise(out, at, { filter: 'bandpass', f, q: 2.2, dur: T.rand(0.012, 0.022), peak: 0.1 * T.rand(0.6, 1) * (1 - 0.06 * k), a: 0.002 });
+    at += T.rand(0.008, 0.024);
+  }
+  const land = at + 0.012;
+  T.osc(out, land, { f: p.pitch * 1.4, to: p.pitch * 0.6, dur: 0.1, peak: 0.026 + 0.05 * p.weight, a: 0.003 });
+  T.osc(out, land, { f: p.pitch * 2.8, to: p.pitch * 1.2, dur: 0.06, peak: 0.012 + 0.02 * p.weight, a: 0.003 });
+  T.noise(out, land, { filter: 'lowpass', f: 900, q: 0.7, dur: 0.03, peak: 0.02 + 0.06 * p.weight, a: 0.002 });
+}},
+{"id":"ui-drag-drop","name":"Drag Drop","category":"ui","tags":["drop","drag","place","land","drag-end","thud","wood"],"desc":"A soft landing thud for dropping an item on its target, with an optional small bounce as it settles.","dur":0.14,"params":{"pitch":{"min":90,"max":300,"def":196,"unit":"Hz"},"bounce":{"min":0,"max":1,"def":0.4},"snap":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  T.osc(out, t, { f: p.pitch * 1.5, to: p.pitch * 0.6, dur: 0.08, peak: 0.065, a: 0.003 });
+  T.osc(out, t, { f: p.pitch * 3, to: p.pitch * 1.2, dur: 0.05, peak: 0.022, a: 0.003 });
+  T.noise(out, t, { filter: 'lowpass', f: 1500, to: 600, q: 0.7, dur: 0.025, peak: 0.04 + 0.1 * p.snap, a: 0.002 });
+  T.osc(out, t + 0.075, { f: p.pitch * 1.3, to: p.pitch * 0.6, dur: 0.05, peak: 0.028 * p.bounce, a: 0.003 });
+}},
+{"id":"ui-drag-pickup","name":"Drag Pickup","category":"ui","tags":["drag","grab","pickup","lift","drag-start","air"],"desc":"A soft lift for grabbing an item to drag: a small grip tick and a short rising breath.","dur":0.12,"params":{"pitch":{"min":250,"max":700,"def":392,"unit":"Hz"},"lift":{"min":0,"max":1,"def":0.5},"air":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  T.noise(out, t, { filter: 'highpass', f: 3500, q: 0.8, dur: 0.01, peak: 0.012, a: 0.002 });
+  T.noise(out, t, { filter: 'bandpass', f: 500, to: 500 + 2200 * p.lift, q: 1, dur: 0.11, a: 0.045, peak: 0.04 + 0.1 * p.air });
+  T.osc(out, t, { type: 'triangle', f: p.pitch, to: p.pitch * (1.15 + 0.6 * p.lift), dur: 0.08, peak: 0.03, a: 0.008, glide: 0.06 });
+}},
+{"id":"ui-expand","name":"Expand and Collapse","category":"ui","tags":["expand","collapse","accordion","disclosure","unfold","section","soft"],"desc":"A quick stepped run of soft blips: rising when a section expands, falling and a touch quieter when it collapses.","dur":0.26,"params":{"open":{"min":0,"max":1,"def":1,"step":1},"steps":{"min":2,"max":5,"def":3,"step":1},"gap":{"min":0.02,"max":0.05,"def":0.03,"unit":"s"},"pitch":{"min":330,"max":800,"def":523,"unit":"Hz"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.steps);
+  const open = p.open >= 0.5;
+  const scale = [0, 2, 4, 7, 9];
+  for (let k = 0; k < n; k++) {
+    const f = p.pitch * Math.pow(2, scale[open ? k : n - 1 - k] / 12);
+    T.osc(out, t + k * p.gap, { type: 'triangle', f, to: f * 1.03, dur: 0.05, peak: open ? 0.05 : 0.04, a: 0.002 });
+  }
+  T.noise(out, t, { filter: 'highpass', f: 4500, q: 0.7, dur: 0.008, peak: 0.006, a: 0.002 });
+}},
+{"id":"ui-focus-ring","name":"Focus Ring","category":"ui","tags":["focus","tab","keyboard","navigate","accessibility","ring","glass"],"desc":"A soft pip with a few fading echoes for keyboard focus landing on a control, like a ring spreading outward.","dur":0.4,"params":{"pitch":{"min":700,"max":2000,"def":1047,"unit":"Hz"},"spread":{"min":0.03,"max":0.075,"def":0.05,"unit":"s"},"echo":{"min":0.2,"max":0.7,"def":0.45}},"play":function (T, out, t, p) {
+  const ring = T.delay(out, t, { time: p.spread, fb: 0.34, mix: p.echo, tone: 3500 });
+  T.osc(ring, t, { f: p.pitch, to: p.pitch * 1.12, dur: 0.05, peak: 0.04, a: 0.006 });
+}},
+{"id":"ui-hover-tick","name":"Hover Tick","category":"ui","tags":["hover","pointer","mouseover","tick","cursor","glass"],"desc":"A barely-there high tick for the pointer entering a button or row. Very quiet, meant to repeat.","dur":0.03,"params":{"pitch":{"min":1800,"max":5200,"def":3136,"unit":"Hz"},"air":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  T.osc(out, t, { f: p.pitch, to: p.pitch * 0.9, dur: 0.02, peak: 0.02, a: 0.002 });
+  T.noise(out, t, { filter: 'highpass', f: 6000, q: 0.7, dur: 0.01, peak: 0.003 + 0.009 * p.air, a: 0.002 });
+}},
+{"id":"ui-key-light","name":"Light Keypress","category":"ui","tags":["keypress","key","typing","keyboard","type","wood"],"desc":"A light, quiet keypress for typing: a soft thump and tap that varies a little each press; size reaches the spacebar.","dur":0.08,"params":{"pitch":{"min":140,"max":400,"def":220,"unit":"Hz"},"bright":{"min":0,"max":1,"def":0.4},"size":{"min":0,"max":1,"def":0}},"play":function (T, out, t, p) {
+  const v = 1 + 0.06 * T.rand(-1, 1);
+  const l = 1 + 0.12 * T.rand(-1, 1);
+  const f = p.pitch * (1 - 0.3 * p.size) * v;
+  T.osc(out, t, { f, to: f * 0.7, dur: 0.04 + 0.03 * p.size, peak: 0.036 * (1 + 0.4 * p.size) * l, a: 0.003 });
+  T.noise(out, t, { filter: 'bandpass', f: (1200 + 2000 * p.bright) * v, q: 1.2, dur: 0.02, peak: 0.05 * l, a: 0.002 });
+}},
+{"id":"ui-key-mechanical","name":"Mechanical Keypress","category":"ui","tags":["keypress","key","typing","keyboard","switch","clicky","mechanical"],"desc":"A mechanical keyboard keypress: a bright click, a bottom-out thock and a faint release tick, different every time.","dur":0.11,"params":{"pitch":{"min":2000,"max":5000,"def":3520,"unit":"Hz"},"click":{"min":0,"max":1,"def":0.7},"thock":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const v = 1 + 0.04 * T.rand(-1, 1);
+  const l = 1 + 0.1 * T.rand(-1, 1);
+  T.bell(out, t, { f: p.pitch * v, partials: [[1, 1, 1], [2.7, 0.4, 0.6]], drift: 0.97, dur: 0.03, peak: 0.016 * p.click * l, a: 0.002 });
+  T.noise(out, t, { filter: 'highpass', f: 3500, q: 0.8, dur: 0.012, peak: (0.01 + 0.024 * p.click) * l, a: 0.002 });
+  const at = t + 0.014;
+  T.osc(out, at, { f: 260 * v, to: 160 * v, dur: 0.045, peak: (0.016 + 0.048 * p.thock) * l, a: 0.002 });
+  T.noise(out, at, { filter: 'lowpass', f: 1400, q: 0.7, dur: 0.02, peak: (0.024 + 0.048 * p.thock) * l, a: 0.002 });
+  T.noise(out, t + 0.085, { filter: 'highpass', f: 3500, q: 0.8, dur: 0.01, peak: (0.006 + 0.01 * p.click) * l, a: 0.002 });
+}},
+{"id":"ui-menu-slide","name":"Menu Slide","category":"ui","tags":["menu","drawer","dropdown","sidebar","panel","open","close","slide","air"],"desc":"An airy slide for a menu or drawer opening (rising, soft landing) and closing (falling, latch tick); size runs from dropdown to drawer.","dur":0.34,"params":{"open":{"min":0,"max":1,"def":1,"step":1},"size":{"min":0,"max":1,"def":0.3},"tone":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const open = p.open >= 0.5;
+  const len = 0.07 + 0.2 * p.size;
+  const lo = 350 + 500 * p.tone;
+  const hi = 1400 + 2200 * p.tone;
+  T.noise(out, t, {
+    filter: 'bandpass', f: open ? lo : hi, to: open ? hi : lo, q: 0.9,
+    dur: len + 0.06, a: Math.max(0.01, len * (open ? 0.5 : 0.3)), peak: 0.09,
+  });
+  const at = t + len * 0.85;
+  if (open) {
+    T.osc(out, at, { f: 300 - 100 * p.size, to: 200 - 70 * p.size, dur: 0.07, peak: 0.03 + 0.03 * p.size, a: 0.004 });
+  } else {
+    T.osc(out, at, { f: 700, to: 450, dur: 0.03, peak: 0.03, a: 0.002 });
+    T.noise(out, at, { filter: 'highpass', f: 3500, q: 0.8, dur: 0.01, peak: 0.01, a: 0.002 });
+  }
+}},
+{"id":"ui-modal","name":"Modal Open and Close","category":"ui","tags":["modal","dialog","popup","overlay","open","close","sheet","soft"],"desc":"A soft low swell for a dialog opening, with a small glint on arrival, and a quick falling sigh for it closing.","dur":0.23,"params":{"open":{"min":0,"max":1,"def":1,"step":1},"pitch":{"min":100,"max":260,"def":165,"unit":"Hz"},"air":{"min":0,"max":1,"def":0.5},"shine":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const w = p.pitch;
+  if (p.open >= 0.5) {
+    T.osc(out, t, { f: w * 0.7, to: w * 1.1, dur: 0.2, peak: 0.06, a: 0.025, glide: 0.12 });
+    T.osc(out, t, { f: w * 1.4, to: w * 2.2, dur: 0.16, peak: 0.025, a: 0.025, glide: 0.12 });
+    T.noise(out, t, { filter: 'bandpass', f: 500, to: 1800, q: 0.7, dur: 0.22, a: 0.05, peak: 0.02 + 0.06 * p.air });
+    T.bell(out, t + 0.1, { f: 1318, partials: [[1, 1, 1], [2.76, 0.3, 0.5]], dur: 0.12, peak: 0.005 + 0.02 * p.shine, a: 0.002 });
+  } else {
+    T.osc(out, t, { f: w * 1.1, to: w * 0.6, dur: 0.14, peak: 0.045, a: 0.006, glide: 0.1 });
+    T.osc(out, t, { f: w * 2.2, to: w * 1.2, dur: 0.1, peak: 0.02, a: 0.006, glide: 0.1 });
+    T.noise(out, t, { filter: 'bandpass', f: 1800, to: 400, q: 0.7, dur: 0.15, a: 0.01, peak: 0.02 + 0.06 * p.air });
+    T.bell(out, t, { f: 1318, partials: [[1, 1, 1], [2.76, 0.3, 0.5]], drift: 0.85, dur: 0.1, peak: 0.005 + 0.02 * p.shine, a: 0.002 });
+  }
+}},
+{"id":"ui-page-turn","name":"Page Turn","category":"ui","tags":["page","turn","paper","next","book","swipe","air"],"desc":"A paper page turned: a soft sweep of air, light rustles and a quiet landing. For pagers, carousels and readers.","dur":0.35,"params":{"length":{"min":0.14,"max":0.34,"def":0.22,"unit":"s"},"rustle":{"min":0,"max":1,"def":0.5},"bright":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const len = p.length;
+  T.noise(out, t, {
+    filter: 'bandpass', f: 700 + 400 * p.bright, to: 2400 + 2000 * p.bright, q: 0.8,
+    dur: len, a: len * 0.35, peak: 0.1,
+  });
+  for (let k = 0; k < 3; k++) {
+    T.noise(out, t + len * (0.15 + 0.55 * T.rand()), { filter: 'highpass', f: 3500, q: 0.8, dur: 0.02, peak: 0.03 * p.rustle, a: 0.002 });
+  }
+  T.osc(out, t + len * 0.8, { f: 200, to: 140, dur: 0.06, peak: 0.03, a: 0.004 });
+}},
+{"id":"ui-radio-select","name":"Radio Select","category":"ui","tags":["radio","select","choose","option","bloop","soft"],"desc":"A soft rounded bloop for picking one option from a group: a sine that bends upward over a quiet low body.","dur":0.1,"params":{"pitch":{"min":400,"max":1100,"def":659,"unit":"Hz"},"bloop":{"min":0,"max":1,"def":0.5},"round":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const rise = 1.15 + 0.6 * p.bloop;
+  T.osc(out, t, { f: p.pitch, to: p.pitch * rise, dur: 0.09, peak: 0.055, a: 0.004, glide: 0.05 });
+  T.osc(out, t, { f: p.pitch / 2, to: (p.pitch / 2) * rise, dur: 0.07, peak: 0.015 + 0.03 * p.round, a: 0.004, glide: 0.05 });
+  T.noise(out, t, { filter: 'highpass', f: 4000, q: 0.7, dur: 0.008, peak: 0.006, a: 0.002 });
+}},
+{"id":"ui-scroll-detent","name":"Scroll Detent","category":"ui","tags":["scroll","detent","notch","wheel","ratchet","picker","wood"],"desc":"A tiny dry wooden tick for one notch of a scroll wheel or picker; raise ticks for a quick flick through several.","dur":0.32,"params":{"ticks":{"min":1,"max":5,"def":1,"step":1},"pitch":{"min":300,"max":900,"def":523,"unit":"Hz"},"gap":{"min":0.03,"max":0.07,"def":0.05,"unit":"s"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.ticks);
+  for (let k = 0; k < n; k++) {
+    const at = t + k * p.gap;
+    const v = 1 + 0.05 * T.rand(-1, 1);
+    T.bell(out, at, { f: p.pitch * v, partials: [[1, 1, 1], [2.76, 0.35, 0.5]], drift: 0.97, dur: 0.022, peak: 0.02, a: 0.002 });
+    T.noise(out, at, { filter: 'bandpass', f: 2400 * v, q: 4, dur: 0.008, peak: 0.07, a: 0.002 });
+  }
+}},
+{"id":"ui-slider-detent","name":"Slider Detent","category":"ui","tags":["slider","detent","notch","stop","tick","mechanical"],"desc":"A small pitched tick for a slider thumb crossing a notch; set pos from the thumb position and a drag climbs a scale.","dur":0.04,"params":{"pitch":{"min":500,"max":1500,"def":784,"unit":"Hz"},"pos":{"min":0,"max":1,"def":0.4},"edge":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const f = p.pitch * Math.pow(2, p.pos);
+  T.osc(out, t, { type: 'triangle', f, to: f * 0.8, dur: 0.03, peak: 0.037, a: 0.002 });
+  T.noise(out, t, { filter: 'bandpass', f: f * 2, q: 2, dur: 0.012, peak: 0.016 + 0.066 * p.edge, a: 0.002 });
+}},
+{"id":"ui-tap","name":"Tap","category":"ui","tags":["tap","touch","finger","press","row","soft"],"desc":"A soft fingertip tap for touch screens and list rows: a muffled pat over a short mid thud, rounder than a click.","dur":0.06,"params":{"pitch":{"min":220,"max":600,"def":330,"unit":"Hz"},"pat":{"min":0,"max":1,"def":0.5},"soft":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  T.osc(out, t, { f: p.pitch, to: p.pitch * 0.62, dur: 0.05, peak: 0.05, a: 0.004 });
+  T.noise(out, t, { filter: 'lowpass', f: 2600 - 1800 * p.soft, to: 500, q: 0.7, dur: 0.03, peak: 0.025 + 0.11 * p.pat, a: 0.003 });
+}},
+{"id":"ui-toggle-switch","name":"Toggle Switch","category":"ui","tags":["toggle","switch","checkbox","on","off","click","mechanical"],"desc":"A two-stage click-clack for switches: rising when turned on, falling when turned off.","dur":0.25,"params":{"on":{"min":0,"max":1,"def":1,"step":1},"pitch":{"min":1200,"max":3600,"def":2600,"unit":"Hz"},"gap":{"min":0.03,"max":0.12,"def":0.075,"unit":"s"},"body":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
   const lo = p.pitch * 0.73;
   const up = p.on >= 0.5;
   const click = (f, at, level) => {
@@ -1067,6 +1235,86 @@ const SOUNDS = [
   click(up ? lo : p.pitch, t, 0.024);
   click(up ? p.pitch : lo, t + p.gap, 0.033);
   T.osc(out, t + p.gap, { f: 420, to: 300, dur: 0.06, peak: 0.075 * p.body, a: 0.002 });
+}},
+{"id":"ui-tooltip-pop","name":"Tooltip Pop","category":"ui","tags":["tooltip","popover","hint","pop","bubble","appear","glass"],"desc":"A tiny glassy bubble pop for a tooltip or popover appearing: a bright pip that bends up and settles.","dur":0.08,"params":{"pitch":{"min":800,"max":2400,"def":1318,"unit":"Hz"},"rise":{"min":0,"max":1,"def":0.5},"shimmer":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  T.fm(out, t, {
+    f: p.pitch, to: p.pitch * (1 + 0.9 * p.rise), ratio: 1.5, index: 0.3 + 1.2 * p.shimmer, index1: 0,
+    dur: 0.07, peak: 0.04, a: 0.003, glide: 0.03,
+  });
+  T.noise(out, t, { filter: 'highpass', f: 5000, q: 0.7, dur: 0.008, peak: 0.004, a: 0.002 });
+}},
+{"id":"ui-undo","name":"Undo","category":"ui","tags":["undo","revert","rewind","back","restore","soft"],"desc":"A short rewind flutter that falls and settles with a soft tick, for undoing the last action.","dur":0.22,"params":{"pitch":{"min":500,"max":1400,"def":784,"unit":"Hz"},"speed":{"min":18,"max":46,"def":30,"unit":"Hz"},"settle":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  T.osc(out, t, {
+    type: 'triangle', f: p.pitch, to: p.pitch * 0.45, dur: 0.14, peak: 0.04, a: 0.006,
+    s: 0.8, d: 0.01, r: 0.05, trem: { rate: p.speed, depth: 0.8 },
+  });
+  T.noise(out, t, { filter: 'bandpass', f: 3000, to: 900, q: 1, dur: 0.12, a: 0.01, peak: 0.04 });
+  T.bell(out, t + 0.13, { f: p.pitch * 0.5, partials: [[1, 1, 1], [2.76, 0.4, 0.6]], dur: 0.08, peak: 0.005 + 0.03 * p.settle, a: 0.002 });
+}},
+{"id":"notify-achievement","name":"Achievement Unlocked","category":"notify","tags":["achievement","unlock","reward","trophy","level-up","fanfare","win"],"desc":"A quick rising run into a warm bell chord with a few glints. A small celebration for something earned.","dur":1.5,"params":{"pitch":{"min":392,"max":600,"def":523.25,"unit":"Hz"},"gap":{"min":0.05,"max":0.12,"def":0.075,"unit":"s"},"space":{"min":0,"max":0.6,"def":0.3},"sparkle":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 1.0, mix: p.space, tone: 0.65 });
+  const run = [0, 4, 7];
+  for (let k = 0; k < 3; k++) {
+    T.osc(room, t + k * p.gap, { type: 'triangle', f: p.pitch * Math.pow(2, run[k] / 12), dur: 0.16, peak: 0.08, a: 0.006 });
+  }
+  const at = t + 3 * p.gap;
+  const chord = [0, 4, 7, 14];
+  const level = [1, 0.9, 0.9, 0.5];   // the ninth sits highest, so it is the quietest
+  const parts = [[1, 1, 1], [2, 0.18, 0.5], [3, 0.04, 0.3]];
+  for (let k = 0; k < chord.length; k++) {
+    T.bell(room, at, { f: p.pitch * 2 * Math.pow(2, chord[k] / 12), dur: 0.9, peak: 0.042 * level[k], a: 0.006, partials: parts });
+  }
+  const glint = [0, 4, 7, 12];
+  for (let k = 0; k < glint.length; k++) {
+    T.osc(room, at + 0.05 + k * 0.07 + T.rand(0, 0.03), {
+      f: p.pitch * 4 * Math.pow(2, glint[k] / 12), dur: 0.1, peak: 0.012 * p.sparkle, a: 0.004,
+    });
+  }
+}},
+{"id":"notify-alarm","name":"Gentle Alarm","category":"notify","tags":["alarm","wake","timer","beep","gentle","morning","swell"],"desc":"Soft rounded beeps in rising pairs that swell round by round. Wakes you without startling you.","dur":2.3,"params":{"pitch":{"min":440,"max":1000,"def":659.25,"unit":"Hz"},"rounds":{"min":2,"max":4,"def":3,"step":1},"pace":{"min":0.12,"max":0.25,"def":0.17,"unit":"s"},"swell":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const rounds = Math.round(p.rounds);
+  const lp = T.filter(out, t, { type: 'lowpass', f: 2600, q: 0.7 });
+  for (let r = 0; r < rounds; r++) {
+    const lift = 1 - 0.6 * p.swell * (rounds - 1 - r) / (rounds - 1);
+    for (let k = 0; k < 2; k++) {
+      const f = p.pitch * (k ? 1.5 : 1);
+      const at = t + r * 0.6 + k * p.pace;
+      T.osc(lp, at, { type: 'triangle', f, dur: 0.15, peak: 0.1 * lift, a: 0.02 });
+      T.osc(lp, at, { f: f * 2, dur: 0.1, peak: 0.02 * lift, a: 0.02 });
+    }
+  }
+}},
+{"id":"notify-calendar","name":"Calendar Event","category":"notify","tags":["calendar","event","meeting","schedule","agenda","pluck","appointment"],"desc":"A tiny page-flip tick and two soft plucked notes rising a fourth. An event is starting; warm and organized, not urgent.","dur":0.8,"params":{"pitch":{"min":330,"max":880,"def":523.25,"unit":"Hz"},"interval":{"min":3,"max":8,"def":5,"step":1,"unit":"st"},"gap":{"min":0.1,"max":0.25,"def":0.16,"unit":"s"},"bright":{"min":0.1,"max":0.8,"def":0.45},"tick":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  T.noise(out, t, { filter: 'bandpass', f: 2200, q: 1.4, dur: 0.025, peak: 0.09 * p.tick, a: 0.003 });
+  const start = 1200 + 3200 * p.bright;
+  for (let k = 0; k < 2; k++) {
+    const f = k ? p.pitch * Math.pow(2, Math.round(p.interval) / 12) : p.pitch;
+    const at = t + 0.04 + k * p.gap;
+    // the cutoff falls from `start` to just above the note, which is what makes it a pluck
+    const lp = T.filter(out, at, { type: 'lowpass', f: start, to: Math.min(start, f * 1.3), dur: 0.3, q: 1.2 });
+    T.osc(lp, at, { type: 'sawtooth', f, dur: 0.45, peak: 0.06, a: 0.003 });
+    T.osc(lp, at, { type: 'triangle', f: f / 2, dur: 0.3, peak: 0.03, a: 0.003 });
+  }
+}},
+{"id":"notify-double-tap","name":"Attention Double Tap","category":"notify","tags":["tap","knock","double","attention","nudge","soft","wood"],"desc":"Two soft wooden knocks, each a touch lower and quieter. A gentle \"excuse me\" that is barely a sound.","dur":0.55,"params":{"pitch":{"min":200,"max":500,"def":320,"unit":"Hz"},"gap":{"min":0.07,"max":0.2,"def":0.12,"unit":"s"},"wood":{"min":0,"max":1,"def":0.5},"taps":{"min":2,"max":3,"def":2,"step":1}},"play":function (T, out, t, p) {
+  const n = Math.round(p.taps);
+  let at = t;
+  for (let k = 0; k < n; k++) {
+    // seeded wobble in timing and pitch, because a person never knocks twice the same way
+    const f = p.pitch * Math.pow(0.93, k) * (1 + T.rand(-0.02, 0.02));
+    const lv = 1 - 0.15 * k;
+    T.osc(out, at, { f: f * 1.6, to: f, glide: 0.035, dur: 0.1, peak: 0.072 * lv, a: 0.004 });
+    T.osc(out, at, { f: f * 3, dur: 0.04, peak: 0.018 * lv, a: 0.004 });
+    T.noise(out, at, { filter: 'bandpass', f: 1800, q: 1.6, dur: 0.02, peak: 0.072 * p.wood * lv, a: 0.002 });
+    at += p.gap * (1 + T.rand(-0.05, 0.05));
+  }
+}},
+{"id":"notify-download-done","name":"Download Complete","category":"notify","tags":["download","done","complete","finished","drop","success","saved"],"desc":"A soft downward glide that settles with a gentle thump and a small ting. The file is in place.","dur":0.8,"params":{"pitch":{"min":300,"max":700,"def":440,"unit":"Hz"},"fall":{"min":0.06,"max":0.2,"def":0.12,"unit":"s"},"thump":{"min":0,"max":1,"def":0.5},"ring":{"min":0.15,"max":0.5,"def":0.3,"unit":"s"}},"play":function (T, out, t, p) {
+  const land = t + p.fall;
+  T.osc(out, t, { f: p.pitch * 2, to: p.pitch, glide: p.fall, dur: p.fall + 0.02, peak: 0.05, a: p.fall * 0.4, s: 1, d: 0.01, r: 0.02 });
+  T.osc(out, land, { f: 150, to: 70, glide: 0.07, dur: 0.1, peak: 0.07 * p.thump, a: 0.004 });
+  T.osc(out, land, { type: 'triangle', f: p.pitch, dur: p.ring, peak: 0.085, a: 0.008 });
+  T.osc(out, land + 0.09, { f: p.pitch * 1.5, dur: p.ring * 0.6, peak: 0.05, a: 0.01 });
 }},
 {"id":"notify-error-buzz","name":"Error Buzz","category":"notify","tags":["error","fail","invalid","denied","buzz","negative"],"desc":"A low falling double buzz for a rejected action. Clear without being harsh.","dur":0.45,"params":{"pitch":{"min":90,"max":300,"def":160,"unit":"Hz"},"pulses":{"min":1,"max":3,"def":2,"step":1},"rough":{"min":0,"max":1,"def":0.5},"tone":{"min":500,"max":3000,"def":1200,"unit":"Hz"}},"play":function (T, out, t, p) {
   const lp = T.filter(out, t, { type: 'lowpass', f: p.tone, q: 0.8 });
@@ -1079,11 +1327,156 @@ const SOUNDS = [
     });
   }
 }},
+{"id":"notify-incoming-call","name":"Incoming Call Ring","category":"notify","tags":["call","ring","phone","incoming","telephone","trill","ringtone"],"desc":"A short bell-like phone ring: bursts of fast alternating notes with a pause between. Loops cleanly if you repeat it.","dur":2,"params":{"pitch":{"min":600,"max":1000,"def":880,"unit":"Hz"},"rate":{"min":8,"max":16,"def":12,"unit":"Hz"},"rings":{"min":1,"max":3,"def":2,"step":1},"tone":{"min":1200,"max":3500,"def":2600,"unit":"Hz"}},"play":function (T, out, t, p) {
+  const lp = T.filter(out, t, { type: 'lowpass', f: p.tone, q: 0.7 });
+  const per = 1 / p.rate;
+  const n = Math.round(0.42 * p.rate);
+  for (let r = 0; r < Math.round(p.rings); r++) {
+    for (let k = 0; k < n; k++) {
+      const swell = 0.6 + 0.4 * Math.sin(Math.PI * (k + 0.5) / n);
+      T.osc(lp, t + r * 0.65 + k * per, {
+        type: 'triangle', f: k % 2 ? p.pitch * 1.26 : p.pitch, dur: per * 2.2, peak: 0.087 * swell, a: 0.004,
+      });
+    }
+  }
+}},
+{"id":"notify-info","name":"Info Ping","category":"notify","tags":["info","notice","ping","neutral","heads-up","bell","fyi"],"desc":"One soft bell tap for neutral news: nothing wrong and nothing won, just a heads-up. Made to be heard all day.","dur":0.8,"params":{"pitch":{"min":500,"max":1200,"def":880,"unit":"Hz"},"decay":{"min":0.2,"max":0.7,"def":0.4,"unit":"s"},"bright":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  // the 2.76 partial lasts a quarter of the decay, so it reads as the edge of the attack, not a tone
+  // a touch of seeded variation (under 1% in pitch, about 1 dB in level) so a busy day is not one
+  // identical tap repeated; it is steady when Vary is off
+  T.bell(out, t, {
+    f: p.pitch * (1 + T.rand(-0.008, 0.008)), dur: p.decay, peak: 0.072 * T.rand(0.9, 1), a: 0.006,
+    partials: [[1, 1, 1], [2, 0.2 + 0.3 * p.bright, 0.5], [2.76, 0.04 + 0.12 * p.bright, 0.25]],
+  });
+}},
+{"id":"notify-low-battery","name":"Low Battery","category":"notify","tags":["battery","low","power","drain","warning","falling","charge"],"desc":"Three slow falling notes under a closing filter, the last one sagging. Power is running out.","dur":1.4,"params":{"pitch":{"min":250,"max":700,"def":440,"unit":"Hz"},"steps":{"min":2,"max":4,"def":3,"step":1},"gap":{"min":0.15,"max":0.3,"def":0.2,"unit":"s"},"tone":{"min":800,"max":3000,"def":1800,"unit":"Hz"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.steps);
+  const lp = T.filter(out, t, { type: 'lowpass', f: p.tone, to: p.tone * 0.4, dur: (n - 1) * p.gap + 0.4, q: 0.8 });
+  for (let k = 0; k < n; k++) {
+    const f = p.pitch * Math.pow(0.89, k);
+    const last = k === n - 1;
+    const at = t + k * p.gap;
+    T.osc(lp, at, { type: 'triangle', f, to: last ? f * 0.8 : f, dur: last ? 0.4 : 0.17, peak: 0.076, a: 0.012 });
+    T.osc(lp, at, { f: f / 2, to: last ? f * 0.4 : f / 2, dur: last ? 0.4 : 0.17, peak: 0.036, a: 0.012 });
+  }
+}},
+{"id":"notify-mention","name":"Mention Ping","category":"notify","tags":["mention","ping","at","tag","highlight","ding","attention"],"desc":"A quick grace note into a glassy bell ting with a soft echo. Stands out from ordinary messages without shouting.","dur":1.2,"params":{"pitch":{"min":600,"max":1318.5,"def":1046.5,"unit":"Hz"},"glass":{"min":0,"max":1,"def":0.5},"ring":{"min":0.2,"max":0.5,"def":0.32,"unit":"s"},"echo":{"min":0,"max":0.5,"def":0.25}},"play":function (T, out, t, p) {
+  const room = T.delay(out, t, { time: 0.15, fb: 0.3, mix: p.echo, tone: 3200 });
+  const pitch = p.pitch * (1 + T.rand(-0.006, 0.006));   // seeded variation so repeats are not identical
+  T.osc(room, t, { f: pitch * 0.667, dur: 0.09, peak: 0.045, a: 0.006 });
+  T.bell(room, t + 0.075, {
+    f: pitch, dur: p.ring, peak: 0.07, a: 0.004,
+    partials: [[1, 1, 1], [2, 0.25, 0.5], [2.76, 0.08 + 0.32 * p.glass, 0.22]],
+  });
+}},
+{"id":"notify-message-in","name":"Message Received","category":"notify","tags":["message","chat","received","incoming","dm","pop","bubble"],"desc":"Two quick bubbly pops rising a fourth, like a chat bubble arriving. Friendly and short enough for a busy channel.","dur":0.4,"params":{"pitch":{"min":400,"max":880,"def":660,"unit":"Hz"},"interval":{"min":2,"max":7,"def":5,"step":1,"unit":"st"},"gap":{"min":0.07,"max":0.18,"def":0.11,"unit":"s"},"pop":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  // seeded variation under 1% in pitch and about 1 dB in level, so repeats are not identical
+  const j = 1 + T.rand(-0.008, 0.008);
+  const v = T.rand(0.9, 1);
+  const notes = [[p.pitch * j, 0, 0.8 * v], [p.pitch * j * Math.pow(2, Math.round(p.interval) / 12), p.gap, v]];
+  for (let k = 0; k < 2; k++) {
+    const f = notes[k][0];
+    const at = t + notes[k][1];
+    const lv = notes[k][2];
+    T.osc(out, at, { f: f * (1 - 0.22 * p.pop), to: f, glide: 0.03, dur: 0.17, peak: 0.085 * lv, a: 0.006 });
+    T.osc(out, at, { f: f * 2, dur: 0.07, peak: 0.018 * lv, a: 0.006 });
+  }
+}},
+{"id":"notify-message-out","name":"Message Sent","category":"notify","tags":["message","send","sent","whoosh","blip","outgoing","post"],"desc":"A soft rising whoosh into a tiny blip: your message is on its way. Quiet enough to play on every send.","dur":0.35,"params":{"pitch":{"min":600,"max":1400,"def":1047,"unit":"Hz"},"speed":{"min":0.08,"max":0.22,"def":0.13,"unit":"s"},"air":{"min":0.2,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const w = p.speed * (1 + T.rand(-0.06, 0.06));   // seeded variation so repeats are not identical
+  const pitch = p.pitch * (1 + T.rand(-0.008, 0.008));
+  T.noise(out, t, { filter: 'bandpass', f: 600, to: 3200, q: 0.9, dur: w, peak: 0.15 * p.air, a: w * 0.6 });
+  T.osc(out, t + w * 0.85, { f: pitch * 0.88, to: pitch, glide: 0.02, dur: 0.11, peak: 0.085, a: 0.005 });
+  T.osc(out, t + w * 0.85, { f: pitch * 2, dur: 0.05, peak: 0.016, a: 0.005 });
+}},
+{"id":"notify-new-mail","name":"New Mail","category":"notify","tags":["mail","email","inbox","new","letter","ding","incoming"],"desc":"A soft falling swish into a short-long two-bell \"tu-ding\". A letter has landed in the inbox.","dur":0.95,"params":{"pitch":{"min":440,"max":880,"def":784,"unit":"Hz"},"interval":{"min":3,"max":9,"def":5,"step":1,"unit":"st"},"swish":{"min":0.2,"max":1,"def":0.5},"ring":{"min":0.25,"max":0.6,"def":0.4,"unit":"s"}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 0.5, mix: 0.18, tone: 0.6 });
+  const parts = [[1, 1, 1], [2, 0.25, 0.5], [2.76, 0.08, 0.2]];
+  const pitch = p.pitch * (1 + T.rand(-0.006, 0.006));   // seeded variation so repeats are not identical
+  T.noise(room, t, { filter: 'bandpass', f: 3000, to: 700, q: 0.9, dur: 0.1, peak: 0.13 * p.swish, a: 0.03 });
+  T.bell(room, t + 0.09, { f: pitch, dur: 0.1, peak: 0.045, a: 0.005, partials: parts });
+  T.bell(room, t + 0.2, { f: pitch * Math.pow(2, Math.round(p.interval) / 12), dur: p.ring, peak: 0.07, a: 0.005, partials: parts });
+}},
+{"id":"notify-reminder","name":"Reminder Chime","category":"notify","tags":["reminder","chime","ding-dong","doorbell","due","nudge","bell"],"desc":"A soft two-bell \"ding-dong\" with a little room around it. A polite nudge that something is due.","dur":1.6,"params":{"pitch":{"min":440,"max":990,"def":659.25,"unit":"Hz"},"drop":{"min":3,"max":7,"def":4,"step":1,"unit":"st"},"gap":{"min":0.2,"max":0.4,"def":0.3,"unit":"s"},"ring":{"min":0.5,"max":0.9,"def":0.7,"unit":"s"},"space":{"min":0,"max":0.5,"def":0.2}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 0.7, mix: p.space, tone: 0.5 });
+  const parts = [[1, 1, 1], [2, 0.3, 0.55], [3, 0.1, 0.3]];
+  T.bell(room, t, { f: p.pitch, dur: p.ring, peak: 0.07, a: 0.006, partials: parts });
+  T.bell(room, t + p.gap, { f: p.pitch * Math.pow(2, -Math.round(p.drop) / 12), dur: p.ring, peak: 0.075, a: 0.006, partials: parts });
+}},
 {"id":"notify-success-chime","name":"Success Chime","category":"notify","tags":["success","done","complete","confirm","chime","positive"],"desc":"A gentle two-note rising chime for a completed action. Not a fanfare; a quiet yes.","dur":0.5,"params":{"pitch":{"min":330,"max":1320,"def":659.25,"unit":"Hz"},"interval":{"min":3,"max":12,"def":7,"step":1,"unit":"st"},"gap":{"min":0.06,"max":0.2,"def":0.12,"unit":"s"},"shimmer":{"min":0,"max":1,"def":0.35}},"play":function (T, out, t, p) {
   const hi = p.pitch * Math.pow(2, Math.round(p.interval) / 12);
   T.osc(out, t, { type: 'triangle', f: p.pitch, dur: 0.19, peak: 0.11, a: 0.01 });
   T.osc(out, t + p.gap, { type: 'triangle', f: hi, dur: 0.26, peak: 0.11, a: 0.01 });
   T.osc(out, t + p.gap, { f: hi * 2, dur: 0.13, peak: 0.1 * p.shimmer, a: 0.01 });
+}},
+{"id":"notify-sync-done","name":"Sync Done","category":"notify","tags":["sync","done","complete","refresh","backup","success","cycle"],"desc":"A quick back-and-forth of two notes that settles on the octave. Everything is in step again.","dur":1.1,"params":{"pitch":{"min":330,"max":700,"def":523.25,"unit":"Hz"},"cycles":{"min":1,"max":3,"def":2,"step":1},"speed":{"min":0.06,"max":0.12,"def":0.08,"unit":"s"},"shimmer":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const n = Math.round(p.cycles) * 2;
+  let at = t;
+  for (let k = 0; k < n; k++) {
+    T.osc(out, at, { type: 'triangle', f: k % 2 ? p.pitch * 1.5 : p.pitch, dur: p.speed * 1.5, peak: 0.055, a: 0.006 });
+    at += p.speed;
+  }
+  T.osc(out, at, { type: 'triangle', f: p.pitch * 2, dur: 0.3, peak: 0.1, a: 0.008 });
+  T.osc(out, at, { f: p.pitch * 4, dur: 0.14, peak: 0.06 * p.shimmer, a: 0.008 });
+}},
+{"id":"notify-task-failed","name":"Task Failed","category":"notify","tags":["fail","failed","error","task","build","broken","negative"],"desc":"A run of low falling buzzes that sags on the last one. Something you were waiting on did not work out; firm, not harsh.","dur":0.85,"params":{"pitch":{"min":120,"max":320,"def":190,"unit":"Hz"},"pulses":{"min":2,"max":4,"def":3,"step":1},"rough":{"min":0,"max":1,"def":0.4},"weight":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const lp = T.filter(out, t, { type: 'lowpass', f: 1200, q: 0.8 });
+  const n = Math.round(p.pulses);
+  for (let k = 0; k < n; k++) {
+    const f = p.pitch * Math.pow(0.89, k);
+    const last = k === n - 1;
+    T.osc(lp, t + k * 0.16, {
+      type: 'square', f, to: last ? f * 0.78 : f * 0.97, dur: last ? 0.32 : 0.13, peak: 0.055, a: 0.008,
+      s: 0.6, d: 0.03, r: last ? 0.1 : 0.03, trem: { rate: 30, depth: 0.7 * p.rough },
+    });
+  }
+  T.osc(out, t, { f: p.pitch, to: p.pitch * 0.6, dur: 0.4, peak: 0.06 * p.weight, a: 0.01 });
+}},
+{"id":"notify-upload-done","name":"Upload Complete","category":"notify","tags":["upload","done","complete","finished","rise","success","cloud"],"desc":"A soft upward glide that lands on a bright chime note. The file has arrived.","dur":0.75,"params":{"pitch":{"min":300,"max":900,"def":523.25,"unit":"Hz"},"rise":{"min":0.06,"max":0.2,"def":0.12,"unit":"s"},"ring":{"min":0.15,"max":0.5,"def":0.3,"unit":"s"},"shimmer":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const top = p.pitch * 1.5;
+  T.osc(out, t, { f: p.pitch * 0.6, to: top, glide: p.rise, dur: p.rise, peak: 0.05, a: p.rise * 0.5, s: 1, d: 0.01, r: 0.02 });
+  const at = t + p.rise;
+  T.osc(out, at, { type: 'triangle', f: top, dur: p.ring, peak: 0.105, a: 0.008 });
+  T.osc(out, at, { f: top * 2, dur: p.ring * 0.45, peak: 0.05 * p.shimmer, a: 0.008 });
+}},
+{"id":"notify-warning","name":"Warning Tone","category":"notify","tags":["warning","caution","alert","uh-oh","attention","careful"],"desc":"A two-note falling \"uh-oh\" in a round triangle tone. Cautions without scolding; milder than the error buzz.","dur":0.65,"params":{"pitch":{"min":250,"max":700,"def":440,"unit":"Hz"},"drop":{"min":2,"max":7,"def":3,"step":1,"unit":"st"},"gap":{"min":0.1,"max":0.3,"def":0.16,"unit":"s"},"tone":{"min":800,"max":4000,"def":1800,"unit":"Hz"}},"play":function (T, out, t, p) {
+  const lp = T.filter(out, t, { type: 'lowpass', f: p.tone, q: 0.7 });
+  const low = p.pitch * Math.pow(2, -Math.round(p.drop) / 12);
+  T.osc(lp, t, { type: 'triangle', f: p.pitch, dur: 0.15, peak: 0.1, a: 0.01 });
+  T.osc(lp, t + p.gap, { type: 'triangle', f: low, dur: 0.3, peak: 0.1, a: 0.012, vib: { rate: 5, depth: 14 } });
+}},
+{"id":"game-arrow-shot","name":"Arrow Shot","category":"game","tags":["arrow","bow","shot","shoot","twang","archer","ranged","projectile"],"desc":"A bowstring twang and the zip of an arrow leaving. For archers and ranged attacks.","dur":0.55,"params":{"pitch":{"min":90,"max":320,"def":160,"unit":"Hz"},"flight":{"min":0.12,"max":0.4,"def":0.22,"unit":"s"},"twang":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  T.pluck(out, t, { f: p.pitch, dur: 0.22 + 0.12 * p.twang, bright: 0.3 + 0.6 * p.twang, peak: 0.075 });
+  T.osc(out, t, { f: p.pitch * 0.9, to: p.pitch * 0.5, dur: 0.1, peak: 0.03, a: 0.003 });
+  // the arrow leaves and recedes: bright and loud at first, then falling away
+  T.noise(out, t + 0.015, {
+    filter: 'bandpass', f: 5200, to: 1500, q: 2, dur: p.flight, peak: 0.09, a: 0.012,
+  });
+}},
+{"id":"game-bounce","name":"Bounce","category":"game","tags":["bounce","boing","spring","rubber","ball","trampoline","jump-pad","cartoon"],"desc":"A rubbery boing: a quick spring up, then a wobble that settles. For jump pads, springs and balls.","dur":0.66,"params":{"pitch":{"min":150,"max":500,"def":260,"unit":"Hz"},"wobble":{"min":0,"max":1,"def":0.6},"length":{"min":0.25,"max":0.6,"def":0.4,"unit":"s"}},"play":function (T, out, t, p) {
+  T.osc(out, t, { f: p.pitch * 0.9, to: p.pitch * 1.8, glide: 0.05, dur: 0.06, peak: 0.065, a: 0.004 });
+  T.osc(out, t + 0.045, {
+    f: p.pitch * 1.8, to: p.pitch, glide: p.length * 0.9, dur: p.length, peak: 0.08, a: 0.01,
+    vib: { rate: 13, depth: 350 * p.wobble },
+  });
+  T.osc(out, t + 0.045, {
+    type: 'triangle', f: p.pitch * 3.6, to: p.pitch * 2, glide: p.length * 0.9, dur: p.length * 0.8,
+    peak: 0.016, a: 0.01, vib: { rate: 13, depth: 350 * p.wobble },
+  });
+}},
+{"id":"game-checkpoint","name":"Checkpoint","category":"game","tags":["checkpoint","save","flag","respawn","progress","reached","banner","chime"],"desc":"A soft thump and three bells fanning up that ring together: progress saved. Warmer than a success chime.","dur":1.17,"params":{"pitch":{"min":262,"max":784,"def":392,"unit":"Hz"},"spread":{"min":0.04,"max":0.14,"def":0.08,"unit":"s"},"ring":{"min":0.35,"max":0.85,"def":0.65,"unit":"s"}},"play":function (T, out, t, p) {
+  const steps = [0, 7, 12];
+  // the bell partials sit near whole multiples, so it sounds like a held chord, not struck metal
+  const warm = [[1, 1, 1], [2, 0.3, 0.5], [3, 0.15, 0.3], [4.07, 0.1, 0.2]];
+  T.osc(out, t, { f: 110, to: 70, dur: 0.15, peak: 0.06, a: 0.004 });
+  for (let k = 0; k < 3; k++) {
+    T.bell(out, t + 0.03 + k * p.spread, {
+      f: p.pitch * Math.pow(2, steps[k] / 12), partials: warm, dur: p.ring, peak: 0.055, a: 0.003,
+    });
+  }
+  T.noise(out, t + 0.03 + 2 * p.spread, {
+    filter: 'highpass', f: 6000, to: 9000, q: 0.8, dur: 0.15, peak: 0.02, a: 0.03,
+  });
 }},
 {"id":"game-coin-flip","name":"Coin Flip","category":"game","tags":["coin","flip","toss","spin","money","ping"],"desc":"A coin spun into the air: rising ticks as it turns, then a bright ping when it lands.","dur":1.5,"params":{"spins":{"min":3,"max":8,"def":6,"step":1},"spin":{"min":0.05,"max":0.1,"def":0.075,"unit":"s"},"pitch":{"min":900,"max":2600,"def":1568,"unit":"Hz"},"ring":{"min":0.15,"max":0.6,"def":0.42,"unit":"s"}},"play":function (T, out, t, p) {
   const n = Math.round(p.spins);
@@ -1094,6 +1487,135 @@ const SOUNDS = [
   const land = t + n * p.spin + 0.07;
   T.osc(out, land, { f: p.pitch, dur: p.ring, peak: 0.13, a: 0.006 });
   T.osc(out, land, { f: p.pitch * 2.76, to: p.pitch * 2.7, dur: p.ring * 0.38, peak: 0.05, a: 0.006 });
+}},
+{"id":"game-combo-ping","name":"Combo Ping","category":"game","tags":["combo","streak","chain","multiplier","ping","score","hit-streak","arcade"],"desc":"A short bright ping that rises one scale step per streak count, so a combo plays a rising tune. Chip makes it a square ping.","dur":0.52,"params":{"pitch":{"min":500,"max":1400,"def":880,"unit":"Hz"},"streak":{"min":1,"max":8,"def":1,"step":1},"ring":{"min":0.12,"max":0.5,"def":0.26,"unit":"s"},"chip":{"min":0,"max":1,"def":0,"step":1}},"play":function (T, out, t, p) {
+  const chip = p.chip >= 0.5;
+  const scale = [0, 2, 4, 7, 9, 12, 14, 16];
+  const f = p.pitch * Math.pow(2, scale[Math.round(p.streak) - 1] / 12);
+  if (chip) {
+    const dest = T.crush(out, t, { bits: 4, ref: 0.07 });
+    T.osc(dest, t, { type: 'square', f, dur: p.ring * 0.8, peak: 0.07, a: 0.003 });
+    T.osc(out, t, { type: 'triangle', f: f * 2, dur: p.ring * 0.4, peak: 0.02, a: 0.003 });
+  } else {
+    T.bell(out, t, {
+      f, partials: [[1, 1, 1], [2, 0.35, 0.55], [3.01, 0.18, 0.35]], dur: p.ring, peak: 0.07, a: 0.003,
+    });
+    T.osc(out, t, { f: f * 4, dur: 0.05, peak: 0.012, a: 0.002 });
+  }
+}},
+{"id":"game-countdown-beep","name":"Countdown Beep","category":"game","tags":["countdown","beep","timer","start","go","race","ready","8-bit","chiptune"],"desc":"The beep for 3, 2, 1 in a race or round start; turn Go on for the longer, higher start tone.","dur":0.62,"params":{"pitch":{"min":440,"max":1320,"def":880,"unit":"Hz"},"length":{"min":0.06,"max":0.25,"def":0.14,"unit":"s"},"go":{"min":0,"max":1,"def":0,"step":1},"chip":{"min":0,"max":1,"def":1,"step":1}},"play":function (T, out, t, p) {
+  const chip = p.chip >= 0.5;
+  const go = p.go >= 0.5;
+  const len = go ? p.length * 2.4 : p.length;
+  const f = go ? p.pitch * 2 : p.pitch;
+  const peak = (chip ? 0.065 : 0.07) * (go ? 1.15 : 1);
+  const dest = chip ? T.crush(out, t, { bits: 5, ref: peak }) : out;
+  const type = chip ? 'square' : 'sine';
+  // a beep is flat on top with a short release, not a decaying ping
+  T.osc(dest, t, { type, f, dur: len, peak, a: 0.003, s: 0.9, d: 0.01, r: len * 0.25 });
+  if (go) {
+    T.osc(dest, t, { type, f: f * 1.5, dur: len, peak: peak * 0.4, a: 0.003, s: 0.9, d: 0.01, r: len * 0.25 });
+  }
+  if (!chip) T.osc(out, t, { type: 'triangle', f: f * 2, dur: len * 0.8, peak: 0.02, a: 0.003, s: 0.8, d: 0.01 });
+}},
+{"id":"game-door-open","name":"Door Open","category":"game","tags":["door","open","creak","hinge","latch","wood","squeak","entrance"],"desc":"A latch clicks and a wooden hinge creaks open. Use a short length for a quick door, long for a spooky one.","dur":1.1,"params":{"pitch":{"min":70,"max":260,"def":130,"unit":"Hz"},"length":{"min":0.4,"max":1,"def":0.7,"unit":"s"},"creak":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  // the latch: a bright click then a small knock as it lets go
+  T.noise(out, t, { filter: 'highpass', f: 3200, to: 2400, q: 0.8, dur: 0.012, peak: 0.05, a: 0.001 });
+  T.noise(out, t + 0.03, { filter: 'bandpass', f: 1400, q: 2, dur: 0.02, peak: 0.05, a: 0.001 });
+  T.osc(out, t + 0.03, { f: 160, to: 110, dur: 0.05, peak: 0.03, a: 0.002 });
+  // the hinge: the door swings, so the creak climbs and the bandpass opens with it
+  const s = t + 0.08;
+  const band = T.filter(out, s, { type: 'bandpass', f: 500, to: 900, dur: p.length, q: 3 });
+  const f0 = p.pitch * T.rand(0.95, 1.05);
+  T.osc(band, s, {
+    type: 'sawtooth', f: f0, to: f0 * 1.5, dur: p.length, peak: 0.17, a: 0.08, s: 0.8, d: 0.2, r: p.length * 0.3,
+    trem: { rate: 14 + 10 * p.creak, depth: 0.4 + 0.6 * p.creak },
+    vib: { rate: 9, depth: 40 + 200 * p.creak },
+  });
+  // a second hinge a fifth up, shuddering at an unrelated rate, so the stick and slip never lines up
+  T.osc(band, s + 0.02, {
+    type: 'sawtooth', f: f0 * 1.51, to: f0 * 2.2, dur: p.length - 0.02, peak: 0.1, a: 0.1, s: 0.8, d: 0.2, r: p.length * 0.3,
+    trem: { rate: 19 + 13 * p.creak, depth: 0.5 + 0.5 * p.creak },
+  });
+  T.noise(band, s, { filter: 'none', dur: p.length, peak: 0.08 * p.creak, a: 0.1, s: 0.8, d: 0.2, r: p.length * 0.3 });
+}},
+{"id":"game-double-jump","name":"Double Jump","category":"game","tags":["double-jump","jump","flip","air","platformer","8-bit","chiptune","retro"],"desc":"Two hops in a row, the second higher and quicker, for a mid-air jump. Chip is square; off is soft triangle.","dur":0.34,"params":{"pitch":{"min":200,"max":500,"def":300,"unit":"Hz"},"gap":{"min":0.08,"max":0.18,"def":0.11,"unit":"s"},"lift":{"min":3,"max":12,"def":7,"step":1,"unit":"st"},"chip":{"min":0,"max":1,"def":1,"step":1}},"play":function (T, out, t, p) {
+  const chip = p.chip >= 0.5;
+  const peak = chip ? 0.06 : 0.08;
+  const dest = chip ? T.crush(out, t, { bits: 4, ref: peak * 1.1 }) : out;
+  const type = chip ? 'square' : 'triangle';
+  const curve = chip ? 'lin' : 'exp';
+  // the second hop starts a lift higher than the first and sweeps further
+  const f2 = p.pitch * Math.pow(2, Math.round(p.lift) / 12) * 1.25;
+  // the first hop ends before the second begins (gap is at least 0.08), so squares never stack
+  T.osc(dest, t, { type, f: p.pitch, to: p.pitch * 2, glide: 0.06, glideCurve: curve, dur: 0.075, peak, a: 0.004 });
+  T.osc(dest, t + p.gap, {
+    type, f: f2, to: f2 * 2.2, glide: 0.1, glideCurve: curve,
+    dur: 0.15, peak: peak * 1.1, a: 0.004, s: 0.7, d: 0.04, r: 0.07,
+  });
+  if (!chip) {
+    T.osc(out, t + p.gap, { f: f2 * 2, to: f2 * 4.4, glide: 0.1, dur: 0.13, peak: 0.02, a: 0.004 });
+    T.noise(out, t + p.gap, { filter: 'highpass', f: 5000, to: 7000, q: 0.8, dur: 0.06, peak: 0.02, a: 0.01 });
+  }
+}},
+{"id":"game-explosion-soft","name":"Explosion Soft","category":"game","tags":["explosion","boom","blast","bomb","cartoon","poof","burst","detonate"],"desc":"A big but friendly boom: a round blast with a pop on the front and crackles after. Cartoon, not harsh.","dur":1.05,"params":{"size":{"min":0.3,"max":0.9,"def":0.6,"unit":"s"},"pitch":{"min":35,"max":110,"def":60,"unit":"Hz"},"soften":{"min":0,"max":1,"def":0.5},"crackle":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const L = p.size;
+  T.noise(out, t, {
+    filter: 'lowpass', f: 2800 - 1700 * p.soften, to: 120, q: 0.8, dur: L, peak: 0.23, a: 0.01,
+  });
+  T.osc(out, t, { f: p.pitch * 2.2, to: p.pitch * 0.6, glide: L * 0.8, dur: L * 0.9, peak: 0.1, a: 0.004 });
+  T.osc(out, t, { f: 700, to: 160, dur: 0.07, peak: 0.031, a: 0.002 });
+  for (let k = 0; k < 5; k++) {
+    T.noise(out, t + 0.05 + k * 0.04 + T.rand(0, 0.03), {
+      filter: 'highpass', f: 3500, q: 0.8, dur: 0.02,
+      peak: 0.016 * p.crackle * T.rand(0.6, 1), a: 0.002,
+    });
+  }
+}},
+{"id":"game-footstep-hard","name":"Footstep Hard","category":"game","tags":["footstep","step","walk","run","stone","wood","floor","heel","hard"],"desc":"A step on wood, tile or stone: a crisp tap with a knock under it. Use Vary for a walking rhythm.","dur":0.2,"params":{"surface":{"min":0,"max":1,"def":0.5},"weight":{"min":0,"max":1,"def":0.5},"pitch":{"min":0.7,"max":1.5,"def":1,"unit":"x"}},"play":function (T, out, t, p) {
+  const j = T.rand(0.92, 1.08) * p.pitch;
+  const l = T.rand(0.85, 1.15);
+  T.noise(out, t, {
+    filter: 'bandpass', f: (2000 + 2200 * p.surface) * j, q: 1.2,
+    dur: 0.02, peak: (0.05 + 0.03 * p.surface) * l, a: 0.001,
+  });
+  T.osc(out, t, {
+    type: 'triangle', f: (280 - 70 * p.surface) * j, to: (150 - 30 * p.surface) * j,
+    dur: 0.07, peak: (0.025 + 0.014 * p.weight) * l, a: 0.002,
+  });
+  T.osc(out, t, {
+    f: 115 * j, to: 70, dur: 0.1, peak: (0.007 + 0.025 * p.weight) * l, a: 0.003,
+  });
+  T.bell(out, t, {
+    f: 1800 * j, partials: [[1, 1, 1], [2.76, 0.4, 0.5]], dur: 0.06,
+    peak: 0.008 * p.surface * l, a: 0.001,
+  });
+}},
+{"id":"game-footstep-soft","name":"Footstep Soft","category":"game","tags":["footstep","step","walk","run","grass","carpet","sand","soft"],"desc":"A quiet step on carpet, grass or sand. Use Vary so a walk never repeats exactly.","dur":0.22,"params":{"weight":{"min":0,"max":1,"def":0.4},"surface":{"min":0,"max":1,"def":0.4},"length":{"min":0.06,"max":0.16,"def":0.1,"unit":"s"}},"play":function (T, out, t, p) {
+  const j = T.rand(0.9, 1.1);
+  const l = T.rand(0.85, 1.15);
+  T.noise(out, t, {
+    filter: 'lowpass', f: (500 + 1700 * p.surface) * j, to: 250, q: 0.8,
+    dur: p.length, peak: (0.053 + 0.053 * p.weight) * l, a: 0.012,
+  });
+  T.osc(out, t, {
+    f: (70 + 30 * p.weight) * j, to: 45, dur: p.length * 1.1,
+    peak: (0.009 + 0.015 * p.weight) * l, a: 0.008,
+  });
+  // gravel crunch: scales with surface, so carpet gets none
+  T.noise(out, t + 0.01, {
+    filter: 'highpass', f: 3500, q: 0.8, dur: 0.04 + 0.04 * p.surface,
+    peak: 0.009 * p.surface * l, a: 0.006,
+  });
+}},
+{"id":"game-gem-collect","name":"Gem Collect","category":"game","tags":["gem","crystal","jewel","collect","treasure","glass","sparkle","reward"],"desc":"A crystalline two-strike ring for a gem or treasure: bright, glassy and a little longer than a coin.","dur":0.95,"params":{"pitch":{"min":800,"max":2400,"def":1568,"unit":"Hz"},"ring":{"min":0.2,"max":0.8,"def":0.5,"unit":"s"},"gap":{"min":0.05,"max":0.12,"def":0.08,"unit":"s"},"sparkle":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const glass = [[1, 1, 1], [2.32, 0.45, 0.55], [4.25, 0.25, 0.35], [6.63, 0.12, 0.22]];
+  T.bell(out, t, { f: p.pitch, partials: glass, dur: p.ring * 0.7, peak: 0.05, a: 0.002 });
+  T.bell(out, t + p.gap, { f: p.pitch * 1.5, partials: glass, dur: p.ring, peak: 0.055, a: 0.002 });
+  T.noise(out, t + p.gap, {
+    filter: 'highpass', f: 6000, to: 9000, q: 0.8, dur: 0.18,
+    peak: 0.05 * p.sparkle, a: 0.02,
+  });
 }},
 {"id":"game-hammer-hit","name":"Hammer Hit","category":"game","tags":["hammer","hit","impact","metal","clank","anvil","smash"],"desc":"A hammer swung and landing on metal: air, then a clank with a thump under it.","dur":0.95,"params":{"swing":{"min":0,"max":0.5,"def":0.32,"unit":"s"},"pitch":{"min":250,"max":1200,"def":560,"unit":"Hz"},"weight":{"min":0,"max":1,"def":0.5},"ring":{"min":0.06,"max":0.4,"def":0.12,"unit":"s"}},"play":function (T, out, t, p) {
   const h = t + p.swing;
@@ -1106,6 +1628,198 @@ const SOUNDS = [
   T.noise(out, h, { filter: 'highpass', f: 3200, to: 2000, q: 0.8, dur: 0.05, peak: 0.037, a: 0.002 });
   T.osc(out, h, { type: 'triangle', f: 1800 * r, to: 700 * r, dur: 0.09, peak: 0.021, a: 0.002 });
   T.osc(out, h, { f: 140, to: 60, dur: 0.16, peak: 0.14 * p.weight + 0.01, a: 0.002 });
+}},
+{"id":"game-heal","name":"Heal","category":"game","tags":["heal","health","restore","regen","recover","potion","warm","soft"],"desc":"A warm rising swell with a soft glow on top, for health restored. Gentle by design; it can repeat.","dur":0.95,"params":{"pitch":{"min":220,"max":700,"def":392,"unit":"Hz"},"length":{"min":0.3,"max":0.9,"def":0.6,"unit":"s"},"rise":{"min":0,"max":7,"def":4,"step":1,"unit":"st"},"glow":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const up = Math.pow(2, Math.round(p.rise) / 12);
+  T.osc(out, t, { f: p.pitch, to: p.pitch * up, glide: L * 0.6, dur: L, peak: 0.04, a: L * 0.3 });
+  T.osc(out, t, { f: p.pitch * 1.5, to: p.pitch * 1.5 * up, glide: L * 0.6, dur: L, peak: 0.028, a: L * 0.35 });
+  T.osc(out, t, { type: 'triangle', f: p.pitch * 2, to: p.pitch * 2 * up, glide: L * 0.6, dur: L, peak: 0.02, a: L * 0.4 });
+  T.noise(out, t, { filter: 'highpass', f: 5500, to: 8000, q: 0.8, dur: L, peak: 0.03 * p.glow, a: L * 0.4 });
+  // the crest: a single soft bell partial pair, scaled by glow so glow 0 is a plain swell
+  T.bell(out, t + L * 0.3, {
+    f: p.pitch * 4 * up, partials: [[1, 1, 1], [2.76, 0.3, 0.5]], dur: Math.min(0.45, L * 0.7),
+    peak: 0.018 * p.glow, a: 0.004,
+  });
+}},
+{"id":"game-hit-heavy","name":"Hit Heavy","category":"game","tags":["hit","heavy","slam","smash","boss","impact","thump","crit","combat"],"desc":"A heavy blow landing: deep sub, a body of rumble and a hard crack. For bosses, crits and slams.","dur":0.78,"params":{"weight":{"min":0,"max":1,"def":0.6},"pitch":{"min":45,"max":110,"def":70,"unit":"Hz"},"crack":{"min":0,"max":1,"def":0.6},"tail":{"min":0.2,"max":0.6,"def":0.38,"unit":"s"}},"play":function (T, out, t, p) {
+  const bus = T.drive(out, t, { amount: 0.2, ref: 0.15 });
+  T.osc(bus, t, {
+    f: p.pitch * 2.2, to: p.pitch * 0.5, glide: 0.2, dur: p.tail + 0.1,
+    peak: 0.1 + 0.1 * p.weight, a: 0.002,
+  });
+  T.noise(bus, t, {
+    filter: 'lowpass', f: 1800, to: 150, q: 0.8, dur: p.tail, peak: 0.25 + 0.2 * p.weight, a: 0.002,
+  });
+  T.noise(bus, t, {
+    filter: 'highpass', f: 3000, to: 1800, q: 0.8, dur: 0.035, peak: 0.04 + 0.12 * p.crack, a: 0.001,
+  });
+}},
+{"id":"game-hit-light","name":"Hit Light","category":"game","tags":["hit","light","tap","slap","combat","impact","strike","attack"],"desc":"A quick, light strike landing: a short knock with a crisp crack. Small enough to chain in a fight.","dur":0.16,"params":{"pitch":{"min":120,"max":400,"def":220,"unit":"Hz"},"snap":{"min":0,"max":1,"def":0.5},"body":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const j = T.rand(0.95, 1.05);
+  T.osc(out, t, { f: p.pitch * 1.6 * j, to: p.pitch * 0.7, dur: 0.07, peak: 0.035 + 0.035 * p.body, a: 0.002 });
+  T.noise(out, t, {
+    filter: 'bandpass', f: 1800 + 2200 * p.snap, q: 0.9, dur: 0.035,
+    peak: 0.042 + 0.056 * p.snap, a: 0.001,
+  });
+  T.osc(out, t, { type: 'triangle', f: 1400 + 1400 * p.snap, to: 700, dur: 0.03, peak: 0.01, a: 0.001 });
+}},
+{"id":"game-hurt","name":"Hurt","category":"game","tags":["hurt","damage","ouch","hit","pain","player","8-bit","chiptune","retro"],"desc":"A falling, wobbling \"ow\" with a crunch on the hit, for the player taking damage. Chip is square; off is a softer saw.","dur":0.32,"params":{"pitch":{"min":150,"max":500,"def":300,"unit":"Hz"},"drop":{"min":0.3,"max":0.7,"def":0.5},"length":{"min":0.12,"max":0.3,"def":0.2,"unit":"s"},"chip":{"min":0,"max":1,"def":1,"step":1}},"play":function (T, out, t, p) {
+  const chip = p.chip >= 0.5;
+  const peak = chip ? 0.1 : 0.11;
+  let dest = out;
+  if (chip) dest = T.crush(out, t, { bits: 4, ref: peak });
+  else dest = T.filter(out, t, { type: 'lowpass', f: 2400, to: 700, dur: p.length, q: 1 });
+  T.osc(dest, t, {
+    type: chip ? 'square' : 'sawtooth', f: p.pitch, to: p.pitch * (1 - p.drop),
+    glide: p.length * 0.9, dur: p.length, peak, a: 0.004,
+    s: 0.7, d: p.length * 0.25, r: p.length * 0.4, vib: { rate: 24, depth: 120 },
+  });
+  T.noise(out, t, { filter: 'bandpass', f: 1500, to: 600, q: 1, dur: 0.05, peak: 0.07, a: 0.002 });
+}},
+{"id":"game-jump","name":"Jump","category":"game","tags":["jump","hop","platformer","player","8-bit","chiptune","retro"],"desc":"The classic platformer hop: a quick rising sweep. Chip is a stepped square wave; off is a soft triangle.","dur":0.27,"params":{"pitch":{"min":180,"max":600,"def":300,"unit":"Hz"},"rise":{"min":1.5,"max":4,"def":2.6,"unit":"x"},"length":{"min":0.08,"max":0.26,"def":0.16,"unit":"s"},"chip":{"min":0,"max":1,"def":1,"step":1}},"play":function (T, out, t, p) {
+  const chip = p.chip >= 0.5;
+  const peak = chip ? 0.065 : 0.085;
+  // quantize against the voice peak so the decay walks down 8 steps
+  const dest = chip ? T.crush(out, t, { bits: 4, ref: peak }) : out;
+  const top = p.pitch * p.rise;
+  T.osc(dest, t, {
+    type: chip ? 'square' : 'triangle', f: p.pitch, to: top,
+    glide: p.length * 0.85, glideCurve: chip ? 'lin' : 'exp',
+    dur: p.length, peak, a: 0.004, s: 0.75, d: p.length * 0.2, r: p.length * 0.45,
+  });
+  if (!chip) {
+    T.osc(out, t, { f: p.pitch * 2, to: top * 2, glide: p.length * 0.85, dur: p.length, peak: 0.02, a: 0.004 });
+  }
+}},
+{"id":"game-key-unlock","name":"Key Unlock","category":"game","tags":["key","unlock","lock","door","chest","jingle","clunk","latch"],"desc":"A key jingles, turns and the lock gives: tiny metal ticks, a bolt clunk and a small ding.","dur":0.85,"params":{"pitch":{"min":1800,"max":4200,"def":2800,"unit":"Hz"},"jingles":{"min":2,"max":6,"def":3,"step":1},"clunk":{"min":0,"max":1,"def":0.5},"ding":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const n = Math.round(p.jingles);
+  for (let k = 0; k < n; k++) {
+    const at = t + k * 0.035 + T.rand(0, 0.008);
+    const f = p.pitch * T.rand(0.85, 1.2);
+    T.noise(out, at, { filter: 'bandpass', f, q: 4, dur: 0.015, peak: 0.1 * T.rand(0.7, 1), a: 0.001 });
+    T.bell(out, at, { f, partials: [[1, 1, 1], [2.76, 0.5, 0.7]], dur: 0.05, peak: 0.025, a: 0.001 });
+  }
+  const turn = t + n * 0.035 + 0.05;
+  T.noise(out, turn, { filter: 'bandpass', f: 1800, to: 2600, q: 3, dur: 0.09, peak: 0.06, a: 0.03 });
+  const bolt = turn + 0.1;
+  T.osc(out, bolt, { f: 190, to: 90, dur: 0.1, peak: 0.025 + 0.05 * p.clunk, a: 0.002 });
+  T.noise(out, bolt, { filter: 'lowpass', f: 1200, to: 500, q: 0.8, dur: 0.045, peak: 0.03 + 0.07 * p.clunk, a: 0.001 });
+  T.noise(out, bolt, { filter: 'highpass', f: 3000, q: 0.8, dur: 0.01, peak: 0.05, a: 0.001 });
+  T.bell(out, bolt + 0.04, {
+    f: p.pitch * 0.5, partials: [[1, 1, 1], [2.76, 0.3, 0.5]], dur: 0.35, peak: 0.045 * p.ding, a: 0.002,
+  });
+}},
+{"id":"game-land","name":"Land","category":"game","tags":["land","landing","thud","fall","step","platformer","impact"],"desc":"A character landing after a jump or fall: a soft thump with a scuff of grit. Heavier settings hit longer.","dur":0.3,"params":{"weight":{"min":0,"max":1,"def":0.5},"pitch":{"min":55,"max":160,"def":90,"unit":"Hz"},"scuff":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const j = T.rand(0.94, 1.06);
+  T.osc(out, t, {
+    f: p.pitch * 1.5 * j, to: p.pitch * 0.6, dur: 0.12 + 0.08 * p.weight,
+    peak: 0.022 + 0.032 * p.weight, a: 0.003,
+  });
+  T.noise(out, t, {
+    filter: 'lowpass', f: 900 + 1200 * p.scuff, to: 300, q: 0.7,
+    dur: 0.07 + 0.05 * p.weight, peak: 0.057 + 0.05 * p.weight, a: 0.002,
+  });
+  T.noise(out, t + 0.004, {
+    filter: 'bandpass', f: 3000 * j, q: 0.8,
+    dur: 0.045 + 0.05 * p.scuff, peak: 0.013 + 0.038 * p.scuff, a: 0.004,
+  });
+}},
+{"id":"game-pickup-item","name":"Pickup Item","category":"game","tags":["pickup","item","grab","collect","loot","blip","pop","inventory"],"desc":"A soft two-note blip for picking up an item. Quiet enough to repeat. Chip switches to square notes.","dur":0.25,"params":{"pitch":{"min":500,"max":1500,"def":880,"unit":"Hz"},"interval":{"min":2,"max":12,"def":5,"step":1,"unit":"st"},"gap":{"min":0.04,"max":0.1,"def":0.06,"unit":"s"},"chip":{"min":0,"max":1,"def":0,"step":1}},"play":function (T, out, t, p) {
+  const chip = p.chip >= 0.5;
+  const hi = p.pitch * Math.pow(2, Math.round(p.interval) / 12);
+  const peak = chip ? 0.045 : 0.06;
+  const dest = chip ? T.crush(out, t, { bits: 4, ref: peak }) : out;
+  const type = chip ? 'square' : 'sine';
+  T.osc(dest, t, { type, f: p.pitch * 0.9, to: p.pitch, glide: 0.03, dur: 0.07, peak, a: 0.004 });
+  T.osc(dest, t + p.gap, { type, f: hi * 0.93, to: hi, glide: 0.035, dur: 0.14, peak, a: 0.004 });
+  if (!chip) {
+    T.osc(out, t + p.gap, { type: 'triangle', f: hi * 2, dur: 0.09, peak: 0.012, a: 0.004 });
+    // a speck of air at the grab, so it reads as a pop and not a beep
+    T.noise(out, t, { filter: 'highpass', f: 4500, q: 0.8, dur: 0.015, peak: 0.01, a: 0.001 });
+  }
+}},
+{"id":"game-power-up","name":"Power Up","category":"game","tags":["power-up","powerup","upgrade","level-up","bonus","boost","8-bit","chiptune","retro"],"desc":"A quick rising scale that lands on a held note: you got stronger. Chip is square; off is soft triangle.","dur":0.72,"params":{"pitch":{"min":200,"max":600,"def":330,"unit":"Hz"},"notes":{"min":4,"max":8,"def":6,"step":1},"gap":{"min":0.035,"max":0.07,"def":0.05,"unit":"s"},"chip":{"min":0,"max":1,"def":1,"step":1}},"play":function (T, out, t, p) {
+  const chip = p.chip >= 0.5;
+  const steps = [0, 2, 4, 7, 9, 12, 14, 16];
+  const n = Math.round(p.notes);
+  const peak = chip ? 0.08 : 0.1;
+  const dest = chip ? T.crush(out, t, { bits: 4, ref: peak }) : out;
+  for (let k = 0; k < n; k++) {
+    const f = p.pitch * Math.pow(2, steps[k] / 12);
+    const at = t + k * p.gap;
+    if (k < n - 1) {
+      // chip notes are flat-topped and cut off, not decaying, so the run reads as a staircase
+      if (chip) T.osc(dest, at, { type: 'square', f, dur: p.gap * 1.05, peak, a: 0.003, s: 0.95, d: 0.004, r: 0.006 });
+      else T.osc(dest, at, { type: 'triangle', f, dur: p.gap * 1.1, peak, a: 0.003 });
+    } else {
+      // the held note: flat top, then a release; soft mode also gets a gentle vibrato
+      T.osc(dest, at, {
+        type: chip ? 'square' : 'triangle', f, dur: 0.22, peak, a: 0.003, s: 0.7, d: 0.04, r: 0.12,
+        vib: chip ? null : { rate: 6, depth: 14 },
+      });
+      if (!chip) T.osc(out, at, { f: f * 2, dur: 0.18, peak: 0.02, a: 0.004 });
+    }
+  }
+}},
+{"id":"game-punch","name":"Punch","category":"game","tags":["punch","fist","hit","smack","brawler","fight","combat","impact"],"desc":"A fist landing with a thump and a smack. Up to three in a flurry, each slightly softer.","dur":0.46,"params":{"pitch":{"min":80,"max":220,"def":140,"unit":"Hz"},"snap":{"min":0,"max":1,"def":0.5},"hits":{"min":1,"max":3,"def":1,"step":1},"gap":{"min":0.05,"max":0.12,"def":0.08,"unit":"s"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.hits);
+  for (let k = 0; k < n; k++) {
+    const at = t + k * p.gap;
+    const l = (1 - 0.12 * k) * T.rand(0.9, 1.1);
+    T.osc(out, at, { f: p.pitch * 1.8, to: p.pitch * 0.6, dur: 0.13, peak: 0.065 * l, a: 0.002 });
+    T.noise(out, at, {
+      filter: 'bandpass', f: (700 + 800 * p.snap) * T.rand(0.9, 1.15), q: 0.8,
+      dur: 0.06, peak: 0.16 * l, a: 0.002,
+    });
+    T.noise(out, at, {
+      filter: 'highpass', f: 2500, q: 0.8, dur: 0.02, peak: (0.024 + 0.056 * p.snap) * l, a: 0.001,
+    });
+  }
+}},
+{"id":"game-shield-up","name":"Shield Up","category":"game","tags":["shield","barrier","defend","guard","charge","activate","energy","buff"],"desc":"An energy field charging up: a humming rise that opens and locks in with a ping. For shields and buffs.","dur":0.95,"params":{"pitch":{"min":80,"max":300,"def":150,"unit":"Hz"},"length":{"min":0.3,"max":0.8,"def":0.5,"unit":"s"},"shimmer":{"min":0,"max":1,"def":0.5},"lock":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const lp = T.filter(out, t, { type: 'lowpass', f: 300, to: 4200, dur: L * 0.9, q: 1.5 });
+  T.osc(lp, t, {
+    type: 'sawtooth', f: p.pitch, to: p.pitch * 2, glide: L * 0.9, dur: L, peak: 0.05, a: L * 0.55, s: 0.8, d: 0.02, r: L * 0.3,
+    trem: { rate: 18, depth: 0.3 },
+  });
+  T.osc(lp, t, {
+    type: 'sawtooth', f: p.pitch, to: p.pitch * 2, glide: L * 0.9, dur: L, peak: 0.04, a: L * 0.55, s: 0.8, d: 0.02, r: L * 0.3, detune: 14,
+  });
+  T.noise(out, t, {
+    filter: 'highpass', f: 3000, to: 7500, q: 0.8, dur: L, peak: 0.04 * p.shimmer, a: L * 0.6,
+  });
+  // the lock-in ping, an octave and a half above the hum's start
+  T.bell(out, t + L * 0.8, {
+    f: p.pitch * 8, partials: [[1, 1, 1], [2.76, 0.35, 0.6]], dur: 0.3, peak: 0.05 * p.lock, a: 0.003,
+  });
+}},
+{"id":"game-sword-clash","name":"Sword Clash","category":"game","tags":["sword","clash","clang","parry","block","steel","metal","blades","duel"],"desc":"Steel meeting steel: a hard clang that rings, with an optional scrape. For parries and duels.","dur":1,"params":{"pitch":{"min":600,"max":2200,"def":1250,"unit":"Hz"},"ring":{"min":0.25,"max":0.9,"def":0.55,"unit":"s"},"scrape":{"min":0,"max":1,"def":0.3}},"play":function (T, out, t, p) {
+  const steel = [[1, 1, 1], [2.76, 0.7, 0.7], [5.4, 0.45, 0.45], [8.93, 0.25, 0.25]];
+  T.bell(out, t, { f: p.pitch, partials: steel, drift: 0.995, dur: p.ring, peak: 0.025, a: 0.001 });
+  // the second blade: a bit later, a bit shorter, a different pitch, so the ring beats
+  T.bell(out, t + 0.008, { f: p.pitch * 1.19, partials: steel, drift: 0.995, dur: p.ring * 0.8, peak: 0.02, a: 0.001 });
+  T.noise(out, t, { filter: 'highpass', f: 3500, to: 2500, q: 0.8, dur: 0.03, peak: 0.09, a: 0.001 });
+  T.noise(out, t, { filter: 'bandpass', f: 1800, to: 1000, q: 1.5, dur: 0.06, peak: 0.1, a: 0.001 });
+  T.noise(out, t + 0.02, {
+    filter: 'bandpass', f: 4000, to: 7000, q: 4, dur: 0.12 + 0.12 * p.scrape,
+    peak: 0.05 * p.scrape, a: 0.04,
+  });
+}},
+{"id":"game-sword-swing","name":"Sword Swing","category":"game","tags":["sword","swing","slash","blade","swish","melee","attack","whoosh"],"desc":"A blade cutting the air: a quick bright swish with a thin edge of steel. Sharper than the generic whoosh.","dur":0.38,"params":{"length":{"min":0.1,"max":0.3,"def":0.17,"unit":"s"},"pitch":{"min":0.6,"max":1.6,"def":1,"unit":"x"},"edge":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const s = p.length / 0.17;
+  T.noise(out, t, {
+    filter: 'bandpass', f: 1400 * p.pitch, to: 6200 * p.pitch, q: 2.6,
+    dur: 0.14 * s, peak: 0.18, a: 0.045 * s,
+  });
+  T.noise(out, t + 0.07 * s, {
+    filter: 'bandpass', f: 5200 * p.pitch, to: 1800 * p.pitch, q: 3.2,
+    dur: 0.1 * s, peak: 0.1, a: 0.02 * s,
+  });
+  T.osc(out, t + 0.02 * s, {
+    f: 3200 * p.pitch, to: 5200 * p.pitch, dur: 0.14 * s, peak: 0.01 * p.edge, a: 0.04 * s,
+  });
 }},
 {"id":"game-whoosh","name":"Whoosh","category":"game","tags":["whoosh","swoosh","swing","swipe","dash","air","transition"],"desc":"Air rushing past: a swing, a dash, or a panel sliding across the screen.","dur":0.62,"params":{"length":{"min":0.15,"max":0.6,"def":0.27,"unit":"s"},"pitch":{"min":0.5,"max":2,"def":1,"unit":"x"},"q":{"min":0.6,"max":3,"def":1.1}},"play":function (T, out, t, p) {
   const s = p.length / 0.27;
@@ -1120,6 +1834,152 @@ const SOUNDS = [
     dur: 0.17 * s, peak: 0.105 * lift, a: 0.032 * s,
   });
 }},
+{"id":"cards-chip-click","name":"Chip Click","category":"cards","tags":["chip","poker","click","clay","bet","casino","tap"],"desc":"A single poker chip clicked down: a crisp clay tick with a short ring and a hint of felt underneath.","dur":0.12,"params":{"pitch":{"min":1600,"max":3600,"def":2500,"unit":"Hz"},"ring":{"min":0.02,"max":0.1,"def":0.05,"unit":"s"},"weight":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const f = p.pitch * T.rand(0.97, 1.03);
+  // the two bands are narrow, so their peaks are high for the level they deliver
+  T.noise(out, t, { filter: 'bandpass', f, to: f * 0.93, q: 9, dur: p.ring, peak: 0.25, a: 0.001 });
+  T.noise(out, t, { filter: 'bandpass', f: f * 1.62, to: f * 1.5, q: 9, dur: p.ring * 0.7, peak: 0.15, a: 0.001 });
+  T.noise(out, t, { filter: 'highpass', f: 3800, to: 2600, q: 0.8, dur: 0.012, peak: 0.024, a: 0.001 });
+  T.osc(out, t, { f: 700, to: 380, dur: 0.035, peak: 0.003 + 0.03 * p.weight, a: 0.002 });
+}},
+{"id":"cards-chip-stack","name":"Chip Stack","category":"cards","tags":["chip","poker","stack","pile","bet","casino","count"],"desc":"Poker chips stacked one by one: uneven clay clicks climbing a little as the stack grows.","dur":0.8,"params":{"chips":{"min":2,"max":8,"def":5,"step":1},"pace":{"min":0.04,"max":0.1,"def":0.065,"unit":"s"},"pitch":{"min":1500,"max":3200,"def":2300,"unit":"Hz"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.chips);
+  let at = t;
+  for (let k = 0; k < n; k++) {
+    const f = p.pitch * (1 + 0.025 * k) * T.rand(0.92, 1.08);
+    const l = T.rand(0.8, 1.15) * (k === 0 ? 1.2 : 0.9);
+    T.noise(out, at, { filter: 'bandpass', f, to: f * 0.93, q: 9, dur: 0.04, peak: 0.2 * l, a: 0.001 });
+    T.noise(out, at, { filter: 'bandpass', f: f * 1.62, to: f * 1.5, q: 9, dur: 0.03, peak: 0.115 * l, a: 0.001 });
+    T.noise(out, at, { filter: 'highpass', f: 3800, to: 2600, q: 0.8, dur: 0.012, peak: 0.02 * l, a: 0.001 });
+    T.osc(out, at, { f: 700, to: 380, dur: 0.03, peak: 0.013 * l, a: 0.002 });
+    if (k === n - 1) {
+      // the top chip rocks once as it settles
+      T.noise(out, at + 0.028, { filter: 'bandpass', f: f * 1.1, to: f, q: 9, dur: 0.025, peak: 0.09, a: 0.001 });
+    }
+    at += p.pace * T.rand(0.75, 1.3);
+  }
+}},
+{"id":"cards-chips-push","name":"Chips Push All-In","category":"cards","tags":["chip","poker","all-in","push","bet","shove","pot","casino"],"desc":"A pile of chips pushed forward for an all-in: a swelling rattle of clay clicks that ends in a thud and a few settling chips.","dur":1.27,"params":{"length":{"min":0.4,"max":0.9,"def":0.65,"unit":"s"},"chips":{"min":14,"max":40,"def":26,"step":1},"pitch":{"min":1400,"max":3200,"def":2200,"unit":"Hz"},"slide":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const n = Math.round(p.chips);
+  T.noise(out, t, { filter: 'bandpass', f: 600, to: 1000, q: 0.8, dur: L + 0.05, peak: 0.015 + 0.1 * p.slide, a: L * 0.5 });
+  for (let k = 0; k < n; k++) {
+    // three uniform draws averaged: the clicks bunch in the middle of the shove
+    const u = (T.rand() + T.rand() + T.rand()) / 3;
+    const f = p.pitch * T.rand(0.7, 1.5);
+    const l = (0.35 + 0.65 * Math.sin(Math.PI * u)) * T.rand(0.7, 1.2);
+    T.noise(out, t + 0.02 + u * (L - 0.05), { filter: 'bandpass', f, to: f * 0.92, q: 9, dur: 0.03, peak: 0.3 * l, a: 0.001 });
+  }
+  const hit = t + L;
+  T.osc(out, hit, { f: 150, to: 70, dur: 0.14, peak: 0.1, a: 0.003 });
+  T.noise(out, hit, { filter: 'lowpass', f: 700, to: 250, q: 1, dur: 0.1, peak: 0.08, a: 0.002 });
+  const rest = [0.04, 0.1, 0.19, 0.31];
+  for (let k = 0; k < rest.length; k++) {
+    const f = p.pitch * T.rand(0.8, 1.3);
+    T.noise(out, hit + rest[k], { filter: 'bandpass', f, to: f * 0.93, q: 9, dur: 0.035, peak: 0.3 * (0.8 - 0.16 * k), a: 0.001 });
+  }
+}},
+{"id":"cards-deal","name":"Card Deal","category":"cards","tags":["card","deal","skim","felt","table","toss"],"desc":"One card dealt across the table: a flick off the deck, a soft skim over felt and a quiet landing.","dur":0.39,"params":{"reach":{"min":0.1,"max":0.32,"def":0.17,"unit":"s"},"tone":{"min":0,"max":1,"def":0.4},"land":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const at = t + p.reach;
+  T.noise(out, t, { filter: 'highpass', f: 2600 + 900 * p.tone, to: 1800, q: 0.9, dur: 0.034, peak: 0.037, a: 0.002 });
+  T.osc(out, t, { type: 'triangle', f: 460 + 160 * p.tone, to: 260, dur: 0.028, peak: 0.01, a: 0.002 });
+  // a wide, slow band: the skim must read as air under the card, never as a hit
+  T.noise(out, t + 0.012, {
+    filter: 'bandpass', f: 1500 + 1300 * p.tone, to: 650 + 350 * p.tone, q: 1.1,
+    dur: p.reach + 0.03, peak: 0.125, a: p.reach * 0.35,
+  });
+  T.noise(out, at, { filter: 'lowpass', f: 1100, to: 480, q: 1, dur: 0.045, peak: 0.025 + 0.038 * p.land, a: 0.002 });
+  T.osc(out, at, { f: 200, to: 118, dur: 0.05, peak: 0.01 + 0.038 * p.land, a: 0.003 });
+}},
+{"id":"cards-deal-hand","name":"Deal a Hand","category":"cards","tags":["card","deal","hand","round","seats","start"],"desc":"A hand dealt round the table, one card per seat, each landing a little differently.","dur":1.47,"params":{"cards":{"min":2,"max":7,"def":5,"step":1},"gap":{"min":0.1,"max":0.22,"def":0.15,"unit":"s"},"spread":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const n = Math.round(p.cards);
+  const seat = [1, 0.84, 1.19, 0.92, 1.06, 0.78, 1.28, 0.97];
+  for (let k = 0; k < n; k++) {
+    const at = t + k * p.gap;
+    const l = 1 - 0.04 * k;
+    const f = 200 * (1 + (seat[k] - 1) * p.spread) * T.rand(0.97, 1.03);
+    const b = T.rand(0.2, 0.6);
+    T.noise(out, at, { filter: 'highpass', f: 2600 + 900 * b, to: 1800, q: 0.9, dur: 0.034, peak: 0.034 * l, a: 0.002 });
+    T.noise(out, at + 0.01, { filter: 'bandpass', f: 1900 * seat[k], to: 800, q: 1.1, dur: 0.1, peak: 0.094 * l, a: 0.035 });
+    T.noise(out, at + 0.08, { filter: 'lowpass', f: 1100 * seat[k], to: 480, q: 1, dur: 0.045, peak: 0.05 * l, a: 0.002 });
+    T.osc(out, at + 0.08, { f, to: f * 0.59, dur: 0.05, peak: 0.038 * l, a: 0.003 });
+  }
+}},
+{"id":"cards-dice-roll","name":"Dice Roll","category":"cards","tags":["dice","roll","throw","bounce","land","table","board-game"],"desc":"A die thrown and tumbling to rest: bounces that close up and soften, then a last rocking tick.","dur":1.04,"params":{"bounces":{"min":2,"max":8,"def":5,"step":1},"length":{"min":0.35,"max":0.9,"def":0.6,"unit":"s"},"surface":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const n = Math.round(p.bounces);
+  // gaps shrink by a constant ratio and add up to the length
+  let sum = 0;
+  for (let k = 0; k < n - 1; k++) sum += Math.pow(0.66, k);
+  let at = t;
+  for (let k = 0; k < n; k++) {
+    const l = Math.pow(0.7, k) * T.rand(0.9, 1.1);
+    const f = (1300 + 1900 * p.surface) * T.rand(0.85, 1.2);
+    T.noise(out, at, { filter: 'bandpass', f, to: f * 0.7, q: 2, dur: 0.03 + 0.03 * p.surface, peak: 0.12 * l, a: 0.001 });
+    T.osc(out, at, { f: (440 + 520 * p.surface) * T.rand(0.9, 1.15), to: 260, dur: 0.04, peak: (0.018 + 0.012 * p.surface) * l, a: 0.001 });
+    if (k < n - 1) at += (p.length * Math.pow(0.66, k)) / sum;
+  }
+  // the die rocks to rest: a few small ticks closing up
+  const rock = [0.035, 0.07, 0.095];
+  for (let k = 0; k < rock.length; k++) {
+    const f = (1500 + 1500 * p.surface) * T.rand(0.85, 1.15);
+    T.noise(out, at + rock[k], { filter: 'bandpass', f, q: 2, dur: 0.02, peak: 0.07 * (1 - 0.25 * k), a: 0.001 });
+  }
+}},
+{"id":"cards-dice-shake","name":"Dice Shake","category":"cards","tags":["dice","shake","rattle","cup","roll","craps","board-game"],"desc":"Dice shaken in a cup: bursts of hard little clacks at each stroke, swelling and fading.","dur":1,"params":{"shakes":{"min":2,"max":5,"def":4,"step":1},"length":{"min":0.35,"max":0.95,"def":0.6,"unit":"s"},"pitch":{"min":0.7,"max":1.5,"def":1,"unit":"x"},"dice":{"min":1,"max":4,"def":2,"step":1}},"play":function (T, out, t, p) {
+  const n = Math.round(p.shakes);
+  const per = p.length / n;
+  // a faint steady rattle of dice sliding over each other, under the clacks
+  T.noise(out, t, { filter: 'bandpass', f: 2200 * p.pitch, to: 1800 * p.pitch, q: 0.9, dur: p.length + 0.05, peak: 0.016, a: p.length * 0.4 });
+  const many = 4 + 3 * Math.round(p.dice);
+  for (let s = 0; s < n; s++) {
+    const centre = t + per * (s + 0.5);
+    const u = (s + 0.5) / n;
+    const swell = 0.45 + 0.55 * Math.sin(Math.PI * u);
+    T.noise(out, centre - per * 0.45, { filter: 'lowpass', f: 520, to: 260, q: 1, dur: 0.05, peak: 0.03 * swell, a: 0.004 });
+    for (let j = 0; j < many; j++) {
+      const at = centre + per * T.rand(-0.42, 0.42);
+      const f = 2400 * p.pitch * T.rand(0.7, 1.5);
+      const l = swell * T.rand(0.55, 1.15);
+      T.noise(out, at, { filter: 'bandpass', f, to: f * 0.8, q: 2.5, dur: 0.02, peak: 0.1 * l, a: 0.001 });
+      T.osc(out, at, { f: 900 * p.pitch * T.rand(0.8, 1.3), to: 500 * p.pitch, dur: 0.02, peak: 0.016 * l, a: 0.001 });
+    }
+  }
+}},
+{"id":"cards-discard","name":"Card Discard","category":"cards","tags":["card","discard","toss","pile","throw-away","muck"],"desc":"A card tossed onto the discard pile: a flick, a short flight and a papery landing on the stack.","dur":0.23,"params":{"toss":{"min":0,"max":1,"def":0.4},"pile":{"min":0,"max":1,"def":0.5},"weight":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const air = 0.03 + 0.1 * p.toss;
+  const at = t + 0.02 + 0.1 * p.toss;
+  T.noise(out, t, { filter: 'highpass', f: 2700, to: 1800, q: 0.9, dur: 0.03, peak: 0.034, a: 0.002 });
+  T.noise(out, t + 0.01, { filter: 'bandpass', f: 1800, to: 700, q: 1.1, dur: air + 0.02, peak: 0.098, a: air * 0.4 });
+  const thump = 1 - 0.5 * p.pile;
+  T.noise(out, at, { filter: 'lowpass', f: 950, to: 400, q: 1, dur: 0.06, peak: (0.039 + 0.039 * p.weight) * thump, a: 0.002 });
+  T.osc(out, at, { f: 175, to: 100, dur: 0.07, peak: (0.013 + 0.052 * p.weight) * thump, a: 0.003 });
+  const ticks = 1 + Math.round(4 * p.pile);
+  for (let j = 0; j < ticks; j++) {
+    T.noise(out, at + 0.006 + j * 0.014, {
+      filter: 'bandpass', f: 2300 * T.rand(0.8, 1.4), to: 1400, q: 2, dur: 0.025,
+      peak: 0.117 * (0.5 + 0.5 * p.pile) * (1 - 0.14 * j) * T.rand(0.8, 1.2), a: 0.002,
+    });
+  }
+}},
+{"id":"cards-draw","name":"Card Draw","category":"cards","tags":["card","draw","pull","deck","top","pick-up"],"desc":"A card drawn off the top of the deck: a rising paper rub that ends in a small snap as it comes free.","dur":0.27,"params":{"reach":{"min":0.07,"max":0.22,"def":0.12,"unit":"s"},"tone":{"min":0,"max":1,"def":0.4},"snap":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const r = p.reach;
+  const end = t + r;
+  // the rub swells until the card clears, so the attack takes most of the length
+  T.noise(out, t, { filter: 'bandpass', f: 600 + 500 * p.tone, to: 1900 + 1500 * p.tone, q: 1.4, dur: r + 0.02, peak: 0.085, a: r * 0.85 });
+  T.noise(out, t, { filter: 'highpass', f: 3600, to: 5200, q: 0.8, dur: r + 0.02, peak: 0.016, a: r * 0.85 });
+  T.noise(out, end, { filter: 'highpass', f: 2700 + 900 * p.tone, to: 1900, q: 0.9, dur: 0.03, peak: 0.003 + 0.022 * p.snap, a: 0.002 });
+  T.osc(out, end, { type: 'triangle', f: 480 + 140 * p.tone, to: 270, dur: 0.026, peak: 0.002 + 0.007 * p.snap, a: 0.002 });
+}},
+{"id":"cards-fan","name":"Fan Out Hand","category":"cards","tags":["card","fan","spread","hand","ratchet","show"],"desc":"A hand of cards fanned open: a quick climbing ratchet of paper ticks over a breath of air.","dur":0.57,"params":{"cards":{"min":4,"max":13,"def":8,"step":1},"length":{"min":0.15,"max":0.5,"def":0.28,"unit":"s"},"bright":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const n = Math.round(p.cards);
+  for (let k = 0; k < n; k++) {
+    const u = k / (n - 1);
+    const f = (1600 + 1800 * p.bright) * (1 + 0.6 * u) * T.rand(0.96, 1.04);
+    const l = 0.75 + 0.25 * Math.sin(Math.PI * u);
+    T.noise(out, t + p.length * u, { filter: 'bandpass', f, to: f * 0.7, q: 2.8, dur: 0.016, peak: 0.12 * l * T.rand(0.85, 1.15), a: 0.002 });
+  }
+  T.noise(out, t, { filter: 'bandpass', f: 800 + 400 * p.bright, to: 2600 + 800 * p.bright, q: 0.9, dur: p.length + 0.05, peak: 0.06, a: p.length * 0.45 });
+}},
 {"id":"cards-flick","name":"Card Flick","category":"cards","tags":["card","flick","paper","draw","deal","snap"],"desc":"A playing card flicked off the deck, or a short fan of them dealt one after another.","dur":0.65,"params":{"count":{"min":1,"max":6,"def":1,"step":1},"gap":{"min":0.045,"max":0.12,"def":0.07,"unit":"s"},"bright":{"min":0,"max":1,"def":0.3}},"play":function (T, out, t, p) {
   const n = Math.round(p.count);
   for (let k = 0; k < n; k++) {
@@ -1130,6 +1990,60 @@ const SOUNDS = [
     T.osc(out, at, { type: 'triangle', f: 460 + 160 * b, to: 260, dur: 0.028, peak: 0.011 * l, a: 0.002 });
   }
 }},
+{"id":"cards-flip","name":"Card Flip","category":"cards","tags":["card","flip","turn","reveal","face-up","show"],"desc":"A card turned face up: a small scrape, a crisp snap at the turn and a light landing.","dur":0.32,"params":{"speed":{"min":0.6,"max":1.8,"def":1,"unit":"x"},"snap":{"min":0,"max":1,"def":0.6},"tone":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const s = 1 / p.speed;
+  const turn = t + 0.07 * s;
+  const land = t + 0.15 * s;
+  T.noise(out, t, { filter: 'bandpass', f: 1300 + 600 * p.tone, to: 2800 + 800 * p.tone, q: 1.3, dur: 0.07 * s, peak: 0.083, a: 0.03 * s });
+  T.noise(out, turn, { filter: 'highpass', f: 2800 + 900 * p.tone, to: 1900, q: 0.9, dur: 0.034, peak: 0.009 + 0.048 * p.snap, a: 0.002 });
+  T.osc(out, turn, { type: 'triangle', f: 520 + 160 * p.tone, to: 280, dur: 0.028, peak: 0.005 + 0.015 * p.snap, a: 0.002 });
+  T.noise(out, land, { filter: 'lowpass', f: 1300, to: 560, q: 1, dur: 0.04, peak: 0.048, a: 0.002 });
+  T.osc(out, land, { f: 220, to: 130, dur: 0.045, peak: 0.033, a: 0.003 });
+}},
+{"id":"cards-piece-capture","name":"Piece Capture","category":"cards","tags":["board","piece","capture","take","knock","wood","chess","hit"],"desc":"One wooden piece knocking another off its square: a sharp clack, then the lost piece skittering away.","dur":0.49,"params":{"pitch":{"min":300,"max":900,"def":560,"unit":"Hz"},"force":{"min":0,"max":1,"def":0.6},"scatter":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const hard = 0.6 + 0.4 * p.force;
+  T.bell(out, t, {
+    f: p.pitch, partials: [[1, 1, 1], [2.45, 0.5, 0.55], [4.3, 0.2, 0.3]], dur: 0.12, peak: 0.048 * hard, a: 0.001,
+  });
+  T.bell(out, t + 0.003, {
+    f: p.pitch * 1.19, partials: [[1, 1, 1], [2.45, 0.4, 0.5]], dur: 0.1, peak: 0.032 * hard, a: 0.001,
+  });
+  T.noise(out, t, { filter: 'bandpass', f: 2400 + 800 * p.force, to: 1800, q: 1.4, dur: 0.018, peak: 0.096 * hard, a: 0.001 });
+  T.osc(out, t, { f: 160, to: 80, dur: 0.06, peak: 0.016 + 0.016 * p.force, a: 0.002 });
+  const taps = 1 + Math.round(2 * p.scatter);
+  let at = t + 0.075;
+  for (let k = 0; k < taps; k++) {
+    const l = Math.pow(0.6, k);
+    T.bell(out, at, {
+      f: p.pitch * 0.8 * Math.pow(0.92, k) * T.rand(0.95, 1.05),
+      partials: [[1, 1, 1], [2.45, 0.35, 0.5]], dur: 0.09, peak: 0.04 * l, a: 0.001,
+    });
+    T.noise(out, at, { filter: 'bandpass', f: 1700, to: 1200, q: 1.4, dur: 0.012, peak: 0.06 * l, a: 0.001 });
+    at += (0.08 + 0.07 * p.scatter) * T.rand(0.8, 1.2) * (1 - 0.12 * k);
+  }
+}},
+{"id":"cards-piece-move","name":"Board Piece Move","category":"cards","tags":["board","piece","move","wood","chess","tok","pawn","token"],"desc":"A wooden piece slid a little and set down on a board with a hollow, polite tok.","dur":0.26,"params":{"pitch":{"min":300,"max":900,"def":520,"unit":"Hz"},"hollow":{"min":0,"max":1,"def":0.5},"slide":{"min":0,"max":0.12,"def":0.04,"unit":"s"}},"play":function (T, out, t, p) {
+  const at = t + p.slide;
+  if (p.slide > 0.015) {
+    T.noise(out, t, { filter: 'bandpass', f: 800 + p.pitch * 0.5, to: 600 + p.pitch * 0.4, q: 1.2, dur: p.slide + 0.01, peak: 0.05, a: p.slide * 0.5 });
+  }
+  T.bell(out, at, {
+    f: p.pitch * T.rand(0.98, 1.02),
+    partials: [[1, 1, 1], [2.45, 0.25 + 0.4 * p.hollow, 0.55], [4.3, 0.08 * p.hollow, 0.3]],
+    dur: 0.09, peak: 0.036, a: 0.001,
+  });
+  T.noise(out, at, { filter: 'bandpass', f: 1500 + p.pitch, to: 1100, q: 1.5, dur: 0.012, peak: 0.05, a: 0.001 });
+  T.osc(out, at, { f: 150, to: 85, dur: 0.045, peak: 0.014, a: 0.002 });
+}},
+{"id":"cards-place","name":"Card Place","category":"cards","tags":["card","place","pat","set-down","felt","table","land"],"desc":"A single card set down on the table with a soft pat, felt-dark or wood-bright.","dur":0.09,"params":{"weight":{"min":0,"max":1,"def":0.5},"tone":{"min":0,"max":1,"def":0.35},"drop":{"min":0,"max":1,"def":0.2}},"play":function (T, out, t, p) {
+  const f = 700 + 900 * p.tone;
+  if (p.drop > 0.02) {
+    T.noise(out, t, { filter: 'highpass', f: 2800, to: 2000, q: 0.9, dur: 0.02, peak: 0.004 + 0.04 * p.drop, a: 0.002 });
+  }
+  const at = t + 0.012 * p.drop;
+  T.noise(out, at, { filter: 'lowpass', f, to: f * 0.44, q: 1, dur: 0.045, peak: 0.05 + 0.033 * p.weight, a: 0.002 });
+  T.osc(out, at, { f: 200 - 30 * p.weight, to: 118 - 18 * p.weight, dur: 0.055, peak: 0.016 + 0.065 * p.weight, a: 0.003 });
+}},
 {"id":"cards-riffle","name":"Deck Riffle","category":"cards","tags":["card","deck","riffle","shuffle","paper","bridge"],"desc":"A deck riffled together: a quick ripple of paper ticks, never two quite alike.","dur":0.55,"params":{"cards":{"min":3,"max":14,"def":6,"step":1},"gap":{"min":0.014,"max":0.035,"def":0.022,"unit":"s"},"pitch":{"min":800,"max":2600,"def":1500,"unit":"Hz"}},"play":function (T, out, t, p) {
   const n = Math.round(p.cards);
   for (let k = 0; k < n; k++) {
@@ -1137,6 +2051,206 @@ const SOUNDS = [
       filter: 'bandpass', f: p.pitch * T.rand(1, 1.93), to: p.pitch * 0.6, q: 2.2,
       dur: 0.045, peak: (k === 0 ? 0.135 : 0.104) * T.rand(0.75, 1.25), a: 0.003,
     });
+  }
+}},
+{"id":"cards-shuffle-overhand","name":"Overhand Shuffle","category":"cards","tags":["card","shuffle","overhand","paper","deck","chunks"],"desc":"An overhand shuffle: separate short ripples of paper as chunks drop off the deck, then a pat to square it.","dur":1.31,"params":{"chunks":{"min":3,"max":7,"def":5,"step":1},"pace":{"min":0.1,"max":0.17,"def":0.12,"unit":"s"},"pitch":{"min":800,"max":2400,"def":1400,"unit":"Hz"},"square":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const n = Math.round(p.chunks);
+  for (let k = 0; k < n; k++) {
+    const at = t + k * p.pace;
+    const ticks = Math.max(3, 7 - k);
+    const l = 1 - 0.05 * k;
+    for (let j = 0; j < ticks; j++) {
+      T.noise(out, at + j * 0.009, {
+        filter: 'bandpass', f: p.pitch * T.rand(0.85, 1.7), to: p.pitch * 0.6, q: 1.8,
+        dur: 0.03, peak: (j === 0 ? 0.125 : 0.095) * l * T.rand(0.75, 1.2), a: 0.002,
+      });
+    }
+    // the hand shifting under the chunk
+    T.noise(out, at, { filter: 'lowpass', f: 700, to: 350, q: 1, dur: 0.05, peak: 0.02 * l, a: 0.004 });
+  }
+  const end = t + n * p.pace + 0.04;
+  T.noise(out, end, { filter: 'lowpass', f: 1000, to: 450, q: 1, dur: 0.05, peak: 0.01 + 0.04 * p.square, a: 0.002 });
+  T.osc(out, end, { f: 190, to: 110, dur: 0.06, peak: 0.003 + 0.03 * p.square, a: 0.003 });
+}},
+{"id":"cards-slide","name":"Card Slide","category":"cards","tags":["card","slide","push","drag","swap","felt","move"],"desc":"A card slid across the felt: a soft breathy glide that falls away from you or rises toward you.","dur":0.52,"params":{"length":{"min":0.1,"max":0.5,"def":0.25,"unit":"s"},"pitch":{"min":0.6,"max":1.6,"def":1,"unit":"x"},"rise":{"min":0,"max":1,"def":0.2},"grit":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const from = p.pitch * (1000 - 650 * p.rise);
+  const to = p.pitch * (350 + 650 * p.rise);
+  // eased in, held, eased out: a sustained envelope, so the glide stays audible for its whole length
+  T.noise(out, t, { filter: 'bandpass', f: from, to, q: 1.1, dur: L, peak: 0.16, a: Math.min(0.07, L * 0.3), s: 0.7, d: 0.05, r: Math.min(0.1, L * 0.4) });
+  const grains = Math.round(p.grit * L * 60);
+  for (let k = 0; k < grains; k++) {
+    T.noise(out, t + T.rand(0.01, L - 0.03), { filter: 'bandpass', f: 3200 * p.pitch * T.rand(0.8, 1.3), q: 2.5, dur: 0.012, peak: 0.05, a: 0.002 });
+  }
+}},
+{"id":"cards-timer-tick","name":"Turn Timer Tick","category":"cards","tags":["timer","tick","clock","countdown","turn","tock","wood"],"desc":"A quiet wooden clock tick-tock for a turn timer, small enough to repeat every second.","dur":1.06,"params":{"pitch":{"min":700,"max":2400,"def":1500,"unit":"Hz"},"tone":{"min":0,"max":1,"def":0.5},"beats":{"min":1,"max":3,"def":2,"step":1},"gap":{"min":0.25,"max":0.5,"def":0.4,"unit":"s"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.beats);
+  for (let k = 0; k < n; k++) {
+    const at = t + k * p.gap;
+    const f = p.pitch * (k % 2 ? 0.76 : 1);
+    // tone fades from a soft wooden knock to a crisp click
+    T.noise(out, at, { filter: 'bandpass', f: f * 2, to: f * 1.5, q: 3, dur: 0.016, peak: 0.04 + 0.12 * p.tone, a: 0.001 });
+    T.osc(out, at, { f, to: f * 0.8, dur: 0.035, peak: 0.02 + 0.014 * (1 - p.tone), a: 0.001 });
+  }
+}},
+{"id":"cards-your-turn","name":"Your Turn","category":"cards","tags":["turn","your-turn","cue","notify","mallet","chime","game"],"desc":"A gentle two-note mallet cue that says it is your move, with a soft tap of a card underneath.","dur":0.65,"params":{"pitch":{"min":440,"max":880,"def":659,"unit":"Hz"},"interval":{"min":3,"max":12,"def":7,"unit":"st"},"bright":{"min":0,"max":1,"def":0.4},"ring":{"min":0.2,"max":0.5,"def":0.3,"unit":"s"}},"play":function (T, out, t, p) {
+  const f2 = p.pitch * Math.pow(2, p.interval / 12);
+  const mallet = (at, f, dur, peak) => {
+    T.bell(out, at, { f, partials: [[1, 1, 1], [3.9, 0.12 + 0.22 * p.bright, 0.3], [9.2, 0.05 * p.bright, 0.12]], dur, peak, a: 0.006 });
+  };
+  mallet(t, p.pitch, p.ring * 0.8, 0.07);
+  mallet(t + 0.13, f2, p.ring, 0.075);
+  T.noise(out, t, { filter: 'lowpass', f: 1000, to: 450, q: 1, dur: 0.04, peak: 0.02, a: 0.002 });
+}},
+{"id":"magic-charge-up","name":"Arcane Charge","category":"magic","tags":["charge","gather","channel","build","windup","power","spell"],"desc":"Energy gathering: a glowing swell climbs in pitch with shimmering overtones and ends in a ready ping.","dur":2.1,"params":{"length":{"min":0.5,"max":1.3,"def":0.9,"unit":"s"},"pitch":{"min":200,"max":600,"def":330,"unit":"Hz"},"shimmer":{"min":0,"max":1,"def":0.5},"space":{"min":0,"max":0.6,"def":0.3}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 0.9, mix: p.space, tone: 0.7 });
+  const L = p.length;
+  // all three lines peak at the end of the climb, then stop short for the ping
+  T.osc(room, t, { type: 'triangle', f: p.pitch, to: p.pitch * 3, dur: L, peak: 0.05, a: L * 0.92, glide: L, vib: { rate: 6, depth: 10 } });
+  T.osc(room, t, { f: p.pitch * 1.5, to: p.pitch * 4.5, dur: L, peak: 0.022, a: L * 0.92, glide: L });
+  T.osc(room, t, { f: p.pitch * 2, to: p.pitch * 6, dur: L, peak: 0.017, a: L * 0.92, glide: L, trem: { rate: 12, depth: 0.5 } });
+  T.noise(room, t, { filter: 'highpass', f: 3000, to: 9000, q: 0.8, dur: L, peak: 0.01 + 0.04 * p.shimmer, a: L * 0.92, glide: L });
+  T.bell(room, t + L, { f: p.pitch * 6, partials: [[1, 1, 1], [2, 0.4, 0.6], [3, 0.25, 0.4]], dur: 0.6, peak: 0.05 });
+}},
+{"id":"magic-curse-hex","name":"Curse Hex","category":"magic","tags":["curse","hex","dark","debuff","evil","dread","malice"],"desc":"A sinister low toll with a sour interval, a sagging drone and creeping whispers. For debuffs and dark spells.","dur":1.8,"params":{"pitch":{"min":70,"max":220,"def":110,"unit":"Hz"},"dread":{"min":0,"max":1,"def":0.6},"whisper":{"min":0,"max":1,"def":0.5},"space":{"min":0,"max":0.6,"def":0.35}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 1.2, mix: p.space, tone: 0.25 });
+  // the toll, and a bell a tritone above that sours it
+  T.bell(room, t, { f: p.pitch * 2, partials: [[1, 1, 1], [2.76, 0.5, 0.7], [5.4, 0.3, 0.5]], drift: 0.96, dur: 1.3, peak: 0.056 });
+  T.bell(room, t + 0.06, { f: p.pitch * 2 * 1.4142, partials: [[1, 1, 1], [2.76, 0.4, 0.6]], drift: 0.95, dur: 1.1, peak: 0.01 + 0.035 * p.dread });
+  // the drone: two saws a few cents apart, filtered shut as it fades
+  const dark = T.filter(room, t, { type: 'lowpass', f: 700, to: 150, dur: 1.2, q: 1.5 });
+  T.osc(dark, t, { type: 'sawtooth', f: p.pitch, to: p.pitch * 0.9, dur: 1.3, peak: 0.035, a: 0.08, detune: -12, vib: { rate: 4.5, depth: 15 } });
+  T.osc(dark, t, { type: 'sawtooth', f: p.pitch, to: p.pitch * 0.9, dur: 1.3, peak: 0.035, a: 0.08, detune: 12 });
+  // whispers: short narrow bursts of breath, spaced unevenly
+  let at = t + 0.12;
+  for (let k = 0; k < 5; k++) {
+    T.noise(room, at, { filter: 'bandpass', f: T.rand(1400, 3200), q: 6, dur: T.rand(0.1, 0.2), peak: 0.04 + 0.18 * p.whisper, a: 0.04 });
+    at += T.rand(0.1, 0.22);
+  }
+}},
+{"id":"magic-enchant","name":"Enchant","category":"magic","tags":["enchant","imbue","infuse","harp","glissando","upgrade","blessing"],"desc":"A harp-like run of plucked notes over a glowing pad, closing on a bell. For enchanting an item.","dur":1.9,"params":{"pitch":{"min":200,"max":600,"def":329.63,"unit":"Hz"},"notes":{"min":4,"max":8,"def":6,"step":1},"speed":{"min":0.04,"max":0.12,"def":0.07,"unit":"s"},"glow":{"min":0,"max":1,"def":0.5},"space":{"min":0,"max":0.6,"def":0.35}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 1.1, mix: p.space, tone: 0.6 });
+  const steps = [0, 2, 4, 7, 9, 12, 14, 16];
+  const n = Math.round(p.notes);
+  for (let k = 0; k < n; k++) {
+    T.pluck(room, t + k * p.speed, { f: p.pitch * Math.pow(2, steps[k] / 12), dur: 0.8, bright: 0.6, peak: 0.07, a: 0.002 });
+  }
+  // the glow underneath: a fifth and an octave, slowly swelling
+  const run = n * p.speed;
+  T.osc(room, t, { f: p.pitch * 2, dur: run + 0.7, peak: 0.01 + 0.03 * p.glow, a: 0.15, vib: { rate: 5, depth: 6 } });
+  T.osc(room, t, { f: p.pitch * 3, dur: run + 0.7, peak: 0.005 + 0.02 * p.glow, a: 0.2, vib: { rate: 5.5, depth: 6 } });
+  // the closing bell, an octave above the last string
+  T.bell(room, t + run, { f: p.pitch * Math.pow(2, (steps[n - 1] + 12) / 12), partials: [[1, 1, 1], [2.76, 0.4, 0.5]], dur: 0.8, peak: 0.04 });
+}},
+{"id":"magic-fire-spell","name":"Fire Spell","category":"magic","tags":["fire","fireball","flame","burn","spell","crackle","roar"],"desc":"A rushing fireball: a warm thump at the cast, a roar that swells and fades, and crackling embers.","dur":1.3,"params":{"heat":{"min":0,"max":1,"def":0.5},"length":{"min":0.5,"max":1.2,"def":0.8,"unit":"s"},"crackle":{"min":0,"max":1,"def":0.5},"weight":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const len = p.length;
+  // the roar: the cutoff opens with the heat, the level swells then falls
+  T.noise(out, t, { filter: 'lowpass', f: 250, to: 900 + 2600 * p.heat, q: 0.8, dur: len, peak: 0.4, a: len * 0.22, glide: len * 0.5 });
+  // the ignition: a short bright sizzle and a low thump
+  T.noise(out, t, { filter: 'bandpass', f: 1200, to: 6000, q: 1.4, dur: 0.18, peak: 0.1, a: 0.01 });
+  T.osc(out, t, { f: 130, to: 45, dur: 0.28, peak: 0.04 + 0.12 * p.weight, a: 0.004 });
+  // the magic in it: a quick rising flare over the ignition
+  T.osc(out, t, { type: 'triangle', f: 500, to: 2000, dur: 0.22, peak: 0.025, a: 0.01 });
+  // embers popping at random moments, fewer and softer toward the end
+  const n = Math.round(3 + 11 * p.crackle);
+  for (let k = 0; k < n; k++) {
+    const at = t + 0.05 + T.rand(0, len - 0.12);
+    const fade = 1 - 0.6 * ((at - t) / len);
+    T.noise(out, at, { filter: 'highpass', f: T.rand(2500, 6500), q: 0.8, dur: 0.014, peak: T.rand(0.03, 0.08) * fade, a: 0.001 });
+  }
+}},
+{"id":"magic-healing-shimmer","name":"Healing Shimmer","category":"magic","tags":["heal","restore","shimmer","bloom","buff","blessing","glow"],"desc":"A warm chord that swells and blooms with a few falling sparkles. For healing, a blessing or a buff.","dur":2,"params":{"pitch":{"min":220,"max":880,"def":392,"unit":"Hz"},"swell":{"min":0.15,"max":0.6,"def":0.35,"unit":"s"},"sparkle":{"min":0,"max":1,"def":0.5},"space":{"min":0.1,"max":0.6,"def":0.4}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 1.4, mix: p.space, tone: 0.6 });
+  const chord = [0, 4, 7, 12, 14];
+  for (let k = 0; k < chord.length; k++) {
+    T.osc(room, t + k * 0.035, {
+      type: k < 3 ? 'triangle' : 'sine', f: p.pitch * Math.pow(2, chord[k] / 12), dur: 1.3,
+      peak: 0.024, a: p.swell, vib: { rate: 5 + k * 0.4, depth: 5 },
+    });
+  }
+  // sparkles drift down from above the chord
+  const steps = [19, 16, 14, 12, 9, 7, 4, 2];
+  const n = Math.round(2 + 6 * p.sparkle);
+  let at = t + p.swell * 0.7;
+  for (let k = 0; k < n; k++) {
+    const f = p.pitch * Math.pow(2, steps[k] / 12) * 2;
+    T.osc(room, at, { f, dur: 0.38, peak: 0.028, a: 0.004 });
+    T.osc(room, at, { f: f * 2.01, dur: 0.16, peak: 0.008, a: 0.004 });
+    at += T.rand(0.05, 0.1);
+  }
+  T.noise(room, t, { filter: 'highpass', f: 6000, q: 0.8, dur: p.swell + 0.7, peak: 0.004 + 0.02 * p.sparkle, a: p.swell });
+}},
+{"id":"magic-ice-spell","name":"Ice Spell","category":"magic","tags":["ice","frost","freeze","crystal","glass","shatter","spell"],"desc":"A crystalline freeze: a glassy ring over a frosty hiss, then icy shards tinkling away downward.","dur":1.4,"params":{"pitch":{"min":1200,"max":3600,"def":2200,"unit":"Hz"},"shards":{"min":3,"max":9,"def":6,"step":1},"frost":{"min":0,"max":1,"def":0.5},"space":{"min":0,"max":0.6,"def":0.35}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 1.0, mix: p.space, tone: 0.9 });
+  // the freeze: frost breathes in while the glass rings
+  T.noise(room, t, { filter: 'highpass', f: 6500, to: 4500, q: 0.8, dur: 0.55, peak: 0.01 + 0.07 * p.frost, a: 0.1 });
+  T.bell(room, t, {
+    f: p.pitch,
+    partials: [[1, 1, 1], [2.32, 0.6, 0.6], [3.87, 0.4, 0.5], [5.9, 0.25, 0.35], [8.1, 0.12, 0.2]],
+    dur: 1.0, peak: 0.055, a: 0.006,
+  });
+  // the shards: a pentatonic fall, each a tiny struck bell, loosely spaced
+  const steps = [12, 9, 7, 4, 2, 0, -3, -5, -8];
+  const n = Math.round(p.shards);
+  let at = t + 0.12;
+  for (let k = 0; k < n; k++) {
+    T.bell(room, at, {
+      f: p.pitch * Math.pow(2, steps[k] / 12), partials: [[1, 1, 1], [2.76, 0.4, 0.5]],
+      dur: 0.32, peak: 0.04 - 0.002 * k,
+    });
+    at += T.rand(0.045, 0.09);
+  }
+}},
+{"id":"magic-lightning","name":"Lightning Bolt","category":"magic","tags":["lightning","thunder","bolt","shock","storm","electric","spell"],"desc":"A bright crack of electricity that forks into crackling arcs and rolls away as low thunder.","dur":1.4,"params":{"bright":{"min":1500,"max":6000,"def":3200,"unit":"Hz"},"crackle":{"min":0,"max":1,"def":0.5},"rumble":{"min":0,"max":1,"def":0.5},"thunder":{"min":0.3,"max":1,"def":0.7,"unit":"s"},"space":{"min":0,"max":0.5,"def":0.2}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 0.6, mix: p.space, tone: 0.5 });
+  // the strike
+  T.noise(room, t, { filter: 'highpass', f: 6000, to: 2000, q: 0.8, dur: 0.09, peak: 0.08, a: 0.001 });
+  T.osc(room, t, { type: 'sawtooth', f: p.bright, to: p.bright * 0.08, dur: 0.12, peak: 0.025, a: 0.001 });
+  T.fm(room, t, { f: p.bright * 0.7, to: p.bright * 0.1, ratio: 1.41, index: 3, index1: 0.5, dur: 0.18, peak: 0.03, a: 0.001 });
+  // the forks: bandpassed crackles that thin and soften as they go
+  const n = Math.round(3 + 8 * p.crackle);
+  let at = t + 0.04;
+  for (let k = 0; k < n; k++) {
+    const fade = 1 - k / (n + 2);
+    T.noise(room, at, { filter: 'bandpass', f: T.rand(1500, 5000), q: 2, dur: T.rand(0.012, 0.035), peak: T.rand(0.035, 0.07) * fade, a: 0.001 });
+    at += T.rand(0.02, 0.075);
+  }
+  // the thunder: a lowpass that closes as the roll fades
+  T.noise(room, t + 0.03, { filter: 'lowpass', f: 700, to: 80, q: 0.9, dur: p.thunder, peak: 0.08 + 0.3 * p.rumble, a: 0.07 });
+}},
+{"id":"magic-portal-open","name":"Portal Open","category":"magic","tags":["portal","gateway","dimension","vortex","summon","rift","open"],"desc":"A swirling gateway tears open: a resonant vortex whirls up, then a deep shimmering chord settles.","dur":2.5,"params":{"size":{"min":0.5,"max":1.3,"def":0.9,"unit":"s"},"pitch":{"min":80,"max":220,"def":110,"unit":"Hz"},"swirl":{"min":0,"max":1,"def":0.5},"space":{"min":0,"max":0.6,"def":0.4}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 1.3, mix: p.space, tone: 0.6 });
+  const s = p.size;
+  // two narrow, resonant sweeps crossing: the vortex
+  T.noise(room, t, { filter: 'bandpass', f: 180, to: 2400, q: 4, dur: s, peak: 0.2 + 0.16 * p.swirl, a: s * 0.8 });
+  T.noise(room, t, { filter: 'bandpass', f: 2800, to: 300, q: 4, dur: s, peak: 0.11 + 0.1 * p.swirl, a: s * 0.8 });
+  // the throb: two near-unison triangles beating, the swirl amount sets how hard they pulse
+  T.osc(room, t, { type: 'triangle', f: p.pitch, to: p.pitch * 1.5, dur: s + 0.5, peak: 0.04, a: s * 0.8, trem: { rate: 3 + 6 * p.swirl, depth: 0.3 + 0.5 * p.swirl } });
+  T.osc(room, t, { type: 'triangle', f: p.pitch * 1.007, to: p.pitch * 1.51, dur: s + 0.5, peak: 0.04, a: s * 0.8 });
+  // it opens
+  const at = t + s * 0.9;
+  T.osc(room, at, { f: p.pitch * 2, to: p.pitch * 0.6, dur: 0.45, peak: 0.06, a: 0.01 });
+  T.bell(room, at, {
+    f: p.pitch * 4, partials: [[1, 1, 1], [1.5, 0.6, 0.9], [2, 0.5, 0.8], [3, 0.3, 0.6], [4.01, 0.15, 0.4]],
+    dur: 1.1, peak: 0.035, a: 0.01,
+  });
+}},
+{"id":"magic-potion-bubble","name":"Potion Bubble","category":"magic","tags":["potion","bubble","brew","cauldron","liquid","bloop","alchemy"],"desc":"A bubbling cauldron of glassy bloops with a faint magical glimmer. For potions, brewing and alchemy.","dur":1.6,"params":{"bubbles":{"min":3,"max":12,"def":7,"step":1},"pitch":{"min":200,"max":700,"def":380,"unit":"Hz"},"span":{"min":0.4,"max":1.2,"def":0.8,"unit":"s"},"glimmer":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 0.5, mix: 0.15, tone: 0.6 });
+  const n = Math.round(p.bubbles);
+  for (let k = 0; k < n; k++) {
+    const at = t + (k / n) * p.span + T.rand(0, 0.5 * p.span / n);
+    const f = p.pitch * T.rand(0.7, 1.8);
+    const len = T.rand(0.05, 0.11);
+    T.osc(room, at, { f, to: f * 2.2, dur: len, peak: T.rand(0.05, 0.09), a: 0.004 });
+    T.osc(room, at, { f: f * 3, to: f * 6.6, dur: len * 0.5, peak: 0.012, a: 0.004 });
+  }
+  // the gurgle bed
+  T.noise(room, t, { filter: 'lowpass', f: 300, to: 220, q: 0.7, dur: p.span + 0.1, peak: 0.1, a: 0.1 });
+  // glimmers: high pings above the bubbling
+  const g = Math.round(1 + 3 * p.glimmer);
+  for (let k = 0; k < g; k++) {
+    T.osc(room, t + T.rand(0.05, p.span), { f: p.pitch * T.rand(8, 12), dur: 0.3, peak: 0.005 + 0.022 * p.glimmer, a: 0.004 });
   }
 }},
 {"id":"magic-sparkle","name":"Magic Sparkle","category":"magic","tags":["magic","sparkle","shimmer","twinkle","fairy","heal","bonus"],"desc":"A rising twinkle of bright notes over a breath of shimmer, with a little room around it.","dur":1.5,"params":{"notes":{"min":3,"max":7,"def":4,"step":1},"pitch":{"min":600,"max":2000,"def":1046.5,"unit":"Hz"},"gap":{"min":0.025,"max":0.09,"def":0.05,"unit":"s"},"shimmer":{"min":0,"max":1,"def":0.5},"space":{"min":0,"max":0.6,"def":0.3}},"play":function (T, out, t, p) {
@@ -1151,6 +2265,594 @@ const SOUNDS = [
     T.osc(room, at, { f: f * 2, to: f * 2.02, dur: 0.12, peak: 0.02 * l, a: 0.004 });
   }
   T.noise(room, t, { filter: 'highpass', f: 5000, to: 8000, q: 0.8, dur: n * p.gap + 0.25, peak: 0.06 * p.shimmer, a: 0.06 });
+}},
+{"id":"magic-spell-cast","name":"Spell Cast","category":"magic","tags":["spell","cast","magic","conjure","wand","release","bloom"],"desc":"Magic gathered and let go: a quick rising swirl, then a bright bell bloom opening in a soft room.","dur":1.5,"params":{"pitch":{"min":330,"max":1320,"def":659.25,"unit":"Hz"},"gather":{"min":0.1,"max":0.4,"def":0.2,"unit":"s"},"bloom":{"min":0,"max":1,"def":0.6},"space":{"min":0,"max":0.6,"def":0.3}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 1.1, mix: p.space, tone: 0.7 });
+  const g = p.gather;
+  const b = p.bloom;
+  // the swirl: a bandpassed breath opening upward over a rising triangle
+  T.noise(room, t, { filter: 'bandpass', f: 600, to: 5200, q: 1.5, dur: g + 0.03, peak: 0.1, a: g * 0.85 });
+  T.osc(room, t, { type: 'triangle', f: p.pitch * 0.5, to: p.pitch, dur: g + 0.03, peak: 0.05, a: g * 0.85 });
+  // the bloom: a bell whose upper partials arrive with the bloom amount
+  const at = t + g;
+  T.bell(room, at, {
+    f: p.pitch,
+    partials: [[1, 1, 1], [2, 0.3 + 0.3 * b, 0.75], [3.01, 0.3 * b, 0.55], [4.2, 0.2 * b, 0.4], [5.43, 0.12 * b, 0.28]],
+    dur: 1.0, peak: 0.065,
+  });
+  T.noise(room, at, { filter: 'highpass', f: 5000, to: 8000, q: 0.8, dur: 0.14, peak: 0.02 + 0.04 * b, a: 0.004 });
+}},
+{"id":"magic-teleport","name":"Teleport","category":"magic","tags":["teleport","blink","warp","vanish","appear","phase","travel"],"desc":"A vanishing rush upward, a beat of silence, then a soft bell where you reappear.","dur":1.4,"params":{"pitch":{"min":400,"max":1600,"def":800,"unit":"Hz"},"gap":{"min":0.08,"max":0.3,"def":0.16,"unit":"s"},"reach":{"min":1,"max":2.5,"def":1.5,"unit":"x"},"space":{"min":0,"max":0.6,"def":0.3}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 0.9, mix: p.space, tone: 0.7 });
+  // vanish: a sine and a highpassed shimmer shooting upward
+  T.osc(room, t, { f: p.pitch, to: p.pitch * 6, dur: 0.14, peak: 0.07, a: 0.01, trem: { rate: 40, depth: 0.5 } });
+  T.noise(room, t, { filter: 'highpass', f: 3000, to: 9000, q: 0.8, dur: 0.14, peak: 0.07, a: 0.01 });
+  // arrive: the rush comes back down, then a bell lands
+  const at = t + 0.14 + p.gap;
+  const f = p.pitch * p.reach;
+  T.osc(room, at, { f: f * 5, to: f, dur: 0.12, peak: 0.05, a: 0.03, trem: { rate: 40, depth: 0.5 } });
+  T.noise(room, at, { filter: 'highpass', f: 9000, to: 3000, q: 0.8, dur: 0.12, peak: 0.05, a: 0.03 });
+  T.bell(room, at + 0.12, { f: f * 2, partials: [[1, 1, 1], [2.76, 0.4, 0.5], [5.4, 0.2, 0.3]], dur: 0.6, peak: 0.07 });
+}},
+{"id":"scifi-alert-siren","name":"Soft Alert Siren","category":"scifi","tags":["alert","siren","alarm","warning","caution","klaxon","notification"],"desc":"A gentle two-tone siren that swoops between notes: a warning that gets attention without startling.","dur":2.3,"params":{"pitch":{"min":350,"max":900,"def":520,"unit":"Hz"},"cycles":{"min":1,"max":3,"def":2,"step":1},"interval":{"min":3,"max":12,"def":7,"step":1,"unit":"st"},"rate":{"min":0.15,"max":0.3,"def":0.22,"unit":"s"},"tone":{"min":600,"max":4000,"def":1800,"unit":"Hz"}},"play":function (T, out, t, p) {
+  const echo = T.delay(out, t, { time: 0.11, fb: 0.25, mix: 0.2, tone: 2500 });
+  const lp = T.filter(echo, t, { type: 'lowpass', f: p.tone, q: 0.7 });
+  const hi = p.pitch * Math.pow(2, Math.round(p.interval) / 12);
+  const n = Math.round(p.cycles) * 2;
+  for (let k = 0; k < n; k++) {
+    const up = k % 2 === 0;
+    const at = t + k * p.rate;
+    const a = up ? p.pitch : hi;
+    const b = up ? hi : p.pitch;
+    // each swoop runs a hair past its slot so neighbours overlap and the line stays legato
+    T.osc(lp, at, { type: 'triangle', f: a, to: b, glide: p.rate, dur: p.rate + 0.03, peak: 0.075, a: 0.03, s: 0.85, d: 0.04, r: 0.04 });
+    T.osc(lp, at, { type: 'sawtooth', f: a, to: b, glide: p.rate, dur: p.rate + 0.03, peak: 0.02, a: 0.03, s: 0.85, d: 0.04, r: 0.04 });
+  }
+}},
+{"id":"scifi-blaster-bolt","name":"Blaster Bolt","category":"scifi","tags":["blaster","bolt","plasma","cannon","gun","shot","heavy"],"desc":"A heavy plasma shot: a gritty falling snarl with a bright crack on top and a thump underneath.","dur":0.45,"params":{"pitch":{"min":300,"max":1200,"def":700,"unit":"Hz"},"length":{"min":0.18,"max":0.4,"def":0.3,"unit":"s"},"grit":{"min":0,"max":1,"def":0.5},"weight":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const len = p.length;
+  // a 40 Hz highpass keeps the falling low end from leaving a DC offset (the sweeps end mid-cycle)
+  const body = T.filter(out, t, { type: 'highpass', f: 40, q: 0.7 });
+  // drive's ref caps the snarl near 0.085 however hard it is pushed
+  const dr = T.drive(body, t, { amount: 0.25 + 0.65 * p.grit, ref: 0.085 });
+  T.osc(dr, t, { type: 'sawtooth', f: p.pitch, to: p.pitch * 0.1, dur: len, peak: 0.07, a: 0.002, glide: len * 0.8 });
+  T.osc(dr, t, { type: 'square', f: p.pitch * 1.01, to: p.pitch * 0.1, dur: len, peak: 0.05, a: 0.002, glide: len * 0.8 });
+  T.fm(body, t, { f: p.pitch * 2, to: p.pitch * 0.3, ratio: 1.41, index: 2, index1: 0.2, dur: len * 0.6, peak: 0.02, a: 0.002 });
+  T.noise(out, t, { filter: 'highpass', f: 5000, to: 1500, q: 0.8, dur: 0.05, peak: 0.05, a: 0.001 });
+  T.osc(body, t, { f: 180, to: 45, dur: 0.22, peak: 0.015 + 0.06 * p.weight, a: 0.002 });
+}},
+{"id":"scifi-data-stream","name":"Data Stream","category":"scifi","tags":["data","stream","transfer","download","digital","packets","chatter"],"desc":"A rapid patter of tiny bitcrushed ticks and chirps, like data pouring through a channel.","dur":1.1,"params":{"ticks":{"min":10,"max":40,"def":22,"step":1},"length":{"min":0.3,"max":1,"def":0.6,"unit":"s"},"pitch":{"min":600,"max":3000,"def":1600,"unit":"Hz"},"spread":{"min":0,"max":1,"def":0.6},"grit":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const cr = T.crush(out, t, { bits: 8 - 4 * p.grit, ref: 0.1 });
+  const n = Math.round(p.ticks);
+  const slot = p.length / n;
+  for (let k = 0; k < n; k++) {
+    const at = t + (k + T.rand(0, 0.8)) * slot;
+    const f = p.pitch * Math.pow(2, T.rand(-1, 1) * p.spread * 1.5);
+    const type = T.rand() < 0.5 ? 'square' : 'sawtooth';
+    T.osc(cr, at, { type, f, to: f * 1.15, dur: 0.022, peak: 0.04, a: 0.002 });
+  }
+  T.noise(out, t, { filter: 'highpass', f: 5000, q: 0.8, dur: p.length, peak: 0.012, a: 0.05 });
+}},
+{"id":"scifi-hologram-flicker","name":"Hologram Flicker","category":"scifi","tags":["hologram","flicker","glitch","projection","unstable","digital","static"],"desc":"A glassy digital tone that stutters and drops out as a projection flickers, with static in the gaps.","dur":1.3,"params":{"pitch":{"min":400,"max":1600,"def":800,"unit":"Hz"},"flickers":{"min":3,"max":9,"def":6,"step":1},"glitch":{"min":0,"max":1,"def":0.5},"length":{"min":0.5,"max":1,"def":0.8,"unit":"s"}},"play":function (T, out, t, p) {
+  const cr = T.crush(out, t, { bits: 9 - 5 * p.glitch, ref: 0.1 });
+  const n = Math.round(p.flickers);
+  const slot = p.length / n;
+  for (let k = 0; k < n; k++) {
+    const start = t + k * slot;
+    const last = k === n - 1;
+    const on = last ? 0.3 : slot * T.rand(0.35, 0.8);
+    // the pitch wanders further as the glitch amount rises
+    const f = p.pitch * (1 + p.glitch * T.rand(-0.35, 0.35));
+    T.fm(cr, start, { f, ratio: 2.76, index: 1.2, index1: 0.4, dur: on, peak: 0.08, a: 0.004, s: 0.8, d: 0.01, r: last ? 0.2 : 0.01 });
+    if (!last) {
+      T.noise(out, start + on, { filter: 'highpass', f: 3500, q: 0.8, dur: Math.max(0.015, slot - on), peak: 0.012 + 0.05 * p.glitch, a: 0.002 });
+    }
+  }
+}},
+{"id":"scifi-laser-zap","name":"Laser Zap","category":"scifi","tags":["laser","zap","pew","shoot","ray","shot","retro"],"desc":"A bright falling pew for a laser shot. Fire it once, or in a quick burst of up to four.","dur":0.8,"params":{"pitch":{"min":1200,"max":4000,"def":2400,"unit":"Hz"},"drop":{"min":0.5,"max":0.95,"def":0.85},"shots":{"min":1,"max":4,"def":1,"step":1},"rate":{"min":0.06,"max":0.2,"def":0.1,"unit":"s"},"edge":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const lp = T.filter(out, t, { type: 'lowpass', f: 7000, q: 0.7 });
+  const n = Math.round(p.shots);
+  for (let k = 0; k < n; k++) {
+    const at = t + k * p.rate;
+    // each shot in a burst is a touch lower than the last
+    const f = p.pitch * (1 - 0.04 * k);
+    const to = f * (1 - p.drop);
+    T.osc(lp, at, { type: 'square', f, to, dur: 0.17, peak: 0.012 + 0.045 * p.edge, a: 0.002, glide: 0.15 });
+    T.osc(lp, at, { f, to, dur: 0.17, peak: 0.06, a: 0.002, glide: 0.15 });
+    T.fm(lp, at, { f: f * 0.5, to: to * 0.5, ratio: 3.5, index: 2.5, index1: 0.3, dur: 0.12, peak: 0.02, a: 0.002 });
+    T.noise(out, at, { filter: 'highpass', f: 6000, q: 0.8, dur: 0.015, peak: 0.04, a: 0.001 });
+  }
+}},
+{"id":"scifi-power-down","name":"Power Down","category":"scifi","tags":["power-down","shutdown","deactivate","off","spin-down","fail","engine"],"desc":"A machine spinning down: a falling whine closes under a slowing patter of ticks and ends in a soft clunk.","dur":1.6,"params":{"length":{"min":0.5,"max":1.4,"def":0.9,"unit":"s"},"pitch":{"min":60,"max":200,"def":110,"unit":"Hz"},"ticks":{"min":3,"max":12,"def":7,"step":1},"bright":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const lp = T.filter(out, t, { type: 'lowpass', f: 1500 + 4500 * p.bright, to: 150, dur: L, q: 2 });
+  T.osc(lp, t, { type: 'sawtooth', f: p.pitch * 10, to: p.pitch * 0.8, dur: L, peak: 0.07, a: 0.02, glide: L, s: 0.6, d: 0.15, r: L * 0.4 });
+  T.osc(lp, t, { type: 'square', f: p.pitch * 20, to: p.pitch * 1.6, dur: L, peak: 0.02, a: 0.02, glide: L, s: 0.6, d: 0.15, r: L * 0.4 });
+  const n = Math.round(p.ticks);
+  for (let k = 0; k < n; k++) {
+    const u = k / n;
+    // u^1.8 spreads the ticks further apart toward the end, and each sits lower than the last
+    T.osc(out, t + L * Math.pow(u, 1.8), { type: 'square', f: p.pitch * 6 * Math.pow(2, -u * 1.5), dur: 0.03, peak: 0.035, a: 0.002 });
+  }
+  // the last of it: a soft thud and a dull click
+  T.osc(out, t + L, { f: 90, to: 40, dur: 0.14, peak: 0.09, a: 0.003 });
+  T.noise(out, t + L, { filter: 'lowpass', f: 500, q: 0.8, dur: 0.05, peak: 0.12, a: 0.002 });
+}},
+{"id":"scifi-power-up","name":"Power Up","category":"scifi","tags":["power-up","charge","boot","startup","energize","spin-up","engine"],"desc":"A machine spinning up: accelerating ticks climb into a rising whine that locks on at full power.","dur":1.65,"params":{"length":{"min":0.5,"max":1.4,"def":0.9,"unit":"s"},"pitch":{"min":80,"max":250,"def":130,"unit":"Hz"},"ticks":{"min":4,"max":14,"def":9,"step":1},"bright":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const lp = T.filter(out, t, { type: 'lowpass', f: 300, to: 1500 + 4500 * p.bright, dur: L, q: 2 });
+  T.osc(lp, t, { type: 'sawtooth', f: p.pitch, to: p.pitch * 8, dur: L + 0.25, peak: 0.07, a: L * 0.9, glide: L });
+  T.osc(lp, t, { type: 'square', f: p.pitch * 2, to: p.pitch * 16, dur: L + 0.25, peak: 0.02, a: L * 0.9, glide: L });
+  const n = Math.round(p.ticks);
+  for (let k = 0; k < n; k++) {
+    const u = k / n;
+    // 1 - (1 - u)^1.8 packs the ticks closer together toward the end
+    T.osc(out, t + L * (1 - Math.pow(1 - u, 1.8)), { type: 'square', f: p.pitch * 4 * Math.pow(2, u * 1.5), dur: 0.03, peak: 0.035, a: 0.002 });
+  }
+  // the lock-on: the whine ends at pitch * 8, so the chime is that note and its fifth
+  const soft = T.filter(out, t, { type: 'lowpass', f: 4000, q: 0.7 });
+  T.osc(soft, t + L, { type: 'square', f: p.pitch * 8, dur: 0.22, peak: 0.04, a: 0.003, s: 0.5, d: 0.04, r: 0.08 });
+  T.osc(soft, t + L, { type: 'square', f: p.pitch * 12, dur: 0.22, peak: 0.03, a: 0.003, s: 0.5, d: 0.04, r: 0.08 });
+}},
+{"id":"scifi-robot-chirp","name":"Robot Chirp","category":"scifi","tags":["robot","droid","chirp","bleep","chatter","android","talk"],"desc":"A quick burst of FM chirps that swoop up and down like a small, expressive droid.","dur":1.05,"params":{"pitch":{"min":500,"max":1400,"def":900,"unit":"Hz"},"chirps":{"min":2,"max":6,"def":4,"step":1},"mood":{"min":0,"max":1,"def":0.6},"speed":{"min":0.05,"max":0.12,"def":0.075,"unit":"s"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.chirps);
+  const ratios = [2, 3, 1.5, 2.5];
+  let f = p.pitch;
+  let at = t;
+  for (let k = 0; k < n; k++) {
+    const len = p.speed * T.rand(0.8, 1.3);
+    const up = T.rand() < p.mood;
+    const to = Math.min(3200, f * (up ? T.rand(1.3, 2.2) : T.rand(0.5, 0.8)));
+    T.fm(out, at, {
+      f, to, ratio: ratios[Math.floor(T.rand() * ratios.length)], index: 1.5, index1: 0.5,
+      dur: len, peak: 0.09, a: 0.004, s: 0.7, d: 0.02, r: 0.02,
+    });
+    // the next chirp starts near where this one ended, kept inside a comfortable band
+    f = Math.min(p.pitch * 2, Math.max(p.pitch * 0.55, to * T.rand(0.8, 1.25)));
+    at += len + 0.012;
+  }
+}},
+{"id":"scifi-scanner-sweep","name":"Scanner Sweep","category":"scifi","tags":["scanner","scan","sweep","radar","sensor","detect","sonar"],"desc":"A narrow beam sweeping up and back with a wobble, ending on a two-blip confirm.","dur":2.3,"params":{"pitch":{"min":300,"max":1200,"def":520,"unit":"Hz"},"sweeps":{"min":1,"max":3,"def":2,"step":1},"length":{"min":0.3,"max":0.7,"def":0.5,"unit":"s"},"wobble":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const n = Math.round(p.sweeps);
+  const L = p.length;
+  for (let k = 0; k < n; k++) {
+    const up = k % 2 === 0;
+    const from = up ? p.pitch : p.pitch * 4;
+    const to = up ? p.pitch * 4 : p.pitch;
+    const at = t + k * L;
+    const hold = { a: 0.04, s: 0.9, d: 0.05, r: 0.05, dur: L + 0.03 };
+    T.osc(out, at, { type: 'triangle', f: from, to, glide: L, peak: 0.07, a: hold.a, s: hold.s, d: hold.d, r: hold.r, dur: hold.dur, trem: { rate: 14, depth: 0.7 * p.wobble } });
+    T.osc(out, at, { f: from * 2, to: to * 2, glide: L, peak: 0.025, a: hold.a, s: hold.s, d: hold.d, r: hold.r, dur: hold.dur });
+    T.noise(out, at, { filter: 'bandpass', f: from * 1.5, to: to * 1.5, q: 14, glide: L, peak: 0.4, a: hold.a, s: hold.s, d: hold.d, r: hold.r, dur: hold.dur });
+  }
+  const end = t + n * L;
+  T.osc(out, end, { type: 'square', f: p.pitch * 4, dur: 0.05, peak: 0.045, a: 0.002 });
+  T.osc(out, end + 0.08, { type: 'square', f: p.pitch * 6, dur: 0.07, peak: 0.045, a: 0.002 });
+}},
+{"id":"scifi-shield-hum","name":"Shield Hum","category":"scifi","tags":["shield","force-field","hum","barrier","energy","activate","deflect"],"desc":"A throbbing energy hum that swells in as a shield powers up, then settles into a slow pulse.","dur":1.6,"params":{"pitch":{"min":70,"max":200,"def":110,"unit":"Hz"},"pulse":{"min":2,"max":10,"def":5,"unit":"Hz"},"bright":{"min":0,"max":1,"def":0.5},"length":{"min":0.6,"max":1.6,"def":1.2,"unit":"s"}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const lp = T.filter(out, t, { type: 'lowpass', f: 150, to: 500 + 2500 * p.bright, dur: 0.35, q: 3 });
+  const pulse = { rate: p.pulse, depth: 0.55 };
+  T.osc(lp, t, { type: 'sawtooth', f: p.pitch, dur: L, peak: 0.04, a: 0.25, s: 0.85, d: 0.12, r: 0.3, trem: pulse });
+  T.osc(lp, t, { type: 'sawtooth', f: p.pitch * 1.006, dur: L, peak: 0.04, a: 0.25, s: 0.85, d: 0.12, r: 0.3, trem: pulse });
+  T.osc(lp, t, { type: 'square', f: p.pitch * 0.5, dur: L, peak: 0.03, a: 0.25, s: 0.85, d: 0.12, r: 0.3, trem: pulse });
+  // a thin whine on top that brightens with the filter
+  T.osc(out, t, { f: p.pitch * 12, dur: L, peak: 0.004 + 0.012 * p.bright, a: 0.3, s: 0.8, d: 0.1, r: 0.3, trem: pulse });
+}},
+{"id":"scifi-terminal-blip","name":"Terminal Blip","category":"scifi","tags":["terminal","blip","beep","computer","console","readout","retro"],"desc":"A quick run of bitcrushed computer beeps, like a console printing a readout or acknowledging a command.","dur":0.45,"params":{"pitch":{"min":500,"max":2400,"def":1200,"unit":"Hz"},"count":{"min":1,"max":5,"def":3,"step":1},"speed":{"min":0.04,"max":0.1,"def":0.055,"unit":"s"},"grit":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const cr = T.crush(out, t, { bits: 8 - 5 * p.grit, ref: 0.1 });
+  const scale = [1, 1.2599, 1.4983, 1.7818, 2, 1.3348];
+  const n = Math.round(p.count);
+  for (let k = 0; k < n; k++) {
+    // the first beep is always the base pitch, so the run always starts from the same place
+    const r = k === 0 ? 1 : scale[Math.floor(T.rand() * scale.length)];
+    T.osc(cr, t + k * p.speed, { type: 'square', f: p.pitch * r, dur: 0.04, peak: 0.09, a: 0.002 });
+  }
+}},
+{"id":"scifi-warp-jump","name":"Warp Jump","category":"scifi","tags":["warp","jump","hyperspace","ftl","engine","lightspeed","transition"],"desc":"An engine whine winds up, then the ship leaps: a stretched streak and a deep thump as it vanishes.","dur":1.95,"params":{"charge":{"min":0.3,"max":1,"def":0.6,"unit":"s"},"pitch":{"min":60,"max":160,"def":90,"unit":"Hz"},"boom":{"min":0,"max":1,"def":0.5},"tail":{"min":0.3,"max":0.9,"def":0.5,"unit":"s"}},"play":function (T, out, t, p) {
+  const C = p.charge;
+  const lp = T.filter(out, t, { type: 'lowpass', f: 250, to: 7000, dur: C, q: 3 });
+  T.osc(lp, t, { type: 'sawtooth', f: p.pitch, to: p.pitch * 8, dur: C + 0.05, peak: 0.04, a: C * 0.9, glide: C });
+  T.osc(lp, t, { type: 'sawtooth', f: p.pitch, to: p.pitch * 8, detune: 14, dur: C + 0.05, peak: 0.03, a: C * 0.9, glide: C });
+  T.fm(out, t, { f: p.pitch * 6, to: p.pitch * 40, ratio: 2, index: 0.8, dur: C + 0.05, peak: 0.02, a: C * 0.9, glide: C });
+  // the jump
+  const j = t + C;
+  T.noise(out, j, { filter: 'bandpass', f: 7000, to: 300, q: 1.2, dur: p.tail, peak: 0.12, a: 0.01 });
+  T.osc(out, j, { f: p.pitch * 40, to: p.pitch * 3, dur: 0.25, peak: 0.04, a: 0.004 });
+  T.osc(out, j, { f: 150, to: 30, dur: 0.5, peak: 0.02 + 0.09 * p.boom, a: 0.004 });
+}},
+{"id":"ambience-cave-drips","name":"Cave Drips","category":"ambience","tags":["cave","drip","water","dungeon","echo","underground","damp","bed"],"desc":"Slow drips falling in a damp stone chamber, each one ringing in the echo, over a low draft of air.","dur":8,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s"},"drips":{"min":2,"max":10,"def":5,"step":1},"pitch":{"min":0.6,"max":1.6,"def":1,"unit":"x"},"cave":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const fade = Math.min(1.2, L * 0.3);
+  const cave = T.reverb(out, t, { time: 1 + 1 * p.cave, mix: 0.35 + 0.45 * p.cave, tone: 0.4, pre: 0.02 });
+  T.noise(out, t, {
+    filter: 'bandpass', f: 200, q: 1, dur: L, peak: 0.07, a: fade, s: 1, d: 0.02, r: fade,
+  });
+  const n = Math.round(p.drips);
+  const span = Math.max(0.5, L - 0.3 - 1.7);
+  for (let k = 0; k < n; k++) {
+    const at = 0.3 + ((k + T.rand(0.1, 0.9)) * span) / n;
+    const f = T.rand(900, 1500) * p.pitch;
+    const pk = 0.055 * T.rand(0.6, 1);
+    T.osc(cave, t + at, { f, to: f * T.rand(1.6, 2.2), glide: 0.04, dur: 0.16, peak: pk, a: 0.003 });
+    if (T.rand() < 0.3) {
+      T.osc(cave, t + at + 0.13, { f: f * 1.1, to: f * 1.9, glide: 0.04, dur: 0.12, peak: pk * 0.4, a: 0.003 });
+    }
+  }
+}},
+{"id":"ambience-distant-thunder","name":"Distant Thunder","category":"ambience","tags":["thunder","storm","rumble","weather","low","distant","rolling"],"desc":"A storm miles away: a muffled crack and a long low rumble that rolls and fades out.","dur":8,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s"},"distance":{"min":0,"max":1,"def":0.55},"rolls":{"min":0,"max":3,"def":2,"step":1}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const far = p.distance;
+  const dark = 1 - 0.55 * far;
+  // a lower cutoff passes less noise: lift the peak so a far storm is not just quieter
+  const lift = 1 / Math.sqrt(dark);
+  T.noise(out, t, {
+    filter: 'lowpass', f: 260 * dark, to: 55, q: 0.8, dur: L, peak: 0.2 * lift, a: 0.45, curve: 'lin',
+  });
+  const n = Math.round(p.rolls);
+  for (let k = 1; k <= n; k++) {
+    const at = Math.min(L - 1.2, L * 0.14 * k + T.rand(0.2, 0.7));
+    T.noise(out, t + at, {
+      filter: 'lowpass', f: T.rand(190, 260) * dark, to: 50, q: 0.8,
+      dur: Math.min(2.6, L - at), peak: 0.16 * lift * (1 - 0.22 * k), a: 0.5,
+    });
+  }
+  // the crack: a muffled burst and a handful of ticks, fading with distance
+  const crack = 1 - far;
+  T.noise(out, t, { filter: 'bandpass', f: 900, to: 250, q: 0.9, dur: 0.55, peak: 0.12 * crack, a: 0.004 });
+  for (let k = 0; k < 5; k++) {
+    T.noise(out, t + T.rand(0.02, 0.4), {
+      filter: 'bandpass', f: T.rand(500, 1400), q: 1.5, dur: T.rand(0.03, 0.07), peak: 0.1 * crack * T.rand(0.4, 1), a: 0.003,
+    });
+  }
+}},
+{"id":"ambience-fire-crackle","name":"Fire Crackle","category":"ambience","tags":["fire","crackle","campfire","fireplace","flame","wood","cozy","bed"],"desc":"A hearth or campfire: a soft roar of flame with random snaps, pops and the odd log settling.","dur":8,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s"},"crackle":{"min":0,"max":1,"def":0.5},"roar":{"min":0,"max":1,"def":0.4},"tone":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const fade = Math.min(1, L * 0.25);
+  const win = (x) => Math.min(1, x / 0.6, (L - x) / 0.8);
+  const bright = 0.6 + 1.4 * p.tone;
+  // the roar, and a few flicker swells riding on it
+  T.noise(out, t, {
+    filter: 'bandpass', f: 300, q: 0.6, dur: L, peak: 0.01 + 0.07 * p.roar, a: fade, s: 1, d: 0.02, r: fade,
+  });
+  const fl = Math.max(2, Math.round(L / 1.6));
+  for (let k = 0; k < fl; k++) {
+    const at = T.rand(0, L - 1.2);
+    T.noise(out, t + at, {
+      filter: 'lowpass', f: T.rand(500, 900), to: 250, q: 0.7,
+      dur: Math.min(T.rand(1.2, 2), L - at), peak: 0.07 * p.roar * T.rand(0.5, 1), a: 0.5,
+    });
+  }
+  // crackle
+  const n = Math.round(L * (3 + 13 * p.crackle));
+  for (let k = 0; k < n; k++) {
+    const at = T.rand(0.1, L - 0.15);
+    const pk = 0.03 * Math.pow(6, T.rand()) * win(at);
+    const f = T.rand(1400, 5500) * bright;
+    T.noise(out, t + at, { filter: 'bandpass', f, to: f * 0.6, q: T.rand(2, 5), dur: T.rand(0.012, 0.045), peak: pk, a: 0.002 });
+    if (T.rand() < 0.25) {
+      T.noise(out, t + at + T.rand(0.02, 0.06), { filter: 'bandpass', f: f * 0.8, q: 3, dur: 0.025, peak: pk * 0.5, a: 0.002 });
+    }
+  }
+  // logs settling
+  const m = Math.round(L * (0.1 + 0.3 * p.crackle));
+  for (let k = 0; k < m; k++) {
+    const at = T.rand(0.3, L - 0.4);
+    T.osc(out, t + at, { f: T.rand(130, 190), to: 70, dur: 0.08, peak: 0.05 * win(at), a: 0.003 });
+    T.noise(out, t + at, { filter: 'lowpass', f: 500, q: 0.8, dur: 0.06, peak: 0.12 * win(at), a: 0.003 });
+  }
+}},
+{"id":"ambience-forest-birds","name":"Forest Birds","category":"ambience","tags":["birds","birdsong","chirp","tweet","forest","morning","nature","bed"],"desc":"Morning birdsong in the trees: tweets, trills and whistles from near and far over a faint breeze.","dur":8,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s"},"activity":{"min":0,"max":1,"def":0.5},"pitch":{"min":0.7,"max":1.4,"def":1,"unit":"x"},"trill":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const fade = Math.min(1, L * 0.25);
+  const room = T.reverb(out, t, { time: 1.1, mix: 0.22, tone: 0.8 });
+  // one chirp: a sine gliding f0 -> f1 with a rounded envelope
+  const tw = (at, f0, f1, d, pk) => T.osc(room, t + at, {
+    f: f0 * p.pitch, to: f1 * p.pitch, dur: d, peak: pk, a: Math.min(0.012, d * 0.3),
+    s: 0.8, d: 0.015, r: d * 0.45, glideCurve: 'lin',
+  });
+  // the breeze in the leaves
+  T.noise(out, t, {
+    filter: 'bandpass', f: 700, q: 0.5, dur: L, peak: 0.03, a: fade, s: 1, d: 0.02, r: fade,
+  });
+  // phrases stop 1.6 s before the end so the room's tail is gone by the last sample
+  const n = Math.max(1, Math.round(L * (0.5 + 1.1 * p.activity)));
+  for (let k = 0; k < n; k++) {
+    const at = T.rand(0.15, L - 1.6);
+    const kind = T.rand();
+    const base = T.rand(2600, 4200);
+    const far = T.rand() < 0.35;
+    const lv = (far ? 0.018 : 0.04) * T.rand(0.8, 1);
+    if (kind < 0.1 + 0.55 * p.trill) {
+      const m = Math.round(T.rand(6, 12));
+      for (let j = 0; j < m; j++) {
+        const up = j % 2 === 0;
+        tw(at + j * 0.055, base * (up ? 1 : 1.12), base * (up ? 1.12 : 0.97), 0.04, lv * 0.8);
+      }
+    } else if (kind < 0.7) {
+      const m = Math.round(T.rand(2, 3));
+      for (let j = 0; j < m; j++) tw(at + j * 0.14, base * 0.9, base * 1.25, 0.09, lv);
+    } else {
+      tw(at, base * 0.75, base * 1.05, 0.2, lv);
+      tw(at + 0.2, base * 1.05, base * 0.7, 0.22, lv * 0.9);
+    }
+  }
+}},
+{"id":"ambience-ocean-surf","name":"Ocean Surf","category":"ambience","tags":["ocean","sea","surf","waves","beach","shore","water","bed"],"desc":"Waves building and breaking on a beach, each with a hiss of foam, over a low swell. Fades in and out.","dur":8,"params":{"length":{"min":3,"max":8,"def":7,"unit":"s"},"period":{"min":2.5,"max":6,"def":4,"unit":"s"},"foam":{"min":0,"max":1,"def":0.5},"depth":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const P = p.period;
+  const fade = Math.min(1.2, L * 0.3);
+  T.noise(out, t, {
+    filter: 'lowpass', f: 130, q: 0.7, dur: L, peak: 0.18 * p.depth + 0.01, a: fade, s: 1, d: 0.02, r: fade,
+  });
+  const n = Math.max(1, Math.ceil((L - 0.4) / P));
+  for (let k = 0; k < n; k++) {
+    const at = k === 0 ? 0 : k * P + T.rand(-0.15, 0.15) * P;
+    if (L - at < 0.8) continue;
+    const len = Math.min(P * 1.3, L - at);
+    const a = Math.min(P * 0.38, len * 0.5);
+    const big = T.rand(0.75, 1);
+    T.noise(out, t + at, {
+      filter: 'lowpass', f: 250, to: 1300, q: 0.6, glide: a, dur: len, peak: 0.075 * big, a,
+    });
+    T.noise(out, t + at + a * 0.8, {
+      filter: 'bandpass', f: 4200, to: 2600, q: 0.6,
+      dur: Math.min(P * 0.9, L - at - a * 0.8), peak: 0.05 * p.foam * big, a: a * 0.35,
+    });
+  }
+}},
+{"id":"ambience-rain","name":"Rain","category":"ambience","tags":["rain","drizzle","downpour","weather","water","outdoor","bed"],"desc":"Rain on leaves and puddles, from a drizzle to a steady downpour. Fades in and out.","dur":8,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s"},"rate":{"min":0,"max":1,"def":0.5},"tone":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const fade = Math.min(1, L * 0.25);
+  const win = (x) => Math.min(1, x / fade, (L - x) / fade);
+  const hi = 2200 + 3300 * p.tone;
+  // the wash
+  T.noise(out, t, {
+    filter: 'bandpass', f: hi, q: 0.5, dur: L, peak: 0.011 + 0.026 * p.rate, a: fade, s: 1, d: 0.02, r: fade,
+  });
+  // single drops, thinning out at both ends
+  const n = Math.round(L * (4 + 22 * p.rate));
+  for (let k = 0; k < n; k++) {
+    const at = T.rand(0.05, L - 0.1);
+    T.noise(out, t + at, {
+      filter: 'bandpass', f: hi * T.rand(0.7, 1.6), q: 2.5, dur: T.rand(0.015, 0.04),
+      peak: 0.07 * T.rand(0.3, 1) * win(at), a: 0.002,
+    });
+  }
+  // puddle plinks
+  const m = Math.round(L * (1 + 5 * p.rate));
+  for (let k = 0; k < m; k++) {
+    const at = T.rand(0.1, L - 0.2);
+    const f = T.rand(700, 1900) * (0.8 + 0.5 * p.tone);
+    T.osc(out, t + at, { f, to: f * 1.6, glide: 0.04, dur: 0.08, peak: 0.016 * T.rand(0.5, 1) * win(at), a: 0.003 });
+  }
+}},
+{"id":"ambience-room-hum","name":"Room Tone Hum","category":"ambience","tags":["room-tone","hum","electrical","mains","hvac","indoor","office","bed"],"desc":"A quiet indoor bed: electrical hum with its buzzing harmonics over a breath of ventilation hiss.","dur":8,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s"},"pitch":{"min":50,"max":120,"def":60,"unit":"Hz"},"buzz":{"min":0,"max":1,"def":0.4},"air":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const fade = Math.min(1, L * 0.25);
+  const body = T.filter(out, t, { type: 'lowpass', f: 250 + 1400 * p.buzz, q: 0.7, dur: 0.1 });
+  T.osc(body, t, {
+    type: 'sawtooth', f: p.pitch, detune: -4, dur: L, peak: 0.022, a: fade, s: 1, d: 0.02, r: fade,
+    trem: { rate: 0.35, depth: 0.25 },
+  });
+  T.osc(body, t, { type: 'sawtooth', f: p.pitch, detune: 5, dur: L, peak: 0.014, a: fade, s: 1, d: 0.02, r: fade });
+  T.osc(out, t, { f: p.pitch * 2, dur: L, peak: 0.01, a: fade, s: 1, d: 0.02, r: fade });
+  T.noise(out, t, {
+    filter: 'lowpass', f: 900, q: 0.7, dur: L, peak: 0.07 * p.air, a: fade, s: 1, d: 0.02, r: fade,
+  });
+}},
+{"id":"ambience-space-drone","name":"Space Drone","category":"ambience","tags":["space","drone","pad","ambient","sci-fi","dark","deep","bed"],"desc":"A slow, deep drone for a ship or a void: a dark pad that opens up, with a faint shimmer far above.","dur":8,"params":{"length":{"min":3,"max":8,"def":7,"unit":"s"},"pitch":{"min":36,"max":110,"def":55,"unit":"Hz"},"tone":{"min":0,"max":1,"def":0.4},"shimmer":{"min":0,"max":1,"def":0.4}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const f = p.pitch;
+  const fade = Math.min(1.8, L * 0.3);
+  const lp = T.filter(out, t, { type: 'lowpass', f: 160 + 500 * p.tone, to: 380 + 1500 * p.tone, dur: L * 0.8, q: 1.1 });
+  T.osc(lp, t, { type: 'sawtooth', f, detune: -9, dur: L, peak: 0.014, a: fade, s: 1, d: 0.02, r: fade });
+  T.osc(lp, t, { type: 'sawtooth', f, detune: 9, dur: L, peak: 0.014, a: fade, s: 1, d: 0.02, r: fade });
+  T.osc(lp, t, { type: 'sawtooth', f: f * 1.5, detune: 4, dur: L, peak: 0.008, a: fade, s: 1, d: 0.02, r: fade });
+  T.osc(out, t, { f: f * 2, dur: L, peak: 0.012, a: fade, s: 1, d: 0.02, r: fade, trem: { rate: 0.11, depth: 0.5 } });
+  T.osc(out, t, { f: f * 3, dur: L, peak: 0.007, a: fade, s: 1, d: 0.02, r: fade });
+  // the shimmer ends 1.2 s early so the room's tail is finished by dur
+  const room = T.reverb(out, t, { time: 1.6, mix: 0.5, tone: 0.3 });
+  const ratios = [8, 12, 16];
+  for (let k = 0; k < 3; k++) {
+    T.osc(room, t, {
+      f: f * ratios[k], dur: L - 1.2, peak: 0.012 * p.shimmer, a: fade, s: 1, d: 0.02, r: fade * 0.8,
+      trem: { rate: 0.2 + 0.15 * k, depth: 0.9 }, vib: { rate: 0.3, depth: 8 },
+    });
+  }
+}},
+{"id":"ambience-wind-gusts","name":"Wind Gusts","category":"ambience","tags":["wind","gust","breeze","storm","outdoor","bed","loop"],"desc":"An open-air wind bed: steady air with slow gusts rolling through and a faint whistle. Fades in and out.","dur":8,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s"},"gust":{"min":0,"max":1,"def":0.55},"pitch":{"min":0.6,"max":1.6,"def":1,"unit":"x"},"whistle":{"min":0,"max":1,"def":0.25}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const fade = Math.min(1.3, L * 0.3);
+  // a higher band passes more of the noise: trim it so the level holds as pitch moves
+  const comp = 1 / Math.sqrt(p.pitch);
+  T.noise(out, t, {
+    filter: 'bandpass', f: 380 * p.pitch, q: 0.9, dur: L, peak: 0.055 * comp, a: fade, s: 1, d: 0.02, r: fade,
+  });
+  // gusts: one swell per two seconds, each rising or falling in pitch as it passes
+  const n = Math.max(1, Math.round(L / 2));
+  const span = L / n;
+  for (let k = 0; k < n; k++) {
+    const at = k * span + T.rand(0, span * 0.3);
+    const len = Math.min(span * T.rand(1.3, 1.7), L - at);
+    const up = T.rand() < 0.5;
+    T.noise(out, t + at, {
+      filter: 'bandpass', f: (up ? 260 : 700) * p.pitch, to: (up ? 700 : 260) * p.pitch, q: 1.4,
+      dur: len, peak: 0.17 * p.gust * comp * T.rand(0.7, 1), a: len * 0.4,
+    });
+  }
+  // the whistle: a narrow band is a nearly pure tone, so it needs a much higher peak to be heard
+  T.noise(out, t + L * 0.2, {
+    filter: 'bandpass', f: 1150 * p.pitch, to: 1500 * p.pitch, q: 22,
+    dur: L * 0.65, peak: 0.16 * p.whistle * comp, a: L * 0.25,
+  });
+}},
+{"id":"music-alert-sting","name":"Alert Sting","category":"music","tags":["alert","warning","danger","alarm","urgent","boss","8-bit","stinger"],"desc":"Short minor stabs and a long tense chord with a sub thump, for danger, a boss entrance or a hard warning.","dur":1.8,"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st"},"tempo":{"min":0.75,"max":1.5,"def":1,"unit":"x"},"stabs":{"min":1,"max":4,"def":2,"step":1},"edge":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const s = 1 / p.tempo;
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const chip = T.crush(out, t, { bits: 8 - 3 * p.edge });
+  const m = Math.round(p.stabs);
+  const am = ['A4', 'C5', 'E5'];
+  for (let k = 0; k < m; k++) {
+    for (let j = 0; j < 3; j++) {
+      T.osc(chip, t + k * 0.14 * s, { type: 'square', f: n(am[j]), dur: 0.09 * s, peak: 0.026, a: 0.003, s: 0.8, d: 0.02, r: 0.02 });
+    }
+  }
+  // the long chord: A C Eb F# (diminished seventh) with a vibrato that tightens the tension
+  const at = t + m * 0.14 * s;
+  const dim = ['A4', 'C5', 'D#5', 'F#5'];
+  for (let j = 0; j < 4; j++) {
+    T.osc(chip, at, {
+      type: 'square', f: n(dim[j]), dur: 0.5 * s, peak: 0.022, a: 0.003, s: 0.8, d: 0.05, r: 0.1, vib: { rate: 8, depth: 14 },
+    });
+  }
+  T.osc(chip, at, { type: 'sine', f: n('A2'), to: n('A2') / 2, dur: 0.4 * s, peak: 0.06, a: 0.004 });
+}},
+{"id":"music-defeat-jingle","name":"Defeat Jingle","category":"music","tags":["defeat","lose","fail","game-over","sad","trombone","jingle","stinger"],"desc":"A falling four-note sad-brass wah for a lost round: three short steps down and one long sagging note.","dur":3.4,"params":{"key":{"min":-5,"max":5,"def":0,"step":1,"unit":"st"},"tempo":{"min":0.7,"max":1.4,"def":1,"unit":"x"},"droop":{"min":0,"max":1,"def":0.6},"tone":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const s = 1 / p.tempo;
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const room = T.reverb(out, t, { time: 0.6, mix: 0.15, tone: 0.5 });
+  const steps = [['G4', 0, 0.3], ['F#4', 0.34, 0.3], ['F4', 0.68, 0.3], ['E4', 1.02, 1.1]];
+  for (let k = 0; k < 4; k++) {
+    const at = t + steps[k][1] * s;
+    const len = steps[k][2] * s;
+    const last = k === 3;
+    const f = n(steps[k][0]);
+    const open = 500 + 1600 * p.tone;
+    // each note opens its filter, then closes it again: the "wah"
+    const lp = T.filter(room, at, { type: 'lowpass', f: open * 0.45, to: open, dur: len * 0.25, q: 0.9 });
+    const o = {
+      dur: len, peak: 0.05, a: 0.03, s: 0.7, d: 0.1, r: Math.min(0.2, len * 0.4),
+      to: f * (last ? 1 - 0.2 * p.droop : 0.985),
+    };
+    T.osc(lp, at, { ...o, type: 'sawtooth', f, detune: -8, vib: last ? { rate: 5.5, depth: 20 * p.droop } : null });
+    T.osc(lp, at, { ...o, type: 'sawtooth', f, detune: 8, peak: 0.04, vib: last ? { rate: 5.5, depth: 20 * p.droop } : null });
+  }
+}},
+{"id":"music-fanfare-short","name":"Short Fanfare","category":"music","tags":["fanfare","brass","trumpet","announce","royal","win","proud","stinger"],"desc":"Three stabs and a long chord on synth brass: an announcement or a proud arrival in two seconds.","dur":2.2,"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st"},"tempo":{"min":0.75,"max":1.4,"def":1,"unit":"x"},"brass":{"min":0,"max":1,"def":0.5},"weight":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const s = 1 / p.tempo;
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const room = T.reverb(out, t, { time: 0.8, mix: 0.18, tone: 0.6 });
+  const hit = (at, names, len, pk) => {
+    for (let k = 0; k < names.length; k++) {
+      const lp = T.filter(room, t + at, { type: 'lowpass', f: 500 + 400 * p.brass, to: 1800 + 2600 * p.brass, dur: 0.09, q: 0.9 });
+      const o = { type: 'sawtooth', f: n(names[k]), dur: len, peak: pk, a: 0.02, s: 0.85, d: 0.08, r: Math.min(0.2, len * 0.4) };
+      T.osc(lp, t + at, { ...o, detune: -6 });
+      T.osc(lp, t + at, { ...o, detune: 6 });
+    }
+  };
+  hit(0, ['G4', 'C5'], 0.13 * s, 0.028);
+  hit(0.17 * s, ['G4', 'C5'], 0.13 * s, 0.028);
+  hit(0.34 * s, ['G4', 'C5', 'E5'], 0.13 * s, 0.025);
+  const end = 0.52 * s;
+  hit(end, ['C5', 'E5', 'G5'], 0.9 * s, 0.03);
+  // weight: the root an octave down, and a cymbal wash on the last chord
+  hit(end, ['C4'], 0.9 * s, 0.04 * p.weight + 0.004);
+  T.noise(room, t + end, { filter: 'highpass', f: 5000, q: 0.7, dur: 0.9, peak: 0.03 * p.weight, a: 0.005 });
+}},
+{"id":"music-intro-logo","name":"Intro Logo Sting","category":"music","tags":["intro","logo","brand","title","opening","reveal","shimmer","stinger"],"desc":"A rising sweep that opens into a warm, ringing major-seventh chord with a glint on top. A calm logo reveal.","dur":4.2,"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st"},"tempo":{"min":0.8,"max":1.3,"def":1,"unit":"x"},"shine":{"min":0,"max":1,"def":0.5},"space":{"min":0.2,"max":0.7,"def":0.45}},"play":function (T, out, t, p) {
+  const s = 1 / p.tempo;
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const room = T.reverb(out, t, { time: 2, mix: p.space, tone: 0.5 });
+  const land = 0.75 * s;
+  // the sweep peaks as the chord arrives
+  T.noise(room, t, { filter: 'bandpass', f: 400, to: 5000, q: 1.2, dur: land + 0.05, peak: 0.05, a: land });
+  // the chord: four FM tones whose brightness settles as they ring
+  const names = ['C4', 'E4', 'G4', 'B4'];
+  for (let k = 0; k < 4; k++) {
+    T.fm(room, t + land, { f: n(names[k]), ratio: 2, index: 1.4, index1: 0.1, dur: 1.8, peak: 0.028, a: 0.012 });
+  }
+  // the swell: a low octave that blooms under the chord
+  T.osc(room, t + land - 0.1, { f: n('C3'), dur: 2, peak: 0.04, a: 0.4, s: 0.7, d: 0.4, r: 0.9 });
+  // the glint
+  T.bell(room, t + land + 0.12, { f: n('C7'), dur: 1.4, peak: 0.012 + 0.016 * p.shine });
+}},
+{"id":"music-level-complete","name":"Level Complete","category":"music","tags":["level-complete","stage-clear","win","success","pluck","bell","arpeggio","stinger"],"desc":"A warm plucked arpeggio climbing into a ringing bell chord. For finishing a stage, not a whole game.","dur":3.4,"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st"},"tempo":{"min":0.75,"max":1.4,"def":1,"unit":"x"},"sparkle":{"min":0,"max":1,"def":0.6},"space":{"min":0,"max":0.6,"def":0.3}},"play":function (T, out, t, p) {
+  const s = 1 / p.tempo;
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const room = T.reverb(out, t, { time: 1.4, mix: p.space, tone: 0.6 });
+  const arp = ['C5', 'E5', 'G5', 'C6', 'E6', 'G6'];
+  for (let k = 0; k < 6; k++) {
+    T.pluck(room, t + k * 0.085 * s, { f: n(arp[k]), dur: 0.55, bright: 0.65, peak: 0.07 });
+  }
+  // the landing: bell on top, triangle triad under it, a breath of air above
+  const at = t + 0.6 * s;
+  T.bell(room, at, { f: n('C6'), dur: 1.5, peak: 0.03 + 0.012 * p.sparkle });
+  const triad = ['C5', 'E5', 'G5'];
+  for (let k = 0; k < 3; k++) {
+    T.osc(room, at, { type: 'triangle', f: n(triad[k]), dur: 1.2, peak: 0.025, a: 0.01, s: 0.6, d: 0.3, r: 0.5 });
+  }
+  T.noise(room, at, { filter: 'highpass', f: 6000, to: 9000, q: 0.8, dur: 0.5, peak: 0.04 * p.sparkle, a: 0.03 });
+}},
+{"id":"music-menu-confirm","name":"Menu Confirm Melody","category":"music","tags":["menu","confirm","select","start","melody","8-bit","chiptune","stinger"],"desc":"Two to four quick rising notes with an echo, for pressing Start or confirming a menu choice.","dur":1.7,"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st"},"notes":{"min":2,"max":4,"def":3,"step":1},"speed":{"min":0.7,"max":1.6,"def":1,"unit":"x"},"echo":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const eco = T.delay(out, t, { time: 0.11, fb: 0.2 + 0.3 * p.echo, mix: 0.5 * p.echo, tone: 2500 });
+  const gap = 0.075 / p.speed;
+  const m = Math.round(p.notes);
+  // always end on the tonic: the last m of C E G C
+  const run = ['C5', 'E5', 'G5', 'C6'].slice(4 - m);
+  for (let k = 0; k < m; k++) {
+    const last = k === m - 1;
+    const len = last ? 0.26 : gap * 1.3;
+    T.osc(eco, t + k * gap, { type: 'square', f: n(run[k]), dur: len, peak: last ? 0.042 : 0.036, a: 0.004, s: 0.7, d: 0.03, r: 0.05 });
+    T.osc(eco, t + k * gap, { type: 'triangle', f: n(run[k]) / 2, dur: len, peak: 0.03, a: 0.004, s: 0.7, d: 0.03, r: 0.05 });
+  }
+}},
+{"id":"music-mystery-sting","name":"Mystery Sting","category":"music","tags":["mystery","suspense","eerie","clue","reveal","spooky","fm","stinger"],"desc":"Two hanging bell tones a tritone apart over a dark swell. For a clue, a twist or a door that should not open.","dur":4.2,"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st"},"tempo":{"min":0.75,"max":1.4,"def":1,"unit":"x"},"eerie":{"min":0,"max":1,"def":0.5},"space":{"min":0.2,"max":0.7,"def":0.45}},"play":function (T, out, t, p) {
+  const s = 1 / p.tempo;
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const room = T.reverb(out, t, { time: 2.2, mix: p.space, tone: 0.35 });
+  const idx = 1.5 + 3 * p.eerie;
+  T.fm(room, t, { f: n('D4'), ratio: 1.41, index: idx, index1: 0.3, dur: 1.6, peak: 0.04, a: 0.01 });
+  T.fm(room, t + 0.55 * s, { f: n('G#4'), ratio: 1.41, index: idx, index1: 0.3, dur: 1.6, peak: 0.04, a: 0.01 });
+  // the pad: a low sine that swells under the second bell
+  T.osc(room, t, {
+    f: n('D3'), dur: 2.2, peak: 0.035, a: 0.5 * s, s: 0.7, d: 0.5, r: 1,
+    trem: { rate: 5.5, depth: 0.5 * p.eerie }, vib: { rate: 4.5, depth: 12 * p.eerie },
+  });
+  T.noise(room, t + 0.4 * s, { filter: 'highpass', f: 6500, q: 0.8, dur: 1.5, peak: 0.02 * p.eerie, a: 0.6 });
+}},
+{"id":"music-ta-da","name":"Ta-da","category":"music","tags":["ta-da","tada","reveal","cheerful","achievement","surprise","celebrate","stinger"],"desc":"A cheerful two-chord reveal: a quick staccato hit and a bright held chord with a sparkle on top.","dur":2,"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st"},"tempo":{"min":0.75,"max":1.4,"def":1,"unit":"x"},"sparkle":{"min":0,"max":1,"def":0.5},"weight":{"min":0,"max":1,"def":0.5}},"play":function (T, out, t, p) {
+  const s = 1 / p.tempo;
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const room = T.reverb(out, t, { time: 0.9, mix: 0.2, tone: 0.6 });
+  // "ta": a short dyad
+  const ta = ['G4', 'C5'];
+  for (let k = 0; k < 2; k++) {
+    T.osc(room, t, { type: 'triangle', f: n(ta[k]), dur: 0.11, peak: 0.035, a: 0.004, s: 0.6, d: 0.03, r: 0.04 });
+  }
+  // "daa": the chord, with the bass as the weight
+  const at = t + 0.17 * s;
+  const chord = ['C5', 'E5', 'G5', 'C6'];
+  for (let k = 0; k < 4; k++) {
+    T.osc(room, at, { type: 'triangle', f: n(chord[k]), dur: 1, peak: 0.024, a: 0.006, s: 0.6, d: 0.2, r: 0.4 });
+    T.pluck(room, at, { f: n(chord[k]), dur: 0.8, bright: 0.6, peak: 0.03 });
+  }
+  T.osc(room, at, { f: n('C3'), dur: 1, peak: 0.01 + 0.045 * p.weight, a: 0.006, s: 0.6, d: 0.2, r: 0.4 });
+  // the sparkle: a quick glissando up into a bell and a shimmer
+  T.osc(room, t + 0.1 * s, { f: n('C6'), to: n('C8'), dur: 0.18 * s + 0.05, peak: 0.012 * p.sparkle + 0.002, a: 0.01 });
+  T.bell(room, at, { f: n('C7'), dur: 1, peak: 0.01 + 0.015 * p.sparkle });
+}},
+{"id":"music-victory-jingle","name":"Victory Jingle","category":"music","tags":["victory","win","jingle","8-bit","chiptune","square","arcade","stinger"],"desc":"A chiptune win: a quick rising arpeggio into a held major chord. Bright, short and proud.","dur":1.7,"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st"},"tempo":{"min":0.75,"max":1.5,"def":1,"unit":"x"},"crunch":{"min":0,"max":1,"def":0.5},"bass":{"min":0,"max":1,"def":0.6}},"play":function (T, out, t, p) {
+  const s = 1 / p.tempo;
+  const n = (name) => T.note(name) * Math.pow(2, p.key / 12);
+  const chip = T.crush(out, t, { bits: 8 - 3 * p.crunch });
+  const b = 0.1 * s;
+  const run = ['G4', 'C5', 'E5', 'G5'];
+  for (let k = 0; k < 4; k++) {
+    T.osc(chip, t + k * b, { type: 'square', f: n(run[k]), dur: b * 1.05, peak: 0.048, a: 0.004, s: 0.8, d: 0.01, r: 0.015 });
+  }
+  // the held chord: a square lead with a little vibrato, a triangle triad, and the bass
+  const at = 4 * b;
+  const hold = 0.6 * s;
+  T.osc(chip, at + t, {
+    type: 'square', f: n('C6'), dur: hold, peak: 0.048, a: 0.004, s: 0.75, d: 0.08, r: 0.12, vib: { rate: 7, depth: 10 },
+  });
+  const triad = ['C5', 'E5', 'G5'];
+  for (let k = 0; k < 3; k++) {
+    T.osc(chip, at + t, { type: 'triangle', f: n(triad[k]), dur: hold, peak: 0.034, a: 0.004, s: 0.8, d: 0.08, r: 0.12 });
+  }
+  T.osc(chip, at + t, { type: 'triangle', f: n('C3'), dur: hold, peak: 0.04 * p.bass + 0.004, a: 0.004, s: 0.85, d: 0.08, r: 0.1 });
 }}
 ];
 // ---- themes (src/themes) ----
