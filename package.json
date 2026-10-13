@@ -1,0 +1,13 @@
+{
+  "name": "timbre",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A single-file, offline gallery of synthesized sound effects (WebAudio only, no samples).",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test gates/*.test.mjs",
+    "gates": "bash gates/run_all.sh"
+  }
+}
