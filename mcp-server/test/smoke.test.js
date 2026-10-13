@@ -78,3 +78,20 @@ test('cli: call runs one tool and prints its blocks; info and tools work too', a
   assert.equal(badJson.code, 2);
   assert.match(badJson.err, /must be JSON/);
 });
+
+test('a client that vanishes mid-reply does not crash the server with a stack trace', async (t) => {
+  if (!HAVE_REPO) return t.skip('needs the Timbre repository next to mcp-server');
+  const child = spawn(process.execPath, [path.join(PKG, 'cli.js'), 'start', '--levels', 'none', '--no-cache', '--catalog', fixtureDir()], { stdio: ['pipe', 'pipe', 'pipe'] });
+  let err = '';
+  child.stderr.on('data', (d) => { err += d; });
+  const exited = new Promise((resolve) => child.on('exit', (code) => resolve(code)));
+  for (let i = 1; i <= 30; i++) {
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: i, method: 'tools/call', params: { name: 'get_copy', arguments: { id: 'cards-riffle' } } }) + '\n');
+  }
+  child.stdout.destroy();   // the client hangs up before reading anything
+  child.stdin.end();
+  const code = await Promise.race([exited, new Promise((r) => setTimeout(() => r('timeout'), 15000))]);
+  if (code === 'timeout') child.kill();
+  assert.notEqual(code, 'timeout', 'it exits when stdin closes');
+  assert.doesNotMatch(err, /Unhandled|EPIPE|at .*\(.*\.js:\d+/, err);
+});

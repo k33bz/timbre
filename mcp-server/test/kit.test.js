@@ -178,6 +178,17 @@ test('checkParams validates, clamps and reports', (t) => {
   refuses(() => checkParams(s, { pitch: NaN }, 'x'), 'bad_param_value');
 });
 
+test('resolveKit on the real catalog: the retro mood switches chip on where a sound has it', (t) => {
+  if (skip(t)) return;
+  const c = new Catalog(REAL_CATALOG, { levelsPath: false }).load();
+  const retro = resolveKit(c, { moments: ['jump'], mood: 'retro' }).choices[0];
+  assert.equal(retro.params.chip, 1);
+  const plain = resolveKit(c, { moments: ['jump'] }).choices[0];
+  assert.ok(plain.params.chip === undefined || plain.params.chip === plain.sound.params.chip.def, 'without the mood chip stays at its default');
+  const themed = resolveKit(c, { theme: 'soft-ui', mood: 'retro' });
+  assert.ok(themed.choices.every((x) => x.source === 'theme'), 'a theme keeps its own parameters: a mood does not override them');
+});
+
 // ---------------------------------------------------------------- the module
 
 let counter = 0;

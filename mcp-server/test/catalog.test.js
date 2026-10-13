@@ -198,3 +198,21 @@ test('paramKind reads the control a parameter is', () => {
   assert.equal(paramKind({ min: 400, max: 2400, def: 1100, unit: 'Hz' }), 'value');
   assert.equal(paramKind({ min: 0, max: 1, def: 0.5, unit: 'x' }), 'value');
 });
+
+test('a manifest caught half written keeps the last good catalog, and the finished one replaces it', (t) => {
+  if (skip(t)) return;
+  const dir = writeCatalog(tmpDir(), realManifest());
+  const c = new Catalog(dir).load();
+  const n = c.sounds.length;
+  const text = fs.readFileSync(path.join(dir, 'manifest.json'), 'utf8');
+  fs.writeFileSync(path.join(dir, 'manifest.json'), text.slice(0, Math.floor(text.length / 2)));
+  assert.equal(c.refresh(), true);
+  assert.equal(c.error, null, 'no error state: the old sounds are still served');
+  assert.equal(c.sounds.length, n);
+  assert.ok(c.warnings.some((w) => /kept the previous catalog: .*not valid JSON/.test(w)));
+  assert.equal(c.refresh(), false, 'the broken file is not retried until it changes');
+  fs.writeFileSync(path.join(dir, 'manifest.json'), text + '\n');
+  assert.equal(c.refresh(), true);
+  assert.equal(c.sounds.length, n);
+  assert.deepEqual(c.warnings, [], 'the warning goes away with the good file');
+});

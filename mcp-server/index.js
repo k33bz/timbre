@@ -213,7 +213,10 @@ export class TimbreMCPServer {
   connect(transport) {
     this.transport = transport;
     transport.onMessage((msg) => {
-      const p = this.handleMessage(msg).then((res) => { if (res) transport.send(res); }).finally(() => this.pending.delete(p));
+      const p = this.handleMessage(msg)
+        .then((res) => { if (res) transport.send(res); })
+        .catch((e) => this.logger.error(`could not answer: ${e && e.message}`))
+        .finally(() => this.pending.delete(p));
       this.pending.add(p);
       return p;
     });
@@ -261,6 +264,8 @@ export class StdioTransport {
   onClose(cb) { this.closeCb = cb; }
 
   start() {
+    // a client that goes away mid-reply must not take the process down with an EPIPE
+    if (this.output.on) this.output.on('error', () => {});
     this.input.setEncoding('utf8');
     this.input.on('data', (chunk) => {
       this.buffer += chunk;

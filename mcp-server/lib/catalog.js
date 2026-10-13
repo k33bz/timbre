@@ -153,17 +153,36 @@ export class Catalog {
   /** Load the catalog now. Never throws: a failure is kept in `error` and reported by the tools. */
   load() {
     this.signature = this.currentSignature();
+    const previous = this.sounds && this.sounds.length ? this.snapshot() : null;
     this.loadedAt = new Date().toISOString();
     this.reset();
     try {
       this.read();
     } catch (e) {
-      this.error = e instanceof CatalogError ? e : new CatalogError(String(e && e.message ? e.message : e));
-      this.sounds = [];
-      this.byId = new Map();
-      if (this.logger) this.logger.warn(`catalog: ${this.error.message}`);
+      const err = e instanceof CatalogError ? e : new CatalogError(String(e && e.message ? e.message : e));
+      if (previous) {
+        // a build rewriting the files can be caught half way: keep serving the last good catalog;
+        // the next change to the files (the build finishing) triggers another try
+        this.restore(previous);
+        this.warnings.push(`kept the previous catalog: ${err.message}`);
+      } else {
+        this.error = err;
+        this.sounds = [];
+        this.byId = new Map();
+      }
+      if (this.logger) this.logger.warn(`catalog: ${err.message}`);
     }
     return this;
+  }
+
+  /** The loaded state, to put back if a reload fails. */
+  snapshot() {
+    const keys = ['sounds', 'byId', 'themes', 'themeById', 'helpers', 'warnings', 'schema', 'version', 'mode', 'levels'];
+    return Object.fromEntries(keys.map((k) => [k, this[k]]));
+  }
+
+  restore(snap) {
+    Object.assign(this, snap, { warnings: [...snap.warnings], error: null });
   }
 
   /** Reload when the catalog files changed since the last load. Returns true when it reloaded. */

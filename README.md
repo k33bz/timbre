@@ -42,7 +42,7 @@ a whole app (`build_kit`). Run `node build.mjs` first so `catalog/` is current, 
 # Claude Code (add --scope user for every project)
 claude mcp add timbre -- node /absolute/path/to/timbre/mcp-server/cli.js start
 ```
-```json
+```jsonc
 // Claude Desktop: claude_desktop_config.json (macOS ~/Library/Application Support/Claude/, Windows %APPDATA%\Claude\)
 { "mcpServers": { "timbre": { "command": "node", "args": ["/absolute/path/to/timbre/mcp-server/cli.js", "start"] } } }
 ```

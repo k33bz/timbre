@@ -87,6 +87,8 @@ export function rankMoment(catalog, spec, ctx = {}) {
       (byField[field] = byField[field] || []).push(rest);
     }
     const word = (stem) => d.disp.get(stem) || stem;
+    // the whole tag a stem came from (8-bit, not bit), when the sound has one
+    const tagOf = (stem) => d.s.tags.find((t) => stems(t.replace(/-/g, ' ')).includes(stem)) || word(stem);
     const direct = (f) => (byField[f] || []).filter((x) => !x.includes('~'));
     const viaSyn = Object.values(byField).flat().filter((x) => x.includes('~'));
     // a tag is a strong match when it is one of the moment's own tag stems, found directly
@@ -130,7 +132,10 @@ export function rankMoment(catalog, spec, ctx = {}) {
       const pen = mood.penalty && mood.penalty[d.s.category];
       if (pen) score *= 1 - 0.1 * pen;
       const fam = mood.tagStems.filter((w) => d.tags.has(w));
-      if (fam.length) { score *= 1 + (mood.tagBoost || 0.18) * Math.min(2, fam.length); reasons.push(`tagged ${fam.slice(0, 2).map(word).join(', ')}, a ${mood.name} mood`); }
+      if (fam.length) { score *= 1 + (mood.tagBoost || 0.18) * Math.min(2, fam.length); reasons.push(`tagged ${[...new Set(fam.slice(0, 2).map(tagOf))].join(', ')}, a ${mood.name} mood`); }
+      // a sound with a setting the mood asks for (the retro mood turns a chip switch on) can fulfil it
+      const knob = Object.keys(mood.hints || {}).find((k) => d.s.params[k]);
+      if (knob) { score *= 1.3; reasons.push(`has a ${knob} setting for the ${mood.name} mood`); }
       if (lv && mood.loud) {
         const mi = mood.loud.indexOf(lv.band);
         if (mi === 0) { score *= 1.1; reasons.push(`${lv.band} level suits a ${mood.name} mood`); }
@@ -155,20 +160,27 @@ export function trimRows(rows, limit) {
   return keep.slice(0, limit);
 }
 
-/** Parameter values a moment asks for, limited to parameters the sound has and inside their range. */
-export function hintsFor(spec, sound) {
+/**
+ * Parameter values a moment (and then the moods) ask for, limited to parameters the sound has and
+ * inside their range; the moment's own hints win over a mood's.
+ */
+export function hintsFor(spec, sound, moods = []) {
   const out = {};
-  for (const [k, v] of Object.entries(spec.hints || {})) {
-    const d = sound.params[k];
-    if (d && v >= d.min && v <= d.max) out[k] = v;
-  }
+  const take = (hints) => {
+    for (const [k, v] of Object.entries(hints || {})) {
+      const d = sound.params[k];
+      if (!(k in out) && d && v >= d.min && v <= d.max) out[k] = v;
+    }
+  };
+  take(spec.hints);
+  for (const { mood } of moods) take(mood.hints);
   return out;
 }
 
 /** One candidate in the shape the tools return. */
-export function candidateOf(row, spec) {
+export function candidateOf(row, spec, moods = []) {
   const s = row.sound;
-  const hints = hintsFor(spec, s);
+  const hints = hintsFor(spec, s, moods);
   return {
     id: s.id,
     name: s.name,
@@ -206,7 +218,7 @@ export function suggest(catalog, { description = '', moments = [], mood = '', th
       moment: name,
       about: spec.about,
       source: origin[name],
-      candidates: trimRows(rows, limit).map((r) => candidateOf(r, spec)),
+      candidates: trimRows(rows, limit).map((r) => candidateOf(r, spec, moods)),
       ...(rows.length ? {} : { note: `Nothing in the catalog matches "${name}" under these filters yet. Try search_sounds with a looser query or without filters.` }),
     });
   }
@@ -233,7 +245,7 @@ export function suggest(catalog, { description = '', moments = [], mood = '', th
       rows.push({ sound: d.s, score, reasons: [`words match: ${[...new Set(r.why.slice(0, 4).map((w) => d.disp.get(w.split(':')[1].split('~')[0]) || w.split(':')[1].split('~')[0]))].join(', ')}`], strong: true, level: d.level });
     }
     rows.sort((a, b) => b.score - a.score || a.sound.id.localeCompare(b.sound.id));
-    match = { candidates: rows.slice(0, Math.max(limit, 5)).map((r) => candidateOf(r, spec)) };
+    match = { candidates: rows.slice(0, Math.max(limit, 5)).map((r) => candidateOf(r, spec, moods)) };
   }
   return { moods, theme: themeObj, detected, groups, match };
 }

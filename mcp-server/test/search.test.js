@@ -204,3 +204,22 @@ test('the real catalog: common words find sounds of the right kind', (t) => {
     assert.ok(search(c, idx, { query: q }).total > 0, `"${q}" finds something`);
   }
 });
+
+test('the real catalog: every sound is found by its own name, id and leading tags', (t) => {
+  if (skip(t)) return;
+  const c = new Catalog(REAL_CATALOG, { levelsPath: false }).load();
+  const idx = indexFor(c);
+  const rankOf = (query, id) => ids(search(c, idx, { query, limit: 300 })).indexOf(id) + 1;
+  let byName3 = 0;
+  const lost = [];
+  for (const s of c.sounds) {
+    const rn = rankOf(s.name, s.id);
+    if (rn >= 1 && rn <= 3) byName3++;
+    const ri = rankOf(s.id.replace(/-/g, ' '), s.id);
+    if (ri < 1 || ri > 5) lost.push(`${s.id} by id: ${ri}`);
+    const r2 = rankOf(s.tags.slice(0, 2).join(' '), s.id);
+    if (r2 < 1 || r2 > 15) lost.push(`${s.id} by tags: ${r2}`);
+  }
+  assert.ok(byName3 / c.sounds.length >= 0.97, `${byName3} of ${c.sounds.length} found in the top 3 by name`);
+  assert.deepEqual(lost, []);
+});

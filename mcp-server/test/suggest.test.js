@@ -31,6 +31,15 @@ test('moments: a description yields the moments it names, in order of mention', 
   assert.deepEqual(names(momentsIn('I need a whoosh for slide transitions')), ['transition']);
 });
 
+test('moments: a phrase accounts for its words (a warp jump is a teleport, a jump scare is a scare)', () => {
+  assert.deepEqual(names(momentsIn('warp jump to the next system')), ['teleport']);
+  assert.ok(names(momentsIn('a jump scare sting')).includes('scare') && !names(momentsIn('a jump scare sting')).includes('jump'));
+  assert.deepEqual(names(momentsIn('the hero can jump and double jump')), ['jump']);
+  assert.ok(names(momentsIn('warp jump, and the player can jump')).includes('jump'), 'a separate jump still counts');
+  assert.deepEqual(names(momentsIn('you win!')), ['victory']);
+  assert.ok(!names(momentsIn('a banking app: payment success')).includes('coin'));
+});
+
 test('moments: words several moments share do not detect any one of them', () => {
   assert.deepEqual(momentsIn('a tick'), [], 'tick alone is ambiguous (click, hover, type)');
   assert.deepEqual(momentsIn('something nice for my app'), []);
@@ -295,4 +304,30 @@ test('the real catalog: a style word picks that style (wood, glass, mechanical, 
   assert.ok(mech.tags.includes('mechanical') || /mechanical/.test(mech.id), mech.id);
   const retro = pick('retro 8-bit arcade', 'jump');
   assert.equal(retro.category, 'game');
+});
+
+test('the real catalog: open and close set the drawer direction; the retro mood sets chip', (t) => {
+  if (skip(t)) return;
+  const c = new Catalog(REAL_CATALOG, { levelsPath: false }).load();
+  const open = suggest(c, { moments: ['open', 'close'] }).groups;
+  const withOpen = (g) => g.candidates.find((x) => c.get(x.id).params.open);
+  assert.ok(withOpen(open[0]), 'a sound with an open parameter is offered for open');
+  assert.equal(withOpen(open[0]).params.open, 1);
+  assert.equal(withOpen(open[1]).params.open, 0);
+  const plain = suggest(c, { moments: ['jump'] }).groups[0].candidates[0];
+  const retro = suggest(c, { moments: ['jump'], mood: 'retro 8-bit' }).groups[0].candidates[0];
+  assert.equal(plain.params, undefined, 'no chip without the mood');
+  assert.equal(c.get(retro.id).params.chip.max, 1);
+  assert.equal(retro.params.chip, 1);
+});
+
+test('hintsFor: the moment hint beats the mood hint, and a mood hint only applies to sounds that have the parameter', (t) => {
+  const c = fixture(t);
+  if (!c) return;
+  const sound = { params: { chip: { min: 0, max: 1, def: 0 }, open: { min: 0, max: 1, def: 1 } } };
+  const retro = activeMoods('retro');
+  assert.deepEqual(hintsFor({ hints: { chip: 0 } }, sound, retro), { chip: 0 });
+  assert.deepEqual(hintsFor({}, sound, retro), { chip: 1 });
+  assert.deepEqual(hintsFor({}, { params: {} }, retro), {});
+  assert.deepEqual(hintsFor({ hints: { open: 5 } }, sound, []), {}, 'out of range is dropped');
 });

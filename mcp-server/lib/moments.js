@@ -18,7 +18,8 @@ import { stems, stem } from './text.js';
  *   avoid       tags that rule a sound out for this moment
  *   maxDur/minDur  soft length bounds in seconds (a frequent moment wants a short sound)
  *   loud        preferred loudness bands, best first
- *   hints       parameter values to set when the sound has that parameter (toggle direction)
+ *   hints       parameter values to set when the sound has that parameter (the direction of a
+ *               toggle: on; of a drawer or modal: open)
  */
 export const MOMENTS = {
   // ---- interface
@@ -50,12 +51,12 @@ export const MOMENTS = {
   open: {
     about: 'A menu, panel, modal or drawer opens or slides in.',
     tags: ['open', 'expand', 'modal', 'dialog', 'menu', 'drawer', 'popup', 'panel', 'dropdown', 'sheet', 'unfold'], terms: ['slide in', 'overlay', 'appear', 'sidebar'],
-    categories: ['ui'], avoid: ['error'], maxDur: 0.8, loud: ['quiet', 'medium'],
+    categories: ['ui'], avoid: ['error'], maxDur: 0.8, loud: ['quiet', 'medium'], hints: { open: 1 },
   },
   close: {
     about: 'A menu, panel, modal or drawer closes.',
     tags: ['close', 'collapse', 'dismiss', 'modal', 'dialog', 'menu', 'drawer', 'popup', 'panel'], terms: ['slide out', 'hide', 'fold'],
-    categories: ['ui'], avoid: ['error'], maxDur: 0.8, loud: ['quiet', 'medium'],
+    categories: ['ui'], avoid: ['error'], maxDur: 0.8, loud: ['quiet', 'medium'], hints: { open: 0 },
   },
   transition: {
     about: 'A screen, page or scene changes; something sweeps past.',
@@ -176,7 +177,7 @@ export const MOMENTS = {
   },
   coin: {
     about: 'A coin, currency or small reward is gained or spun.',
-    tags: ['coin', 'money', 'ping', 'spin', 'flip', 'toss', 'gem', 'score'], terms: ['cash', 'gold', 'currency', 'payment', 'purchase', 'reward', 'tip'],
+    tags: ['coin', 'money', 'ping', 'spin', 'flip', 'toss', 'gem', 'score'], terms: ['cash', 'gold', 'currency', 'purchase', 'reward'],
     categories: ['game'], avoid: ['error'], maxDur: 2.0, loud: ['medium', 'loud'],
   },
   'level-up': {
@@ -196,7 +197,7 @@ export const MOMENTS = {
   },
   victory: {
     about: 'The player wins a round or finishes a level.',
-    tags: ['victory', 'win', 'fanfare', 'jingle', 'level-complete', 'stage-clear', 'ta-da', 'celebrate'], terms: ['you win', 'won', 'finish line', 'triumph', 'celebration', 'complete level', 'stage clear'],
+    tags: ['victory', 'win', 'fanfare', 'jingle', 'level-complete', 'stage-clear', 'ta-da', 'celebrate'], terms: ['win', 'you win', 'won', 'finish line', 'triumph', 'celebration', 'complete level', 'stage clear'],
     categories: ['music', 'game'], avoid: ['error', 'fail', 'defeat'], minDur: 0.6, maxDur: 5.0, loud: ['loud', 'medium'],
   },
   'game-over': {
@@ -263,13 +264,43 @@ export const MOMENTS = {
   },
   teleport: {
     about: 'A teleport, warp or portal.',
-    tags: ['teleport', 'warp', 'portal', 'blink', 'hyperspace', 'vanish', 'phase'], terms: ['jump drive', 'beam me up', 'dimension'],
+    tags: ['teleport', 'warp', 'portal', 'blink', 'hyperspace', 'vanish', 'phase'], terms: ['jump drive', 'warp jump', 'warp drive', 'hyperspace jump', 'beam me up', 'dimension'],
     categories: ['magic', 'scifi'], avoid: ['error'], maxDur: 3.0, loud: ['medium'],
   },
   'power-down': {
     about: 'A machine, shield or system powers down.',
     tags: ['power-down', 'shutdown', 'deactivate', 'spin-down'], terms: ['switch off machine', 'offline'],
     categories: ['scifi'], avoid: ['power-up'], maxDur: 3.0, loud: ['medium', 'quiet'],
+  },
+  door: {
+    about: 'A door, hatch or chest opens or latches.',
+    tags: ['door', 'creak', 'hinge', 'latch', 'squeak', 'entrance', 'lock', 'chest'], terms: ['hatch', 'gate', 'creaks', 'unlock door'],
+    categories: ['game'], avoid: ['error'], maxDur: 2.0, loud: ['quiet', 'medium'],
+  },
+  shield: {
+    about: 'A shield or force field goes up or takes a hit.',
+    tags: ['shield', 'barrier', 'force-field', 'deflect', 'guard', 'defend', 'block'], terms: ['force field', 'protect', 'forcefield'],
+    categories: ['scifi', 'game', 'magic'], avoid: ['error'], maxDur: 2.5, loud: ['medium'],
+  },
+  readout: {
+    about: 'A console or HUD prints a readout or acknowledges.',
+    tags: ['blip', 'terminal', 'console', 'readout', 'computer', 'hud'], terms: ['blips', 'bleep', 'interface beep', 'ship computer'],
+    categories: ['scifi'], avoid: ['error'], maxDur: 1.0, loud: ['quiet', 'medium'],
+  },
+  scan: {
+    about: 'A scanner, radar or sensor sweeps.',
+    tags: ['scanner', 'scan', 'sweep', 'radar', 'sensor', 'sonar', 'detect'], terms: ['scanning', 'ping the area'],
+    categories: ['scifi'], avoid: ['error'], maxDur: 3.0, loud: ['quiet', 'medium'],
+  },
+  chips: {
+    about: 'Poker chips are clicked, stacked or pushed.',
+    tags: ['chip', 'chips', 'casino', 'bet', 'poker', 'stack', 'pot'], terms: ['betting', 'ante', 'raise', 'all in'],
+    categories: ['cards'], avoid: [], maxDur: 1.5, loud: ['quiet', 'medium'],
+  },
+  scare: {
+    about: 'A sting for a scare, a twist or a mystery.',
+    tags: ['scare', 'spooky', 'eerie', 'suspense', 'mystery', 'stinger', 'sting', 'clue'], terms: ['jump scare', 'horror', 'creepy', 'twist', 'dread'],
+    categories: ['music'], avoid: ['cheerful', 'win'], minDur: 0.5, maxDur: 6, loud: ['medium'],
   },
   // ---- beds and phrases
   ambience: {
@@ -304,6 +335,7 @@ for (const [name, m] of Object.entries(MOMENTS)) {
 /**
  * Moods. Fields: words that signal it in a description; tags a sound carries when it fits (a tag
  * match lifts the sound); category boosts; loudness preference (best first); categories that clash.
+ * hints set parameters the same way a moment's do (the retro mood turns a sound's chip switch on).
  * Boosts are fractions: boost 1.5 lifts a score by 18 percent. A tag match lifts it by tagBoost
  * (default 0.18) per tag, at most two; the style moods (wood, glass, mechanical, air, retro) use 0.6
  * because naming a style is an explicit request.
@@ -332,6 +364,7 @@ export const MOODS = {
     words: ['retro', 'arcade', '8bit', 'chiptune', 'pixel', 'nes', 'platformer', 'rpg'],
     tags: ['8-bit', 'chiptune', 'retro', 'arcade', 'square'],
     tagBoost: 0.6,
+    hints: { chip: 1 },   // game sounds with a chip switch get their square-wave voicing
     boost: { game: 2 }, loud: ['medium', 'loud'],
   },
   gamey: {
@@ -440,11 +473,23 @@ const DETECT_MIN = 1.4;
 export function momentsIn(text) {
   const toks = stems(text);
   const joined = ' ' + toks.join(' ') + ' ';
-  const out = [];
+  // every position in the text where a stem sequence (one word or a phrase) occurs
+  const positions = (seq) => {
+    const words = seq.split(' ');
+    const out = [];
+    for (let i = 0; i + words.length <= toks.length; i++) {
+      if (words.every((x, k) => toks[i + k] === x)) for (let k = 0; k < words.length; k++) out.push(i + k);
+    }
+    return out;
+  };
+  const found = [];
+  const inPhrase = new Set();   // words that a phrase of some moment already accounts for
   for (const m of Object.values(MOMENTS)) {
     const matched = [];
+    const where = new Set();
     let strength = 0;
     let strong = false;
+    let phrase = false;
     let first = Infinity;
     const note = (w, base, isTag) => {
       if (matched.includes(w)) return;
@@ -454,12 +499,23 @@ export function momentsIn(text) {
       if (isTag ? weight >= 1.4 : weight >= 1.0) strong = true;
       const at = joined.indexOf(' ' + w + ' ');
       if (at >= 0 && at < first) first = at;
+      for (const i of positions(w)) where.add(i);
     };
-    for (const ph of m.phrases) if (joined.includes(' ' + ph + ' ')) note(ph, 3, false);
+    for (const ph of m.phrases) {
+      if (!joined.includes(' ' + ph + ' ')) continue;
+      note(ph, 3, false);
+      phrase = true;
+      for (const i of positions(ph)) inPhrase.add(i);
+    }
     if (!MULTI.test(m.name)) for (const w of stems(m.name)) if (toks.includes(w)) note(w, 3, false);
     for (const w of m.detectStems) if (toks.includes(w)) note(w, 2, false);
     for (const w of m.tagStems) if (toks.includes(w)) note(w, 1.5, true);
-    if (strong && strength >= DETECT_MIN) out.push({ moment: m.name, strength: Math.round(strength * 10) / 10, matched, first });
+    if (strong && strength >= DETECT_MIN) found.push({ moment: m.name, strength: Math.round(strength * 10) / 10, matched, first, where, phrase });
   }
-  return out.sort((a, b) => a.first - b.first);
+  // "warp jump" is a teleport, not also a jump: a moment whose every word sits inside another
+  // moment's phrase, and which has no phrase of its own, is dropped
+  return found
+    .filter((f) => f.phrase || ![...f.where].every((i) => inPhrase.has(i)))
+    .map(({ where, phrase, ...rest }) => rest)
+    .sort((a, b) => a.first - b.first);
 }

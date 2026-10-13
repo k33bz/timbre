@@ -138,6 +138,8 @@ pasted Copy function uses, so mixing a kit and a pasted Copy on one context stil
 `format: "script"` gives a classic script that defines one global (`global_name`, default
 `timbreKit`). `vary: true` draws a fresh noise seed per play.
 
+A moment can also set a parameter: `toggle-on` and `toggle-off` set a sound's `on` switch,
+`open` and `close` set its `open` switch, and the `retro` mood turns a sound's `chip` switch on.
 How a moment gets its sound, in order: the theme (if you named one, or your `mood` names one such as
 "soft ui"), then your explicit `{ moment, sound, params }`, then the best catalog match for the
 moment, shaped by the mood. Every choice carries its reason; loose matches and anything repaired or

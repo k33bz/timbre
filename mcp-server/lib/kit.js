@@ -120,11 +120,11 @@ export function resolveKit(catalog, { moments, theme, mood, filters = {} }) {
       fit = pick.row.strong ? 'strong' : 'loose';
       reason = pick.row.reasons.slice(0, 3).join('; ');
       alternatives = pick.alternatives.map((r) => r.sound.id);
-      base = hintsFor(pick.spec, sound);
+      base = hintsFor(pick.spec, sound, moods);
       if (!pick.row.strong) warnings.push(`moment "${w.name}": only a loose match (${sound.id}); consider choosing explicitly`);
       if (themeObj && !themeObj.moments[w.name]) warnings.push(`theme ${themeObj.id} has no "${w.name}" moment; picked ${sound.id} from the catalog`);
     } else if (source === 'explicit') {
-      base = hintsFor(spec, sound);
+      base = hintsFor(spec, sound, moods);
     }
     if (!sound.copyable) throw new ToolError(`Sound ${sound.id} cannot be copied: ${sound.copyIssue || 'the catalog has no code for it'}.`, { code: 'copy_unavailable' });
     for (const k of OPT_KEYS) {
