@@ -190,9 +190,12 @@ export function phonemize(text) {
       else if (/^(be|de|re|pre)[^aeiou]/.test(word) && /^(IH|IY)$/.test(ph[vi[0]])) pick = 1;
     }
     if (pick < 0) { pick = vi.findIndex((i) => ph[i] !== 'AX'); if (pick < 0) pick = 0; }
+    // an unstressed EH, AE, AA or AO is a schwa in English (basket, salad, balloon); the rules give
+    // the full vowel of the spelling
     return ph.map((p, i) => {
       if (!VOWELS.test(p)) return p;
       if (i === vi[pick]) return (p === 'AX' ? 'AH' : p) + '1';
+      if (/^(EH|AE|AA|AO)$/.test(p)) return 'AX0';
       return p + (/^(AY|EY|OY|AW|OW)$/.test(p) && n > 1 ? '2' : '0');
     });
   };

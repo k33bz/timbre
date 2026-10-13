@@ -22,7 +22,7 @@ It's 3.5 meters away, isn't it?	IH1 T S / TH R IY1 / P OY1 N T / F AY1 V / M IY1
 Press [S T AA1 R T] to begin.	P R EH1 S / S T AA1 R T / T UW0 / B IH0 G IH1 N .
 TV, PC and HQ.	T IY1 / V IY1 , P IY1 / S IY1 / AE0 N D / EY1 CH / K Y UW1 .
 1st place, 2nd place, 3rd place.	F ER1 S T / P L EY1 S , S EH1 K AX0 N D / P L EY1 S , TH ER1 D / P L EY1 S .
--7 degrees and 1,000,000 points	M AY1 N AX0 S / S EH1 V AX0 N / D EH0 G R IY1 Z / AE0 N D / W AH1 N / M IH1 L Y AX0 N / P OY1 N T S	"degrees": the prefix as EH0, usually IH0
+-7 degrees and 1,000,000 points	M AY1 N AX0 S / S EH1 V AX0 N / D AX0 G R IY1 Z / AE0 N D / W AH1 N / M IH1 L Y AX0 N / P OY1 N T S
 about	AX0 B AW1 T
 action	AE1 K SH AX0 N
 again	AX0 G EH1 N
@@ -54,8 +54,8 @@ fire	F AY1 R	AY1 R; often said AY1 ER0
 follow	F AA1 L OW2	OW2: a final long vowel gets a secondary stress (CMUdict has OW0)
 food	F UW1 D
 foot	F UH1 T
-forest	F AO1 R EH0 S T	unstressed EH0 for a schwa (reduced toward one by the engine)
-garden	G AA1 R D EH0 N	unstressed EH0 for a schwa
+forest	F AO1 R AX0 S T
+garden	G AA1 R D AX0 N
 great	G R EY1 T
 ground	G R AW1 N D
 half	HH AE1 F
@@ -82,7 +82,7 @@ nation	N EY1 SH AX0 N
 nature	N EY1 CH ER0
 night	N AY1 T
 ocean	OW1 SH AX0 N
-open	OW1 P EH0 N	unstressed EH0 for a schwa
+open	OW1 P AX0 N
 orange	AO1 R AX0 N JH
 people	P IY1 P AX0 L
 piece	P IY1 S
@@ -90,7 +90,7 @@ planet	P L AE1 N AX0 T
 potion	P OW1 SH AX0 N
 problem	P R AA1 B L AX0 M
 question	K W EH1 S CH AX0 N
-quiet	K W AY1 EH0 T	unstressed EH0 for a schwa
+quiet	K W AY1 AX0 T
 remember	R IY0 M EH1 M B ER0	the prefix as IY0, usually IH0
 river	R IH1 V ER0
 search	S ER1 CH
