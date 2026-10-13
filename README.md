@@ -32,6 +32,24 @@ start time, `dest` an optional node to end in. The function returns the time the
 first call on a context builds the master chain and starts the sound 0.2 s later, while the limiter
 warms up; later calls play at once.
 
+## Use it from an agent (MCP)
+`mcp-server/` is a zero-dependency MCP server over the catalog (Node 22, stdio). An agent can search
+sounds, turn "a meditation timer with gentle taps" into ranked picks with reasons, read parameters
+and levels, get the exact Copy function for one sound, or get **one module** with `play('click')` for
+a whole app (`build_kit`). Run `node build.mjs` first so `catalog/` is current, then:
+
+```
+# Claude Code (add --scope user for every project)
+claude mcp add timbre -- node /absolute/path/to/timbre/mcp-server/cli.js start
+```
+```json
+// Claude Desktop: claude_desktop_config.json (macOS ~/Library/Application Support/Claude/, Windows %APPDATA%\Claude\)
+{ "mcpServers": { "timbre": { "command": "node", "args": ["/absolute/path/to/timbre/mcp-server/cli.js", "start"] } } }
+```
+`node mcp-server/cli.js info` checks it without a client, and `cd mcp-server && npm test` runs its
+tests. The tools, the module `build_kit` writes, how levels are measured or estimated and the
+options are in [mcp-server/README.md](mcp-server/README.md).
+
 ## Add a sound in three steps
 1. Write `src/sounds/<category>/<id>.js`: id, name, category, tags, desc, dur, params and a
    `play(T, out, t, p)` that uses the helper kit `T`. Start from a seed sound in the same category.
@@ -69,4 +87,5 @@ build.mjs          validates, writes catalog/manifest.json and catalog/index.jso
 catalog/           manifest.json (every field, play source, helper list, helper sources); index.json (search fields)
 dist/timbre.html   the single page (generated; do not edit by hand)
 gates/             unit tests and the level, page and copy gates
+mcp-server/        MCP server over the catalog (tools, tests, smoke run); see mcp-server/README.md
 ```
