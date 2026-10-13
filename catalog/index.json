@@ -2166,8 +2166,8 @@
         "dystopian",
         "buzzer"
       ],
-      "desc": "A sustained, growling industrial alarm horn: a steady buzzing tone with a mechanical rattle and a slow swell, ringing in a concrete hall. For lockdowns, breaches and red alerts.",
-      "dur": 8.2,
+      "desc": "A growling industrial alarm horn in three blasts: a steady buzzing tone with a mechanical rattle, ringing in a concrete hall. For lockdowns, breaches and red alerts.",
+      "dur": 8.4,
       "family": "synthetic",
       "moments": [
         "warning",
