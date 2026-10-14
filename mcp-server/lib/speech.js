@@ -4,7 +4,7 @@
 // function the gallery's Speak rack writes, and test/speak.test.js holds the two byte for byte.
 import vm from 'node:vm';
 import { ToolError } from './errors.js';
-import { dedent } from './copy.js';
+import { dedent, VOICE_ALIASES } from './copy.js';
 
 /** The helpers the speak tool calls; a catalog built before the voices has none of them. */
 export const SPEECH_HELPERS = ['phonemize', 'speechVoices', 'babbleVoices', 'speak', 'babble', 'utter', 'chatter'];
@@ -22,6 +22,20 @@ export function closure(names, helperSrc) {
   };
   names.forEach(visit);
   return out;
+}
+
+/** A voice table's ids in the order a person sees them: by display name. */
+export function voiceIds(table) {
+  return Object.keys(table).sort((a, b) => String(table[a].name).localeCompare(String(table[b].name), 'en'));
+}
+
+/** The speech and babble voices as { id: display name }, each in display-name order; null when the
+ *  catalog has no speech engine. */
+export function voiceListing(helperSrc) {
+  let rt;
+  try { rt = speechRuntime(helperSrc); } catch (e) { return null; }
+  const list = (t) => Object.fromEntries(voiceIds(t).map((id) => [id, t[id].name]));
+  return { speech: list(rt.speechVoices()), babble: list(rt.babbleVoices()), aliases: { ...VOICE_ALIASES } };
 }
 
 const cache = new WeakMap();

@@ -11,13 +11,13 @@ export default {
   family: 'voice',
   moments: ['announce'],
   params: {
-    voice: { min: 0, max: 5, def: 0, step: 1, choices: ['announcer', 'deep', 'small', 'whisper', 'retro', 'announcer-female'], desc: 'Who counts: announcer (male), deep or small robot, whisper, retro computer, female announcer' },
+    voice: { min: 0, max: 5, def: 1, step: 1, choices: ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'], desc: 'Who counts: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper' },
     from: { min: 3, max: 5, def: 3, step: 1, desc: 'The number the count starts from' },
     beat: { min: 0.7, max: 1.2, def: 1, unit: 's', desc: 'Time between the numbers' },
     pitch: { min: -6, max: 6, def: 0, unit: 'st', desc: 'Pitch shift from the voice, down or up' },
   },
   play(T, out, t, p) {
-    const voice = ['announcer', 'deep', 'small', 'whisper', 'retro', 'announcer-female'][Math.round(p.voice)];
+    const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
     const words = ['one', 'two', 'three', 'four', 'five'];
     const n = Math.round(p.from);
     for (let k = 0; k < n; k++) T.speak(out, t + k * p.beat, { text: words[n - 1 - k] + '.', voice, pitch: p.pitch });

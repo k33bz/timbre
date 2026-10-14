@@ -84,7 +84,7 @@ test('speak: one function with the line baked in, the engine only, the gallery\'
   const f = await call(s, 'speak', { text: 'Attention, please.', voice: 'announcer-female' });
   assert.equal(f.isError, false, JSON.stringify(f.data));
   assert.equal(f.data.voice, 'announcer-female');
-  assert.equal(f.data.voiceName, 'Female Announcer');
+  assert.equal(f.data.voiceName, 'Announcer (Female)');
   const fctx = vm.createContext({});
   vm.runInContext(f.code, fctx);
   const fac = new MockContext(48000, { strict: true });
@@ -99,7 +99,13 @@ test('speak: one function with the line baked in, the engine only, the gallery\'
   assert.equal(m.isError, false);
   assert.equal(m.data.voice, 'announcer');
   assert.equal(m.code, (await call(s, 'speak', { text: 'Attention, please.', voice: 'announcer' })).code);
-  assert.deepEqual(m.data.voices.speech, ['announcer', 'deep', 'small', 'whisper', 'retro', 'announcer-female']);
+  assert.equal(m.data.voiceName, 'Announcer (Male)');
+  assert.deepEqual(m.data.voices.speech, ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'], 'by display name');
+  assert.deepEqual(m.data.voices.babble, ['cute', 'gruff', 'beep', 'sprite', 'elder'], 'by display name');
+  // with no voice named, speech is the male announcer, as before the lists were sorted
+  const d = await call(s, 'speak', { text: 'Attention, please.' });
+  assert.equal(d.data.voice, 'announcer');
+  assert.equal(d.code, m.code);
   // babble
   const b = await call(s, 'speak', { text: 'Yay! You found me!', mode: 'babble', voice: 'sprite', speed: 1.2 });
   assert.equal(b.isError, false);
@@ -119,7 +125,7 @@ test('speak checks its arguments and clamps values, saying so', async (t) => {
     assert.equal(r.data.code, code, JSON.stringify(r.data));
     if (re) assert.match(r.data.error, re);
   };
-  await bad({ text: 'Hi', voice: 'nobody' }, 'not_found', /Voices: announcer, deep, small, whisper, retro, announcer-female\./);
+  await bad({ text: 'Hi', voice: 'nobody' }, 'not_found', /Voices: announcer-female, announcer, deep, retro, small, whisper\./);
   await bad({ text: 'Hi', mode: 'babble', voice: 'announcer-male' }, 'not_found', /cute, gruff, beep, sprite, elder/);
   await bad({ text: 'Hi', mode: 'babble', voice: 'announcer' }, 'not_found', /cute, gruff, beep, sprite, elder/);
   await bad({ text: 'Hi', mode: 'babble', rate: 1.2 }, 'bad_params', /rate applies to speech; babble takes pitch, speed, spread/);
@@ -150,23 +156,31 @@ test('voice sounds: choices show in get_sound, and get_copy takes a voice by nam
   assert.equal(g.isError, false);
   const voice = g.data.params.find((p) => p.name === 'voice');
   assert.equal(voice.control, 'choice');
-  assert.deepEqual(voice.choices, ['announcer', 'deep', 'small', 'whisper', 'retro', 'announcer-female']);
-  assert.equal(voice.default, 0);
+  assert.deepEqual(voice.choices, ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'], 'by display name');
+  assert.equal(voice.default, 1, 'the default is still the announcer');
   const byName = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'deep' } });
-  const byNumber = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 1 } });
+  const byNumber = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 2 } });
   assert.equal(byName.code, byNumber.code);
-  assert.equal(byName.data.params.voice, 1);
+  assert.equal(byName.data.params.voice, 2);
   // the female announcer by name, and announcer-male for the announcer
   const female = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'announcer-female' } });
   assert.equal(female.isError, false);
-  assert.equal(female.data.params.voice, 5);
-  assert.equal(female.code, (await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 5 } })).code);
+  assert.equal(female.data.params.voice, 0);
+  assert.equal(female.code, (await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 0 } })).code);
   const male = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'announcer-male' } });
-  assert.equal(male.data.params.voice, 0);
+  assert.equal(male.data.params.voice, 1);
   assert.equal(male.code, (await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'announcer' } })).code);
   const wrong = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'robot' } });
   assert.equal(wrong.isError, true);
-  assert.match(wrong.data.error, /or one of "announcer", "deep", "small", "whisper", "retro", "announcer-female"/);
+  assert.match(wrong.data.error, /or one of "announcer-female", "announcer", "deep", "retro", "small", "whisper"/);
+  // info lists the voices with their names, each list by display name
+  const inf = await call(s, 'info', {});
+  const names = (l) => Object.values(l);
+  const cmp = (a, b) => a.localeCompare(b, 'en');
+  assert.deepEqual(Object.keys(inf.data.voices.speech), ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper']);
+  assert.deepEqual(names(inf.data.voices.speech).slice(0, 2), ['Announcer (Female)', 'Announcer (Male)']);
+  for (const l of [inf.data.voices.speech, inf.data.voices.babble]) assert.deepEqual(names(l), names(l).slice().sort(cmp));
+  assert.deepEqual(inf.data.voices.aliases, { 'announcer-male': 'announcer' });
   // the voice category and the voice moments reach search and suggestions
   const v = await call(s, 'search_sounds', { category: 'voice', limit: 50 });
   assert.ok(v.data.items.length >= 15 && v.data.items.every((x) => x.category === 'voice'));

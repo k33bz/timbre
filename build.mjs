@@ -457,21 +457,28 @@ export function writeAtomic(file, text) {
 /**
  * node build.mjs --say "Access denied." [--voice announcer-female] [--babble]: the phonemes of a
  * line and how long it lasts in each voice at three rates (speed for babble), tail included, to set
- * a voice sound's dur (it must cover the slowest setting its parameters allow). --voice also takes
- * an alias (announcer-male is the announcer).
+ * a voice sound's dur (it must cover the slowest setting its parameters allow). The voices are
+ * listed by display name: Announcer (Female) announcer-female, Announcer (Male) announcer (also
+ * announcer-male), Deep Robot deep, Retro Computer retro, Small Robot small, Whisper whisper; with
+ * --babble Cute cute, Gruff gruff, Robot Beep beep, Tiny Sprite sprite, Wise Elder elder.
  */
+/** A voice table's ids in the order a person sees them: by display name. */
+export function sayOrder(table) {
+  return Object.keys(table).sort((a, b) => table[a].name.localeCompare(table[b].name, 'en'));
+}
+
 function say(args) {
   const opt = (name) => { const i = args.indexOf('--' + name); return i >= 0 ? args[i + 1] : null; };
   const text = opt('say') || '';
   const babble = args.includes('--babble');
   const voices = babble ? T.babbleVoices() : T.speechVoices();
   const asked = opt('voice');
-  const names = asked ? [!babble && Object.hasOwn(VOICE_ALIASES, asked) ? VOICE_ALIASES[asked] : asked] : Object.keys(voices);
+  const names = asked ? [!babble && Object.hasOwn(VOICE_ALIASES, asked) ? VOICE_ALIASES[asked] : asked] : sayOrder(voices);
   if (!babble) console.log('phonemes: ' + T.phonemize(text));
   for (const v of names) {
-    if (!Object.hasOwn(voices, v)) { console.error(`unknown voice "${v}" (${Object.keys(voices).join(', ')}${babble ? '' : '; ' + Object.keys(VOICE_ALIASES).map((a) => a + ' is ' + VOICE_ALIASES[a]).join(', ')})`); process.exit(1); }
+    if (!Object.hasOwn(voices, v)) { console.error(`unknown voice "${v}" (${sayOrder(voices).join(', ')}${babble ? '' : '; ' + Object.keys(VOICE_ALIASES).map((a) => a + ' is ' + VOICE_ALIASES[a]).join(', ')})`); process.exit(1); }
     const lens = [0.75, 1, 1.3].map((r) => (babble ? T.babble(null, 0, { text, voice: v, speed: r }) : T.speak(null, 0, { text, voice: v, rate: r })).toFixed(2));
-    console.log(`  ${v.padEnd(16)} ${lens.join(' s, ')} s at ${babble ? 'speed' : 'rate'} 0.75, 1, 1.3`);
+    console.log(`  ${voices[v].name.padEnd(18)} ${v.padEnd(16)} ${lens.join(' s, ')} s at ${babble ? 'speed' : 'rate'} 0.75, 1, 1.3`);
   }
 }
 

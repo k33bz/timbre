@@ -5,7 +5,7 @@
 import { ToolError } from '../lib/errors.js';
 import { CATEGORIES } from '../lib/catalog.js';
 import { buildCopy, camel, paramsFor, PREROLL, buildSpeechCopy, SPEAK_PARAMS, VOICE_ALIASES } from '../lib/copy.js';
-import { speechRuntime, closure as speechClosure } from '../lib/speech.js';
+import { speechRuntime, closure as speechClosure, voiceIds, voiceListing } from '../lib/speech.js';
 import { BANDS, BAND_NAMES } from '../lib/levels.js';
 import { search, FilterError } from '../lib/search.js';
 import { suggest, indexFor } from '../lib/suggest.js';
@@ -128,7 +128,7 @@ const LOUDNESS_SCHEMA = {
 const info = {
   name: 'info',
   description:
-    'Start here. Reports the Timbre version, how many sounds the catalog holds in each category, the themes, the loudness bands, the moment names that suggest_sounds and build_kit understand, ' +
+    'Start here. Reports the Timbre version, how many sounds the catalog holds in each category, the themes, the loudness bands, the moment names that suggest_sounds and build_kit understand, the voices that speak takes, ' +
     'and where the numbers come from (measured by the level gate, or estimated). Use it once at the start of a task, or to check that the catalog loaded and is current. ' +
     'It does not search and it returns no code: follow it with suggest_sounds or search_sounds to find sounds, then get_copy or build_kit for code.',
   inputSchema: { type: 'object', properties: {}, additionalProperties: false },
@@ -151,6 +151,8 @@ const info = {
     const sources = [];
     if (fromCatalog && c.levels.explicit !== false) sources.push(`measured values carried in the catalog (catalog/levels.json, the level gate) for ${fromCatalog} sound(s)`);
     if (c.levels.reportFile && reportMeasured > 0) sources.push(`measured values from ${c.levels.reportFile} for ${reportMeasured} ${sources.length ? 'more' : 'sound(s)'}${c.levels.reportStale ? ' (the report is older than the catalog)' : ''}`);
+    // the speech and babble voices, when the catalog carries the speech engine
+    const voices = c.helpers ? voiceListing(c.helpers) : null;
     const out = {
       name: 'Timbre',
       about: 'A single-file offline gallery of synthesized WebAudio sound effects. Every sound is a small recipe (oscillators, seeded noise, filters, envelopes); nothing is sampled or fetched.',
@@ -191,6 +193,7 @@ const info = {
         warmUp: `a new master chain needs ${PREROLL} s before a sound may start on it`,
       },
       parameterRoles: ROLES,
+      ...(voices ? { voices: { ...voices, note: 'speak takes a voice id; each list is in display-name order, as the gallery shows it' } } : {}),
       next: [
         'suggest_sounds { description } maps an app or a moment to candidates with reasons',
         'search_sounds { query } is plain ranked search; filter by category, max_duration, loudness',
@@ -568,7 +571,8 @@ const speakTool = {
   description:
     'Get ONE self-contained JavaScript function that says a line of text in a synthesized voice, or babbles it (Animalese style), with the line baked in. ' +
     'Speech runs the text through the text front end (letter-to-sound rules and a lexicon; numbers and punctuation are understood, and [W EY1 T] in the text spells a word in ARPAbet) and bakes in the phonemes, so the function carries only the formant synthesizer, the voice and the master chain: the same function the gallery\'s Speak rack copies. ' +
-    'Speech voices: announcer (a classic synthesized PA voice, male, the default; announcer-male names it too), announcer-female (the same PA system with a woman speaking), deep and small (robots), whisper, retro (an 8-bit home computer). Babble voices: cute (default), gruff, beep, sprite, elder. ' +
+    'Speech voices (display name, then id): Announcer (Female) announcer-female (the same PA system with a woman speaking); Announcer (Male) announcer (the classic synthesized PA voice, the default; announcer-male names it too); Deep Robot deep; Retro Computer retro (an 8-bit home computer); Small Robot small; Whisper whisper. ' +
+    'Babble voices: Cute cute (the default), Gruff gruff, Robot Beep beep, Tiny Sprite sprite, Wise Elder elder. ' +
     'The function keeps the Copy contract, fn(ac, opts, when, dest), returns the end time, and takes pitch, rate and range (speed and spread for babble) and seed in opts at play time. ' +
     'Use it for a custom line; for ready-made announcements, countdowns and babble, search_sounds with category "voice", then get_copy.',
   inputSchema: {
@@ -576,7 +580,7 @@ const speakTool = {
     properties: {
       text: { type: 'string', minLength: 1, maxLength: 500, description: 'The line, in English, e.g. "Access granted. Welcome back, commander."' },
       mode: { type: 'string', enum: ['speech', 'babble'], description: '"speech" (default) says the words; "babble" turns each letter or syllable into a short pitched talk blip.' },
-      voice: { type: 'string', description: 'Speech: announcer (default, male; also announcer-male), announcer-female, deep, small, whisper, retro. Babble: cute (default), gruff, beep, sprite, elder.' },
+      voice: { type: 'string', description: 'A voice id. Speech: announcer-female (Announcer (Female)), announcer (Announcer (Male), the default; also announcer-male), deep, retro, small, whisper. Babble: cute (the default), gruff, beep, sprite, elder.' },
       pitch: { type: 'number', description: 'Semitones up or down from the voice\'s own pitch, -12 to 12 (default 0).' },
       rate: { type: 'number', description: 'Speech only: speaking rate, 0.5 to 1.6 (default 1).' },
       range: { type: 'number', description: 'Speech only: intonation, 0 a monotone to 2 animated (default 1).' },
@@ -599,10 +603,10 @@ const speakTool = {
       throw new ToolError(`${wrong.join(' and ')} ${wrong.length > 1 ? 'apply' : 'applies'} to ${mode === 'babble' ? 'speech' : 'babble'}; ${mode === 'babble' ? 'babble' : 'speech'} takes ${Object.keys(defs).join(', ')}.`, { code: 'bad_params' });
     }
     const voices = mode === 'babble' ? rt.babbleVoices() : rt.speechVoices();
-    const asked = args.voice == null ? Object.keys(voices)[0] : String(args.voice).toLowerCase();
+    const asked = args.voice == null ? (mode === 'babble' ? 'cute' : 'announcer') : String(args.voice).toLowerCase();
     const voice = mode === 'speak' && Object.hasOwn(VOICE_ALIASES, asked) ? VOICE_ALIASES[asked] : asked;
     if (!Object.hasOwn(voices, voice)) {
-      throw new ToolError(`Unknown ${mode === 'babble' ? 'babble' : 'speech'} voice "${args.voice}". Voices: ${Object.keys(voices).join(', ')}.`, { code: 'not_found', data: { voices: Object.keys(voices) } });
+      throw new ToolError(`Unknown ${mode === 'babble' ? 'babble' : 'speech'} voice "${args.voice}". Voices: ${voiceIds(voices).join(', ')}.`, { code: 'not_found', data: { voices: voiceIds(voices) } });
     }
     if (!/[A-Za-z0-9]/.test(args.text)) throw new ToolError('The text has nothing to say: give it words or numbers.', { code: 'invalid_arguments' });
     const clamped = [];
@@ -630,7 +634,7 @@ const speakTool = {
       seed: cfg.seed,
       dur: Math.round(dur * 1000) / 1000,
       bytes: Buffer.byteLength(r.code),
-      voices: { speech: Object.keys(rt.speechVoices()), babble: Object.keys(rt.babbleVoices()) },
+      voices: { speech: voiceIds(rt.speechVoices()), babble: voiceIds(rt.babbleVoices()) },
       usage: `const ac = new AudioContext(); ${r.fname}(ac);  // call from a click or key handler so the browser lets it start; ${r.fname}(ac, { pitch: 2 }) changes it at play time`,
       returns: `the end time: ${PREROLL} s after the context time on the first call (the master chain warms up), then when + about ${Math.round(dur * 100) / 100} s`,
       note: mode === 'speak' ? 'phonemes shows how the text was read; to fix a word, put its ARPAbet in brackets in the text, e.g. [W EY1 T].' : 'Babble has no words: each letter or syllable is a blip, and a question mark lifts the last ones.',

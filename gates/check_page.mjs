@@ -11,7 +11,8 @@
 //   * at phone width (375 px) nothing scrolls sideways
 //   * the Speak rack: a typed line shows its phonemes and renders, plays by a click and by Ctrl+Enter,
 //     a fader moves by keyboard, babble mode swaps the voices, Copy and Save WAV work, the voice
-//     picker offers the male and the female announcer
+//     picker offers Announcer (Female) and Announcer (Male), every voice list by display name, and a
+//     voice sound's slider names its voices the same way
 // Screenshots (gates/out): page-dark.png and page-light.png (full page, 1280 wide),
 // page-phone.png (375 wide, top of the page, light), page-phone-speak.png (the Speak rack) and
 // page-phone-dark.png (a card, dark)
@@ -199,9 +200,25 @@ async function main() {
     const spk = await b.eval(`[...document.querySelectorAll('#sp-voice option')].map((o) => o.value + '=' + o.textContent)`);
     await b.eval(`(() => { const s = document.querySelector('#sp-voice'); s.value = 'announcer-female'; s.dispatchEvent(new Event('change')); })()`);
     const fem = await waitFor(b, `document.querySelector('#sp-voice').value === 'announcer-female' && /woman/.test(document.querySelector('#sp-desc').textContent) && document.querySelector('#speak').dataset.rendered === '1'`, 5000);
-    ok('the Speak rack offers the male and the female announcer', spk.includes('announcer=Announcer') && spk.includes('announcer-female=Female Announcer') && fem,
-      spk.join(', '));
+    const sorted = (a) => a.every((x, i) => i === 0 || a[i - 1].localeCompare(x, 'en') <= 0);
+    const spkNames = spk.map((x) => x.split('=')[1]);
+    ok('the Speak rack offers Announcer (Female) and (Male), every voice by display name', spk[0] === 'announcer-female=Announcer (Female)' &&
+      spk[1] === 'announcer=Announcer (Male)' && sorted(spkNames) && sorted(bab.voices) && fem, `${spkNames.join(', ')}; babble ${bab.voices.join(', ')}`);
     await b.eval(`(() => { const s = document.querySelector('#sp-voice'); s.value = 'announcer'; s.dispatchEvent(new Event('change')); })()`);
+    // a voice sound's voice slider names each voice by its display name, in that order, and starts
+    // on the voice the sound speaks with
+    const slider = await b.eval(`(() => {
+      const inp = document.querySelector('#p-voice-warning-voice');
+      const out = inp.nextElementSibling;
+      const first = out.textContent;
+      const names = [];
+      for (let v = Number(inp.min); v <= Number(inp.max); v++) { inp.value = v; inp.dispatchEvent(new Event('input')); names.push(out.textContent); }
+      inp.value = inp.defaultValue;
+      inp.dispatchEvent(new Event('input'));
+      return { first, names, back: out.textContent };
+    })()`);
+    ok('the voice slider of a voice sound shows the voices by display name, in order', slider.first === 'Announcer (Male)' && slider.back === slider.first &&
+      slider.names.join() === spkNames.join() && sorted(slider.names), slider.names.join(', '));
 
     // color theme switch
     const bgDark = await b.eval('getComputedStyle(document.body).backgroundColor');

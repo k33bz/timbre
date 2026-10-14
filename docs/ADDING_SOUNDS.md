@@ -91,8 +91,9 @@ reader would question (why a peak is higher, why a filter is narrow).
   ratio). Leave `unit` out for 0..1 amounts.
 - `step: 1` for counts; a 0..1 parameter with `step: 1` and no unit shows as off and on.
 - A stepped parameter that picks one of several named things (a voice) carries `choices`: kebab-case
-  names for the values 0, 1, 2, ... (`{ min: 0, max: 5, def: 0, step: 1, choices: ['announcer',
-  'deep', 'small', 'whisper', 'retro', 'announcer-female'] }`). The gallery shows the name, the MCP
+  names for the values 0, 1, 2, ... (`{ min: 0, max: 5, def: 1, step: 1, choices: ['announcer-female',
+  'announcer', 'deep', 'retro', 'small', 'whisper'] }`). The gallery shows the name (a speech voice's
+  display name: Announcer (Female), Announcer (Male), ...), the MCP
   server lists them and takes a name for the number. The build checks min 0, max one less than the
   count, step 1, no unit and no role; `play` maps the number to the name itself
   (`['announcer', ...][Math.round(p.voice)]`).
@@ -132,7 +133,7 @@ envelope ends; effects return the node to play into (chain by passing it as the 
 | `T.rand(lo, hi)` | Seeded random: `rand()` in [0, 1), `rand(x)` in [0, x), `rand(lo, hi)` |
 | `T.jitter(x, o)` | Seeded variation for repeated sounds: `jitter(x, 0.1)` is x within 10%, `jitter(f, { cents: 30 })` a pitch, `jitter(peak, { db: 2 })` a level, `jitter(opts, { cents, db })` a copy of a voice's options with `f`, `to` and `peak` moved. Draws a fixed number of values (one for a number, two for options) |
 | `T.note(n)` | Hz of a note name ('A4', 'C#5', 'Eb3') or of semitones from A4 |
-| `T.speak(out, t, o)` | Speech (see Voices): `text` (English; `[W EY1 T]` spells a word in ARPAbet) or `ph` (phonemes), `voice` ('announcer' or 'announcer-male', 'announcer-female', 'deep', 'small', 'whisper', 'retro', or a voice object), `pitch` (semitones from the voice's own), `rate` and `range` (times the voice's), `peak` (default 0.18), `fx` (false: no effect chain). Returns the end time; `T.speak(null, 0, o)` schedules nothing and returns the line's length |
+| `T.speak(out, t, o)` | Speech (see Voices): `text` (English; `[W EY1 T]` spells a word in ARPAbet) or `ph` (phonemes), `voice` ('announcer-female', 'announcer' or 'announcer-male', 'deep', 'retro', 'small', 'whisper', or a voice object), `pitch` (semitones from the voice's own), `rate` and `range` (times the voice's), `peak` (default 0.18), `fx` (false: no effect chain). Returns the end time; `T.speak(null, 0, o)` schedules nothing and returns the line's length |
 | `T.babble(out, t, o)` | Animalese style talk: a pitched vowel blip per letter or syllable. `text`, `voice` ('cute', 'gruff', 'beep', 'sprite', 'elder'), `pitch` (semitones), `speed` and `spread` (times the voice's speed and pitch spread), `peak`, `fx`. Returns the end time; with `out = null` the length |
 | `T.phonemize(text)` | The text front end: English to ARPAbet with stress, `/` between words, punctuation kept ("Access denied." is `AE1 K S EH2 S / D IH0 N AY1 D .`) |
 | `T.utter`, `T.chatter` | The engines under speak and babble: phonemes (or a line) and a whole voice object, no front end or voice table. What a baked Copy carries |
@@ -164,12 +165,12 @@ export default {
   family: 'voice',
   moments: ['announce'],
   params: {
-    voice: { min: 0, max: 5, def: 0, step: 1, choices: ['announcer', 'deep', 'small', 'whisper', 'retro', 'announcer-female'], desc: 'Who speaks' },
+    voice: { min: 0, max: 5, def: 1, step: 1, choices: ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'], desc: 'Who speaks' },
     pitch: { min: -6, max: 6, def: 0, unit: 'st', desc: 'Pitch shift from the voice, down or up' },
     rate: { min: 0.75, max: 1.3, def: 1, unit: 'x', desc: 'Slow and deliberate to brisk' },
   },
   play(T, out, t, p) {
-    const voice = ['announcer', 'deep', 'small', 'whisper', 'retro', 'announcer-female'][Math.round(p.voice)];
+    const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
     T.speak(out, t, { text: 'Access denied.', voice, pitch: p.pitch, rate: p.rate });
   },
 };
@@ -182,10 +183,14 @@ export default {
 - **Phonemes.** `T.speak` also takes `ph`, ARPAbet separated by spaces: vowels carry their stress
   (0 none, 1 primary, 2 secondary), `/` separates words, the punctuation above makes pauses, and
   `AA1*3` holds a phoneme three times its length.
-- **The voices.** A voice sound lists every speech voice in `src/core/speech.js` order (the build
-  test holds it to that), so a new voice is appended to every list and the numbers already saved
-  keep their meaning. The announcer is a pair on one PA system: `announcer` (male; `announcer-male`
-  names it too) and `announcer-female`, both at the same rate, so a line lasts as long in either.
+- **The voices.** A voice sound lists every speech voice in the order a person sees them, by display
+  name (Announcer (Female), Announcer (Male), Deep Robot, Retro Computer, Small Robot, Whisper: the
+  order of the table in `src/core/speech.js`, which the build test and a voice test hold), and its
+  default points at the voice it speaks with. A new voice goes in at its place in that order, so the
+  numbers after it move: move each default with them, and any theme override that sets `voice`. The
+  ids stay (`announcer` also answers to `announcer-male`), and a Copy carries its own list, so code
+  already pasted keeps working. The announcer is a pair on one PA system, both at the same rate, so
+  a line lasts as long in either.
 - **Its length.** `node build.mjs --say "Access denied."` prints the phonemes and the length in each
   voice at three rates (`--babble` for babble, `--voice <name>` for one); `dur` must cover the
   slowest setting the parameters allow, and the build reports the time a voice is still sounding

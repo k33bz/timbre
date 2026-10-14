@@ -140,26 +140,40 @@ voice sounds say. Everything is written from those publications; no code or data
 speech engine. Babble (Animalese style talk) reuses the synthesizer: a pitched vowel blip per letter
 or syllable.
 
-The announcer is a pair: one PA system, two speakers. `announcer` is the male voice (`announcer-male`
-names it too) and is exactly what it was. `announcer-female` is a woman's voice, not his pitched up:
+Every voice list a person sees (the Speak rack's picker, a voice sound's slider, `build.mjs --say`,
+the MCP server's listings, these docs) is in display-name order, the order of the voice tables
+themselves: the speech voices Announcer (Female), Announcer (Male), Deep Robot, Retro Computer,
+Small Robot and Whisper, the babble voices Cute, Gruff, Robot Beep, Tiny Sprite and Wise Elder. Ids
+do not change with names: code and Copy say `announcer-female` and `announcer` (or `announcer-male`),
+and the gallery shows a voice sound's choice by the voice's display name.
+
+The announcer is a pair: one PA system, two speakers. `announcer`, Announcer (Male), is exactly what
+it was. `announcer-female`, Announcer (Female), is a woman's voice, not his pitched up, tuned on the
+cues listening studies tie to a female voice (F0 and formants both, Hillenbrand and Clark 2009;
+breathiness, Klatt and Klatt 1990; a wider pitch range):
 - Vowels: her own table, carried in the voice as `vowels`: Peterson and Barney (1952), women; EY and
   OW start at the /e/ and /o/ of Hillenbrand et al. (1995), women; every other diphthong target is
   his times their women-to-men ratio, formant by formant, for the vowel it is nearest (AY and AW
   start at /a/; EY ends toward /i/, AY and OY toward /I/, AW toward /U/, OW toward /u/). AX is the
-  neutral tube of her shorter tract (585, 1755, 2925 Hz). The women-to-men ratio of the Peterson and
+  neutral tube of a woman's tract (585, 1755, 2925 Hz). The women-to-men ratio of the Peterson and
   Barney formants runs from 1.02 (F1 of ER) to 1.46 (F1 of AH), so no single scale would do.
-- Tract: `formant` 1.17 (the mean of those ratios, F1, F2 and F3 alike) scales what has no table of
-  its own: consonant loci, F4 and F5, the nasals and the frication, so her sibilants and alveolar
-  bursts sit about 15% higher. The vowel table already belongs to her tract, so it is not scaled.
-- Pitch: 210 Hz on his intonation. The contour is multiplicative, so declination, the accents and a
-  question's rise keep their shape a register up; her timing is his (the same rate), so a line lasts
+- Tract: `vowelScale` [1.06, 1.08, 1.10] lifts that table past the women's averages, more in the upper
+  formants: a shorter tract than the average woman's and a wider formant dispersion. `formant` 1.29
+  (1.17, the mean women-to-men ratio of the Peterson and Barney formants, times 1.10) moves what has
+  no table of its own with the top formants: consonant loci, F4 and F5, the nasals and the frication,
+  so her sibilants and alveolar burst sit 19 to 27% above his.
+- Pitch: 230 Hz. `range` 1.1, `accent` 1.8 and `fall` 0.5 give her contour 1.5 times his span in
+  semitones (7.7 against 5.1 over six test lines), with livelier accents, a question that ends 7
+  semitones above her F0 (his: 4) and a statement that ends 2 below it (his: 3); her F0 stays above
+  195 Hz, never down where a voice turns creaky. Her timing is his (the same rate), so a line lasts
   as long in either voice and every voice sound's dur holds for both.
-- Source, after Klatt and Klatt (1990) on female talkers: open quotient 0.7 (his 0.55), a steeper
-  tilt (0.75, his 0.25), aspiration under the voice at 0.1 (his 0.02) and every cascade bandwidth 15%
-  wider (`bw` 1.15). Measured on a held vowel: H1-H2 about 5 dB and H1-A3 about 3 to 6 dB above his,
-  harmonics-to-noise about 10 dB below his and still above 30 dB.
-- Chain: his PA horn and hall, with the presence peak (1900 to 2200 Hz) and the top of the horn (4500
-  to 5200 Hz) moved up with her formants; the highpass, the drive and the hall are his.
+- Source, after Klatt and Klatt (1990) on female talkers: open quotient 0.8 (his 0.55), a steep tilt
+  (0.8, his 0.25), aspiration in the voicing at 0.16 (his 0.02) and every cascade bandwidth 15% wider
+  (`bw` 1.15). Measured on a held vowel: H1-H2 6 to 7 dB above his (a strong first harmonic), H1-A3
+  7 to 8 dB above, harmonics-to-noise 15 dB below his and still above 25 dB.
+- Chain: his horn's drive and hall, with the high-pass lowered from 300 to 150 Hz so her fundamental
+  passes (at 230 Hz it loses 0.7 dB, where his horn takes 6), a presence peak at 2.6 kHz and air at
+  6 kHz (`eq` takes a list), under a 7 kHz top instead of his 4.5: still a PA, a woman on it.
 
 Every line is normalized to its peak (-15 dBFS after the chain), so a whisper and an announcer read
 alike. Each has a public helper over an engine: `speak` and `babble` resolve the text and the voice
@@ -274,3 +288,26 @@ channel) and Copy pass two channels through; Save WAV writes one channel when bo
   in her voice and a Speak line in it; voice_wavs.mjs writes both announcers saying the same two
   lines and every announcer sound in her voice. The gallery's Speak rack and the MCP server list her
   with the other voices.
+- 2026-10-14, a more feminine announcer and voices by display name: after a listening pass, Announcer
+  (Female) moved further from him on every cue (see Voices): F0 210 to 230 Hz with 1.5 times his
+  span in semitones (livelier accents, a brighter question rise, a gentler statement fall), her
+  formants 6 to 10% above the women's averages (`vowelScale`, weighted to F2 and F3; `formant` 1.17
+  to 1.29 for the consonants, F4, F5 and frication), a breathier, softer source (open quotient 0.7
+  to 0.8, tilt 0.75 to 0.8, breath 0.1 to 0.16) and a wider PA band for her (high-pass 300 to 150 Hz,
+  top 5.2 to 7 kHz with presence and air). New engine fields, each a branch that runs only when a
+  voice sets it: `vowelScale`, `accent` and `fall` in the planner, and `eq` as a list in the effect
+  chain. The two announcers are now named Announcer (Female) and Announcer (Male) wherever a person
+  sees them (ids unchanged: `announcer-female`, `announcer` and its alias `announcer-male`), and every
+  voice list a person sees is in display-name order: the voice tables themselves, so the Speak rack,
+  `build.mjs --say`, the MCP server (speak's description, its `voices` and errors, a new `voices`
+  listing in `info`, get_sound's and get_copy's choices) and the docs follow, and the gallery shows a
+  voice sound's choice by display name. The voice sounds' `choices` are reordered to match (number 0
+  is now announcer-female, 1 announcer, 2 deep, 3 retro, 4 small, 5 whisper), so each default moved
+  with its voice (access-denied 0 to 1, game-over 1 to 2, retro-greetings 4 to 3, robot-processing 2
+  to 4, whisper-behind-you 3 to 5, and so on) and Sci-fi Console's announce override moved from 0 to
+  1: every default render is unchanged. A saved number from before now names another voice, and a
+  name still names the same one; a Copy carries its own list and renders as it did. The build test
+  expects the sorted order, and a voice test fails when a person-facing list (the tables, the voice
+  sounds' sliders, `--say`, the docs, the speak description) is out of order. The male voices,
+  babble and every non-female setting of the voice sounds render sample for sample as before (242
+  renders against main on the mock graph, worst difference 0).

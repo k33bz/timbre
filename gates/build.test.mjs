@@ -222,7 +222,10 @@ test('every voice sound speaks or babbles a fixed line and names its voices', as
   for (const s of voices) {
     assert.equal(s.family, 'voice', s.id);
     assert.match(String(s.play), /T\.(speak|babble)\(/, s.id);
-    if (s.params.voice) assert.deepEqual(s.params.voice.choices, Object.keys(T.speechVoices()), `${s.id} lists the speech voices in order`);
+    // every speech voice, in the order a person sees them: by display name
+    const sv = T.speechVoices();
+    const sorted = Object.keys(sv).sort((a, b) => sv[a].name.localeCompare(sv[b].name, 'en'));
+    if (s.params.voice) assert.deepEqual(s.params.voice.choices, sorted, `${s.id} lists the speech voices by display name`);
   }
 });
 

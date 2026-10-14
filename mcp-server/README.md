@@ -127,10 +127,13 @@ no way to type one), and values outside a range are clamped *and reported*.
 phonemes the text was read as, the line's length and one function,
 `sayContainmentBreachEvacuateThe(ac, opts, when, dest)`, that says it. The text front end ran on the
 server, so the function carries the phonemes and only the synthesizer, the voice and the master chain
-(about 26 KB). Speech voices: announcer (a classic synthesized PA voice, male; `announcer-male`
-names it too), announcer-female (the same PA system with a woman speaking), deep and small (robots),
-whisper, retro (an 8-bit home computer); `mode: "babble"` gives Animalese style talk instead (cute,
-gruff, beep, sprite, elder). pitch, rate and range (speed and spread for babble) and the seed are
+(about 26 KB). Speech voices, by display name with their ids: Announcer (Female) `announcer-female`
+(the same PA system with a woman speaking), Announcer (Male) `announcer` (the classic synthesized PA
+voice and the default; `announcer-male` names it too), Deep Robot `deep`, Retro Computer `retro` (an
+8-bit home computer), Small Robot `small`, Whisper `whisper`; `mode: "babble"` gives Animalese style
+talk instead (Cute `cute`, Gruff `gruff`, Robot Beep `beep`, Tiny Sprite `sprite`, Wise Elder
+`elder`). Every list of voices the server returns (speak's `voices`, its unknown-voice error, `info`'s
+`voices`, id to display name, a voice sound's `choices`) is in that display-name order. pitch, rate and range (speed and spread for babble) and the seed are
 baked in and can change in `opts` at play time; values out of range are clamped and reported. A word
 read wrong is fixed in the text with its ARPAbet in brackets: `"Press [S T AA1 R T] to begin."`. The
 engine is compiled from the catalog's own helper sources, so `speak` needs a catalog built with

@@ -194,7 +194,7 @@ export function buildSpeechCopy(T, cfg) {
   const babble = cfg.mode === 'babble';
   const voices = babble ? T.babbleVoices() : T.speechVoices();
   const want = Object.hasOwn(VOICE_ALIASES, String(cfg.voice)) ? VOICE_ALIASES[cfg.voice] : cfg.voice;
-  const vname = Object.hasOwn(voices, want) ? want : Object.keys(voices)[0];
+  const vname = Object.hasOwn(voices, want) ? want : babble ? 'cute' : 'announcer';
   const text = String(cfg.text == null ? '' : cfg.text);
   const engine = babble ? 'chatter' : 'utter';
   const vals = paramsFor({ params: SPEAK_PARAMS[babble ? 'babble' : 'speak'] }, cfg);

@@ -1,9 +1,10 @@
 // The voices, measured: nobody can listen in a test, so each check renders through the engine
 // (src/core/speech.js) on the mock graph and measures the buffer it computed.
 //   * vowels: LPC on a sustained render puts F1 and F2 within 10% of the table (Peterson and Barney)
-//   * the female announcer: F1 and F2 within 10% of the women's table, F0 200 to 220 Hz with his
-//     intonation scaled, a longer open phase, steeper tilt and more aspiration (Klatt and Klatt 1990),
-//     sibilants and bursts a little higher; and the male announcer still renders what main rendered
+//   * the female announcer: F1 and F2 within 10% of her targets (the women's table lifted by her
+//     vowelScale), F0 225 to 235 Hz with about 1.5 times his span, a longer open phase, steeper tilt
+//     and more aspiration (Klatt and Klatt 1990), sibilants and bursts higher; the male announcer
+//     still renders what main rendered; every voice list a person sees is in display-name order
 //   * fricatives put their energy in the right bands; stops close, burst and aspirate; nasals murmur
 //   * prosody: statements fall, questions rise, rate scales length, range 0 is a monotone
 //   * determinism, lengths (speak(null) is the render's length), levels, every voice
@@ -16,7 +17,7 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { T } from '../src/core/t.js';
 import { buildSpeechCopy, SPEAK_PARAMS, VOICE_ALIASES } from '../src/core/copy.js';
-import { ROOT } from '../build.mjs';
+import { ROOT, build, sayOrder } from '../build.mjs';
 import { MockContext } from './lib/mockaudio.mjs';
 import { decimate, formants, bandEnergy, rmsDb, pitchTrack, lineDb, fft } from './lib/analysis.mjs';
 
@@ -79,25 +80,35 @@ test('diphthongs glide from their onset toward their end target (in the formant 
 });
 
 // The female announcer: her own vowel table (Peterson and Barney 1952, women; diphthongs after
-// Hillenbrand et al. 1995, women), her shorter tract and the voice quality of Klatt and Klatt (1990)
-// female talkers. Measured twice: through her tract at the men's 100 Hz measuring pitch, where LPC
-// reads the resonances cleanly, and at her own pitch and intonation, where her harmonics lie 210 Hz
-// apart and LPC leans toward the nearest one (most in UW, whose F1 of 370 Hz sits by H2 at 420).
+// Hillenbrand et al. 1995, women) lifted by her vowelScale (a shorter tract than the average woman,
+// more in the upper formants), and the voice quality of Klatt and Klatt (1990) female talkers. Her
+// targets are the table times vowelScale. Measured twice: through her tract at the men's 100 Hz
+// measuring pitch, where LPC reads the resonances cleanly, and at her own F0 on the planner's
+// standard contour (range 0.7, so the pitch moves a little and LPC is not parked on one harmonic).
+// At her own F0 her harmonics lie about 230 Hz apart and LPC follows them wherever F1 sits within
+// two of them: there F2 is held to the target and F1 is reported (IY, whose F1 of 329 Hz lies
+// between H1 and H2), elsewhere both are.
 const MALE = T.speechVoices().announcer;
 const FEMALE = T.speechVoices()['announcer-female'];
-test('female vowels: LPC puts F1 and F2 within 10% of the women\'s targets, at 100 Hz and at her own pitch', (t) => {
+const herTarget = (v) => FEMALE.vowels[v].map((x, i) => x * FEMALE.vowelScale[i % 3]);
+test('female vowels: LPC puts F1 and F2 within 10% of her targets, at 100 Hz and at her own pitch', (t) => {
   const rows = [];
-  for (const [label, voice] of [['her tract, 100 Hz source, monotone', { ...FEMALE, f0: 100, range: 0 }], [`her own voice, ${FEMALE.f0} Hz and her intonation`, FEMALE]]) {
+  const cases = [
+    ['her tract, 100 Hz source, monotone', { ...FEMALE, f0: 100, range: 0 }, () => true],
+    [`her own F0 (${FEMALE.f0} Hz) on the standard contour`, { ...FEMALE, range: 0.7, accent: 1, fall: 1 }, (f1) => f1 >= 1.75 * FEMALE.f0],
+  ];
+  for (const [label, voice, f1Held] of cases) {
     rows.push(label + ':');
     for (const v of VOWELS) {
       const y = utter(v + '1*5', voice);
       const d = decimate(y.subarray(Math.floor(y.length * 0.3), Math.floor(y.length * 0.7)), SR, 4, 5000);
       const f = formants(d, SR / 4, 12);
-      const target = FEMALE.vowels[v];
+      const target = herTarget(v).map((x) => Math.round(x));
       const e1 = (100 * (f[0] - target[0])) / target[0];
       const e2 = (100 * (f[1] - target[1])) / target[1];
-      rows.push(`  ${v.padEnd(3)} F1 ${f[0].toFixed(0).padStart(4)} (${target[0]}, ${e1.toFixed(1)}%)  F2 ${f[1].toFixed(0).padStart(4)} (${target[1]}, ${e2.toFixed(1)}%)`);
-      assert.ok(Math.abs(e1) <= 10, `${label}: ${v} F1 ${f[0].toFixed(0)} vs ${target[0]}`);
+      const held = f1Held(target[0]);
+      rows.push(`  ${v.padEnd(3)} F1 ${f[0].toFixed(0).padStart(4)} (${target[0]}, ${e1.toFixed(1)}%${held ? '' : ', reported'})  F2 ${f[1].toFixed(0).padStart(4)} (${target[1]}, ${e2.toFixed(1)}%)`);
+      if (held) assert.ok(Math.abs(e1) <= 10, `${label}: ${v} F1 ${f[0].toFixed(0)} vs ${target[0]}`);
       assert.ok(Math.abs(e2) <= 10, `${label}: ${v} F2 ${f[1].toFixed(0)} vs ${target[1]}`);
     }
   }
@@ -108,14 +119,19 @@ test('female vowels: LPC puts F1 and F2 within 10% of the women\'s targets, at 1
   const r = VOWELS.filter((v) => v !== 'AX').map((v) => FEMALE.vowels[v][0] / P[v].F[0]);
   assert.ok(Math.max(...r) - Math.min(...r) > 0.25, r.join(' '));
   for (const v of Object.keys(P).filter((k) => P[k].vowel)) assert.equal(FEMALE.vowels[v].length, P[v].G ? 6 : 3, v);
+  // and she sits 6 to 10% above the women's averages, more in the upper formants (a shorter tract,
+  // a wider formant dispersion), with the consonants and the higher formants moved as far as F3
+  const [k1, k2, k3] = FEMALE.vowelScale;
+  assert.ok(k1 >= 1.05 && k3 <= 1.11 && k1 <= k2 && k2 <= k3, FEMALE.vowelScale.join(' '));
+  assert.ok(Math.abs(FEMALE.formant - 1.17 * k3) < 0.01, `formant ${FEMALE.formant}`);
 });
 
 test('female diphthongs glide from her onset toward her end target', () => {
   for (const v of ['EY', 'AY', 'AW', 'OW', 'OY']) {
     const y = utter(v + '1*5', { ...FEMALE, f0: 100, range: 0 });
     const n = y.length;
-    const F = FEMALE.vowels[v].slice(0, 3);
-    const G = FEMALE.vowels[v].slice(3);
+    const F = herTarget(v).slice(0, 3);
+    const G = herTarget(v).slice(3);
     const k = Math.abs(G[0] - F[0]) > Math.abs(G[1] - F[1]) ? 0 : 1;
     const fk = (a, b) => formants(decimate(y.subarray(Math.floor(n * a), Math.floor(n * b)), SR, 4, 5000), SR / 4, 12)[k];
     const want = G[k] - F[k];
@@ -124,34 +140,59 @@ test('female diphthongs glide from her onset toward her end target', () => {
   }
 });
 
-test('female pitch: 200 to 220 Hz, with his intonation scaled to her register', (t) => {
-  assert.ok(FEMALE.f0 >= 200 && FEMALE.f0 <= 220, `f0 ${FEMALE.f0}`);
+test('female pitch: 225 to 235 Hz, about 1.5 times his range, livelier accents, a gentle fall', (t) => {
+  assert.ok(FEMALE.f0 >= 225 && FEMALE.f0 <= 235, `f0 ${FEMALE.f0}`);
   const med = (a) => a.slice().sort((p, q) => p - q)[a.length >> 1];
+  const st = (a, b) => 12 * Math.log2(a / b);
   // a held vowel on a monotone sounds at her f0
   const held = pitchTrack(utter('AA1*5', { ...FEMALE, range: 0 }), SR);
   assert.ok(held.length > 20 && Math.abs(med(held) / FEMALE.f0 - 1) < 0.015, `held ${med(held)}`);
-  // the same shape as his: for every line her pitch track is his times the ratio of their f0, so the
-  // declination, the accents and a question's rise are his, a register higher; the timing is his
-  for (const text of ['Access granted. Welcome back, commander.', 'Is the system online? Three, two, one... go!']) {
-    const ph = T.phonemize(text);
-    const m = T.speechPlan(ph, MALE);
-    const f = T.speechPlan(ph, FEMALE);
-    assert.equal(f.dur, m.dur);
-    for (let i = 1; i < m.f0.length; i += 2) assert.ok(Math.abs(f.f0[i] / m.f0[i] - FEMALE.f0 / MALE.f0) < 1e-9, text);
-  }
-  // measured in her render (no effect chain): a statement centres near her f0 and falls on its last
-  // vowel; a question rises on it
+  // her contour against his, from the planner's pitch track over the vowels of six lines: the span
+  // (5th to 95th percentile) in semitones, the lowest F0, the end of a statement and of a question
+  const LINES = ['Access granted. Welcome back, commander.', 'Is the system online? Three, two, one... go!', 'Warning.',
+    'Containment breach. Evacuate the facility.', 'Attention, please. The doors are closing.', 'Are you ready?'];
+  const contour = (v) => {
+    let span = 0;
+    const all = [];
+    for (const text of LINES) {
+      const p = T.speechPlan(T.phonemize(text), v);
+      const vals = [];
+      for (const s of p.segs) if (/[0-2]$/.test(s.ph)) for (let tt = s.t0; tt < s.t1; tt += 0.01) vals.push(p.f0[2 * Math.round(tt / 0.01) + 1]);
+      vals.sort((a, b) => a - b);
+      span += st(vals[Math.floor(vals.length * 0.95)], vals[Math.floor(vals.length * 0.05)]) / LINES.length;
+      all.push(...vals);
+    }
+    all.sort((a, b) => a - b);
+    const end = (text) => {
+      const p = T.speechPlan(T.phonemize(text), v);
+      const last = p.segs.filter((s) => /[0-2]$/.test(s.ph)).pop();
+      return st(p.f0[2 * Math.round((last.t1 - 0.02) / 0.01) + 1], v.f0);
+    };
+    return { span, low: all[Math.floor(all.length * 0.02)], fall: end('The system is online.'), rise: end('Is the system online?') };
+  };
+  const m = contour(MALE);
+  const f = contour(FEMALE);
+  t.diagnostic(`span ${m.span.toFixed(2)} -> ${f.span.toFixed(2)} semitones (${(f.span / m.span).toFixed(2)} times his); lowest ${m.low.toFixed(0)} -> ${f.low.toFixed(0)} Hz; ` +
+    `statement ends ${m.fall.toFixed(1)} -> ${f.fall.toFixed(1)} st, question ends ${m.rise.toFixed(1)} -> ${f.rise.toFixed(1)} st from the voice's f0`);
+  assert.ok(f.span / m.span >= 1.4 && f.span / m.span <= 1.6, `span ratio ${f.span / m.span}`);
+  assert.ok(f.fall < 0 && f.fall > m.fall + 0.5, `a gentler statement fall: ${m.fall} -> ${f.fall}`);
+  assert.ok(f.rise > m.rise * 1.4, `a brighter question rise: ${m.rise} -> ${f.rise}`);
+  assert.ok(f.low > 190, `never down in a low, creaky end: ${f.low}`);
+  // the timing is his: the same rate, so a line lasts as long in either voice
+  const ph = T.phonemize('Access granted. Welcome back, commander.');
+  assert.equal(T.speechPlan(ph, FEMALE).dur, T.speechPlan(ph, MALE).dur);
+  // measured in her render (no effect chain): a statement falls on its last vowel; a question rises
   const line = (text) => {
     const y = render((out) => T.speak(out, 0, { text, voice: 'announcer-female', fx: false })).y;
     const last = T.speechPlan(T.phonemize(text), FEMALE).segs.filter((x) => /[0-2]$/.test(x.ph)).pop();
     const [a, b] = span(last, 0.3, 0);
-    return { all: med(pitchTrack(y, SR)), end: med(pitchTrack(y.subarray(a, b + Math.round(0.04 * SR)), SR)) };
+    return { all: med(pitchTrack(y, SR, 60, 600)), end: med(pitchTrack(y.subarray(a, b + Math.round(0.04 * SR)), SR, 60, 600)) };
   };
-  const st = line('The system is online.');
-  const q = line('Is the system online?');
-  t.diagnostic(`statement: median ${st.all.toFixed(0)} Hz, its last vowel ${st.end.toFixed(0)} Hz; question: median ${q.all.toFixed(0)} Hz, its last vowel ${q.end.toFixed(0)} Hz`);
-  assert.ok(st.all > 185 && st.all < 235, `statement median ${st.all}`);
-  assert.ok(st.end < st.all * 0.92 && q.end > q.all * 1.1, `statement ends ${st.end}, question ends ${q.end}`);
+  const sl = line('The system is online.');
+  const ql = line('Is the system online?');
+  t.diagnostic(`statement: median ${sl.all.toFixed(0)} Hz, its last vowel ${sl.end.toFixed(0)} Hz; question: median ${ql.all.toFixed(0)} Hz, its last vowel ${ql.end.toFixed(0)} Hz`);
+  assert.ok(sl.all > FEMALE.f0 * 0.9 && sl.all < FEMALE.f0 * 1.2, `statement median ${sl.all}`);
+  assert.ok(sl.end < sl.all * 0.95 && ql.end > ql.all * 1.1, `statement ends ${sl.end}, question ends ${ql.end}`);
 });
 
 test('female voice quality, after Klatt and Klatt (1990): a longer open phase, a steeper tilt, more aspiration', (t) => {
@@ -160,7 +201,7 @@ test('female voice quality, after Klatt and Klatt (1990): a longer open phase, a
   // the noise on its own; harmonics-to-noise in dB, over 0 to 8 kHz and in the F3 region
   const measure = (voice, v) => {
     const cfg = { ...voice, range: 0, jitter: 0, shimmer: 0 };
-    const own = voice.vowels ? voice.vowels[v] : T.phones()[v].F.map((x) => x * (voice.formant || 1));
+    const own = voice.vowels ? voice.vowels[v].map((x, i) => x * (voice.vowelScale ? voice.vowelScale[i] : 1)) : T.phones()[v].F.map((x) => x * (voice.formant || 1));
     T.seed(1);
     const y = T.klatt(SR, T.speechPlan(v + '1*5', cfg), cfg);
     T.seed(1);
@@ -191,12 +232,12 @@ test('female voice quality, after Klatt and Klatt (1990): a longer open phase, a
     assert.ok(f.h12 > m.h12 + 3, `${v} H1-H2 ${m.h12} -> ${f.h12}`);
     assert.ok(f.h13 > m.h13 + 2, `${v} H1-A3 ${m.h13} -> ${f.h13}`);
     assert.ok(f.hnr[1] < m.hnr[1] - 6 && f.hnr[0] < m.hnr[0] - 6, `${v} more aspiration ${m.hnr} -> ${f.hnr}`);
-    assert.ok(f.hnr[0] > 25, `${v} still clearly voiced: ${f.hnr[0]}`);
+    assert.ok(f.hnr[0] > 20, `${v} still clearly voiced: ${f.hnr[0]}`);
   }
   t.diagnostic('\nmale -> female\n' + rows.join('\n'));
 });
 
-test('female consonants: the sibilants and the alveolar burst sit a little higher with her shorter tract', (t) => {
+test('female consonants: the sibilants and the alveolar burst sit higher with her shorter tract', (t) => {
   // spectral centroid between 300 Hz and 8 kHz, averaged over 12 seeds so a short burst is stable
   const N = 2048;
   const centroid = (voice, ph, pick) => {
@@ -235,7 +276,7 @@ test('female consonants: the sibilants and the alveolar burst sit a little highe
     const m = centroid(MALE, ph, pick);
     const w = centroid(FEMALE, ph, pick);
     rows.push(`${f.padEnd(2)} ${m.toFixed(0)} -> ${w.toFixed(0)} Hz (${((100 * (w - m)) / m).toFixed(1)}%)`);
-    assert.ok(w > m * 1.05 && w < m * 1.3, `${f}: ${m} -> ${w}`);
+    assert.ok(w > m * 1.1 && w < m * 1.4, `${f}: ${m} -> ${w}`);
   }
   t.diagnostic('\nmale -> female, centroid 300 Hz to 8 kHz\n' + rows.join('\n'));
 });
@@ -477,4 +518,40 @@ test('the male announcer is the voice main rendered (gates/fixtures/announcer.js
     l.y.forEach((v, k) => { worst = Math.max(worst, Math.abs(y[Math.floor(((k + 0.5) * y.length) / 96)] - v)); });
     assert.ok(worst < 7.7e-6, `${l.text}: ${worst}`);
   }
+});
+
+test('every voice list a person sees is in display-name order; the announcers are Announcer (Female) and (Male)', async () => {
+  const cmp = (a, b) => a.localeCompare(b, 'en');
+  const sv = T.speechVoices();
+  const bv = T.babbleVoices();
+  assert.equal(sv.announcer.name, 'Announcer (Male)');
+  assert.equal(sv['announcer-female'].name, 'Announcer (Female)');
+  assert.ok(!Object.values(sv).some((v) => /Female Announcer/.test(v.name)), 'the old name is gone');
+  // the voice tables are in that order: the gallery's Speak rack, build.mjs --say, the MCP server,
+  // the WAV pass and every voice sound's choices follow them
+  const names = (t, ids) => ids.map((id) => t[id].name);
+  for (const t of [sv, bv]) {
+    const n = names(t, Object.keys(t));
+    assert.deepEqual(n, n.slice().sort(cmp), n.join(', '));
+    assert.deepEqual(sayOrder(t), Object.keys(t), 'build.mjs --say lists them so');
+  }
+  // each voice sound's voice slider: its choices read as the names the slider shows
+  const { sounds } = await build();
+  for (const s of sounds.filter((x) => x.params.voice)) {
+    const shown = s.params.voice.choices.map((c) => sv[c].name);
+    assert.deepEqual(shown, shown.slice().sort(cmp), s.id);
+  }
+  // the docs and the MCP server's speak description list the speech voices in that order
+  const order = names(sv, Object.keys(sv));
+  const listed = (text, where) => {
+    const at = text.indexOf(order[0]);
+    assert.ok(at >= 0, `${where} names ${order[0]}`);
+    let last = -1;
+    for (const n of order) {
+      const i = text.indexOf(n, at);
+      assert.ok(i > last, `${where}: ${n} after the voice before it`);
+      last = i;
+    }
+  };
+  for (const f of ['README.md', 'docs/DESIGN.md', 'mcp-server/README.md', 'mcp-server/tools/index.js']) listed(fs.readFileSync(path.join(ROOT, f), 'utf8'), f);
 });

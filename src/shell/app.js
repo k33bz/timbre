@@ -107,9 +107,19 @@ function decimalsOf(x) {
   if (s.includes('e-')) return Number(s.split('e-')[1]);
   return i < 0 ? 0 : s.length - i - 1;
 }
+/** The name a person sees for a voice id (a speech voice's display name; an alias's voice too). */
+function voiceLabel(id) {
+  const all = T.speechVoices();
+  const key = Object.hasOwn(VOICE_ALIASES, id) ? VOICE_ALIASES[id] : id;
+  return Object.hasOwn(all, key) ? all[key].name : id;
+}
+/** A voice table's ids in the order a person sees them: by display name. */
+function byName(table) {
+  return Object.keys(table).sort((a, b) => table[a].name.localeCompare(table[b].name, 'en'));
+}
 function fmtParam(d, v) {
-  // a stepped parameter that names its values (a voice) shows the name
-  if (d.choices) return d.choices[Math.max(0, Math.min(d.choices.length - 1, Math.round(v)))];
+  // a stepped parameter that names its values (a voice) shows the name, a speech voice its display name
+  if (d.choices) return voiceLabel(d.choices[Math.max(0, Math.min(d.choices.length - 1, Math.round(v)))]);
   const u = d.unit || '';
   if (d.step === 1 && d.min === 0 && d.max === 1 && !u) return v >= 0.5 ? 'on' : 'off';
   if (u === 's') return v < 1 ? Math.round(v * 1000) + ' ms' : v.toFixed(2) + ' s';
@@ -580,10 +590,10 @@ function spMode() {
   const voices = m === 'babble' ? T.babbleVoices() : T.speechVoices();
   const sel = qs('#sp-voice');
   sel.textContent = '';
-  for (const [id, v] of Object.entries(voices)) {
+  for (const id of byName(voices)) {
     const o = document.createElement('option');
     o.value = id;
-    o.textContent = v.name;
+    o.textContent = voices[id].name;
     sel.appendChild(o);
   }
   sel.value = sp.voice[m];

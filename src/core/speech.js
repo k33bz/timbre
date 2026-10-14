@@ -93,7 +93,9 @@ export function phones() {
  *       resonance: above 1 a smaller vocal tract), whisper, breath (aspiration under the voice),
  *       vowels (the voice's own vowel targets, { IY: [F1, F2, F3], EY: [F1, F2, F3, end F1, F2, F3],
  *       ... }: they belong to its tract already, so formant then scales only the consonants, F4, F5,
- *       the nasals and the frication), bw (times every cascade bandwidth)
+ *       the nasals and the frication), vowelScale ([k1, k2, k3]: times that table's F1, F2, F3),
+ *       bw (times every cascade bandwidth), accent (times the accents' height), fall (times the
+ *       declination and a statement's closing fall)
  * Returns { dur (s), f0: [t, Hz, ...], amp: [t, AV, AH, AF, AB, A2..A6, ...], form: [t, F1..F5,
  * B1..B5, FNZ, F6, ...], segs: [{ ph, t0, t1 }] }.
  */
@@ -160,7 +162,10 @@ export function speechPlan(ph, o) {
   // toward the vowel it leans on (the next one, or the one before when it closes its word). A voice
   // with its own vowel table takes its targets (and its neutral tube) from it, unscaled
   const own = o.vowels || null;
-  const AX = own && own.AX ? own.AX : P.AX.F;
+  // vowelScale [k1, k2, k3] moves the voice's own table, formant by formant (a shorter tract)
+  const vk = own && o.vowelScale ? o.vowelScale : null;
+  const ow = (f) => (vk ? [f[0] * vk[0], f[1] * vk[1], f[2] * vk[2]] : f);
+  const AX = own && own.AX ? ow(own.AX) : P.AX.F;
   const sc = (f) => [f[0] * fs, f[1] * fs, f[2] * fs];
   for (const s of segs) {
     if (!isV(s)) continue;
@@ -168,8 +173,8 @@ export function speechPlan(ph, o) {
     const mix = (f) => [f[0] + (AX[0] - f[0]) * red, f[1] + (AX[1] - f[1]) * red, f[2] + (AX[2] - f[2]) * red];
     const e = own && own[s.n];
     if (e) {
-      s.F = mix(e);
-      s.G = s.d.G && e.length > 5 ? mix(e.slice(3)) : s.F;
+      s.F = mix(ow(e));
+      s.G = s.d.G && e.length > 5 ? mix(ow(e.slice(3))) : s.F;
       continue;
     }
     s.F = sc(mix(s.d.F));
@@ -305,16 +310,20 @@ export function speechPlan(ph, o) {
     if (s.st === 1 || !p.fs) { p.tf = s.t0; p.fs = s.st === 1 ? 1 : p.fs; }
   }
   const plist = Object.keys(phr).map((k) => phr[k]);
+  // accent scales the accents' height and fall the declination and a statement's closing fall (1 the
+  // planner's own; a livelier talker accents more and falls less)
+  const ac = o.accent == null ? 1 : o.accent;
+  const fl = o.fall == null ? 1 : o.fall;
   for (const p of plist) {
     const em = p.type === '!' ? 1.5 : 1;
-    p.acc = p.acc.map((s, j) => ({ a: s.t0 - 0.02, m: s.t0 + (s.t1 - s.t0) * 0.4, b: s.t1 + 0.03, h: range * em * (s.st === 1 ? (j === 0 ? 0.2 : 0.15) : 0.06) }));
+    p.acc = p.acc.map((s, j) => ({ a: s.t0 - 0.02, m: s.t0 + (s.t1 - s.t0) * 0.4, b: s.t1 + 0.03, h: range * ac * em * (s.st === 1 ? (j === 0 ? 0.2 : 0.15) : 0.06) }));
   }
   const f0At = (tt) => {
     let p = plist[0];
     for (const q of plist) if (q.t0 <= tt) p = q;
     if (!p) return base;
     const x = Math.min(1, Math.max(0, (tt - p.t0) / Math.max(0.05, p.t1 - p.t0)));
-    let f = base * (1 + range * (0.08 - 0.16 * x));
+    let f = base * (1 + range * fl * (0.08 - 0.16 * x));
     let acc = 0;
     for (const c of p.acc) {
       if (tt <= c.a || tt >= c.b) continue;
@@ -323,7 +332,7 @@ export function speechPlan(ph, o) {
     f *= 1 + acc;
     const z = Math.min(1, Math.max(0, (tt - p.tf) / Math.max(0.05, p.t1 - p.tf)));
     const y = z * z * (3 - 2 * z);
-    return f * (p.type === '?' ? 1 + range * 0.5 * y : p.type === ',' ? 1 + range * 0.08 * y : p.type === '...' ? 1 - range * 0.08 * y : 1 - range * 0.2 * y);
+    return f * (p.type === '?' ? 1 + range * 0.5 * y : p.type === ',' ? 1 + range * 0.08 * y : p.type === '...' ? 1 - range * 0.08 * y : 1 - range * fl * 0.2 * y);
   };
   const f0 = [];
   for (let tt = 0; tt < dur + 0.01; tt += 0.01) f0.push(tt, f0At(tt));
@@ -479,7 +488,8 @@ export function klatt(sr, plan, o) {
 /**
  * The output stage of speech and babble: the voice's effect chain (fx), a DC blocker, the level (the
  * peak is o.peak, default 0.18), 2 ms in and 10 ms out, one buffer source into out at t. Returns
- * the end time. fx: hp, lp (Hz), eq { f, q, db } (biquads of the Audio EQ Cookbook), drive (0..1,
+ * the end time. fx: hp, lp (Hz), eq { f, q, db } or a list of them (peaking biquads of the Audio EQ
+ * Cookbook; hp and lp are its 2-pole filters), drive (0..1,
  * tanh), comb { ms, fb, mix } (a metallic ring), crush { bits, hz } (hold, quantize, then the
  * converter's reconstruction lowpass, 4 poles at 0.45 hz), room { time, mix, pre } (Schroeder's
  * reverb of four combs and two allpasses, 1962; it lengthens the buffer by time and pre).
@@ -521,7 +531,7 @@ export function voiceOut(out, t, y, o) {
   };
   if (fx.hp) biq('hp', fx.hp, 0.707);
   if (fx.lp) biq('lp', fx.lp, 0.707);
-  if (fx.eq) biq('eq', fx.eq.f, fx.eq.q || 1, fx.eq.db);
+  if (fx.eq) for (const q of [].concat(fx.eq)) biq('eq', q.f, q.q || 1, q.db);
   if (fx.drive) {
     const m = peakOf() || 1;
     const k = 1 + 8 * fx.drive;
@@ -599,21 +609,51 @@ export function voiceOut(out, t, y, o) {
 }
 
 /**
- * The speech voices: f0 (Hz), rate, range, formant (vocal tract scale), vowels (the voice's own
- * vowel table) and bw (bandwidth scale), oq and tilt (a low oq and tilt is buzzier), jitter,
- * shimmer, breath, whisper and the effect chain fx (voiceOut). The announcer is the male voice
- * ('announcer-male' names it too); announcer-female is the same PA system with a woman speaking.
+ * The speech voices, in the order a person sees them (by display name): f0 (Hz), rate, range,
+ * accent and fall (the planner's contour), formant (vocal tract scale), vowels (the voice's own
+ * vowel table), vowelScale and bw (its formant and bandwidth scales), oq and tilt (a low oq and tilt
+ * is buzzier), jitter, shimmer, breath, whisper and the effect chain fx (voiceOut). The announcer is
+ * a pair on one PA system: announcer (male; 'announcer-male' names it too) and announcer-female.
  */
 export function speechVoices() {
   return {
+    // A woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at the /e/
+    // and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his times
+    // their women-to-men ratio for the nearest vowel (AY and AW start at /a/, EY ends toward /i/, AY
+    // and OY toward /I/, AW toward /U/, OW toward /u/); AX is the neutral tube of her shorter tract.
+    // vowelScale lifts that table past the women's averages, more in the upper formants (a shorter
+    // tract, a wider formant dispersion: F0 and formants both mark a voice as female, Hillenbrand
+    // and Clark 2009), and formant 1.29 (1.17, the women-to-men ratio of the Peterson and Barney
+    // means, times 1.10) moves her consonant loci, F4, F5, nasals and frication with the top
+    // formants. Pitch 230 Hz; range, accent and fall give her about 1.5 times his span in
+    // semitones: livelier accents, a brighter question rise, a gentler statement fall that never
+    // drops into a low, creaky end. Source after Klatt and Klatt (1990) female talkers: a long open
+    // phase, a steep tilt, aspiration in the voicing, wider bandwidths. His horn's drive and hall,
+    // its high-pass lowered so her fundamental passes, presence and air up to a 7 kHz top
+    'announcer-female': {
+      name: 'Announcer (Female)', desc: 'The same PA system with a woman speaking: bright, breathy and lively, through the horn into the hall',
+      f0: 230, rate: 0.92, range: 1.1, accent: 1.8, fall: 0.5, formant: 1.29, vowelScale: [1.06, 1.08, 1.1], bw: 1.15,
+      oq: 0.8, tilt: 0.8, jitter: 0.003, shimmer: 0.02, breath: 0.16,
+      vowels: {
+        IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],
+        AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],
+        AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],
+        AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],
+      },
+      fx: { hp: 150, lp: 7000, eq: [{ f: 2600, q: 1.2, db: 4 }, { f: 6000, q: 0.9, db: 3 }], drive: 0.25, room: { time: 1.1, mix: 0.18, pre: 0.02 } },
+    },
     announcer: {
-      name: 'Announcer', desc: 'The classic synthesized PA voice: clear and level, through a horn into a hall',
+      name: 'Announcer (Male)', desc: 'The classic synthesized PA voice: clear and level, through a horn into a hall',
       f0: 104, rate: 0.92, range: 0.7, formant: 1, oq: 0.55, tilt: 0.25, jitter: 0.003, shimmer: 0.02, breath: 0.02,
       fx: { hp: 300, lp: 4500, eq: { f: 1900, q: 1.2, db: 5 }, drive: 0.25, room: { time: 1.1, mix: 0.18, pre: 0.02 } },
     },
     deep: {
       name: 'Deep Robot', desc: 'A slow, low machine voice with a metallic ring',
       f0: 64, rate: 0.82, range: 0.25, formant: 0.86, oq: 0.4, tilt: 0.1, fx: { comb: { ms: 5.5, fb: 0.55, mix: 0.5 }, lp: 6000 },
+    },
+    retro: {
+      name: 'Retro Computer', desc: 'A flat, buzzy home computer voice through an 8-bit converter',
+      f0: 96, rate: 0.96, range: 0, formant: 1, oq: 0.3, tilt: 0, fx: { crush: { bits: 7, hz: 8000 }, lp: 3800 },
     },
     small: {
       name: 'Small Robot', desc: 'A quick, bright little robot in a tin box',
@@ -622,30 +662,6 @@ export function speechVoices() {
     whisper: {
       name: 'Whisper', desc: 'Breath only: no voicing, close and airy',
       f0: 120, rate: 0.9, range: 0.4, formant: 1.04, whisper: 1, fx: { hp: 220 },
-    },
-    retro: {
-      name: 'Retro Computer', desc: 'A flat, buzzy home computer voice through an 8-bit converter',
-      f0: 96, rate: 0.96, range: 0, formant: 1, oq: 0.3, tilt: 0, fx: { crush: { bits: 7, hz: 8000 }, lp: 3800 },
-    },
-    // A woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at the /e/
-    // and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his times
-    // their women-to-men ratio for the nearest vowel, formant by formant (AY and AW start at /a/,
-    // EY ends toward /i/, AY and OY toward /I/, AW toward /U/, OW toward /u/); AX is the neutral
-    // tube of her shorter tract. formant 1.17 (the women-to-men ratio of the Peterson and Barney
-    // means, F1 to F3 alike) moves her consonant loci, F4, F5, nasals and frication up. Voice
-    // quality after Klatt and Klatt (1990) female talkers: a longer open phase, a steeper tilt,
-    // more aspiration in the voicing, wider bandwidths. The same horn and hall, its presence peak
-    // and top end moved up with her formants
-    'announcer-female': {
-      name: 'Female Announcer', desc: 'The same PA voice system with a woman speaking: clear and level, through the horn into the hall',
-      f0: 210, rate: 0.92, range: 0.7, formant: 1.17, bw: 1.15, oq: 0.7, tilt: 0.75, jitter: 0.003, shimmer: 0.02, breath: 0.1,
-      vowels: {
-        IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],
-        AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],
-        AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],
-        AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],
-      },
-      fx: { hp: 300, lp: 5200, eq: { f: 2200, q: 1.2, db: 5 }, drive: 0.25, room: { time: 1.1, mix: 0.18, pre: 0.02 } },
     },
   };
 }
@@ -805,8 +821,9 @@ export function babblePlan(text, o, dry) {
 }
 
 /**
- * The babble voices: f0 (Hz), speed (blips per second), per ('letter' or 'syllable'), colour,
- * random, scale, glide, oq, tilt, jitter, shimmer, vib, breath, raw (a plain square) and fx.
+ * The babble voices, in the order a person sees them (by display name): f0 (Hz), speed (blips per
+ * second), per ('letter' or 'syllable'), colour, random, scale, glide, oq, tilt, jitter, shimmer,
+ * vib, breath, raw (a plain square) and fx.
  */
 export function babbleVoices() {
   return {
