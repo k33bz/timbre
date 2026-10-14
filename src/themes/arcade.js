@@ -2,7 +2,8 @@
 // pings, brass fanfares, a real boom.
 // Voicing: key of C, bell and triangle voices (the chip switches stay off, that is the 8-bit theme),
 // notes from C5 up to C6 with the fanfares an octave under. The frequent moments (click, hover,
-// type, scroll) stay at or under -23 dBFS; the wins are the loudest things in the set.
+// type, scroll) stay at or under -23 dBFS; the wins, the coin, the teleport, the explosion, the
+// knockout and the critical alarm are the loudest things in the set, between -14 and -16 dBFS.
 export default {
   id: 'arcade',
   name: 'Arcade',
@@ -46,5 +47,20 @@ export default {
     teleport: { sound: 'magic-teleport', params: { pitch: 800, gap: 0.12, reach: 1.6, space: 0.2 } },
     scare: { sound: 'music-alert-sting', params: { key: 0, stabs: 3, edge: 0.6, tempo: 1.2 } },
     music: { sound: 'music-menu-confirm', params: { key: 0, notes: 4, speed: 1.3, echo: 0.8 } },
+    critical: { sound: 'notify-critical', params: { pitch: 261.63, stabs: 3, rough: 0.6, sub: 0.6 } },
+    // three falling steps E5, D5, C5 under a closing filter, the last one sagging
+    'level-down': { sound: 'notify-low-battery', params: { pitch: 659.25, steps: 3, gap: 0.15, tone: 2500 } },
+    // a C6 ping; the host raises streak per point and the pings climb the pentatonic
+    score: { sound: 'game-combo-ping', params: { chip: 0, pitch: 1046.5, streak: 1, ring: 0.3 } },
+    ability: { sound: 'battle-ability', params: { pitch: 523.25, power: 0.6, ring: 0.22 } },
+    // C6 and C7 bells on top of the hit
+    crit: { sound: 'battle-weakness-bell', params: { pitch: 1046.5, ring: 0.22, air: 0.5 } },
+    knockout: { sound: 'battle-ko', params: { pitch: 261.63, weight: 0.4, crack: 0.3 } },
+    // dizzy stars, the cartoon status
+    debuff: { sound: 'battle-status-confusion', params: { wobble: 9, stars: 3 } },
+    // a column of light rising from C4 an octave; the host passes up 0 for the fall
+    transform: { sound: 'battle-evolve', params: { up: 1, pitch: 261.63, shimmer: 0.6 } },
+    // the cabinet's marquee striking up
+    'neon-on': { sound: 'fx-neon-strike', params: { flickers: 4, pitch: 120, buzz: 0.5, length: 0.5 } },
   },
 };

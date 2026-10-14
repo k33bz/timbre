@@ -2,8 +2,9 @@
 // wherever a sound offers one.
 // Voicing: key of C major (C E G triads). The beeps sit on C5, G5 and C6 and the jingles are in C.
 // The frequent moments (click, hover, type, scroll) are short square beeps and triangle ticks at or
-// under -23 dBFS. The catalog has no chiptune delete or undo, so those moments are left out, and the
-// game-over is the nearest thing (a dark saw-brass jingle), not a true chip sound.
+// under -23 dBFS, and so are select, progress and the loading blink. The catalog has no chiptune
+// delete or undo, so those moments are left out, and the game-over is the nearest thing (a dark
+// saw-brass jingle), not a true chip sound.
 export default {
   id: '8-bit',
   name: '8-bit',
@@ -55,5 +56,27 @@ export default {
     // text-box talk: square beeps on the pentatonic scale, moved down 2.94 semitones from the voice's
     // 620 Hz so the scale sits on C5
     dialogue: { sound: 'voice-babble-beep', params: { pitch: -2.94, speed: 1, spread: 1 } },
+    // the alarm is already square stabs: a C4 run of three with the sub low
+    critical: { sound: 'notify-critical', params: { pitch: 261.63, stabs: 3, rough: 1, sub: 0.4 } },
+    // two quick triangle steps down from A5
+    dismiss: { sound: 'ui-expand', params: { open: 0, steps: 2, gap: 0.02, pitch: 783.99 } },
+    // a G5 beep, a fifth under the click
+    select: { sound: 'game-countdown-beep', params: { chip: 1, go: 0, pitch: 783.99, length: 0.06 } },
+    // the catalog has no chip loop cell: loading is one short C5 beep re-triggered every 0.5 s,
+    // thinking a slow run of three crushed computer beeps re-triggered every 1 s
+    loading: { sound: 'game-countdown-beep', params: { chip: 1, go: 0, pitch: 523.25, length: 0.06 } },
+    thinking: { sound: 'scifi-terminal-blip', params: { count: 3, pitch: 523.25, speed: 0.1, grit: 0.9 } },
+    // the triangle tick climbs an octave from C5 with pos, the fill of the bar
+    progress: { sound: 'ui-slider-detent', params: { pitch: 523.25, edge: 0.1 } },
+    // two square notes landing on C6
+    'load-complete': { sound: 'game-pickup-item', params: { chip: 1, pitch: 783.99, interval: 5, gap: 0.04 } },
+    // the open run played backwards and slower: A5, G5, E5, D5, C5
+    'level-down': { sound: 'ui-expand', params: { open: 0, steps: 5, gap: 0.05, pitch: 523.25 } },
+    // the go tone up an octave, short: a square stab on C7 with its fifth
+    crit: { sound: 'game-countdown-beep', params: { chip: 1, go: 1, pitch: 1046.5, length: 0.06 } },
+    knockout: { sound: 'game-hurt', params: { chip: 1, pitch: 261.63, drop: 0.7, length: 0.3 } },
+    // a C6 square ping; the host raises streak per point and the pings climb the pentatonic
+    score: { sound: 'game-combo-ping', params: { chip: 1, pitch: 1046.5, streak: 1, ring: 0.25 } },
+    glitch: { sound: 'fx-glitch-burst', params: { harsh: 0.8, pitch: 523.25, slices: 3, split: 0.3 } },
   },
 };

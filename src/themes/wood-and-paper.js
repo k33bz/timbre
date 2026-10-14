@@ -2,7 +2,8 @@
 // a drawer that creaks. Nothing electronic.
 // Voicing: key of C, notes between G4 and G5 on mallets and plucks; the rest is noise and thumps, so
 // the pitched sounds carry the key and the tactile ones stay out of the way. Frequent moments (click,
-// hover, type, scroll) sit between -23 and -30 dBFS.
+// hover, type, scroll) sit between -23 and -30 dBFS, and so do select, the counter tick, the clock
+// that marks loading and the card tap. The rubber stamp is the one thump that rises above the rest.
 export default {
   id: 'wood-and-paper',
   name: 'Wood and Paper',
@@ -53,5 +54,23 @@ export default {
     dice: { sound: 'cards-dice-roll', params: { surface: 0.6 } },
     chips: { sound: 'cards-chip-stack', params: { chips: 4, pace: 0.07, pitch: 1800 } },
     ambience: { sound: 'ambience-fire-crackle', params: { length: 6, crackle: 0.5, roar: 0.3, tone: 0.4 } },
+    // a card slid away from you (undo slides it back)
+    dismiss: { sound: 'cards-slide', params: { rise: 0, length: 0.18, pitch: 1, grit: 0.3 } },
+    // one card flicked over, like an index tab
+    select: { sound: 'cards-flick', params: { count: 1, bright: 0.2 } },
+    stamp: { sound: 'ui-stamp', params: { weight: 0.3, ink: 0.4, pitch: 130.81 } },
+    // a wooden clock, tick and tock, re-triggered every 0.9 s while it waits
+    loading: { sound: 'cards-timer-tick', params: { beats: 2, gap: 0.45, pitch: 1200, tone: 0.2 } },
+    // the dry wheel click of a counter, G5
+    'data-tick': { sound: 'data-counter-tick', params: { pitch: 783.99, click: 1 } },
+    // a cardboard flip board rolling over
+    'count-up': { sound: 'data-split-flap', params: { digits: 3, cards: 5, tone: 0 } },
+    // marimba bars climbing the pentatonic from G4
+    'chart-reveal': { sound: 'data-bar-rise', params: { bars: 5, pitch: 392, climb: 0.75 } },
+    'card-tap': { sound: 'cards-tap', params: { on: 1, weight: 0.5, tone: 0.4 } },
+    // a card laid in the resource row with a low thunk
+    resource: { sound: 'cards-land', params: { onto: 0, weight: 0.4, tone: 0.6 } },
+    // wooden chips knocked out one by one, climbing from G4, without the glass ping
+    score: { sound: 'duel-bag-resolve', params: { count: 3, gap: 0.14, pitch: 392, ping: 0 } },
   },
 };

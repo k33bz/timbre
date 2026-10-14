@@ -3,7 +3,9 @@
 //   1. take the gallery's Copy text and its own offline render (Timbre.copy, Timbre.render)
 //   2. paste the Copy text into a blank page (about:blank, no Timbre) as a script
 //   3. call the pasted function on an OfflineAudioContext and render it the same way
-//   4. compare peak and RMS: they must agree within 0.5 dB
+//   4. compare peak and RMS: they must agree within 0.5 dB, over both channels and in each channel
+//      on its own, so a sound that places voices in stereo (T.pan) must keep its left and right
+//      levels in the Copy (a Copy that lost or mirrored the panning would fail here)
 // The Copy carries its parameter values and seed, so the pasted function is called with no options.
 // Then the same for five lines from the Speak rack (speech and babble): the Copy with the line baked
 // in against the gallery's render of the line, and its end time against the line's length.
@@ -28,6 +30,7 @@ const LINES = [
 async function main() {
   const b = await launch();
   const rows = [];
+  const stereo = new Set();   // sounds whose gallery render differs between left and right
   let failed = 0;
   try {
     await b.goto(distUrl());
@@ -41,9 +44,13 @@ async function main() {
     for (const c of cases) {
       const g = await b.eval(`(async () => {
         const id = ${JSON.stringify(c.s.id)}, p = ${JSON.stringify(c.params)}, sd = ${c.seed};
-        return { copy: Timbre.copy(id, p, sd), m: Timbre.measure(await Timbre.render(id, p, sd)) };
+        const r = await Timbre.render(id, p, sd);
+        const one = (k) => Timbre.measure({ sr: r.sr, dur: r.dur, post: [r.post[k], r.post[k]], pre: null });
+        let side = 0;
+        for (let i = 0; i < r.post[0].length; i++) side = Math.max(side, Math.abs(r.post[0][i] - r.post[1][i]));
+        return { copy: Timbre.copy(id, p, sd), m: Timbre.measure(r), L: one(0), R: one(1), stereo: side > 1e-4 };
       })()`);
-      Object.assign(c, { copy: g.copy, gallery: g.m });
+      Object.assign(c, { copy: g.copy, gallery: g.m, galleryLR: [g.L, g.R], stereo: g.stereo });
     }
     // lines from the Speak rack: its Copy (the line baked in) against the gallery's render of it
     const lineCases = only && !'speak-line'.includes(only) ? [] : LINES.map((cfg) => ({ cfg }));
@@ -72,18 +79,25 @@ async function main() {
         const end = fn(ctx, undefined, 0);
         const buf = await ctx.startRendering();
         const measure = (${measureSrc});
-        const m = measure({ sr, dur, post: [buf.getChannelData(0).subarray(skip), buf.getChannelData(1).subarray(skip)], pre: null });
+        const L = buf.getChannelData(0).subarray(skip), R = buf.getChannelData(1).subarray(skip);
+        const m = measure({ sr, dur, post: [L, R], pre: null });
+        m.L = measure({ sr, dur, post: [L, L], pre: null });
+        m.R = measure({ sr, dur, post: [R, R], pre: null });
         m.endTime = end;
         return m;
       })()`);
-      if (r.error) { rows.push([c.s.id, c.label, '-', '-', '-', '-', '-', 'FAIL ' + r.error]); failed++; continue; }
+      if (r.error) { rows.push([c.s.id, c.label, '-', '-', '-', '-', '-', '-', 'FAIL ' + r.error]); failed++; continue; }
       const dp = Math.abs(r.peak - c.gallery.peak);
       const dr = Math.abs(r.rms - c.gallery.rms);
+      // each channel on its own: the worst peak or RMS difference of the two
+      const dch = Math.max(...[r.L, r.R].map((x, k) => Math.max(Math.abs(x.peak - c.galleryLR[k].peak), Math.abs(x.rms - c.galleryLR[k].rms))));
       const endOk = Math.abs(r.endTime - (preroll + c.s.dur)) < 1e-6;
-      const pass = dp <= TOL && dr <= TOL && !r.silent && endOk;
+      const pass = dp <= TOL && dr <= TOL && dch <= TOL && !r.silent && endOk;
       if (!pass) failed++;
+      if (c.stereo) stereo.add(c.s.id);
       rows.push([c.s.id, c.label, c.gallery.peak.toFixed(1), r.peak.toFixed(1), c.gallery.rms.toFixed(1), r.rms.toFixed(1),
-        `${dp.toFixed(2)}/${dr.toFixed(2)}`, (pass ? 'ok' : 'FAIL') + (endOk ? '' : ' (end time ' + r.endTime + ')') + ' ' + (c.copy.length / 1024).toFixed(1) + ' KB']);
+        `${dp.toFixed(2)}/${dr.toFixed(2)}`, c.stereo ? dch.toFixed(2) : '-',
+        (pass ? 'ok' : 'FAIL') + (endOk ? '' : ' (end time ' + r.endTime + ')') + ' ' + (c.copy.length / 1024).toFixed(1) + ' KB']);
     }
     for (const c of lineCases) {
       const r = await b.eval(`(async () => {
@@ -105,7 +119,7 @@ async function main() {
         return m;
       })()`);
       const label = `${c.cfg.mode} ${c.cfg.voice}`;
-      if (r.error) { rows.push(['speak-line', label, '-', '-', '-', '-', '-', 'FAIL ' + r.error]); failed++; continue; }
+      if (r.error) { rows.push(['speak-line', label, '-', '-', '-', '-', '-', '-', 'FAIL ' + r.error]); failed++; continue; }
       const dp = Math.abs(r.peak - c.gallery.peak);
       const dr = Math.abs(r.rms - c.gallery.rms);
       // the line's end: the gallery's dur is the engine's length rounded up, plus 20 ms
@@ -113,14 +127,15 @@ async function main() {
       const pass = dp <= TOL && dr <= TOL && !r.silent && endOk;
       if (!pass) failed++;
       rows.push(['speak-line', label, c.gallery.peak.toFixed(1), r.peak.toFixed(1), c.gallery.rms.toFixed(1), r.rms.toFixed(1),
-        `${dp.toFixed(2)}/${dr.toFixed(2)}`, (pass ? 'ok' : 'FAIL') + (endOk ? '' : ' (end time ' + r.endTime + ')') + ' ' + r.fname + ' ' + (c.copy.length / 1024).toFixed(1) + ' KB']);
+        `${dp.toFixed(2)}/${dr.toFixed(2)}`, '-', (pass ? 'ok' : 'FAIL') + (endOk ? '' : ' (end time ' + r.endTime + ')') + ' ' + r.fname + ' ' + (c.copy.length / 1024).toFixed(1) + ' KB']);
     }
     if (b.errors.length) { console.error('page errors:\n  ' + b.errors.join('\n  ')); failed++; }
   } finally {
     await b.close();
   }
-  console.log(table(rows, ['sound', 'case', 'gal pk', 'copy pk', 'gal rms', 'copy rms', 'd pk/rms', '']));
+  console.log(table(rows, ['sound', 'case', 'gal pk', 'copy pk', 'gal rms', 'copy rms', 'd pk/rms', 'd L/R', '']));
   console.log(`\ncopy: ${rows.length - failed}/${rows.length} pasted functions match the gallery within ${TOL} dB`);
+  console.log(`stereo: ${stereo.size} sounds render a different left and right, each channel held to ${TOL} dB: ${[...stereo].join(', ') || 'none'}`);
   process.exit(failed ? 1 : 0);
 }
 

@@ -2,7 +2,7 @@
 // and holding the lexicon to the real catalog (every moment still finds a sound).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Catalog } from '../lib/catalog.js';
+import { Catalog, CATEGORIES } from '../lib/catalog.js';
 import { MOMENTS, MOODS, momentsIn, moodsIn } from '../lib/moments.js';
 import { suggest, rankMoment, pickForMoment, specFor, themeFromText, activeMoods, hintsFor, trimRows, indexFor } from '../lib/suggest.js';
 import { HAVE_REPO, REAL_CATALOG } from './helper.js';
@@ -62,6 +62,23 @@ test('every moment and mood is well formed', () => {
     if (m.maxDur && m.minDur) assert.ok(m.minDur < m.maxDur, name);
   }
   for (const [name, m] of Object.entries(MOODS)) assert.ok(m.about && m.words.length && m.name === name, name);
+});
+
+test('moods weigh the newer categories, and name only real ones', () => {
+  const { professional, gamey, tabletop } = MOODS;
+  const scifi = MOODS['sci-fi'];
+  for (const k of ['ui', 'notify', 'data', 'ai']) assert.ok(professional.boost[k] > 0, `professional favours ${k}`);
+  for (const k of ['game', 'battle', 'duel']) assert.ok(professional.penalty[k] > 0, `professional marks down ${k}`);
+  for (const m of [gamey, tabletop]) for (const k of ['game', 'battle', 'duel', 'cards']) assert.ok(m.boost[k] > 0, `${m.name} favours ${k}`);
+  assert.ok(tabletop.boost.cards >= tabletop.boost.duel && tabletop.boost.duel >= tabletop.boost.game, 'tabletop leans on cards first');
+  for (const k of ['scifi', 'fx', 'data', 'ai']) assert.ok(scifi.boost[k] > 0, `sci-fi favours ${k}`);
+  for (const m of Object.values(MOODS)) {
+    for (const k of [...Object.keys(m.boost || {}), ...Object.keys(m.penalty || {})]) assert.ok(CATEGORIES.includes(k), `${m.name}: ${k} is a category`);
+    for (const k of Object.keys(m.boost || {})) assert.ok(!(m.penalty && m.penalty[k]), `${m.name} both boosts and marks down ${k}`);
+  }
+  assert.ok(moodsIn('a tcg deck builder').map((m) => m.mood.name).includes('tabletop'));
+  // info lists the mood names, so each name must call up its own mood
+  for (const name of Object.keys(MOODS)) assert.ok(moodsIn(name).some((m) => m.mood.name === name), `the word ${name} names its mood`);
 });
 
 test('specFor gives custom moments a spec made from their words', () => {
@@ -304,6 +321,23 @@ test('the real catalog: a style word picks that style (wood, glass, mechanical, 
   assert.ok(mech.tags.includes('mechanical') || /mechanical/.test(mech.id), mech.id);
   const retro = pick('retro 8-bit arcade', 'jump');
   assert.equal(retro.category, 'game');
+});
+
+test('the real catalog: moods move the newer categories', (t) => {
+  if (skip(t)) return;
+  const c = new Catalog(REAL_CATALOG, { levelsPath: false }).load();
+  const rows = (m, mood) => rankMoment(c, specFor(m), { moods: mood ? activeMoods(mood) : [] });
+  const pos = (m, mood, cats) => rows(m, mood).findIndex((r) => cats.includes(r.sound.category));
+  const pick = (m, mood) => pickForMoment(c, m, { moods: activeMoods(mood) }).row.sound;
+  // sci-fi lifts the screen effects over the plain interface wipe, and says why
+  assert.ok(pos('reveal', 'sci-fi', ['fx']) < pos('reveal', '', ['fx']), 'an fx reveal moves up for sci-fi');
+  assert.ok(rows('reveal', 'sci-fi').find((r) => r.sound.category === 'fx').reasons.includes('fx suits a sci-fi mood'));
+  // a professional hit stays a plain game hit, not a creature-battle strike
+  assert.ok(!['battle', 'duel'].includes(pick('hit', 'professional').category), pick('hit', 'professional').id);
+  assert.ok(pos('readout', 'professional', ['data']) < pos('readout', '', ['data']), 'a data readout moves up for professional');
+  // tabletop and gamey favour the battle and duel sounds
+  assert.ok(['battle', 'duel', 'cards'].includes(pick('transform', 'tabletop').category), pick('transform', 'tabletop').id);
+  assert.ok(rows('attack', 'a video game').find((r) => r.sound.category === 'battle').reasons.includes('battle suits a gamey mood'));
 });
 
 test('the real catalog: open and close set the drawer direction; the retro mood sets chip', (t) => {

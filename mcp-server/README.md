@@ -170,7 +170,9 @@ A moment that names both directions starts on the first (`link`, `presence`, `re
 value to `play(moment, opts)` for the reverse.
 These are parameter roles: the switch is found by its `role` in the catalog, whatever it is called,
 and by its name only in a catalog without roles. A mood also lifts the sounds of its family (calm:
-soft; glassy: glass; retro: chip; ...) the way it lifts sounds carrying its tags.
+soft; glassy: glass; retro: chip; ...) the way it lifts sounds carrying its tags, and it weighs
+categories: `professional` favours ui, data, notify and ai and marks down game, battle and duel;
+`gamey` and `tabletop` favour battle, duel and cards; `sci-fi` favours scifi, fx, data and ai.
 How a moment gets its sound, in order: the theme (if you named one, or your `mood` names one such as
 "soft ui"), then your explicit `{ moment, sound, params }`, then the best catalog match for the
 moment, shaped by the mood. Every choice carries its reason; loose matches and anything repaired or

@@ -2,7 +2,7 @@
 // Voicing: the clicks are bandpassed noise and short bells with nothing sustained. The few tonal
 // sounds are bells and plucks in C major (the alarm is G5 and B5, the rest sit on C, D, E and A), so
 // the dings agree with each other. Frequent moments (click, hover, type, scroll) sit between -22 and
-// -28 dBFS.
+// -28 dBFS, with the counter tick and the gauge needle; the loading ratchet is a little quieter.
 export default {
   id: 'mechanical',
   name: 'Mechanical',
@@ -46,5 +46,23 @@ export default {
     chips: { sound: 'cards-chip-stack', params: { chips: 5, pace: 0.06, pitch: 2300 } },
     dice: { sound: 'cards-dice-shake', params: { shakes: 3, dice: 2, pitch: 1.1 } },
     ambience: { sound: 'ambience-room-hum', params: { length: 6, pitch: 60, buzz: 0.5, air: 0.3 } },
+    // a fire bell: the alarm clock's bell (G5 and B5) ringing hard, three bursts
+    critical: { sound: 'notify-incoming-call', params: { pitch: 783.99, rate: 16, rings: 3, tone: 3500 } },
+    // a dater stamp, dry ink
+    stamp: { sound: 'ui-stamp', params: { weight: 0.4, ink: 0.2, pitch: 130.81 } },
+    // a cash register: a short ratchet, the drawer stop and the margin bell on E7
+    purchase: { sound: 'ui-typewriter-bell', params: { slide: 0.12, pitch: 2637.02, ring: 0.3, bell: 1 } },
+    // a line typed out ends on the carriage return and the bell on C7
+    'type-out': { sound: 'ui-typewriter-bell', params: { slide: 0.22, pitch: 2093, ring: 0.38, bell: 0.7 } },
+    // a fine ratchet turning once, re-triggered every 1 s
+    loading: { sound: 'data-spinner-ticks', params: { steps: 12, pitch: 523.25, tone: 1, width: 0.2 } },
+    // the needle swings up the dial and settles on a detent
+    progress: { sound: 'data-gauge-needle', params: { sweep: 0.3, swing: 0.2, pitch: 261.63 } },
+    // the dry wheel click of a counter
+    'data-tick': { sound: 'data-counter-tick', params: { pitch: 1046.5, click: 1 } },
+    // the ticks climb from C6 to A6
+    'count-up': { sound: 'data-count-up', params: { pitch: 1046.5, rise: 9, thunk: 0.6 } },
+    // a departures board: rows of hard plastic flaps clattering into their new order
+    sort: { sound: 'data-split-flap', params: { digits: 6, cards: 4, tone: 0.8 } },
   },
 };

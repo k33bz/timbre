@@ -2,8 +2,9 @@
 // stone hall, a quill, a fireball, a brass horn.
 // Voicing: key of D (D E F# A B). Pitched sounds are set on D4, D5 or A5, and the fanfare, the
 // game-over, the mystery sting and the title logo are transposed up two semitones with their key
-// control, so a whole session agrees. The frequent moments (click, hover, type, scroll) stay at or
-// under -23 dBFS.
+// control, so a whole session agrees. The card-duel and battle moments keep to D too: the Gold ink
+// signature sits on D4, the lore chimes and the weakness bells on D6. The frequent moments (click,
+// hover, type, scroll) stay at or under -23 dBFS.
 export default {
   id: 'fantasy',
   name: 'Fantasy',
@@ -58,5 +59,25 @@ export default {
     dice: { sound: 'cards-dice-roll', params: { surface: 0.5 } },
     ambience: { sound: 'ambience-fire-crackle', params: { length: 6, crackle: 0.6, roar: 0.4, tone: 0.4 } },
     music: { sound: 'music-intro-logo', params: { key: 2, shine: 0.8, space: 0.55 } },
+    // a chord on D4 falling away an octave
+    'level-down': { sound: 'battle-evolve', params: { up: 0, pitch: 293.66, length: 0.6, shimmer: 0.5 } },
+    // the Gold ink signature already sits on D4: plucks climbing into a warm pair of bells
+    ability: { sound: 'duel-ink-gold', params: { pitch: 1, glow: 0.5, space: 0.3 } },
+    // a reedy swell rising a fifth, D3 to A3
+    transform: { sound: 'duel-shift-swell', params: { up: 1, pitch: 146.83, swell: 0.32, land: 0.6 } },
+    // a potion gone bad: bubbles from D4
+    debuff: { sound: 'battle-status-poison', params: { pitch: 293.66, bubbles: 4 } },
+    // D6 and D7 bells over the blow
+    crit: { sound: 'battle-weakness-bell', params: { pitch: 1174.66, ring: 0.25, air: 0.5 } },
+    knockout: { sound: 'battle-ko', params: { pitch: 146.83, weight: 0.3, crack: 0.2 } },
+    // lore: glass chimes climbing from D6
+    score: { sound: 'duel-lore-gain', params: { lore: 2, pitch: 1174.7, shine: 0.5 } },
+    // a bead of ink into the well, D5
+    resource: { sound: 'duel-well-drip', params: { pitch: 587.33, glass: 0.5, pool: 0.5 } },
+    'card-tap': { sound: 'duel-exert-tilt', params: { on: 1, weight: 0.5, tone: 0.5 } },
+    // a quest log: one note per step up the D pentatonic
+    step: { sound: 'ui-step-advance', params: { pitch: 293.66 } },
+    // gold counted out at the shop: three coins ringing up from D7
+    purchase: { sound: 'battle-coin-chain', params: { flips: 3, heads: 3, gap: 0.08, pitch: 2349.32 } },
   },
 };

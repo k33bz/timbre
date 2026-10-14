@@ -17,7 +17,7 @@ through an MCP server.
 - **Measured, not guessed.** Every sound declares its duration and is rendered offline in a gate
   that checks peak, RMS, DC offset, clipping and silence. Nothing ships louder than the house range.
 - **Copy is self-contained.** Copy yields one JavaScript function plus only the helpers it uses;
-  pasted anywhere it plays the same sound (same render within 0.5 dB).
+  pasted anywhere it plays the same sound (same render within 0.5 dB, in each channel).
 
 ## Layout
 ```
@@ -217,3 +217,18 @@ channel) and Copy pass two channels through; Save WAV writes one channel when bo
   picks a sound inside each new moment's own categories (the real-catalog test holds all 98 moments
   to that), and it reads the tested descriptions as before. No sound changed: the manifest's
   sounds, helpers and levels are identical to the base; only its vocabulary grew.
+- 2026-10-13, gap-fill themes and moods: the eight themes map 132 of the new moments where they
+  belong (Soft UI 25, Glass 27 and Sci-fi Console 29 take the data, AI, notify and interface
+  moments; 8-bit 12, Arcade 9, Fantasy 11, Mechanical 9 and Wood and Paper 10 take the game, battle,
+  duel, card and effect moments that suit them), each override set to the theme's key, register and
+  level. No gate renders a theme's overrides (the level gate renders defaults and random settings,
+  the page gate counts the first theme's pads and plays one), so every theme moment was rendered
+  once in the engine at its theme parameters, worst of three seeds: all inside the house range, Soft
+  UI still under -16, and the moments that repeat while something runs (select, progress, data
+  ticks, loaders, thinking, tokens, packets) sit with each theme's frequent moments. `auth` stays
+  unmapped: no sound carries a lock switch yet. The MCP moods weigh the new categories
+  (professional favours data and ai and marks down battle, duel and cards; gamey and tabletop
+  favour battle, duel and cards; sci-fi favours fx, data and ai), and the word "gamey", which `info`
+  lists, now calls up its own mood. The copy gate measures each channel on its own as well as both
+  together, so a Copy that lost or mirrored a sound's placement (`T.pan`) fails; 77 sounds render a
+  different left and right, all 34 that use `T.pan` among them.

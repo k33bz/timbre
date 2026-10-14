@@ -37,7 +37,10 @@ for (const [name, m] of Object.entries(MOMENTS)) {
  * match lifts the sound); families (src/vocabulary.js) whose sounds fit, a match that counts like a
  * tag; category boosts; loudness preference (best first); categories that clash. hints set
  * parameters the same way a moment's do (the retro mood turns a sound's chip switch on).
- * Boosts are fractions: boost 1.5 lifts a score by 18 percent. A tag or family match lifts it by
+ * Boosts are fractions: boost 1.5 lifts a score by 18 percent, and a penalty of 2 lowers it by 20
+ * percent. The newer categories ride along with the older ones they serve: professional favours
+ * data and ai and marks down battle and duel, gamey and tabletop favour battle, duel and cards, and
+ * sci-fi favours fx, data and ai. A tag or family match lifts it by
  * tagBoost (default 0.18) per match, at most two; the style moods (wood, glass, mechanical, air,
  * retro) use 0.6 because naming a style is an explicit request.
  */
@@ -54,7 +57,8 @@ export const MOODS = {
     words: ['professional', 'productivity', 'business', 'enterprise', 'saas', 'dashboard', 'work', 'serious', 'corporate', 'fintech', 'finance', 'banking', 'admin', 'office', 'tool', 'b2b'],
     tags: ['soft', 'glass'],
     families: ['soft', 'glass'],
-    boost: { ui: 1.5, notify: 1 }, loud: ['quiet', 'medium'], dislike: ['loud'], penalty: { game: 1.5, magic: 1 },
+    boost: { ui: 1.5, data: 1.5, notify: 1, ai: 1 }, loud: ['quiet', 'medium'], dislike: ['loud'],
+    penalty: { game: 1.5, battle: 2, duel: 2, cards: 1, magic: 1, fx: 0.5 },
   },
   playful: {
     about: 'Bright, bouncy, rewarding.',
@@ -73,16 +77,16 @@ export const MOODS = {
   },
   gamey: {
     about: 'A video game.',
-    words: ['game', 'gaming', 'gamer', 'videogame'],
+    words: ['game', 'gamey', 'gaming', 'gamer', 'videogame'],
     tags: [],
-    boost: { game: 1 }, loud: ['medium', 'loud'],
+    boost: { game: 1, battle: 1, duel: 1, cards: 0.5 }, loud: ['medium', 'loud'],
   },
   'sci-fi': {
     about: 'Futuristic and technical.',
     words: ['scifi', 'sci', 'space', 'futuristic', 'cyber', 'cyberpunk', 'robot', 'tech', 'hud', 'starship', 'terminal'],
     tags: ['sci-fi', 'digital', 'robot', 'computer', 'terminal', 'console'],
     families: ['synthetic'],
-    boost: { scifi: 2.5 }, loud: ['medium'],
+    boost: { scifi: 2.5, fx: 1.5, data: 1, ai: 1 }, loud: ['medium'],
   },
   magical: {
     about: 'Fantasy and wonder.',
@@ -92,10 +96,10 @@ export const MOODS = {
   },
   tabletop: {
     about: 'Cards, boards and dice.',
-    words: ['cards', 'card', 'tabletop', 'board', 'poker', 'deck', 'solitaire', 'boardgame', 'dice', 'casino', 'chess'],
+    words: ['cards', 'card', 'tabletop', 'board', 'poker', 'deck', 'solitaire', 'boardgame', 'dice', 'casino', 'chess', 'tcg', 'ccg'],
     tags: ['card', 'poker', 'board-game', 'casino', 'dice', 'chess'],
     families: ['paper', 'wood'],
-    boost: { cards: 2.5 }, loud: ['quiet', 'medium'],
+    boost: { cards: 2.5, duel: 2, battle: 1.5, game: 0.5 }, loud: ['quiet', 'medium'],
   },
   atmospheric: {
     about: 'Immersive background sound.',
