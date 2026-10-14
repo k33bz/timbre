@@ -2,6 +2,7 @@
   "name": "timbre",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "A single-file, offline gallery of synthesized sound effects (WebAudio only, no samples).",
   "type": "module",
   "engines": { "node": ">=22" },
