@@ -2,8 +2,30 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 153,
+  "count": 330,
   "sounds": [
+    {
+      "id": "ui-cascade",
+      "name": "Stagger Cascade",
+      "category": "ui",
+      "tags": [
+        "cascade",
+        "stagger",
+        "pop-in",
+        "list",
+        "chips",
+        "rolling",
+        "sequence",
+        "reveal"
+      ],
+      "desc": "A quick roll of soft pops climbing in pitch from left to right, the last one ringing slightly. For staggered lists, chips and words appearing one by one.",
+      "dur": 0.75,
+      "family": "soft",
+      "moments": [
+        "reveal",
+        "chart-reveal"
+      ]
+    },
     {
       "id": "ui-checkbox",
       "name": "Checkbox",
@@ -198,6 +220,28 @@
       ]
     },
     {
+      "id": "ui-dropzone",
+      "name": "Drop Zone",
+      "category": "ui",
+      "tags": [
+        "dropzone",
+        "drop-zone",
+        "upload",
+        "file",
+        "drag-over",
+        "swallow",
+        "arm",
+        "drop",
+        "soft"
+      ],
+      "desc": "A drop zone for files: a soft rising breath when a file hovers over it, and a gulp, a low thunk and a small settle pip when it lands.",
+      "dur": 0.31,
+      "family": "soft",
+      "moments": [
+        "drop"
+      ]
+    },
+    {
       "id": "ui-expand",
       "name": "Expand and Collapse",
       "category": "ui",
@@ -213,6 +257,29 @@
       "desc": "A quick stepped run of soft blips: rising when a section expands, falling and a touch quieter when it collapses.",
       "dur": 0.26,
       "family": "soft",
+      "moments": [
+        "open",
+        "close"
+      ]
+    },
+    {
+      "id": "ui-flyout",
+      "name": "Submenu Flyout",
+      "category": "ui",
+      "tags": [
+        "flyout",
+        "submenu",
+        "nested",
+        "context-menu",
+        "mega-menu",
+        "open",
+        "close",
+        "menu",
+        "air"
+      ],
+      "desc": "A short, bright puff and pip for a submenu or nested context menu opening beside its parent; closing falls and ends in a soft tick.",
+      "dur": 0.11,
+      "family": "air",
       "moments": [
         "open",
         "close"
@@ -297,6 +364,30 @@
       ]
     },
     {
+      "id": "ui-menu-radial",
+      "name": "Radial Fan",
+      "category": "ui",
+      "tags": [
+        "radial",
+        "menu",
+        "fan",
+        "petals",
+        "speed-dial",
+        "fab",
+        "long-press",
+        "open",
+        "close",
+        "glass"
+      ],
+      "desc": "A quick fan of small pips round a ring for a radial menu or speed-dial opening, one per petal; closing folds back down.",
+      "dur": 0.31,
+      "family": "glass",
+      "moments": [
+        "open",
+        "close"
+      ]
+    },
+    {
       "id": "ui-menu-slide",
       "name": "Menu Slide",
       "category": "ui",
@@ -362,6 +453,71 @@
       ]
     },
     {
+      "id": "ui-palette-open",
+      "name": "Palette Open",
+      "category": "ui",
+      "tags": [
+        "palette",
+        "command-palette",
+        "spotlight",
+        "search",
+        "cmd-k",
+        "open",
+        "close",
+        "overlay",
+        "glass"
+      ],
+      "desc": "A quick upward glide into a small glassy ring for a command palette or search overlay opening; closing slips back down.",
+      "dur": 0.25,
+      "family": "glass",
+      "moments": [
+        "open",
+        "close"
+      ]
+    },
+    {
+      "id": "ui-pin-key",
+      "name": "Keypad Key",
+      "category": "ui",
+      "tags": [
+        "pin",
+        "keypad",
+        "numeric",
+        "otp",
+        "passcode",
+        "digit",
+        "dial",
+        "key",
+        "soft"
+      ],
+      "desc": "A soft two-tone press for a PIN pad or numeric keypad, different for each digit; the last digit can add a small rising confirm.",
+      "dur": 0.27,
+      "family": "soft",
+      "moments": [
+        "type"
+      ]
+    },
+    {
+      "id": "ui-pulse-beat",
+      "name": "Pulse Beat",
+      "category": "ui",
+      "tags": [
+        "pulse",
+        "heartbeat",
+        "beat",
+        "live",
+        "thump",
+        "loop-cell",
+        "soft"
+      ],
+      "desc": "One soft lub-dub heartbeat. Re-trigger every 0.8 s at 72 bpm (60 divided by the rate) for a live dot or pulsing badge.",
+      "dur": 0.43,
+      "family": "soft",
+      "moments": [
+        "loading"
+      ]
+    },
+    {
       "id": "ui-radio-select",
       "name": "Radio Select",
       "category": "ui",
@@ -378,6 +534,51 @@
       "family": "soft",
       "moments": [
         "click"
+      ]
+    },
+    {
+      "id": "ui-rating-star",
+      "name": "Star Rating",
+      "category": "ui",
+      "tags": [
+        "rating",
+        "star",
+        "stars",
+        "review",
+        "like",
+        "mood",
+        "select",
+        "ping",
+        "glass"
+      ],
+      "desc": "A run of rising glassy pings, one per star, for rating something; five stars add a small glint on top.",
+      "dur": 0.4,
+      "family": "glass",
+      "moments": [
+        "select"
+      ]
+    },
+    {
+      "id": "ui-record-toggle",
+      "name": "Record Toggle",
+      "category": "ui",
+      "tags": [
+        "record",
+        "recording",
+        "rec",
+        "mic",
+        "voice-recorder",
+        "capture",
+        "start",
+        "stop",
+        "beep",
+        "soft"
+      ],
+      "desc": "Two short blips and a longer beep when recording starts, and one long falling tone when it stops.",
+      "dur": 0.45,
+      "family": "soft",
+      "moments": [
+        "record"
       ]
     },
     {
@@ -401,6 +602,51 @@
       ]
     },
     {
+      "id": "ui-shake-no",
+      "name": "Shake No",
+      "category": "ui",
+      "tags": [
+        "shake",
+        "no",
+        "reject",
+        "deny",
+        "uh-uh",
+        "wrong",
+        "invalid",
+        "head-shake"
+      ],
+      "desc": "A soft two-note \"uh-uh\" that swings left and right. For a field that shakes, a refused input or a polite no.",
+      "dur": 0.55,
+      "family": "soft",
+      "moments": [
+        "error"
+      ]
+    },
+    {
+      "id": "ui-sheet-snap",
+      "name": "Sheet Snap",
+      "category": "ui",
+      "tags": [
+        "sheet",
+        "drawer",
+        "bottom-sheet",
+        "rail",
+        "sidebar",
+        "snap",
+        "settle",
+        "open",
+        "close",
+        "soft"
+      ],
+      "desc": "A weighty drawer or bottom sheet sliding in and snapping into place with a small rebound; closing drops away with a soft thud.",
+      "dur": 0.27,
+      "family": "soft",
+      "moments": [
+        "open",
+        "close"
+      ]
+    },
+    {
       "id": "ui-slider-detent",
       "name": "Slider Detent",
       "category": "ui",
@@ -420,6 +666,115 @@
       ]
     },
     {
+      "id": "ui-spring-settle",
+      "name": "Spring Settle",
+      "category": "ui",
+      "tags": [
+        "spring",
+        "settle",
+        "elastic",
+        "wobble",
+        "jelly",
+        "rubber-band",
+        "overshoot",
+        "ease"
+      ],
+      "desc": "A quiet wobbling tone that overshoots, swings up and down and settles to rest. For springy, elastic and jelly motion.",
+      "dur": 0.55,
+      "family": "soft",
+      "moments": [
+        "transition",
+        "drop"
+      ]
+    },
+    {
+      "id": "ui-stamp",
+      "name": "Rubber Stamp",
+      "category": "ui",
+      "tags": [
+        "stamp",
+        "rubber-stamp",
+        "thump",
+        "seal",
+        "ink",
+        "approved",
+        "verified",
+        "slap"
+      ],
+      "desc": "A rubber stamp landing on paper: a firm thump, a flat slap and a wet splat of ink, then a soft peel as it lifts. For approved, paid or verified.",
+      "dur": 0.31,
+      "family": "impact",
+      "moments": [
+        "stamp"
+      ]
+    },
+    {
+      "id": "ui-step-advance",
+      "name": "Step Advance",
+      "category": "ui",
+      "tags": [
+        "step",
+        "stepper",
+        "wizard",
+        "progress",
+        "milestone",
+        "advance",
+        "checkout",
+        "next",
+        "onboarding"
+      ],
+      "desc": "One soft rounded note per step, each higher on a gentle scale, landing with a small knock. Reaching the last step adds a bell glint on top.",
+      "dur": 0.42,
+      "family": "soft",
+      "moments": [
+        "step"
+      ]
+    },
+    {
+      "id": "ui-stepper-tick",
+      "name": "Number Stepper",
+      "category": "ui",
+      "tags": [
+        "stepper",
+        "quantity",
+        "spinner",
+        "increment",
+        "decrement",
+        "plus",
+        "minus",
+        "tick",
+        "soft"
+      ],
+      "desc": "A tiny pip for the plus and minus of a number stepper: it hops up when the value rises and down when it falls.",
+      "dur": 0.055,
+      "family": "soft",
+      "moments": [
+        "scroll"
+      ]
+    },
+    {
+      "id": "ui-tab-switch",
+      "name": "Tab Switch",
+      "category": "ui",
+      "tags": [
+        "tab",
+        "tabs",
+        "segmented",
+        "pill",
+        "select",
+        "slide",
+        "underline",
+        "switch",
+        "air"
+      ],
+      "desc": "A short airy slide with a tiny landing pip for a tab, pill or segment taking the selection; the pitch follows where it lands.",
+      "dur": 0.14,
+      "family": "air",
+      "moments": [
+        "select"
+      ]
+    },
+    {
       "id": "ui-tap",
       "name": "Tap",
       "category": "ui",
@@ -436,6 +791,28 @@
       "family": "soft",
       "moments": [
         "click"
+      ]
+    },
+    {
+      "id": "ui-task-done",
+      "name": "Task Done",
+      "category": "ui",
+      "tags": [
+        "task",
+        "done",
+        "complete",
+        "check-off",
+        "strike-through",
+        "todo",
+        "streak",
+        "checklist",
+        "finish"
+      ],
+      "desc": "A pen tick, a quick strike-through swipe and a small ding for a task crossed off. A streak adds a trail of rising glints.",
+      "dur": 0.5,
+      "family": "soft",
+      "moments": [
+        "success"
       ]
     },
     {
@@ -480,6 +857,27 @@
       ]
     },
     {
+      "id": "ui-typewriter-bell",
+      "name": "Typewriter Return",
+      "category": "ui",
+      "tags": [
+        "typewriter",
+        "carriage",
+        "return",
+        "bell",
+        "ding",
+        "line",
+        "retro",
+        "teletype"
+      ],
+      "desc": "A typewriter carriage return: a ratcheting slide, a knock at the stop and a bright margin bell. For typed lines finishing and retro text effects.",
+      "dur": 0.85,
+      "family": "mechanical",
+      "moments": [
+        "type-out"
+      ]
+    },
+    {
       "id": "ui-undo",
       "name": "Undo",
       "category": "ui",
@@ -496,6 +894,50 @@
       "family": "soft",
       "moments": [
         "undo"
+      ]
+    },
+    {
+      "id": "ui-verdict",
+      "name": "Field Verdict",
+      "category": "ui",
+      "tags": [
+        "verdict",
+        "valid",
+        "invalid",
+        "validation",
+        "pass",
+        "block",
+        "field",
+        "guardrail",
+        "check"
+      ],
+      "desc": "Two quick pips stepping up for a valid field, two short buzzing pips stepping down for an invalid one. Light enough to play on every keystroke check.",
+      "dur": 0.21,
+      "family": "soft",
+      "moments": [
+        "verdict"
+      ]
+    },
+    {
+      "id": "ui-wipe",
+      "name": "Directional Wipe",
+      "category": "ui",
+      "tags": [
+        "wipe",
+        "reveal",
+        "curtain",
+        "shutter",
+        "iris",
+        "sweep",
+        "slide",
+        "transition"
+      ],
+      "desc": "A quiet band of air that sweeps across from one side to the other and lands with a tiny tick. For wipes, curtains, shutters and irises uncovering content.",
+      "dur": 0.65,
+      "family": "air",
+      "moments": [
+        "reveal",
+        "transition"
       ]
     },
     {
@@ -540,6 +982,49 @@
       ]
     },
     {
+      "id": "notify-badge-pop",
+      "name": "Badge Pop",
+      "category": "notify",
+      "tags": [
+        "badge",
+        "count",
+        "unread",
+        "bubble",
+        "pop",
+        "bell",
+        "counter",
+        "increment"
+      ],
+      "desc": "One tiny bubbly pop for a badge count going up, with a fainter echo pop behind it. Each count is a step higher on a gentle scale.",
+      "dur": 0.15,
+      "family": "soft",
+      "moments": [
+        "notify"
+      ]
+    },
+    {
+      "id": "notify-banner-drop",
+      "name": "Banner Drop",
+      "category": "notify",
+      "tags": [
+        "banner",
+        "status",
+        "incident",
+        "resolved",
+        "all-clear",
+        "drop",
+        "slide",
+        "thud",
+        "alert"
+      ],
+      "desc": "A weighted slide and a soft thud for a banner dropping in, with a low bong for an alert or a rising pair for an all-clear. It lifts out with a light slide and a latch tick.",
+      "dur": 0.57,
+      "family": "soft",
+      "moments": [
+        "notify"
+      ]
+    },
+    {
       "id": "notify-calendar",
       "name": "Calendar Event",
       "category": "notify",
@@ -557,6 +1042,29 @@
       "family": "orchestral",
       "moments": [
         "reminder"
+      ]
+    },
+    {
+      "id": "notify-critical",
+      "name": "Critical Alarm",
+      "category": "notify",
+      "tags": [
+        "critical",
+        "alarm",
+        "urgent",
+        "incident",
+        "emergency",
+        "breach",
+        "outage",
+        "pager",
+        "alert",
+        "severe"
+      ],
+      "desc": "Two or three hard buzzing stabs, each higher than the last, over a shuddering low rumble. Unmistakably urgent, and over in under a second.",
+      "dur": 0.9,
+      "family": "synthetic",
+      "moments": [
+        "critical"
       ]
     },
     {
@@ -760,6 +1268,27 @@
       ]
     },
     {
+      "id": "notify-presence",
+      "name": "Presence Change",
+      "category": "notify",
+      "tags": [
+        "presence",
+        "online",
+        "offline",
+        "status",
+        "available",
+        "away",
+        "contact",
+        "ding-dong"
+      ],
+      "desc": "Two soft bell notes rising for someone coming online, one lower note sagging away for going offline. Gentle enough for a long contact list.",
+      "dur": 0.55,
+      "family": "soft",
+      "moments": [
+        "presence"
+      ]
+    },
+    {
       "id": "notify-reminder",
       "name": "Reminder Chime",
       "category": "notify",
@@ -840,6 +1369,50 @@
       ]
     },
     {
+      "id": "notify-toast-in",
+      "name": "Toast Arrive",
+      "category": "notify",
+      "tags": [
+        "toast",
+        "snackbar",
+        "notification",
+        "slide-in",
+        "severity",
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "critical"
+      ],
+      "desc": "A quick side swish that lands on a small tick and a short tone for the severity: a soft ping, a rising pair, a falling pair, a low buzz or three urgent stabs.",
+      "dur": 0.43,
+      "family": "soft",
+      "moments": [
+        "notify"
+      ]
+    },
+    {
+      "id": "notify-toast-out",
+      "name": "Toast Dismiss",
+      "category": "notify",
+      "tags": [
+        "toast",
+        "dismiss",
+        "snackbar",
+        "swipe",
+        "swipe-away",
+        "close",
+        "countdown",
+        "clear"
+      ],
+      "desc": "A quick falling swipe and a soft pat for a toast sliding away. With the drain on, a few small ticks run out first, for toasts that dismiss themselves.",
+      "dur": 0.38,
+      "family": "soft",
+      "moments": [
+        "dismiss"
+      ]
+    },
+    {
       "id": "notify-upload-done",
       "name": "Upload Complete",
       "category": "notify",
@@ -877,6 +1450,830 @@
       "family": "soft",
       "moments": [
         "warning"
+      ]
+    },
+    {
+      "id": "data-bar-rise",
+      "name": "Bar Rise",
+      "category": "data",
+      "tags": [
+        "chart",
+        "bar",
+        "bars",
+        "graph",
+        "rise",
+        "marimba",
+        "reveal",
+        "analytics"
+      ],
+      "desc": "A staggered run of soft marimba ticks, one per bar, each as high in pitch as the bar is tall. For bar charts drawing in.",
+      "dur": 0.86,
+      "family": "wood",
+      "moments": [
+        "chart-reveal"
+      ]
+    },
+    {
+      "id": "data-count-up",
+      "name": "Count-Up Roll",
+      "category": "data",
+      "tags": [
+        "count-up",
+        "count",
+        "counter",
+        "odometer",
+        "roll",
+        "total",
+        "kpi",
+        "tally",
+        "ticks",
+        "metric"
+      ],
+      "desc": "A run of small ticks that speeds up, brakes and lands on a soft thunk, climbing in pitch: for a big number counting up to its value.",
+      "dur": 1.57,
+      "family": "mechanical",
+      "moments": [
+        "count-up"
+      ]
+    },
+    {
+      "id": "data-counter-tick",
+      "name": "Counter Tick",
+      "category": "data",
+      "tags": [
+        "counter",
+        "tick",
+        "ticker",
+        "odometer",
+        "digit",
+        "increment",
+        "glass",
+        "mechanical"
+      ],
+      "desc": "A tiny tick for one step of a number: set value from the count and a run of steps climbs in pitch. Glassy at one end, a dry wheel click at the other.",
+      "dur": 0.09,
+      "family": "glass",
+      "moments": [
+        "data-tick"
+      ]
+    },
+    {
+      "id": "data-delta-tick",
+      "name": "Delta Tick",
+      "category": "data",
+      "tags": [
+        "delta",
+        "change",
+        "kpi",
+        "up",
+        "down",
+        "tick",
+        "chirp",
+        "metric"
+      ],
+      "desc": "A tiny two-note chirp for a number that changed: rising when it went up, falling when it went down.",
+      "dur": 0.15,
+      "family": "soft",
+      "moments": [
+        "data-tick"
+      ]
+    },
+    {
+      "id": "data-failover",
+      "name": "Failover",
+      "category": "data",
+      "tags": [
+        "failover",
+        "standby",
+        "takeover",
+        "switchover",
+        "backup",
+        "recovery",
+        "outage",
+        "redundancy",
+        "resilience",
+        "diagram"
+      ],
+      "desc": "A dull falling thud as a node goes down, a short silence, then a rising run of three notes as the backup takes over. For high availability and recovery diagrams.",
+      "dur": 1.13,
+      "family": "synthetic",
+      "moments": [
+        "failover"
+      ]
+    },
+    {
+      "id": "data-fanout",
+      "name": "Fan-out",
+      "category": "data",
+      "tags": [
+        "fanout",
+        "fan-out",
+        "split",
+        "broadcast",
+        "load-balancer",
+        "pubsub",
+        "branch",
+        "spread",
+        "diagram",
+        "stereo"
+      ],
+      "desc": "One blip arrives and splits into a fan of blips that fly out across the stereo field, left to right, each a step higher. For a load balancer or a broadcast.",
+      "dur": 0.55,
+      "family": "soft",
+      "moments": [
+        "packet"
+      ]
+    },
+    {
+      "id": "data-gauge-needle",
+      "name": "Gauge Needle",
+      "category": "data",
+      "tags": [
+        "gauge",
+        "needle",
+        "dial",
+        "meter",
+        "servo",
+        "whir",
+        "swing",
+        "settle"
+      ],
+      "desc": "A small servo whir as a gauge needle swings to a new reading, a few springy bounces, then a soft detent tick as it settles.",
+      "dur": 0.62,
+      "family": "mechanical",
+      "moments": [
+        "progress",
+        "chart-reveal"
+      ]
+    },
+    {
+      "id": "data-heat-bloom",
+      "name": "Heat Bloom",
+      "category": "data",
+      "tags": [
+        "heatmap",
+        "heat",
+        "bloom",
+        "density",
+        "treemap",
+        "chart",
+        "grain",
+        "soft"
+      ],
+      "desc": "A soft cluster of tiny grains that swells and fades like a heat map filling in. Higher warmth is brighter and hotter.",
+      "dur": 1.12,
+      "family": "soft",
+      "moments": [
+        "chart-reveal"
+      ]
+    },
+    {
+      "id": "data-line-draw",
+      "name": "Line Draw",
+      "category": "data",
+      "tags": [
+        "chart",
+        "line",
+        "graph",
+        "draw",
+        "trace",
+        "plot",
+        "glide",
+        "shimmer"
+      ],
+      "desc": "A soft tone glides along a line as it is drawn, rising or falling with its trend, and glitters where the line arrives.",
+      "dur": 1.05,
+      "family": "soft",
+      "moments": [
+        "chart-reveal"
+      ]
+    },
+    {
+      "id": "data-link-state",
+      "name": "Link Up / Down",
+      "category": "data",
+      "tags": [
+        "link",
+        "connect",
+        "disconnect",
+        "socket",
+        "handshake",
+        "online",
+        "offline",
+        "peering",
+        "vpn",
+        "blip"
+      ],
+      "desc": "Link up is two quick blips and a soft settling note, a handshake that worked. Link down plays the blips falling and then sinks away.",
+      "dur": 0.58,
+      "family": "soft",
+      "moments": [
+        "link"
+      ]
+    },
+    {
+      "id": "data-liquid-fill",
+      "name": "Liquid Fill",
+      "category": "data",
+      "tags": [
+        "liquid",
+        "fill",
+        "tank",
+        "pour",
+        "glug",
+        "water",
+        "level",
+        "gauge"
+      ],
+      "desc": "Water glugging into a vessel with a pitch that climbs as the level rises. For tanks, batteries, thermometers and filling gauges.",
+      "dur": 0.96,
+      "family": "organic",
+      "moments": [
+        "progress",
+        "chart-reveal"
+      ]
+    },
+    {
+      "id": "data-load-done",
+      "name": "Wait Resolved",
+      "category": "data",
+      "tags": [
+        "loaded",
+        "done",
+        "resolve",
+        "complete",
+        "check",
+        "skeleton",
+        "saved",
+        "loader"
+      ],
+      "desc": "A quick filled sweep that lands with a soft settle and a small check tick, for a spinner or skeleton that has finished. Quieter than a success chime.",
+      "dur": 0.5,
+      "family": "soft",
+      "moments": [
+        "load-complete"
+      ]
+    },
+    {
+      "id": "data-load-pulse",
+      "name": "Load Pulse",
+      "category": "data",
+      "tags": [
+        "loading",
+        "loader",
+        "pulse",
+        "breathing",
+        "skeleton",
+        "dots",
+        "wait",
+        "busy",
+        "soft",
+        "loop-cell"
+      ],
+      "desc": "A soft slow breath of sound for a loader that keeps waiting. One breath per play: re-trigger every 0.9 s (or at the breath length you set).",
+      "dur": 1.22,
+      "family": "soft",
+      "moments": [
+        "loading"
+      ]
+    },
+    {
+      "id": "data-log-tail",
+      "name": "Log Tail",
+      "category": "data",
+      "tags": [
+        "log",
+        "tail",
+        "terminal",
+        "console",
+        "lines",
+        "typed",
+        "stream",
+        "loop-cell"
+      ],
+      "desc": "A short burst of tiny typed blips, one run per log line, higher and edgier from debug to error. Re-trigger every 1.5 s while a log streams.",
+      "dur": 1.05,
+      "family": "synthetic",
+      "moments": [
+        "readout"
+      ]
+    },
+    {
+      "id": "data-monitor-beep",
+      "name": "Monitor Beep",
+      "category": "data",
+      "tags": [
+        "monitor",
+        "beep",
+        "ecg",
+        "pulse",
+        "heartbeat",
+        "vitals",
+        "medical",
+        "loop-cell"
+      ],
+      "desc": "One clean beep of a patient monitor, with an optional soft heartbeat under it. Re-trigger every 0.8 s for 75 beats per minute.",
+      "dur": 0.2,
+      "family": "synthetic",
+      "moments": [
+        "readout",
+        "beacon"
+      ]
+    },
+    {
+      "id": "data-nixie-strike",
+      "name": "Nixie Strike",
+      "category": "data",
+      "tags": [
+        "nixie",
+        "tube",
+        "strike",
+        "glow",
+        "digit",
+        "vintage",
+        "counter",
+        "tick",
+        "spark",
+        "hum"
+      ],
+      "desc": "A glassy snap and a fizz of sparks as a nixie tube lights, then a warm electrical hum that swells and fades: for a retro digit appearing.",
+      "dur": 0.43,
+      "family": "glass",
+      "moments": [
+        "data-tick"
+      ]
+    },
+    {
+      "id": "data-packet-hop",
+      "name": "Packet Hop",
+      "category": "data",
+      "tags": [
+        "packet",
+        "hop",
+        "network",
+        "node",
+        "diagram",
+        "request",
+        "blip",
+        "data",
+        "traffic",
+        "stereo"
+      ],
+      "desc": "A tiny blip hops from node to node, climbing a scale step per hop as it crosses the stereo field, and lands with a soft tick. Quiet enough to fire every few hundred milliseconds.",
+      "dur": 0.3,
+      "family": "soft",
+      "moments": [
+        "packet"
+      ]
+    },
+    {
+      "id": "data-pin-drop",
+      "name": "Pin Drop",
+      "category": "data",
+      "tags": [
+        "pin",
+        "drop",
+        "map",
+        "marker",
+        "location",
+        "land",
+        "tink",
+        "glass"
+      ],
+      "desc": "A map pin drops onto its spot with a quick falling swish, a soft landing tap, a glassy tink and a small bounce. For a marker appearing on a map.",
+      "dur": 0.43,
+      "family": "glass",
+      "moments": [
+        "pin-drop"
+      ]
+    },
+    {
+      "id": "data-progress-fill",
+      "name": "Progress Fill",
+      "category": "data",
+      "tags": [
+        "progress",
+        "bar",
+        "fill",
+        "percent",
+        "upload",
+        "download",
+        "ring",
+        "rising",
+        "meter"
+      ],
+      "desc": "A short rising glide whose note follows the progress: call it on every update with pos from 0 to 1 and the updates draw one climbing line.",
+      "dur": 0.19,
+      "family": "soft",
+      "moments": [
+        "progress"
+      ]
+    },
+    {
+      "id": "data-request-response",
+      "name": "Request / Response",
+      "category": "data",
+      "tags": [
+        "request",
+        "response",
+        "latency",
+        "api",
+        "call",
+        "dns",
+        "roundtrip",
+        "reply",
+        "diagram",
+        "stereo"
+      ],
+      "desc": "A short rising blip goes out, a pause for the latency, and a soft two-note chime comes back. For an API call, a DNS lookup or any request with a reply.",
+      "dur": 0.95,
+      "family": "soft",
+      "moments": [
+        "packet"
+      ]
+    },
+    {
+      "id": "data-route-trace",
+      "name": "Route Trace",
+      "category": "data",
+      "tags": [
+        "route",
+        "path",
+        "waypoint",
+        "trace",
+        "journey",
+        "map",
+        "travel",
+        "arrival",
+        "delivery",
+        "stereo"
+      ],
+      "desc": "A soft rising glide with a small glass tick at each waypoint and a bell where the trip ends. For a dot or vehicle travelling a route on a map.",
+      "dur": 2.6,
+      "family": "glass",
+      "moments": [
+        "route"
+      ]
+    },
+    {
+      "id": "data-scale",
+      "name": "Scale Out / In",
+      "category": "data",
+      "tags": [
+        "scale",
+        "autoscaling",
+        "scale-out",
+        "scale-in",
+        "capacity",
+        "instances",
+        "grow",
+        "shrink",
+        "serverless",
+        "diagram"
+      ],
+      "desc": "Scaling out piles up a run of rising blips into a chord, scaling in drops a run of short blips down and away. For auto scaling, capacity and fleet size changes.",
+      "dur": 0.88,
+      "family": "soft",
+      "moments": [
+        "scale"
+      ]
+    },
+    {
+      "id": "data-sonar",
+      "name": "Sonar Ping",
+      "category": "data",
+      "tags": [
+        "sonar",
+        "ping",
+        "beacon",
+        "pulse",
+        "ripple",
+        "echo",
+        "locate",
+        "map",
+        "radar"
+      ],
+      "desc": "One clean sonar ping that fades into a few softer, darker echoes. For a you-are-here marker, an accuracy ring or an outage ripple spreading from a point.",
+      "dur": 1.36,
+      "family": "glass",
+      "moments": [
+        "beacon"
+      ]
+    },
+    {
+      "id": "data-sort-swap",
+      "name": "Sort Swap",
+      "category": "data",
+      "tags": [
+        "sort",
+        "swap",
+        "reorder",
+        "rank",
+        "leaderboard",
+        "table",
+        "row",
+        "slide"
+      ],
+      "desc": "Rows trading places: crossing glides, a pair of landing ticks and a quiet slide. Raise swaps for a longer sort.",
+      "dur": 0.69,
+      "family": "mechanical",
+      "moments": [
+        "sort"
+      ]
+    },
+    {
+      "id": "data-spinner-ticks",
+      "name": "Spinner Ticks",
+      "category": "data",
+      "tags": [
+        "spinner",
+        "loader",
+        "loading",
+        "ticks",
+        "ring",
+        "rotate",
+        "wait",
+        "pending",
+        "loop-cell"
+      ],
+      "desc": "A soft ring of ticks that turns once per play, circling from side to side. Re-trigger every 1.0 s (or at the turn time you set) for a steady spinner.",
+      "dur": 1.17,
+      "family": "soft",
+      "moments": [
+        "loading"
+      ]
+    },
+    {
+      "id": "data-split-flap",
+      "name": "Flap Clack",
+      "category": "data",
+      "tags": [
+        "split-flap",
+        "flip-clock",
+        "flap",
+        "clack",
+        "departures",
+        "board",
+        "digit",
+        "clatter",
+        "ticker",
+        "counter",
+        "tick"
+      ],
+      "desc": "A rolling clatter of hinged cards falling, character by character, each landing on a firmer clack: for a split-flap board or flip clock changing.",
+      "dur": 0.92,
+      "family": "mechanical",
+      "moments": [
+        "data-tick"
+      ]
+    },
+    {
+      "id": "data-threshold",
+      "name": "Threshold Cross",
+      "category": "data",
+      "tags": [
+        "threshold",
+        "gauge",
+        "meter",
+        "limit",
+        "slo",
+        "quota",
+        "warning",
+        "red-zone"
+      ],
+      "desc": "Two pips as a meter crosses a line: a soft rising pair for green, a repeated note for amber, a rough falling pair for red.",
+      "dur": 0.27,
+      "family": "synthetic",
+      "moments": [
+        "threshold"
+      ]
+    },
+    {
+      "id": "ai-denoise",
+      "name": "Denoise",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "denoise",
+        "diffusion",
+        "generate",
+        "image",
+        "noise",
+        "resolve",
+        "clarify",
+        "sweep",
+        "synthetic"
+      ],
+      "desc": "A haze of static that narrows and sweeps down until it settles into one clean tone. An image or an answer coming into focus.",
+      "dur": 1.55,
+      "family": "synthetic",
+      "moments": [
+        "reveal"
+      ]
+    },
+    {
+      "id": "ai-guard",
+      "name": "Guardrail Verdict",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "guardrail",
+        "verdict",
+        "validation",
+        "allow",
+        "block",
+        "safety",
+        "moderation",
+        "check",
+        "pass"
+      ],
+      "desc": "A check on what an AI is about to do: a small clear ding when it is allowed, a dull thud with a short low buzz when it is blocked.",
+      "dur": 0.32,
+      "family": "soft",
+      "moments": [
+        "verdict"
+      ]
+    },
+    {
+      "id": "ai-handoff",
+      "name": "Agent Handoff",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "handoff",
+        "agent",
+        "multi-agent",
+        "relay",
+        "baton",
+        "transfer",
+        "stereo",
+        "glass"
+      ],
+      "desc": "A single note slides from one side to the other and changes voice on the way, from a warm tone to a glassy ring. One agent handing the work to the next.",
+      "dur": 0.85,
+      "family": "synthetic",
+      "moments": [
+        "tool-call"
+      ]
+    },
+    {
+      "id": "ai-reasoning-step",
+      "name": "Reasoning Step",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "reasoning",
+        "step",
+        "thought",
+        "chain",
+        "plan",
+        "agent",
+        "progress",
+        "glass",
+        "scale"
+      ],
+      "desc": "A soft glassy note that slides up from the last one and echoes twice. Each step climbs one note of a gentle scale, so a chain of thought rises as it goes.",
+      "dur": 0.5,
+      "family": "glass",
+      "moments": [
+        "step"
+      ]
+    },
+    {
+      "id": "ai-retrieve",
+      "name": "Retrieval Sweep",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "retrieval",
+        "search",
+        "rag",
+        "vector",
+        "lookup",
+        "rerank",
+        "knowledge",
+        "glints",
+        "glass"
+      ],
+      "desc": "A quick run of rising glassy glints, faster as they climb, that settles on one clear ping. A knowledge lookup finding its match.",
+      "dur": 1.1,
+      "family": "glass",
+      "moments": [
+        "tool-call"
+      ]
+    },
+    {
+      "id": "ai-stream-done",
+      "name": "Stream Done",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "stream",
+        "done",
+        "complete",
+        "finished",
+        "reply",
+        "cursor",
+        "chime",
+        "llm",
+        "glass"
+      ],
+      "desc": "A small tock as the cursor stops, then a soft two-note glass chime falling to rest. For the end of a streamed reply or a finished generation.",
+      "dur": 0.8,
+      "family": "glass",
+      "moments": [
+        "load-complete"
+      ]
+    },
+    {
+      "id": "ai-thinking-hum",
+      "name": "Thinking Hum",
+      "category": "ai",
+      "tags": [
+        "thinking",
+        "ai",
+        "agent",
+        "processing",
+        "working",
+        "hum",
+        "pad",
+        "calm",
+        "loop-cell"
+      ],
+      "desc": "A warm, quiet breath of sound for an assistant that is working: one soft swell that fades to silence. Re-trigger every 1.4 s for as long as it thinks.",
+      "dur": 1.4,
+      "family": "soft",
+      "moments": [
+        "thinking"
+      ]
+    },
+    {
+      "id": "ai-token-stream",
+      "name": "Token Stream",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "token",
+        "tokens",
+        "stream",
+        "streaming",
+        "generate",
+        "llm",
+        "output",
+        "text",
+        "glass"
+      ],
+      "desc": "A fast patter of tiny glassy pips on an uneven beat, like a reply streaming in word by word. Machine text, not a keyboard.",
+      "dur": 1.7,
+      "family": "glass",
+      "moments": [
+        "stream-token"
+      ]
+    },
+    {
+      "id": "ai-tool-call",
+      "name": "Tool Call",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "tool",
+        "tool-call",
+        "function",
+        "invoke",
+        "result",
+        "agent",
+        "request",
+        "response",
+        "api"
+      ],
+      "desc": "A small blip as a request goes out, a short wait, then the answer: a clear glass ding when the call works, a soft low drop when it fails.",
+      "dur": 1,
+      "family": "glass",
+      "moments": [
+        "tool-call"
+      ]
+    },
+    {
+      "id": "ai-typing-dots",
+      "name": "Typing Dots",
+      "category": "ai",
+      "tags": [
+        "ai",
+        "typing",
+        "dots",
+        "indicator",
+        "chat",
+        "assistant",
+        "bubble",
+        "soft",
+        "thinking",
+        "loop-cell"
+      ],
+      "desc": "Three soft rising bloops in a row, like the dots of a typing indicator. Re-trigger every 1.2 s while the other side is writing.",
+      "dur": 0.7,
+      "family": "soft",
+      "moments": [
+        "thinking"
       ]
     },
     {
@@ -1436,6 +2833,24 @@
       ]
     },
     {
+      "id": "game-whistle",
+      "name": "Referee Whistle",
+      "category": "game",
+      "tags": [
+        "whistle",
+        "referee",
+        "foul",
+        "penalty",
+        "pea",
+        "blast",
+        "sport",
+        "call"
+      ],
+      "desc": "A referee's whistle blast with a trilling pea and a card snap before it, or, switched to fizzle, a whistle that sags and runs out of air.",
+      "dur": 0.67,
+      "family": "air"
+    },
+    {
       "id": "game-whoosh",
       "name": "Whoosh",
       "category": "game",
@@ -1453,6 +2868,802 @@
       "family": "air",
       "moments": [
         "transition"
+      ]
+    },
+    {
+      "id": "battle-ability",
+      "name": "Ability Trigger",
+      "category": "battle",
+      "tags": [
+        "ability",
+        "activate",
+        "trigger",
+        "power-on",
+        "skill",
+        "banner",
+        "battle"
+      ],
+      "desc": "A short rising glide with a bright two-note ping: a creature ability switching on. Power fills it out with a low swell.",
+      "dur": 0.59,
+      "family": "synthetic",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "battle-arch-arrow",
+      "name": "Drawn Arrow",
+      "category": "battle",
+      "tags": [
+        "arrow",
+        "bow",
+        "drawn",
+        "whistle",
+        "thunk",
+        "ranged",
+        "attack",
+        "battle",
+        "archetype"
+      ],
+      "desc": "A bow drawn tight, an arrow whistling in and a thunk where it lands. No twang, dry, so it stacks under any element.",
+      "dur": 0.96,
+      "family": "organic",
+      "moments": [
+        "attack"
+      ]
+    },
+    {
+      "id": "battle-arch-blade",
+      "name": "Crossing Shear",
+      "category": "battle",
+      "tags": [
+        "shear",
+        "slash",
+        "cross",
+        "cut",
+        "snap",
+        "blade",
+        "attack",
+        "battle",
+        "archetype"
+      ],
+      "desc": "Two crossing cuts that snap shut like shears, with a low chop where they meet. Short and dry, so it stacks under any element.",
+      "dur": 0.34,
+      "family": "metal",
+      "moments": [
+        "attack"
+      ]
+    },
+    {
+      "id": "battle-arch-claw",
+      "name": "Claw Rake",
+      "category": "battle",
+      "tags": [
+        "claw",
+        "rake",
+        "tear",
+        "slash",
+        "rip",
+        "attack",
+        "battle",
+        "archetype"
+      ],
+      "desc": "Up to five tearing swipes raked in a row, ending in a low thud. Dry and ragged, so it stacks under any element strike.",
+      "dur": 0.64,
+      "family": "air",
+      "moments": [
+        "attack"
+      ]
+    },
+    {
+      "id": "battle-arch-crescent",
+      "name": "Spinning Crescents",
+      "category": "battle",
+      "tags": [
+        "crescent",
+        "whirr",
+        "twirl",
+        "arc",
+        "blades",
+        "scatter",
+        "attack",
+        "battle",
+        "archetype"
+      ],
+      "desc": "Up to three spinning blades whirring across in an arc, bursting into bright points at the end. Dry, so it stacks under any element.",
+      "dur": 0.92,
+      "family": "synthetic",
+      "moments": [
+        "attack"
+      ]
+    },
+    {
+      "id": "battle-arch-dive",
+      "name": "Plunging Dive",
+      "category": "battle",
+      "tags": [
+        "dive",
+        "plunge",
+        "whistle",
+        "dart",
+        "strike",
+        "attack",
+        "battle",
+        "archetype"
+      ],
+      "desc": "A fast plunging dive: a falling whistle, a dull landing and optional small airy taps after it. Dry, so it stacks under any element.",
+      "dur": 0.9,
+      "family": "air",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-arch-fist",
+      "name": "Fist Jab",
+      "category": "battle",
+      "tags": [
+        "fist",
+        "jab",
+        "strike",
+        "shockwave",
+        "attack",
+        "battle",
+        "archetype"
+      ],
+      "desc": "A single driving jab: a rush of air, a dull thud and a deep shockwave rolling out. Dry, so it stacks under any element strike.",
+      "dur": 0.86,
+      "family": "impact",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-arch-palm",
+      "name": "Palm Slam",
+      "category": "battle",
+      "tags": [
+        "palm",
+        "slam",
+        "crush",
+        "sub",
+        "attack",
+        "battle",
+        "archetype"
+      ],
+      "desc": "A big flat hand coming down: a low swell, then a heavy landing with a deep sub and settling dust. No crack, no ring.",
+      "dur": 0.9,
+      "family": "impact",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-arch-volley",
+      "name": "Rapid Volley",
+      "category": "battle",
+      "tags": [
+        "volley",
+        "flurry",
+        "combo",
+        "multi-hit",
+        "rapid",
+        "barrage",
+        "attack",
+        "battle",
+        "archetype"
+      ],
+      "desc": "A quick flurry of two to eight light blows ending on a heavier one. Dry and fast, for multi-hit attacks.",
+      "dur": 0.88,
+      "family": "impact",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-coin-chain",
+      "name": "Coin Chain",
+      "category": "battle",
+      "tags": [
+        "coin",
+        "flip",
+        "heads",
+        "tails",
+        "chain",
+        "streak",
+        "row",
+        "toss",
+        "luck",
+        "card-game"
+      ],
+      "desc": "A row of coins settling one after another: each heads rings a little higher than the last, each tails lands with a dull clack. For a run of coin flips.",
+      "dur": 1.41,
+      "family": "metal",
+      "moments": [
+        "coin"
+      ]
+    },
+    {
+      "id": "battle-counter",
+      "name": "Counters",
+      "category": "battle",
+      "tags": [
+        "counter",
+        "counters",
+        "damage",
+        "disc",
+        "token",
+        "marker",
+        "lift",
+        "place",
+        "tally",
+        "card-game"
+      ],
+      "desc": "Damage counters on a card: the discs click down one by one when placed, or lift off in a climbing run of soft plucks.",
+      "dur": 0.6,
+      "family": "soft",
+      "moments": [
+        "data-tick"
+      ]
+    },
+    {
+      "id": "battle-energy-attach",
+      "name": "Energy Attach",
+      "category": "battle",
+      "tags": [
+        "energy",
+        "attach",
+        "charge",
+        "resource",
+        "token",
+        "chime",
+        "click",
+        "element",
+        "card-game"
+      ],
+      "desc": "An energy card clicked on to a creature with a short chime. Each element has its own note; a special energy adds a gold ring.",
+      "dur": 0.44,
+      "family": "glass",
+      "moments": [
+        "resource"
+      ]
+    },
+    {
+      "id": "battle-energy-break",
+      "name": "Energy Break",
+      "category": "battle",
+      "tags": [
+        "energy",
+        "break",
+        "smash",
+        "shatter",
+        "discard",
+        "hammer",
+        "crack",
+        "shards",
+        "card-game"
+      ],
+      "desc": "An energy card smashed: a swing of air, a clank and crack, a shower of tiny shards and a dull thud. For discarding an opponent's energy.",
+      "dur": 0.75,
+      "family": "impact"
+    },
+    {
+      "id": "battle-evolve",
+      "name": "Evolve",
+      "category": "battle",
+      "tags": [
+        "evolve",
+        "transform",
+        "morph",
+        "rise",
+        "light",
+        "chord",
+        "devolve",
+        "battle"
+      ],
+      "desc": "A creature changing form: a chord swelling up an octave like a column of light and landing on a bright ping. Off, it falls away.",
+      "dur": 0.95,
+      "family": "synthetic",
+      "moments": [
+        "transform"
+      ]
+    },
+    {
+      "id": "battle-gust-hook",
+      "name": "Tether Hook",
+      "category": "battle",
+      "tags": [
+        "hook",
+        "tether",
+        "drag",
+        "pull",
+        "gust",
+        "swap",
+        "switch",
+        "reel",
+        "ratchet",
+        "force-switch",
+        "card-game"
+      ],
+      "desc": "A thrown line that hooks and reels something in: a fast zip out, a metal bite, a ratcheting pull and a soft landing. For dragging an opponent into play.",
+      "dur": 0.9,
+      "family": "air"
+    },
+    {
+      "id": "battle-ko",
+      "name": "Knockout",
+      "category": "battle",
+      "tags": [
+        "knockout",
+        "ko",
+        "faint",
+        "fallen",
+        "heavy",
+        "battle"
+      ],
+      "desc": "A creature going down: a short crack, a falling body and a slow deep sub, then a dull settle. Heavier than a hit, not louder.",
+      "dur": 0.8,
+      "family": "impact",
+      "moments": [
+        "knockout"
+      ]
+    },
+    {
+      "id": "battle-prize",
+      "name": "Prize Taken",
+      "category": "battle",
+      "tags": [
+        "prize",
+        "reward",
+        "take",
+        "score",
+        "point",
+        "card",
+        "glint",
+        "chime",
+        "card-game"
+      ],
+      "desc": "A prize card lifted and turned over with a glint, then a bright two-note chime. For scoring a point by taking a prize.",
+      "dur": 0.75,
+      "family": "orchestral",
+      "moments": [
+        "score"
+      ]
+    },
+    {
+      "id": "battle-status-burn",
+      "name": "Burned",
+      "category": "battle",
+      "tags": [
+        "burn",
+        "burned",
+        "status",
+        "condition",
+        "fire",
+        "flame",
+        "sizzle",
+        "steam",
+        "debuff",
+        "checkup",
+        "turn",
+        "card-game",
+        "creature"
+      ],
+      "desc": "The burned condition: a flame catching with a few crackles when it lands, a quick sizzle at each turn checkup, and a hiss of steam when it goes out.",
+      "dur": 0.45,
+      "family": "organic",
+      "moments": [
+        "debuff"
+      ]
+    },
+    {
+      "id": "battle-status-confusion",
+      "name": "Confused",
+      "category": "battle",
+      "tags": [
+        "confusion",
+        "confused",
+        "status",
+        "condition",
+        "dizzy",
+        "wobble",
+        "stars",
+        "bonk",
+        "debuff",
+        "checkup",
+        "turn",
+        "card-game",
+        "creature"
+      ],
+      "desc": "The confused condition: a dizzy wobbling tone with twinkling stars when it lands, a dull bonk with two stars at each turn check, and two clear notes when the head clears.",
+      "dur": 0.6,
+      "family": "soft",
+      "moments": [
+        "debuff"
+      ]
+    },
+    {
+      "id": "battle-status-paralysis",
+      "name": "Paralyzed",
+      "category": "battle",
+      "tags": [
+        "paralysis",
+        "paralyzed",
+        "status",
+        "condition",
+        "stun",
+        "buzz",
+        "zap",
+        "shock",
+        "debuff",
+        "checkup",
+        "turn",
+        "card-game",
+        "creature"
+      ],
+      "desc": "The paralyzed condition: a stiff electric buzz with sharp zaps when it lands, a halting twitch at each turn checkup, and a loosening pop when it wears off.",
+      "dur": 0.45,
+      "family": "synthetic",
+      "moments": [
+        "debuff"
+      ]
+    },
+    {
+      "id": "battle-status-poison",
+      "name": "Poisoned",
+      "category": "battle",
+      "tags": [
+        "poison",
+        "poisoned",
+        "status",
+        "condition",
+        "bubble",
+        "toxic",
+        "debuff",
+        "checkup",
+        "turn",
+        "card-game",
+        "creature"
+      ],
+      "desc": "The poisoned condition: thick bubbles welling up when it lands, a pair of small pops at each turn checkup, and a clear rising run when it is cured.",
+      "dur": 0.55,
+      "family": "organic",
+      "moments": [
+        "debuff"
+      ]
+    },
+    {
+      "id": "battle-status-sleep",
+      "name": "Asleep",
+      "category": "battle",
+      "tags": [
+        "sleep",
+        "asleep",
+        "status",
+        "condition",
+        "lullaby",
+        "snore",
+        "wake",
+        "debuff",
+        "checkup",
+        "turn",
+        "card-game",
+        "creature"
+      ],
+      "desc": "The asleep condition: a falling lullaby when it lands, a slow snore at each turn checkup, and a sudden bright pop when the sleeper wakes.",
+      "dur": 0.62,
+      "family": "soft",
+      "moments": [
+        "debuff"
+      ]
+    },
+    {
+      "id": "battle-strike-colorless",
+      "name": "Colorless Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "colorless",
+        "plain",
+        "neutral",
+        "thump",
+        "attack",
+        "projectile",
+        "impact",
+        "dry",
+        "element"
+      ],
+      "desc": "A plain strike: a clean rush of air swells in, then lands as a light, dry thump with a short pop and no tail. For a neutral attack.",
+      "dur": 1.01,
+      "family": "impact",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-darkness",
+      "name": "Darkness Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "darkness",
+        "dark",
+        "shadow",
+        "smear",
+        "sub",
+        "attack",
+        "projectile",
+        "impact",
+        "element"
+      ],
+      "desc": "A darkness strike: a shadow smears downward with a faint wail, then lands as a deep, dull thud that throbs and fades. For a dark attack.",
+      "dur": 1.11,
+      "family": "impact",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-dragon",
+      "name": "Dragon Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "dragon",
+        "roar",
+        "growl",
+        "breath",
+        "attack",
+        "projectile",
+        "impact",
+        "beast",
+        "element"
+      ],
+      "desc": "A dragon strike: a growling rush rises with a low tone wavering, then lands as a rough falling roar and a breath of air. For a dragon attack.",
+      "dur": 1.21,
+      "family": "organic",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-fairy",
+      "name": "Fairy Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "fairy",
+        "twinkle",
+        "glint",
+        "shimmer",
+        "attack",
+        "projectile",
+        "impact",
+        "element"
+      ],
+      "desc": "A fairy strike: a bright rush climbs with a shimmering pair of tones and glints, then lands as a soft chime and a twinkle. For a fairy attack.",
+      "dur": 1.09,
+      "family": "glass",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-fighting",
+      "name": "Fighting Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "fighting",
+        "fist",
+        "punch",
+        "thud",
+        "dust",
+        "attack",
+        "projectile",
+        "impact",
+        "element"
+      ],
+      "desc": "A fighting strike: air rushes in with a low tone rising, then lands as a deep thud with a slap and a puff of dust. For a punch or kick attack.",
+      "dur": 1.2,
+      "family": "impact",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-fire",
+      "name": "Fire Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "fire",
+        "flame",
+        "attack",
+        "projectile",
+        "impact",
+        "whoomph",
+        "blaze",
+        "element"
+      ],
+      "desc": "A fire strike: a flare rushes in with embers spitting, then lands as a low whoomph and a roar that crackles out. For a fire attack.",
+      "dur": 1.16,
+      "family": "organic",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-grass",
+      "name": "Grass Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "grass",
+        "leaf",
+        "leaves",
+        "nature",
+        "rustle",
+        "attack",
+        "projectile",
+        "impact",
+        "element"
+      ],
+      "desc": "A grass strike: leaves rush in with a resonant rustle and a thin whistle, then land as a thwack and a scatter of leaves. For a plant attack.",
+      "dur": 1.19,
+      "family": "organic",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-lightning",
+      "name": "Lightning Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "lightning",
+        "bolt",
+        "electric",
+        "zap",
+        "attack",
+        "projectile",
+        "impact",
+        "crack",
+        "element"
+      ],
+      "desc": "A lightning bolt: a charge builds with a fizzing hum and sparks, then lands as a bright crack, a sizzle and a low rumble. For an electric attack.",
+      "dur": 1.16,
+      "family": "synthetic",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-metal",
+      "name": "Metal Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "metal",
+        "steel",
+        "clang",
+        "blade",
+        "ring",
+        "attack",
+        "projectile",
+        "impact",
+        "element"
+      ],
+      "desc": "A metal strike: a bright rush with a thin singing tone, then lands as a steel clang with a hard tick and a short ring. For a steel attack.",
+      "dur": 1.21,
+      "family": "metal",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-prism",
+      "name": "Prism Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "prism",
+        "rainbow",
+        "multi",
+        "elements",
+        "layered",
+        "attack",
+        "projectile",
+        "impact",
+        "element"
+      ],
+      "desc": "A strike of three elements at once: fire, water and lightning rush in under one swell, then land crack, whoomph and splash with a glint. For a multi-element attack.",
+      "dur": 1.15,
+      "family": "glass",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-psychic",
+      "name": "Psychic Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "psychic",
+        "mind",
+        "pulse",
+        "wobble",
+        "attack",
+        "projectile",
+        "impact",
+        "beating",
+        "element"
+      ],
+      "desc": "A psychic strike: two wavering tones rise and beat against each other, then land as a falling pulse with a soft ping. For a mind attack.",
+      "dur": 1.11,
+      "family": "synthetic",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-strike-water",
+      "name": "Water Strike",
+      "category": "battle",
+      "tags": [
+        "strike",
+        "water",
+        "wave",
+        "splash",
+        "attack",
+        "projectile",
+        "impact",
+        "droplets",
+        "element"
+      ],
+      "desc": "A water strike: a wave rushes in with bubbles popping, then splashes down with a thump, spray and falling droplets. For a water attack.",
+      "dur": 1.17,
+      "family": "organic",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "battle-weakness-bell",
+      "name": "Weakness Bell",
+      "category": "battle",
+      "tags": [
+        "weakness",
+        "super-effective",
+        "double-damage",
+        "doubled",
+        "bell",
+        "crit",
+        "battle"
+      ],
+      "desc": "Two quick bright bell strikes, the second an octave up: a hit that just did double damage. Thin and high, so it rides on top of a strike.",
+      "dur": 0.42,
+      "family": "glass",
+      "moments": [
+        "crit"
       ]
     },
     {
@@ -1687,6 +3898,72 @@
       ]
     },
     {
+      "id": "cards-hand-sweep",
+      "name": "Hand Sweep",
+      "category": "cards",
+      "tags": [
+        "card",
+        "hand",
+        "sweep",
+        "shuffle-in",
+        "return",
+        "deck",
+        "swoosh",
+        "bump",
+        "riffle"
+      ],
+      "desc": "A hand of cards swept back into the deck: a quick run of flicks under one swoosh, a dull bump, then a short riffle.",
+      "dur": 1,
+      "family": "paper",
+      "moments": [
+        "shuffle"
+      ]
+    },
+    {
+      "id": "cards-land",
+      "name": "Card Land",
+      "category": "cards",
+      "tags": [
+        "card",
+        "land",
+        "arrive",
+        "thunk",
+        "clink",
+        "pat",
+        "discard",
+        "pile",
+        "attach"
+      ],
+      "desc": "A played card arriving at its spot: a low thunk for the table, a small metal clink for an attachment, a dull pat for the discard pile.",
+      "dur": 0.24,
+      "family": "paper",
+      "moments": [
+        "drop"
+      ]
+    },
+    {
+      "id": "cards-peek",
+      "name": "Card Peek",
+      "category": "cards",
+      "tags": [
+        "card",
+        "peek",
+        "look",
+        "corner",
+        "lift",
+        "bend",
+        "hidden",
+        "secret",
+        "creak"
+      ],
+      "desc": "A quiet peek under the corner of a face-down card: a soft lift with a few creaks, a held pause, then the corner dropping back.",
+      "dur": 0.78,
+      "family": "paper",
+      "moments": [
+        "card-flip"
+      ]
+    },
+    {
       "id": "cards-piece-capture",
       "name": "Piece Capture",
       "category": "cards",
@@ -1749,6 +4026,27 @@
       ]
     },
     {
+      "id": "cards-reveal",
+      "name": "Card Reveal",
+      "category": "cards",
+      "tags": [
+        "card",
+        "reveal",
+        "slap",
+        "face-up",
+        "play",
+        "show",
+        "kind",
+        "felt"
+      ],
+      "desc": "A card slapped down face up, five flavors: a crisp item, a warm supporter, a broad stadium, a clipped tool and a heavy ace with a flash.",
+      "dur": 0.72,
+      "family": "paper",
+      "moments": [
+        "card-flip"
+      ]
+    },
+    {
       "id": "cards-riffle",
       "name": "Deck Riffle",
       "category": "cards",
@@ -1807,6 +4105,28 @@
       ]
     },
     {
+      "id": "cards-tap",
+      "name": "Card Tap",
+      "category": "cards",
+      "tags": [
+        "card",
+        "tap",
+        "untap",
+        "turn",
+        "sideways",
+        "rotate",
+        "exert",
+        "ready",
+        "felt"
+      ],
+      "desc": "A card turned sideways on the felt with a short paper drag and a soft pat, or, switched off, stood back upright with a lighter settle.",
+      "dur": 0.24,
+      "family": "paper",
+      "moments": [
+        "card-tap"
+      ]
+    },
+    {
       "id": "cards-timer-tick",
       "name": "Turn Timer Tick",
       "category": "cards",
@@ -1828,6 +4148,50 @@
       ]
     },
     {
+      "id": "cards-toss-spin",
+      "name": "Card Toss Spin",
+      "category": "cards",
+      "tags": [
+        "card",
+        "toss",
+        "spin",
+        "throw",
+        "flick",
+        "fly",
+        "flutter",
+        "whir",
+        "air"
+      ],
+      "desc": "A card flicked off and spinning through the air: a fluttering whir that slows, drifts across and ends in a skid and a soft landing.",
+      "dur": 0.82,
+      "family": "air",
+      "moments": [
+        "card-draw"
+      ]
+    },
+    {
+      "id": "cards-wash",
+      "name": "Table Wash",
+      "category": "cards",
+      "tags": [
+        "card",
+        "wash",
+        "shuffle",
+        "mix",
+        "table",
+        "spread",
+        "circles",
+        "felt",
+        "hands"
+      ],
+      "desc": "A deck mixed with both hands in wide circles on the table: overlapping paper sweeps in each ear and a scatter of fine grit.",
+      "dur": 1.46,
+      "family": "paper",
+      "moments": [
+        "shuffle"
+      ]
+    },
+    {
       "id": "cards-your-turn",
       "name": "Your Turn",
       "category": "cards",
@@ -1845,6 +4209,909 @@
       "family": "orchestral",
       "moments": [
         "notify"
+      ]
+    },
+    {
+      "id": "duel-action-cast",
+      "name": "Action Cast",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "action",
+        "cast",
+        "play",
+        "whoosh",
+        "snap",
+        "pulse",
+        "discard",
+        "card"
+      ],
+      "desc": "An action card played: a rising whoosh, a bright snap, a pulse sweeping the table and the card flicked onto the discard pile.",
+      "dur": 0.68,
+      "family": "air",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-bag-resolve",
+      "name": "Trigger Bag Resolve",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "trigger",
+        "bag",
+        "resolve",
+        "chips",
+        "sequence",
+        "wood",
+        "card-game"
+      ],
+      "desc": "Wooden chips knock out one at a time, climbing in pitch, each answered by a small glass ping. For triggered abilities resolving in order.",
+      "dur": 1.17,
+      "family": "wood",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-banish",
+      "name": "Banish Shatter",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "banish",
+        "shatter",
+        "crack",
+        "glass",
+        "fall",
+        "dust",
+        "knockout",
+        "card"
+      ],
+      "desc": "A card cracking like glass and falling away: a quick crackle, a break that sinks in pitch, grey dust, tinkling shards, a low thump.",
+      "dur": 0.9,
+      "family": "glass",
+      "moments": [
+        "knockout"
+      ]
+    },
+    {
+      "id": "duel-banner-raise",
+      "name": "Banner Raise",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "location",
+        "banner",
+        "play",
+        "sweep",
+        "cloth",
+        "flap",
+        "chime",
+        "card"
+      ],
+      "desc": "A wide location card sliding in on a low sweep, a banner unrolling in two cloth flaps and a small gold chime for its lore.",
+      "dur": 0.84,
+      "family": "air"
+    },
+    {
+      "id": "duel-card-land",
+      "name": "Card Land",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "card",
+        "land",
+        "play",
+        "character",
+        "wet",
+        "dry",
+        "pat",
+        "drips"
+      ],
+      "desc": "A card landing damp with a soft pat, beads of ink falling from it, then a warm shimmer opening as it dries. For playing a character.",
+      "dur": 0.7,
+      "family": "soft"
+    },
+    {
+      "id": "duel-chorus-cast",
+      "name": "Chorus Cast",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "sing",
+        "song",
+        "chorus",
+        "choir",
+        "voices",
+        "ahh",
+        "vocal",
+        "bell"
+      ],
+      "desc": "A character singing a song: a short rising phrase of soft \"ah\" voices that ends in a glass bell as the song lights up.",
+      "dur": 1.35,
+      "family": "soft",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-chorus-sum",
+      "name": "Chorus Sum",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "sing",
+        "together",
+        "chorus",
+        "stack",
+        "build",
+        "cost",
+        "chord",
+        "card"
+      ],
+      "desc": "Singers joining one after another: each card adds a pip and a voice to a growing chord, closed by a bright bell when it adds up.",
+      "dur": 1.46,
+      "family": "orchestral",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-clash",
+      "name": "Duel Clash",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "challenge",
+        "clash",
+        "lunge",
+        "strike",
+        "damage",
+        "counters",
+        "card",
+        "hit"
+      ],
+      "desc": "One card lunging at another: a rush, a heavy clunk with a short cold ring, then two dry damage ticks at once, one on each side.",
+      "dur": 0.42,
+      "family": "impact",
+      "moments": [
+        "attack",
+        "hit"
+      ]
+    },
+    {
+      "id": "duel-dash-tether",
+      "name": "Dash Tether",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "rush",
+        "reckless",
+        "keyword",
+        "riser",
+        "snap",
+        "twang",
+        "string"
+      ],
+      "desc": "A fast rising rush into a snap, then a tight string twang: a dash pulled up short by a tether. For Rush and Reckless.",
+      "dur": 0.46,
+      "family": "synthetic",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-exert-tilt",
+      "name": "Exert Tilt",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "exert",
+        "ready",
+        "tilt",
+        "turn",
+        "card",
+        "tap",
+        "untap",
+        "sideways"
+      ],
+      "desc": "A card turned on its side to act, a dimming slide and a low knock, or stood back up, a brightening slide and a thin glass tip.",
+      "dur": 0.32,
+      "family": "wood",
+      "moments": [
+        "card-tap"
+      ]
+    },
+    {
+      "id": "duel-guard-block",
+      "name": "Guard Block",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "bodyguard",
+        "keyword",
+        "knock",
+        "thud",
+        "wood",
+        "ring",
+        "protect"
+      ],
+      "desc": "A solid wooden thud with a short metal ring: a blow stopped by a guard. For a Bodyguard stepping in to take an attack.",
+      "dur": 0.28,
+      "family": "wood",
+      "moments": [
+        "ability",
+        "shield"
+      ]
+    },
+    {
+      "id": "duel-hunt-chain",
+      "name": "Hunt Chain",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "challenge",
+        "chain",
+        "ping",
+        "lock-on",
+        "clash",
+        "banish",
+        "ticks",
+        "metal",
+        "crackle"
+      ],
+      "desc": "A ping and quickening ticks lock on to one target, then challengers clash into it one after another, each a step higher, until it shatters.",
+      "dur": 2.07,
+      "family": "metal",
+      "moments": [
+        "attack",
+        "knockout"
+      ]
+    },
+    {
+      "id": "duel-ink-blue",
+      "name": "Blue Ink",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ink",
+        "blue",
+        "strategy",
+        "clockwork",
+        "marimba",
+        "gears",
+        "card-game"
+      ],
+      "desc": "The Blue ink signature: a marimba arpeggio ticks along with clockwork and lands on a high note, then the gears slow. For planning and building up ink.",
+      "dur": 0.85,
+      "family": "mechanical",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-ink-gold",
+      "name": "Gold Ink",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ink",
+        "gold",
+        "support",
+        "warm",
+        "pluck",
+        "bell",
+        "card-game"
+      ],
+      "desc": "The Gold ink signature: three soft plucks climb into a warm pair of bells that glow and ring out. For supportive, kind cards.",
+      "dur": 0.85,
+      "family": "orchestral",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-ink-green",
+      "name": "Green Ink",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ink",
+        "green",
+        "trick",
+        "snap",
+        "pizzicato",
+        "leaf",
+        "card-game"
+      ],
+      "desc": "The Green ink signature: three dry plucked notes with leafy swishes land in a finger snap and a rustle of leaves. For tricky cards.",
+      "dur": 0.85,
+      "family": "organic",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-ink-grey",
+      "name": "Grey Ink",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ink",
+        "grey",
+        "armor",
+        "resist",
+        "anvil",
+        "metal",
+        "card-game"
+      ],
+      "desc": "The Grey ink signature: three small rivet tinks rise into an anvil clang over a low thud. For armored, resistant cards.",
+      "dur": 0.85,
+      "family": "metal",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-ink-red",
+      "name": "Red Ink",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ink",
+        "red",
+        "rush",
+        "aggressive",
+        "brass",
+        "riser",
+        "card-game"
+      ],
+      "desc": "The Red ink signature: a charging riser slams into a brassy stab with a thump and a crack, and a dash trail fades behind. For fast, bold cards.",
+      "dur": 0.85,
+      "family": "synthetic",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-ink-violet",
+      "name": "Violet Ink",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ink",
+        "violet",
+        "magic",
+        "return",
+        "swirl",
+        "fm",
+        "card-game"
+      ],
+      "desc": "The Violet ink signature: a backwards shimmer swirls upward into a glassy bell that rings with a faint glide back down. For magic and returns.",
+      "dur": 0.85,
+      "family": "synthetic",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-ladder-climb",
+      "name": "Ladder Climb",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "shift",
+        "ladder",
+        "climb",
+        "stack",
+        "tiers",
+        "rising",
+        "steps",
+        "upgrade",
+        "free"
+      ],
+      "desc": "A chain of upgrades: each form slides on with a soft landing and a step higher, the tone thickening, until the last arrives free with gold chimes.",
+      "dur": 1.84,
+      "family": "synthetic",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-lend-hop",
+      "name": "Lend Hop",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "support",
+        "keyword",
+        "mallet",
+        "marimba",
+        "bar",
+        "buff",
+        "lend"
+      ],
+      "desc": "Two soft mallet blips, the second higher: strength hopping from one card to another. For Support.",
+      "dur": 0.38,
+      "family": "soft",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-lore-gain",
+      "name": "Lore Gain",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "lore",
+        "quest",
+        "gain",
+        "chime",
+        "glass",
+        "gold",
+        "star",
+        "score"
+      ],
+      "desc": "A small gold star arcing up and landing as a rising run of glass chimes, one more note for each point of lore gained.",
+      "dur": 0.98,
+      "family": "glass",
+      "moments": [
+        "score"
+      ]
+    },
+    {
+      "id": "duel-lore-tick",
+      "name": "Lore Tick",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "lore",
+        "tick",
+        "meter",
+        "gauge",
+        "point",
+        "count",
+        "gold",
+        "score"
+      ],
+      "desc": "A tiny gold glass tick for one point of lore on the meter. Quiet and quick, meant to repeat; raise the pitch as the meter fills.",
+      "dur": 0.15,
+      "family": "glass",
+      "moments": [
+        "score"
+      ]
+    },
+    {
+      "id": "duel-move-glide",
+      "name": "Move to Location",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "location",
+        "move",
+        "hop",
+        "slide",
+        "glide",
+        "settle",
+        "card-game"
+      ],
+      "desc": "A card hops, slides across a wide location card and settles with a soft landing tick and a faint ring. For moving a character to a location.",
+      "dur": 0.71,
+      "family": "air"
+    },
+    {
+      "id": "duel-pump-snipe",
+      "name": "Pump and Snipe",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "support",
+        "pump",
+        "strength",
+        "snipe",
+        "arrow",
+        "challenge",
+        "banish",
+        "blip",
+        "crackle"
+      ],
+      "desc": "A bonus hops to an ally, its strength ticks upward in quick blips, then a twanging shot lands and the target shatters.",
+      "dur": 1.34,
+      "family": "organic",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-quest-pull",
+      "name": "Quest Pull",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "adventurous",
+        "keyword",
+        "quest",
+        "tug",
+        "chime",
+        "rise",
+        "soft"
+      ],
+      "desc": "A gentle rising pull, like a tether tugging, ending in a small golden chime. For Adventurous, a card drawn to quest.",
+      "dur": 0.58,
+      "family": "soft",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-ready-sweep",
+      "name": "Ready Sweep",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ready",
+        "exert",
+        "row",
+        "sweep",
+        "turn",
+        "cascade",
+        "card",
+        "untap"
+      ],
+      "desc": "A whole row of cards standing up in a rising run of soft wooden ticks as a band of light sweeps across, left to right.",
+      "dur": 0.74,
+      "family": "wood",
+      "moments": [
+        "card-tap"
+      ]
+    },
+    {
+      "id": "duel-resist-plink",
+      "name": "Resist Plink",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "resist",
+        "keyword",
+        "tink",
+        "plink",
+        "metal",
+        "armor",
+        "plate"
+      ],
+      "desc": "A bright metal tink or two off armor, a small step down, then one dry tick: damage shaved down. For Resist.",
+      "dur": 0.34,
+      "family": "metal",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-shift-swell",
+      "name": "Shift Swell",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "shift",
+        "stack",
+        "upgrade",
+        "swell",
+        "rise",
+        "layer",
+        "transform",
+        "card"
+      ],
+      "desc": "One card sliding over another: a reedy swell that rises a fifth, then a thud and a bright glass overtone as it lands.",
+      "dur": 0.86,
+      "family": "synthetic",
+      "moments": [
+        "transform"
+      ]
+    },
+    {
+      "id": "duel-slip-by",
+      "name": "Slip By",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "evasive",
+        "keyword",
+        "swish",
+        "flutter",
+        "air",
+        "miss",
+        "dodge"
+      ],
+      "desc": "A thin, fluttering swish that slides past and fades: an attack missing its mark. For Evasive.",
+      "dur": 0.34,
+      "family": "air",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-slip-draw",
+      "name": "Slip and Draw",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "evasive",
+        "slip",
+        "swoop",
+        "bounce",
+        "draw",
+        "flick",
+        "quest",
+        "lore",
+        "air"
+      ],
+      "desc": "Two airy attackers sweep past a defender that swings and misses, a swirl bounces it away, small gold chimes pay out and cards flick off the deck.",
+      "dur": 1.73,
+      "family": "air",
+      "moments": [
+        "card-draw"
+      ]
+    },
+    {
+      "id": "duel-song-rush",
+      "name": "Song Rush",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "song",
+        "sing",
+        "voice",
+        "arpeggio",
+        "wordless",
+        "rush",
+        "free",
+        "run",
+        "chimes"
+      ],
+      "desc": "Two cheap singers tilt and trade a fast, wordless \"ahh\" run up the scale, then the song fires for free in a bright flare of gold chimes.",
+      "dur": 2.06,
+      "family": "voice",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-spike-pump",
+      "name": "Spike Pump",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "challenger",
+        "keyword",
+        "climb",
+        "crack",
+        "charge",
+        "pump",
+        "buff"
+      ],
+      "desc": "A quick rising run of bright notes ending in a crack: strength pumped up as the attack begins. For Challenger.",
+      "dur": 0.35,
+      "family": "synthetic",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-surge-drop",
+      "name": "Surge Drop",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ink",
+        "ramp",
+        "riser",
+        "land",
+        "heavy",
+        "big",
+        "early",
+        "surge",
+        "drop"
+      ],
+      "desc": "Ink jumps ahead of the curve: quick drips, a swelling rise and a big card landing early with a low ring and a flash of gold.",
+      "dur": 2.01,
+      "family": "impact",
+      "moments": [
+        "resource"
+      ]
+    },
+    {
+      "id": "duel-sweep-clear",
+      "name": "Sweep Clear",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "wipe",
+        "sweep",
+        "board-wipe",
+        "boost",
+        "swell",
+        "crash",
+        "banish",
+        "control",
+        "low"
+      ],
+      "desc": "A board wipe: cards stack up quietly, a low swell rolls across the table and crashes, and the characters on the far side break and fall away.",
+      "dur": 2.64,
+      "family": "impact",
+      "moments": [
+        "knockout"
+      ]
+    },
+    {
+      "id": "duel-token-mint",
+      "name": "Ink Token Mint",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "token",
+        "single-use",
+        "mint",
+        "ink",
+        "coin",
+        "tink",
+        "card-game"
+      ],
+      "desc": "A single-use ink token appearing: a small bloop of ink and one bright coin-like tink that chirps upward. For minting a token worth one ink.",
+      "dur": 0.46,
+      "family": "glass",
+      "moments": [
+        "resource"
+      ]
+    },
+    {
+      "id": "duel-token-pop",
+      "name": "Ink Token Pop",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "token",
+        "single-use",
+        "pop",
+        "spend",
+        "ink",
+        "glass",
+        "card-game"
+      ],
+      "desc": "A single-use ink token spent: a soft falling pop, a glassy tick and a few small crumbs of glass tumbling away. For paying one ink once.",
+      "dur": 0.3,
+      "family": "glass"
+    },
+    {
+      "id": "duel-under-slide",
+      "name": "Under Slide",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "boost",
+        "keyword",
+        "paper",
+        "drip",
+        "click",
+        "tuck",
+        "stack"
+      ],
+      "desc": "Ink dripping to pay, then a card sliding softly under another and settling with a small click. For Boost.",
+      "dur": 0.54,
+      "family": "paper",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-vanish-dust",
+      "name": "Vanish Dust",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "vanish",
+        "keyword",
+        "dust",
+        "dissolve",
+        "fade",
+        "glitter",
+        "air"
+      ],
+      "desc": "A tiny lock-on tick, then a card dissolving into falling, glittering dust. For Vanish.",
+      "dur": 0.59,
+      "family": "air",
+      "moments": [
+        "ability"
+      ]
+    },
+    {
+      "id": "duel-victory-burst",
+      "name": "Victory Burst",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "victory",
+        "win",
+        "lore",
+        "burst",
+        "arpeggio",
+        "bells",
+        "glass",
+        "sparkle"
+      ],
+      "desc": "The win: a quick rising run of glass bells that opens into a full chord, a burst of sparkle and a warm swell underneath.",
+      "dur": 1.95,
+      "family": "orchestral",
+      "moments": [
+        "victory"
+      ]
+    },
+    {
+      "id": "duel-ward-bubble",
+      "name": "Ward Bubble",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ward",
+        "keyword",
+        "glass",
+        "bubble",
+        "crackle",
+        "bounce",
+        "protect"
+      ],
+      "desc": "A glassy bubble forming and ringing, then a tink and a tiny crackle as something bounces off and shatters. For Ward.",
+      "dur": 0.43,
+      "family": "glass",
+      "moments": [
+        "ability",
+        "shield"
+      ]
+    },
+    {
+      "id": "duel-well-drip",
+      "name": "Well Drip",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "ink",
+        "inkwell",
+        "drip",
+        "plunk",
+        "liquid",
+        "pool",
+        "card",
+        "resource"
+      ],
+      "desc": "A bead of ink falling into a dark well: a soft glassy plink, a low bubble in the pool and two ripples. For inking a card.",
+      "dur": 0.5,
+      "family": "organic",
+      "moments": [
+        "resource"
+      ]
+    },
+    {
+      "id": "duel-wide-payoff",
+      "name": "Wide Payoff",
+      "category": "duel",
+      "tags": [
+        "ink-duel",
+        "lore",
+        "bonus",
+        "payoff",
+        "chime",
+        "stacked",
+        "ribbon",
+        "glass",
+        "rising"
+      ],
+      "desc": "A bonus pays off: three soft tilts, a muted landing and a shimmer, then small gold glass chimes climb and stack, one per lore point scored.",
+      "dur": 2.18,
+      "family": "glass",
+      "moments": [
+        "score"
       ]
     },
     {
@@ -2085,6 +5352,409 @@
       "dur": 1.4,
       "family": "synthetic",
       "moments": [
+        "teleport"
+      ]
+    },
+    {
+      "id": "fx-arc-zap",
+      "name": "Arc Zap",
+      "category": "fx",
+      "tags": [
+        "arc",
+        "zap",
+        "electric",
+        "spark",
+        "crackle",
+        "buzz",
+        "static",
+        "shock",
+        "plasma",
+        "border"
+      ],
+      "desc": "A short electric arc: a snap, a rough flickering buzz and a spit of crackle. For an electric border lighting up, a plasma effect or a spark between two things.",
+      "dur": 0.75,
+      "family": "synthetic"
+    },
+    {
+      "id": "fx-circuit-pulse",
+      "name": "Circuit Pulse",
+      "category": "fx",
+      "tags": [
+        "circuit",
+        "trace",
+        "pulse",
+        "pcb",
+        "electric",
+        "current",
+        "zip",
+        "chirp",
+        "energy",
+        "stereo"
+      ],
+      "desc": "A bright chirp zips along a circuit trace, kicking up a notch at each corner, and lights a node at the end with a glassy ring. For energy flowing through a circuit diagram.",
+      "dur": 0.85,
+      "family": "synthetic"
+    },
+    {
+      "id": "fx-confetti-pop",
+      "name": "Confetti Pop",
+      "category": "fx",
+      "tags": [
+        "confetti",
+        "party",
+        "popper",
+        "celebrate",
+        "pop",
+        "paper",
+        "shower",
+        "streamer"
+      ],
+      "desc": "A hollow party-popper pop followed by a thinning shower of paper flutters and a few bright glints. For celebrations, wins and milestones.",
+      "dur": 1.5,
+      "family": "paper",
+      "moments": [
+        "achievement",
+        "victory"
+      ]
+    },
+    {
+      "id": "fx-crt-power",
+      "name": "CRT Power",
+      "category": "fx",
+      "tags": [
+        "crt",
+        "tv",
+        "television",
+        "power-on",
+        "power-off",
+        "degauss",
+        "whine",
+        "collapse",
+        "boot",
+        "retro"
+      ],
+      "desc": "An old tube screen turning on with a thump and a climbing whine, or off with a collapse to a single dot. For retro boot screens and screen-off effects.",
+      "dur": 1.18,
+      "family": "synthetic"
+    },
+    {
+      "id": "fx-disc-throw",
+      "name": "Identity Disc",
+      "category": "fx",
+      "tags": [
+        "disc",
+        "throw",
+        "whir",
+        "doppler",
+        "spin",
+        "frisbee",
+        "catch",
+        "return",
+        "stereo"
+      ],
+      "desc": "A spinning disc is thrown, whirs away with a falling pitch, curves back rising and is caught with a clack. For a projectile that returns, like a boomerang.",
+      "dur": 1.4,
+      "family": "synthetic"
+    },
+    {
+      "id": "fx-firework",
+      "name": "Firework",
+      "category": "fx",
+      "tags": [
+        "firework",
+        "burst",
+        "whistle",
+        "crackle",
+        "celebrate",
+        "new-year",
+        "sky",
+        "rocket"
+      ],
+      "desc": "A shell whistles up, bursts with a flash and a thump, then crackles and glitters as the embers fall. For celebrations and finales.",
+      "dur": 2,
+      "family": "impact",
+      "moments": [
+        "victory",
+        "explosion"
+      ]
+    },
+    {
+      "id": "fx-foil-sheen",
+      "name": "Foil Sheen",
+      "category": "fx",
+      "tags": [
+        "foil",
+        "sheen",
+        "shimmer",
+        "holo",
+        "shine",
+        "glint",
+        "sparkle",
+        "hover",
+        "rare",
+        "comb"
+      ],
+      "desc": "A bright hollow sweep with a breath of air and a few tiny glints, like light sliding across foil. For a hover, a tilt or a shiny card being revealed.",
+      "dur": 0.78,
+      "family": "air"
+    },
+    {
+      "id": "fx-gear-whir",
+      "name": "Gear Whir",
+      "category": "fx",
+      "tags": [
+        "gear",
+        "cog",
+        "mechanical",
+        "servo",
+        "whir",
+        "motor",
+        "ratchet",
+        "settings"
+      ],
+      "desc": "A little set of gears spinning up and winding down: meshing ticks over a rising and falling servo whine. For settings cogs, machinery and mechanical loaders.",
+      "dur": 0.96,
+      "family": "mechanical",
+      "moments": [
+        "refresh"
+      ]
+    },
+    {
+      "id": "fx-glitch-burst",
+      "name": "Glitch Burst",
+      "category": "fx",
+      "tags": [
+        "glitch",
+        "stutter",
+        "bitcrush",
+        "rgb-split",
+        "datamosh",
+        "corrupt",
+        "digital",
+        "screen"
+      ],
+      "desc": "A digital hiccup: a tiny chirp stuck on repeat, then another, smeared left and right and crushed to grit. For a screen glitching or an image corrupting.",
+      "dur": 0.59,
+      "family": "synthetic",
+      "moments": [
+        "glitch"
+      ]
+    },
+    {
+      "id": "fx-grid-sweep",
+      "name": "Grid Sweep",
+      "category": "fx",
+      "tags": [
+        "grid",
+        "sweep",
+        "horizon",
+        "synthwave",
+        "retro",
+        "wash",
+        "sub",
+        "pulse",
+        "neon",
+        "rise"
+      ],
+      "desc": "Deep sub pulses under a hollow rising wash that ends on a glass ping at the horizon. For a neon grid scrolling into view or a retro-futuristic scene opening.",
+      "dur": 1.5,
+      "family": "synthetic",
+      "moments": [
+        "scan"
+      ]
+    },
+    {
+      "id": "fx-hologram-in",
+      "name": "Hologram On",
+      "category": "fx",
+      "tags": [
+        "hologram",
+        "projection",
+        "materialize",
+        "shimmer",
+        "sweep",
+        "appear",
+        "dissolve",
+        "digital",
+        "comb"
+      ],
+      "desc": "A shimmering sweep that stutters into a glassy chord as a projection appears, or breaks up and drifts away as it switches off. For a hologram or a screen image materializing.",
+      "dur": 1.14,
+      "family": "synthetic",
+      "moments": [
+        "reveal"
+      ]
+    },
+    {
+      "id": "fx-liquid-drip",
+      "name": "Liquid Drip",
+      "category": "fx",
+      "tags": [
+        "drip",
+        "drop",
+        "ripple",
+        "rings",
+        "water",
+        "plink",
+        "wax",
+        "liquid",
+        "splash"
+      ],
+      "desc": "A single drop plinks into a pool and ripple rings spread out behind it. Thin for water, thick for wax or syrup. For liquid loaders, ripples and dripping effects.",
+      "dur": 0.9,
+      "family": "organic"
+    },
+    {
+      "id": "fx-morph-blob",
+      "name": "Blob Morph",
+      "category": "fx",
+      "tags": [
+        "morph",
+        "blob",
+        "transform",
+        "shapeshift",
+        "liquid",
+        "goo",
+        "wobble",
+        "evolve"
+      ],
+      "desc": "A gooey wobbling tone that swells up (or shrinks back down) as a shape morphs, with a few soft bloops along the way.",
+      "dur": 1.1,
+      "family": "synthetic",
+      "moments": [
+        "transform"
+      ]
+    },
+    {
+      "id": "fx-neon-strike",
+      "name": "Neon Strike",
+      "category": "fx",
+      "tags": [
+        "neon",
+        "flicker",
+        "buzz",
+        "hum",
+        "sign",
+        "bulb",
+        "tube",
+        "fluorescent",
+        "strike"
+      ],
+      "desc": "A neon sign or bad bulb stuttering on: rough buzzing strikes that grow longer, then a steady electric hum. For a sign switching on or a failing light.",
+      "dur": 1.47,
+      "family": "synthetic",
+      "moments": [
+        "neon-on"
+      ]
+    },
+    {
+      "id": "fx-rocket-launch",
+      "name": "Rocket Launch",
+      "category": "fx",
+      "tags": [
+        "rocket",
+        "launch",
+        "liftoff",
+        "ignition",
+        "roar",
+        "rumble",
+        "space",
+        "blast-off"
+      ],
+      "desc": "Ignition, a deep rumble and a roar that opens up as a rocket climbs away and fades. For launches, deploys and blast-offs.",
+      "dur": 1.96,
+      "family": "impact",
+      "moments": [
+        "power-up",
+        "send"
+      ]
+    },
+    {
+      "id": "fx-scramble-decode",
+      "name": "Scramble Decode",
+      "category": "fx",
+      "tags": [
+        "scramble",
+        "decode",
+        "decrypt",
+        "reveal",
+        "resolve",
+        "cipher",
+        "letters",
+        "text",
+        "hacker",
+        "lock"
+      ],
+      "desc": "A shower of random blips that narrows onto one note and locks in with a glassy ring. For text unscrambling, a redaction lifting or a code being cracked.",
+      "dur": 1.26,
+      "family": "synthetic",
+      "moments": [
+        "type-out",
+        "reveal"
+      ]
+    },
+    {
+      "id": "fx-shatter",
+      "name": "Glass Shatter",
+      "category": "fx",
+      "tags": [
+        "shatter",
+        "glass",
+        "break",
+        "crack",
+        "smash",
+        "shards",
+        "tinkle",
+        "destroy"
+      ],
+      "desc": "A sharp crack and a burst of splinters, then shards tinkling to the floor. For breaking glass, cracked screens and things smashed apart.",
+      "dur": 1.45,
+      "family": "glass",
+      "moments": [
+        "explosion"
+      ]
+    },
+    {
+      "id": "fx-signal-tear",
+      "name": "Signal Tear",
+      "category": "fx",
+      "tags": [
+        "vhs",
+        "tracking",
+        "tape",
+        "signal",
+        "tear",
+        "static",
+        "wow",
+        "analog",
+        "old-tv"
+      ],
+      "desc": "A worn tape losing tracking: the tone sags and wobbles, noise bands race down the screen, then it locks back. For old TVs, VHS and a failing signal.",
+      "dur": 1,
+      "family": "synthetic",
+      "moments": [
+        "glitch"
+      ]
+    },
+    {
+      "id": "fx-vortex-spiral",
+      "name": "Vortex Spiral",
+      "category": "fx",
+      "tags": [
+        "vortex",
+        "spiral",
+        "swirl",
+        "whirl",
+        "tunnel",
+        "zoom",
+        "transition",
+        "sweep"
+      ],
+      "desc": "Air circling faster and faster around you as the pitch climbs, or falls on the way in. For spiral transitions, vortex pulls and tunnel zooms.",
+      "dur": 1.2,
+      "family": "air",
+      "moments": [
+        "transition",
         "teleport"
       ]
     },
@@ -2353,6 +6023,28 @@
       ]
     },
     {
+      "id": "ambience-aurora-pad",
+      "name": "Aurora Pad",
+      "category": "ambience",
+      "tags": [
+        "aurora",
+        "pad",
+        "shimmer",
+        "ethereal",
+        "glow",
+        "northern-lights",
+        "wide",
+        "calm",
+        "bed"
+      ],
+      "desc": "A slow, wide, glowing chord that swells and sways like curtains of light, with a thin glitter above. A dreamy bed for a night sky.",
+      "dur": 8,
+      "family": "synthetic",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
       "id": "ambience-cave-drips",
       "name": "Cave Drips",
       "category": "ambience",
@@ -2436,6 +6128,72 @@
       ]
     },
     {
+      "id": "ambience-grid-hum",
+      "name": "Grid Hum",
+      "category": "ambience",
+      "tags": [
+        "grid",
+        "hum",
+        "electric",
+        "digital",
+        "neon",
+        "data",
+        "power",
+        "wide",
+        "bed"
+      ],
+      "desc": "The clean electric hum of a vast digital grid: a pure throbbing tone with a glassy sheen and tiny data ticks crossing it. For cyber scenes.",
+      "dur": 8,
+      "family": "synthetic",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
+      "id": "ambience-lava-bubbles",
+      "name": "Lava Bubbles",
+      "category": "ambience",
+      "tags": [
+        "lava",
+        "bubbles",
+        "bubbling",
+        "lamp",
+        "viscous",
+        "warm",
+        "molten",
+        "gurgle",
+        "bed"
+      ],
+      "desc": "Thick warm bubbles rising slowly and popping softly over a low simmer of heat, like a lava lamp. Fades in and out.",
+      "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
+      "id": "ambience-night-crickets",
+      "name": "Night Crickets",
+      "category": "ambience",
+      "tags": [
+        "crickets",
+        "night",
+        "summer",
+        "insects",
+        "chirp",
+        "evening",
+        "nature",
+        "wide",
+        "bed"
+      ],
+      "desc": "A warm summer night: a few crickets chirping in runs from different places in the dark, over cool still air.",
+      "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
       "id": "ambience-ocean-surf",
       "name": "Ocean Surf",
       "category": "ambience",
@@ -2498,6 +6256,49 @@
       ]
     },
     {
+      "id": "ambience-sand-pour",
+      "name": "Sand Pour",
+      "category": "ambience",
+      "tags": [
+        "sand",
+        "pour",
+        "hourglass",
+        "grains",
+        "timer",
+        "desert",
+        "hiss",
+        "bed"
+      ],
+      "desc": "Fine sand pouring in a soft steady hiss, thinning to a last few grains and a quiet settle. Good under an hourglass or a timer running down.",
+      "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
+      "id": "ambience-snow-hush",
+      "name": "Snow Hush",
+      "category": "ambience",
+      "tags": [
+        "snow",
+        "winter",
+        "cold",
+        "hush",
+        "quiet",
+        "frost",
+        "calm",
+        "wide",
+        "bed"
+      ],
+      "desc": "Snow falling on a windless night: a soft muffled hush, clumps sliding off branches and faint ice glints. A calm winter-scene bed.",
+      "dur": 8,
+      "family": "air",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
       "id": "ambience-space-drone",
       "name": "Space Drone",
       "category": "ambience",
@@ -2512,6 +6313,74 @@
         "bed"
       ],
       "desc": "A slow, deep drone for a ship or a void: a dark pad that opens up, with a faint shimmer far above.",
+      "dur": 8,
+      "family": "synthetic",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
+      "id": "ambience-starfield-pad",
+      "name": "Starfield Pad",
+      "category": "ambience",
+      "tags": [
+        "stars",
+        "starfield",
+        "space",
+        "night-sky",
+        "twinkle",
+        "pad",
+        "airy",
+        "wide",
+        "bed"
+      ],
+      "desc": "A thin airy pad under a sky of stars: soft twinkling notes ring out across a wide, quiet field. For space and night scenes.",
+      "dur": 8,
+      "family": "synthetic",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
+      "id": "ambience-storm-roar",
+      "name": "Storm Roar",
+      "category": "ambience",
+      "tags": [
+        "storm",
+        "roar",
+        "gale",
+        "hurricane",
+        "tornado",
+        "downpour",
+        "weather",
+        "wind",
+        "heavy",
+        "bed"
+      ],
+      "desc": "Being inside a big storm: a deep wide roar of wind and sheeting rain with a low wail running through it. For a gale, tornado or downpour.",
+      "dur": 8,
+      "family": "organic",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
+      "id": "ambience-synthwave-drive",
+      "name": "Synthwave Drive",
+      "category": "ambience",
+      "tags": [
+        "synthwave",
+        "retro",
+        "drive",
+        "night-drive",
+        "neon",
+        "pulse",
+        "bass",
+        "motion",
+        "wide",
+        "bed"
+      ],
+      "desc": "A night drive as a texture: a steady bass pulse, a slow glowing chord and the rush of the road, with no tune. For retro neon scenes.",
       "dur": 8,
       "family": "synthetic",
       "moments": [
@@ -2534,6 +6403,29 @@
       "desc": "An open-air wind bed: steady air with slow gusts rolling through and a faint whistle. Fades in and out.",
       "dur": 8,
       "family": "air",
+      "moments": [
+        "ambience"
+      ]
+    },
+    {
+      "id": "ambience-zen-breath",
+      "name": "Zen Breath",
+      "category": "ambience",
+      "tags": [
+        "zen",
+        "breath",
+        "breathing",
+        "calm",
+        "meditation",
+        "focus",
+        "bowl",
+        "steam",
+        "quiet",
+        "bed"
+      ],
+      "desc": "A slow breath in and out over the soft wobbling hum of a singing bowl. For focus, calm and winding down.",
+      "dur": 8,
+      "family": "soft",
       "moments": [
         "ambience"
       ]
@@ -3162,15 +7054,40 @@
         "delete",
         "send",
         "refresh",
+        "select",
+        "step",
+        "record",
+        "reveal",
+        "stamp",
         "success",
         "error",
         "warning",
+        "critical",
         "info",
         "notify",
+        "dismiss",
         "message",
+        "presence",
         "reminder",
         "timer",
-        "achievement"
+        "achievement",
+        "loading",
+        "progress",
+        "load-complete",
+        "data-tick",
+        "count-up",
+        "chart-reveal",
+        "threshold",
+        "sort",
+        "beacon",
+        "packet",
+        "link",
+        "failover",
+        "scale",
+        "thinking",
+        "stream-token",
+        "tool-call",
+        "verdict"
       ]
     },
     {
@@ -3214,7 +7131,19 @@
         "explosion",
         "readout",
         "scare",
-        "dialogue"
+        "dialogue",
+        "critical",
+        "dismiss",
+        "select",
+        "loading",
+        "thinking",
+        "progress",
+        "load-complete",
+        "level-down",
+        "crit",
+        "knockout",
+        "score",
+        "glitch"
       ]
     },
     {
@@ -3256,7 +7185,16 @@
         "shield",
         "teleport",
         "scare",
-        "music"
+        "music",
+        "critical",
+        "level-down",
+        "score",
+        "ability",
+        "crit",
+        "knockout",
+        "debuff",
+        "transform",
+        "neon-on"
       ]
     },
     {
@@ -3303,7 +7241,18 @@
         "scare",
         "dice",
         "ambience",
-        "music"
+        "music",
+        "level-down",
+        "ability",
+        "transform",
+        "debuff",
+        "crit",
+        "knockout",
+        "score",
+        "resource",
+        "card-tap",
+        "step",
+        "purchase"
       ]
     },
     {
@@ -3328,15 +7277,42 @@
         "delete",
         "send",
         "refresh",
+        "select",
+        "step",
+        "record",
+        "reveal",
         "success",
         "error",
         "warning",
+        "critical",
         "info",
         "notify",
+        "dismiss",
         "message",
+        "presence",
         "reminder",
         "timer",
         "achievement",
+        "purchase",
+        "loading",
+        "progress",
+        "load-complete",
+        "data-tick",
+        "count-up",
+        "chart-reveal",
+        "threshold",
+        "sort",
+        "beacon",
+        "pin-drop",
+        "route",
+        "packet",
+        "link",
+        "failover",
+        "scale",
+        "thinking",
+        "stream-token",
+        "tool-call",
+        "verdict",
         "sparkle",
         "heal",
         "pickup",
@@ -3380,7 +7356,16 @@
         "hit",
         "chips",
         "dice",
-        "ambience"
+        "ambience",
+        "critical",
+        "stamp",
+        "purchase",
+        "type-out",
+        "loading",
+        "progress",
+        "data-tick",
+        "count-up",
+        "sort"
       ]
     },
     {
@@ -3405,15 +7390,41 @@
         "delete",
         "send",
         "refresh",
+        "select",
+        "step",
+        "record",
+        "reveal",
         "success",
         "error",
         "warning",
+        "critical",
         "info",
         "notify",
+        "dismiss",
         "message",
+        "presence",
         "reminder",
         "timer",
         "countdown",
+        "loading",
+        "progress",
+        "load-complete",
+        "data-tick",
+        "count-up",
+        "chart-reveal",
+        "threshold",
+        "sort",
+        "beacon",
+        "pin-drop",
+        "route",
+        "packet",
+        "link",
+        "failover",
+        "scale",
+        "thinking",
+        "stream-token",
+        "tool-call",
+        "verdict",
         "power-up",
         "power-down",
         "shield",
@@ -3421,6 +7432,9 @@
         "teleport",
         "readout",
         "scan",
+        "glitch",
+        "neon-on",
+        "type-out",
         "scare",
         "ambience",
         "music",
@@ -3467,7 +7481,17 @@
         "shuffle",
         "dice",
         "chips",
-        "ambience"
+        "ambience",
+        "dismiss",
+        "select",
+        "stamp",
+        "loading",
+        "data-tick",
+        "count-up",
+        "chart-reveal",
+        "card-tap",
+        "resource",
+        "score"
       ]
     }
   ]

@@ -2,6 +2,116 @@
  "schema": 1,
  "about": "Written by gates/check_levels.mjs, read by build.mjs (manifest levels) and the MCP server. dBFS after the master chain on a warm chain; see the manifest levels.about for each field. A sound whose fingerprint no longer matches the catalog has changed since it was measured.",
  "sounds": {
+  "ai-denoise": {
+   "fingerprint": "dc887237bcce",
+   "peak": -24.7,
+   "rms": -35.1,
+   "worstPeak": -24.3,
+   "worstRms": -35,
+   "lowestPeak": -25.7,
+   "pre": -29.7,
+   "end": 1.19
+  },
+  "ai-guard": {
+   "fingerprint": "307d353f881c",
+   "peak": -24.2,
+   "rms": -36.7,
+   "worstPeak": -23.4,
+   "worstRms": -36.5,
+   "lowestPeak": -24.5,
+   "pre": -28.8,
+   "end": 0.201
+  },
+  "ai-handoff": {
+   "fingerprint": "0614c7c3c904",
+   "peak": -22.1,
+   "rms": -34.7,
+   "worstPeak": -21.2,
+   "worstRms": -33.9,
+   "lowestPeak": -24.6,
+   "pre": -26.5,
+   "end": 0.545
+  },
+  "ai-reasoning-step": {
+   "fingerprint": "1fb8b23a099d",
+   "peak": -24.5,
+   "rms": -38.6,
+   "worstPeak": -24.3,
+   "worstRms": -38,
+   "lowestPeak": -24.5,
+   "pre": -29.7,
+   "end": 0.355
+  },
+  "ai-retrieve": {
+   "fingerprint": "ce2e25a45b95",
+   "peak": -23.2,
+   "rms": -40.8,
+   "worstPeak": -23.2,
+   "worstRms": -40,
+   "lowestPeak": -25.2,
+   "pre": -28.6,
+   "end": 0.734
+  },
+  "ai-stream-done": {
+   "fingerprint": "7ad23a43258d",
+   "peak": -20.4,
+   "rms": -35.2,
+   "worstPeak": -19.8,
+   "worstRms": -34.5,
+   "lowestPeak": -21,
+   "pre": -25.1,
+   "end": 0.652
+  },
+  "ai-thinking-hum": {
+   "fingerprint": "9d8b2fae0e59",
+   "peak": -30.9,
+   "rms": -42.3,
+   "worstPeak": -29,
+   "worstRms": -39.7,
+   "lowestPeak": -32.9,
+   "pre": -34.4,
+   "end": 1.16
+  },
+  "ai-token-stream": {
+   "fingerprint": "1b046e32d817",
+   "peak": -27.4,
+   "rms": -43,
+   "worstPeak": -26.5,
+   "worstRms": -40.6,
+   "lowestPeak": -28,
+   "pre": -31.9,
+   "end": 0.662
+  },
+  "ai-tool-call": {
+   "fingerprint": "72f87ec04558",
+   "peak": -23.8,
+   "rms": -39.8,
+   "worstPeak": -23.8,
+   "worstRms": -39.8,
+   "lowestPeak": -25.5,
+   "pre": -29.1,
+   "end": 0.524
+  },
+  "ai-typing-dots": {
+   "fingerprint": "9487ffe02040",
+   "peak": -28.2,
+   "rms": -43.7,
+   "worstPeak": -28.2,
+   "worstRms": -43.2,
+   "lowestPeak": -30.5,
+   "pre": -33.7,
+   "end": 0.441
+  },
+  "ambience-aurora-pad": {
+   "fingerprint": "1df8fd91e631",
+   "peak": -24.9,
+   "rms": -39.2,
+   "worstPeak": -22.9,
+   "worstRms": -37.6,
+   "lowestPeak": -27.2,
+   "pre": -28.3,
+   "end": 5.873
+  },
   "ambience-cave-drips": {
    "fingerprint": "a8ea7c03856b",
    "peak": -24.7,
@@ -42,6 +152,36 @@
    "pre": -27.3,
    "end": 5.486
   },
+  "ambience-grid-hum": {
+   "fingerprint": "00ca044a6767",
+   "peak": -25.1,
+   "rms": -37.6,
+   "worstPeak": -24.5,
+   "worstRms": -37.1,
+   "lowestPeak": -28.4,
+   "pre": -29.9,
+   "end": 5.75
+  },
+  "ambience-lava-bubbles": {
+   "fingerprint": "791bb0a34ed1",
+   "peak": -25.4,
+   "rms": -40.7,
+   "worstPeak": -22.2,
+   "worstRms": -36.2,
+   "lowestPeak": -27.6,
+   "pre": -27.5,
+   "end": 5.375
+  },
+  "ambience-night-crickets": {
+   "fingerprint": "95caad0befaa",
+   "peak": -24.9,
+   "rms": -43.1,
+   "worstPeak": -24.9,
+   "worstRms": -40.6,
+   "lowestPeak": -28.5,
+   "pre": -30.3,
+   "end": 5.714
+  },
   "ambience-ocean-surf": {
    "fingerprint": "36d19c5f4f99",
    "peak": -24.7,
@@ -72,6 +212,26 @@
    "pre": -28.4,
    "end": 5.678
   },
+  "ambience-sand-pour": {
+   "fingerprint": "e20723c0dd3e",
+   "peak": -26.6,
+   "rms": -43.1,
+   "worstPeak": -26,
+   "worstRms": -41.8,
+   "lowestPeak": -28.3,
+   "pre": -31.4,
+   "end": 5.827
+  },
+  "ambience-snow-hush": {
+   "fingerprint": "8d4392830222",
+   "peak": -27.8,
+   "rms": -42.5,
+   "worstPeak": -27.2,
+   "worstRms": -42.4,
+   "lowestPeak": -30.1,
+   "pre": -32.6,
+   "end": 5.444
+  },
   "ambience-space-drone": {
    "fingerprint": "75e7cec68860",
    "peak": -26.7,
@@ -82,6 +242,36 @@
    "pre": -28.6,
    "end": 6.497
   },
+  "ambience-starfield-pad": {
+   "fingerprint": "72c52b981768",
+   "peak": -26.3,
+   "rms": -40.3,
+   "worstPeak": -22.1,
+   "worstRms": -36.9,
+   "lowestPeak": -29.6,
+   "pre": -27.5,
+   "end": 6.201
+  },
+  "ambience-storm-roar": {
+   "fingerprint": "71b64161c2d4",
+   "peak": -23.4,
+   "rms": -38.8,
+   "worstPeak": -18.4,
+   "worstRms": -35.3,
+   "lowestPeak": -25.4,
+   "pre": -23.6,
+   "end": 5.595
+  },
+  "ambience-synthwave-drive": {
+   "fingerprint": "73ad098c053d",
+   "peak": -23.3,
+   "rms": -38.9,
+   "worstPeak": -21.7,
+   "worstRms": -37,
+   "lowestPeak": -24,
+   "pre": -27.1,
+   "end": 5.443
+  },
   "ambience-wind-gusts": {
    "fingerprint": "e7a5373484f8",
    "peak": -29.3,
@@ -91,6 +281,366 @@
    "lowestPeak": -33,
    "pre": -30,
    "end": 5.549
+  },
+  "ambience-zen-breath": {
+   "fingerprint": "d6f5354b03c8",
+   "peak": -25.7,
+   "rms": -39.5,
+   "worstPeak": -22.7,
+   "worstRms": -38.6,
+   "lowestPeak": -26.4,
+   "pre": -28,
+   "end": 5.511
+  },
+  "battle-ability": {
+   "fingerprint": "de26d3bad7e7",
+   "peak": -19.3,
+   "rms": -33.6,
+   "worstPeak": -17.9,
+   "worstRms": -31.5,
+   "lowestPeak": -21.2,
+   "pre": -23.2,
+   "end": 0.299
+  },
+  "battle-arch-arrow": {
+   "fingerprint": "af6522dbef44",
+   "peak": -16.6,
+   "rms": -36.1,
+   "worstPeak": -16.1,
+   "worstRms": -35.4,
+   "lowestPeak": -19.3,
+   "pre": -21.3,
+   "end": 0.505
+  },
+  "battle-arch-blade": {
+   "fingerprint": "2475df51aa51",
+   "peak": -18.5,
+   "rms": -34,
+   "worstPeak": -14.9,
+   "worstRms": -30.5,
+   "lowestPeak": -19,
+   "pre": -20,
+   "end": 0.211
+  },
+  "battle-arch-claw": {
+   "fingerprint": "5136413ebe05",
+   "peak": -17.6,
+   "rms": -34.7,
+   "worstPeak": -17.6,
+   "worstRms": -34.3,
+   "lowestPeak": -20.6,
+   "pre": -22.9,
+   "end": 0.292
+  },
+  "battle-arch-crescent": {
+   "fingerprint": "4d9757ec59f0",
+   "peak": -18,
+   "rms": -37.2,
+   "worstPeak": -17.8,
+   "worstRms": -35.9,
+   "lowestPeak": -20.7,
+   "pre": -23,
+   "end": 0.591
+  },
+  "battle-arch-dive": {
+   "fingerprint": "3c8028d4376a",
+   "peak": -16.3,
+   "rms": -33.2,
+   "worstPeak": -15.5,
+   "worstRms": -33.2,
+   "lowestPeak": -18,
+   "pre": -20.6,
+   "end": 0.462
+  },
+  "battle-arch-fist": {
+   "fingerprint": "725f52bd8591",
+   "peak": -16.8,
+   "rms": -32.9,
+   "worstPeak": -16.8,
+   "worstRms": -32,
+   "lowestPeak": -19.7,
+   "pre": -21.9,
+   "end": 0.408
+  },
+  "battle-arch-palm": {
+   "fingerprint": "48bf8becdb7d",
+   "peak": -17,
+   "rms": -31.2,
+   "worstPeak": -15.7,
+   "worstRms": -31,
+   "lowestPeak": -18.2,
+   "pre": -20.8,
+   "end": 0.486
+  },
+  "battle-arch-volley": {
+   "fingerprint": "84f534e5102d",
+   "peak": -17.1,
+   "rms": -34.9,
+   "worstPeak": -15.2,
+   "worstRms": -33,
+   "lowestPeak": -21.5,
+   "pre": -20.2,
+   "end": 0.366
+  },
+  "battle-coin-chain": {
+   "fingerprint": "d115789f0418",
+   "peak": -20.1,
+   "rms": -36.4,
+   "worstPeak": -18.6,
+   "worstRms": -35.1,
+   "lowestPeak": -20.4,
+   "pre": -23.8,
+   "end": 0.596
+  },
+  "battle-counter": {
+   "fingerprint": "eb2bc392d3ce",
+   "peak": -23.7,
+   "rms": -43.9,
+   "worstPeak": -23.7,
+   "worstRms": -39.4,
+   "lowestPeak": -25.4,
+   "pre": -29.1,
+   "end": 0.148
+  },
+  "battle-energy-attach": {
+   "fingerprint": "d1770fdee54d",
+   "peak": -22,
+   "rms": -40.5,
+   "worstPeak": -22,
+   "worstRms": -39,
+   "lowestPeak": -24.4,
+   "pre": -27.3,
+   "end": 0.108
+  },
+  "battle-energy-break": {
+   "fingerprint": "17af93f91167",
+   "peak": -15.1,
+   "rms": -38.4,
+   "worstPeak": -15.1,
+   "worstRms": -38.2,
+   "lowestPeak": -17.3,
+   "pre": -20.1,
+   "end": 0.515
+  },
+  "battle-evolve": {
+   "fingerprint": "3764111b6b2b",
+   "peak": -17.6,
+   "rms": -33.4,
+   "worstPeak": -16.3,
+   "worstRms": -32.6,
+   "lowestPeak": -18.3,
+   "pre": -21.5,
+   "end": 0.598
+  },
+  "battle-gust-hook": {
+   "fingerprint": "275c923600b7",
+   "peak": -20.5,
+   "rms": -43.8,
+   "worstPeak": -20.5,
+   "worstRms": -43.5,
+   "lowestPeak": -22.8,
+   "pre": -25.8,
+   "end": 0.721
+  },
+  "battle-ko": {
+   "fingerprint": "2d10c73f77b9",
+   "peak": -14.1,
+   "rms": -28.7,
+   "worstPeak": -14.1,
+   "worstRms": -27.4,
+   "lowestPeak": -15.9,
+   "pre": -19.1,
+   "end": 0.524
+  },
+  "battle-prize": {
+   "fingerprint": "6af4a434582d",
+   "peak": -19.9,
+   "rms": -36.2,
+   "worstPeak": -19.9,
+   "worstRms": -36.1,
+   "lowestPeak": -20.8,
+   "pre": -25.2,
+   "end": 0.369
+  },
+  "battle-status-burn": {
+   "fingerprint": "09a00148b434",
+   "peak": -19.9,
+   "rms": -32.9,
+   "worstPeak": -19.9,
+   "worstRms": -32.8,
+   "lowestPeak": -21.6,
+   "pre": -25.2,
+   "end": 0.221
+  },
+  "battle-status-confusion": {
+   "fingerprint": "b6eb882a6a72",
+   "peak": -21.8,
+   "rms": -33.6,
+   "worstPeak": -21.8,
+   "worstRms": -33.6,
+   "lowestPeak": -23,
+   "pre": -27.2,
+   "end": 0.351
+  },
+  "battle-status-paralysis": {
+   "fingerprint": "5e04c27fac8d",
+   "peak": -20.3,
+   "rms": -39.5,
+   "worstPeak": -20.3,
+   "worstRms": -37.5,
+   "lowestPeak": -22.4,
+   "pre": -25.6,
+   "end": 0.196
+  },
+  "battle-status-poison": {
+   "fingerprint": "5feb5a76bc50",
+   "peak": -21.1,
+   "rms": -34.9,
+   "worstPeak": -20.6,
+   "worstRms": -34.5,
+   "lowestPeak": -23.3,
+   "pre": -25.9,
+   "end": 0.282
+  },
+  "battle-status-sleep": {
+   "fingerprint": "2d10e1398ae8",
+   "peak": -22.5,
+   "rms": -35.6,
+   "worstPeak": -21,
+   "worstRms": -34.8,
+   "lowestPeak": -26.8,
+   "pre": -26.4,
+   "end": 0.482
+  },
+  "battle-strike-colorless": {
+   "fingerprint": "7a77f3730767",
+   "peak": -14.7,
+   "rms": -33.1,
+   "worstPeak": -13.9,
+   "worstRms": -31.8,
+   "lowestPeak": -15,
+   "pre": -18.8,
+   "end": 0.609
+  },
+  "battle-strike-darkness": {
+   "fingerprint": "674911c9b158",
+   "peak": -14.6,
+   "rms": -31.5,
+   "worstPeak": -14.4,
+   "worstRms": -30.4,
+   "lowestPeak": -15.5,
+   "pre": -19.4,
+   "end": 0.699
+  },
+  "battle-strike-dragon": {
+   "fingerprint": "e1de28683510",
+   "peak": -14.4,
+   "rms": -34.4,
+   "worstPeak": -13.7,
+   "worstRms": -33,
+   "lowestPeak": -15.6,
+   "pre": -18.6,
+   "end": 0.721
+  },
+  "battle-strike-fairy": {
+   "fingerprint": "e66a60c02482",
+   "peak": -14.9,
+   "rms": -34.7,
+   "worstPeak": -14.7,
+   "worstRms": -33.6,
+   "lowestPeak": -15.5,
+   "pre": -19.7,
+   "end": 0.718
+  },
+  "battle-strike-fighting": {
+   "fingerprint": "117066228b3c",
+   "peak": -14.2,
+   "rms": -32,
+   "worstPeak": -13.4,
+   "worstRms": -31.2,
+   "lowestPeak": -14.8,
+   "pre": -18.3,
+   "end": 0.738
+  },
+  "battle-strike-fire": {
+   "fingerprint": "3ee740933560",
+   "peak": -14.4,
+   "rms": -34.2,
+   "worstPeak": -14.1,
+   "worstRms": -33.2,
+   "lowestPeak": -15.9,
+   "pre": -19,
+   "end": 0.742
+  },
+  "battle-strike-grass": {
+   "fingerprint": "755afc4cd2b2",
+   "peak": -13.7,
+   "rms": -35.8,
+   "worstPeak": -13.3,
+   "worstRms": -34.1,
+   "lowestPeak": -15.4,
+   "pre": -18.2,
+   "end": 0.802
+  },
+  "battle-strike-lightning": {
+   "fingerprint": "dc8244ae61ed",
+   "peak": -14.1,
+   "rms": -35.2,
+   "worstPeak": -14,
+   "worstRms": -34.9,
+   "lowestPeak": -15.3,
+   "pre": -19.1,
+   "end": 0.772
+  },
+  "battle-strike-metal": {
+   "fingerprint": "60092e318301",
+   "peak": -13.7,
+   "rms": -36.7,
+   "worstPeak": -13.7,
+   "worstRms": -35.3,
+   "lowestPeak": -18.1,
+   "pre": -18.6,
+   "end": 0.727
+  },
+  "battle-strike-prism": {
+   "fingerprint": "8d7c062a0c01",
+   "peak": -15.1,
+   "rms": -34.8,
+   "worstPeak": -14.1,
+   "worstRms": -33.4,
+   "lowestPeak": -16.6,
+   "pre": -19.1,
+   "end": 0.775
+  },
+  "battle-strike-psychic": {
+   "fingerprint": "8c538db594a7",
+   "peak": -15.6,
+   "rms": -32.8,
+   "worstPeak": -14.5,
+   "worstRms": -30.5,
+   "lowestPeak": -16.2,
+   "pre": -19.5,
+   "end": 0.662
+  },
+  "battle-strike-water": {
+   "fingerprint": "0dfc6780eed2",
+   "peak": -14.9,
+   "rms": -35.8,
+   "worstPeak": -14.9,
+   "worstRms": -34,
+   "lowestPeak": -16.4,
+   "pre": -20,
+   "end": 0.84
+  },
+  "battle-weakness-bell": {
+   "fingerprint": "ed6aee5d2266",
+   "peak": -17.4,
+   "rms": -33.6,
+   "worstPeak": -16.6,
+   "worstRms": -33.4,
+   "lowestPeak": -18.4,
+   "pre": -21.5,
+   "end": 0.182
   },
   "cards-chip-click": {
    "fingerprint": "d895176ab5a2",
@@ -212,6 +762,36 @@
    "pre": -30.7,
    "end": 0.187
   },
+  "cards-hand-sweep": {
+   "fingerprint": "21124f070c25",
+   "peak": -23.9,
+   "rms": -41.2,
+   "worstPeak": -23.9,
+   "worstRms": -40.3,
+   "lowestPeak": -25.7,
+   "pre": -29.3,
+   "end": 0.567
+  },
+  "cards-land": {
+   "fingerprint": "b3b30fa8b5a6",
+   "peak": -22.4,
+   "rms": -35.8,
+   "worstPeak": -20.5,
+   "worstRms": -34,
+   "lowestPeak": -25.9,
+   "pre": -25.9,
+   "end": 0.134
+  },
+  "cards-peek": {
+   "fingerprint": "2bcf838b1f59",
+   "peak": -28.6,
+   "rms": -48.6,
+   "worstPeak": -25.8,
+   "worstRms": -47.7,
+   "lowestPeak": -30.2,
+   "pre": -31.2,
+   "end": 0.449
+  },
   "cards-piece-capture": {
    "fingerprint": "ddb56abd1c7a",
    "peak": -19.7,
@@ -241,6 +821,16 @@
    "lowestPeak": -26.7,
    "pre": -27.7,
    "end": 0.045
+  },
+  "cards-reveal": {
+   "fingerprint": "77e2e2d69f8b",
+   "peak": -22,
+   "rms": -42.1,
+   "worstPeak": -21.8,
+   "worstRms": -40.5,
+   "lowestPeak": -27.6,
+   "pre": -27.1,
+   "end": 0.177
   },
   "cards-riffle": {
    "fingerprint": "73138186b86b",
@@ -272,6 +862,16 @@
    "pre": -29.8,
    "end": 0.23
   },
+  "cards-tap": {
+   "fingerprint": "4f42e3d91744",
+   "peak": -25.7,
+   "rms": -41.3,
+   "worstPeak": -22,
+   "worstRms": -40.2,
+   "lowestPeak": -30.1,
+   "pre": -27.4,
+   "end": 0.151
+  },
   "cards-timer-tick": {
    "fingerprint": "b233ceceabb6",
    "peak": -27.1,
@@ -282,6 +882,26 @@
    "pre": -29.4,
    "end": 0.43
   },
+  "cards-toss-spin": {
+   "fingerprint": "985c2eff20ce",
+   "peak": -25.5,
+   "rms": -45.3,
+   "worstPeak": -24.2,
+   "worstRms": -44.4,
+   "lowestPeak": -26.9,
+   "pre": -29.6,
+   "end": 0.538
+  },
+  "cards-wash": {
+   "fingerprint": "4879a0c4c033",
+   "peak": -23.6,
+   "rms": -42.2,
+   "worstPeak": -23.4,
+   "worstRms": -41.3,
+   "lowestPeak": -27.3,
+   "pre": -28.8,
+   "end": 0.975
+  },
   "cards-your-turn": {
    "fingerprint": "b5b2e6223fc1",
    "peak": -20.7,
@@ -291,6 +911,886 @@
    "lowestPeak": -20.9,
    "pre": -25.7,
    "end": 0.337
+  },
+  "data-bar-rise": {
+   "fingerprint": "9cbbd50b7b81",
+   "peak": -25.8,
+   "rms": -40.5,
+   "worstPeak": -25.2,
+   "worstRms": -39.7,
+   "lowestPeak": -27.2,
+   "pre": -30.6,
+   "end": 0.354
+  },
+  "data-count-up": {
+   "fingerprint": "510a2ff4d7d5",
+   "peak": -23.1,
+   "rms": -42.6,
+   "worstPeak": -19.8,
+   "worstRms": -41.6,
+   "lowestPeak": -24.7,
+   "pre": -25.2,
+   "end": 1.004
+  },
+  "data-counter-tick": {
+   "fingerprint": "d4c96589aa7d",
+   "peak": -27.5,
+   "rms": -40.7,
+   "worstPeak": -24.5,
+   "worstRms": -40.6,
+   "lowestPeak": -28,
+   "pre": -29.9,
+   "end": 0.045
+  },
+  "data-delta-tick": {
+   "fingerprint": "3699428bebed",
+   "peak": -26.9,
+   "rms": -40.7,
+   "worstPeak": -26.9,
+   "worstRms": -40.7,
+   "lowestPeak": -28.4,
+   "pre": -32.4,
+   "end": 0.105
+  },
+  "data-failover": {
+   "fingerprint": "32dfd95ea18f",
+   "peak": -22.4,
+   "rms": -39,
+   "worstPeak": -19.3,
+   "worstRms": -37.9,
+   "lowestPeak": -22.4,
+   "pre": -24.6,
+   "end": 0.788
+  },
+  "data-fanout": {
+   "fingerprint": "e055fb18fd54",
+   "peak": -29.3,
+   "rms": -42.2,
+   "worstPeak": -27.5,
+   "worstRms": -40.7,
+   "lowestPeak": -29.3,
+   "pre": -32.9,
+   "end": 0.219
+  },
+  "data-gauge-needle": {
+   "fingerprint": "69e2a3cfcebe",
+   "peak": -25.5,
+   "rms": -37.8,
+   "worstPeak": -25.5,
+   "worstRms": -37.5,
+   "lowestPeak": -27.7,
+   "pre": -30.9,
+   "end": 0.507
+  },
+  "data-heat-bloom": {
+   "fingerprint": "a51a02e8ee8f",
+   "peak": -25.5,
+   "rms": -41.9,
+   "worstPeak": -23.8,
+   "worstRms": -41,
+   "lowestPeak": -26.8,
+   "pre": -29.2,
+   "end": 0.621
+  },
+  "data-line-draw": {
+   "fingerprint": "bd6b6e69dc7e",
+   "peak": -27.8,
+   "rms": -33,
+   "worstPeak": -27.7,
+   "worstRms": -32.3,
+   "lowestPeak": -27.8,
+   "pre": -33.2,
+   "end": 0.62
+  },
+  "data-link-state": {
+   "fingerprint": "491ce24ef48c",
+   "peak": -25.9,
+   "rms": -40.3,
+   "worstPeak": -25.2,
+   "worstRms": -39.2,
+   "lowestPeak": -26.2,
+   "pre": -30.6,
+   "end": 0.369
+  },
+  "data-liquid-fill": {
+   "fingerprint": "a3d2a5d11dfe",
+   "peak": -24.3,
+   "rms": -38.5,
+   "worstPeak": -24.3,
+   "worstRms": -38.4,
+   "lowestPeak": -28.6,
+   "pre": -29.7,
+   "end": 0.573
+  },
+  "data-load-done": {
+   "fingerprint": "31d550cc804d",
+   "peak": -22.5,
+   "rms": -38.6,
+   "worstPeak": -22.2,
+   "worstRms": -38.5,
+   "lowestPeak": -25.8,
+   "pre": -27.6,
+   "end": 0.279
+  },
+  "data-load-pulse": {
+   "fingerprint": "9b7807bb0605",
+   "peak": -28.3,
+   "rms": -37.7,
+   "worstPeak": -27.9,
+   "worstRms": -37.6,
+   "lowestPeak": -29.4,
+   "pre": -33.4,
+   "end": 0.884
+  },
+  "data-log-tail": {
+   "fingerprint": "b364db5345ab",
+   "peak": -28.6,
+   "rms": -45.2,
+   "worstPeak": -27.2,
+   "worstRms": -43.5,
+   "lowestPeak": -30,
+   "pre": -32.7,
+   "end": 0.465
+  },
+  "data-monitor-beep": {
+   "fingerprint": "cc11e38e8e7e",
+   "peak": -26.9,
+   "rms": -31.7,
+   "worstPeak": -24.7,
+   "worstRms": -31.7,
+   "lowestPeak": -26.9,
+   "pre": -30.1,
+   "end": 0.089
+  },
+  "data-nixie-strike": {
+   "fingerprint": "edae7e469108",
+   "peak": -24,
+   "rms": -41.7,
+   "worstPeak": -23.7,
+   "worstRms": -38.8,
+   "lowestPeak": -26.7,
+   "pre": -29,
+   "end": 0.264
+  },
+  "data-packet-hop": {
+   "fingerprint": "0edff02cafcf",
+   "peak": -27.6,
+   "rms": -43,
+   "worstPeak": -26.7,
+   "worstRms": -41.7,
+   "lowestPeak": -28.7,
+   "pre": -32.1,
+   "end": 0.155
+  },
+  "data-pin-drop": {
+   "fingerprint": "e89164182c30",
+   "peak": -23.4,
+   "rms": -38.7,
+   "worstPeak": -23.1,
+   "worstRms": -38.3,
+   "lowestPeak": -24.9,
+   "pre": -28.5,
+   "end": 0.297
+  },
+  "data-progress-fill": {
+   "fingerprint": "4ff5986b52c5",
+   "peak": -27.9,
+   "rms": -39.5,
+   "worstPeak": -27.2,
+   "worstRms": -39.5,
+   "lowestPeak": -28.2,
+   "pre": -32.6,
+   "end": 0.162
+  },
+  "data-request-response": {
+   "fingerprint": "ab19b31a4f3d",
+   "peak": -24.8,
+   "rms": -42.4,
+   "worstPeak": -24.8,
+   "worstRms": -41.7,
+   "lowestPeak": -25.7,
+   "pre": -30.2,
+   "end": 0.544
+  },
+  "data-route-trace": {
+   "fingerprint": "5ec6c260c88c",
+   "peak": -23.2,
+   "rms": -35.6,
+   "worstPeak": -22.4,
+   "worstRms": -35.2,
+   "lowestPeak": -25.3,
+   "pre": -27.8,
+   "end": 1.469
+  },
+  "data-scale": {
+   "fingerprint": "0cc7fa0cd4f4",
+   "peak": -27,
+   "rms": -38.9,
+   "worstPeak": -25.7,
+   "worstRms": -38.4,
+   "lowestPeak": -30.9,
+   "pre": -31.1,
+   "end": 0.453
+  },
+  "data-sonar": {
+   "fingerprint": "4e1a97d44833",
+   "peak": -24.9,
+   "rms": -39.9,
+   "worstPeak": -24.5,
+   "worstRms": -37.5,
+   "lowestPeak": -25.5,
+   "pre": -29.9,
+   "end": 0.694
+  },
+  "data-sort-swap": {
+   "fingerprint": "3ee7254eb911",
+   "peak": -27.1,
+   "rms": -42.1,
+   "worstPeak": -25.3,
+   "worstRms": -41.3,
+   "lowestPeak": -27.7,
+   "pre": -30.7,
+   "end": 0.201
+  },
+  "data-spinner-ticks": {
+   "fingerprint": "d45d9c600f96",
+   "peak": -29.3,
+   "rms": -48.8,
+   "worstPeak": -28.5,
+   "worstRms": -48.5,
+   "lowestPeak": -29.9,
+   "pre": -34,
+   "end": 0.912
+  },
+  "data-split-flap": {
+   "fingerprint": "0c2a02734f31",
+   "peak": -23.1,
+   "rms": -40.7,
+   "worstPeak": -21.1,
+   "worstRms": -40.1,
+   "lowestPeak": -25.6,
+   "pre": -26.5,
+   "end": 0.398
+  },
+  "data-threshold": {
+   "fingerprint": "8aa5bba11438",
+   "peak": -25.6,
+   "rms": -39.6,
+   "worstPeak": -22.3,
+   "worstRms": -35.5,
+   "lowestPeak": -29.1,
+   "pre": -27.7,
+   "end": 0.21
+  },
+  "duel-action-cast": {
+   "fingerprint": "9feeb8e17f28",
+   "peak": -16,
+   "rms": -38.1,
+   "worstPeak": -16,
+   "worstRms": -38.1,
+   "lowestPeak": -21.6,
+   "pre": -21.1,
+   "end": 0.537
+  },
+  "duel-bag-resolve": {
+   "fingerprint": "bd7dd66d4bbd",
+   "peak": -19.6,
+   "rms": -39.5,
+   "worstPeak": -18.7,
+   "worstRms": -38.5,
+   "lowestPeak": -21.2,
+   "pre": -24,
+   "end": 0.658
+  },
+  "duel-banish": {
+   "fingerprint": "69c8263e71e8",
+   "peak": -17.3,
+   "rms": -36.1,
+   "worstPeak": -17.2,
+   "worstRms": -35.3,
+   "lowestPeak": -22,
+   "pre": -22.3,
+   "end": 0.682
+  },
+  "duel-banner-raise": {
+   "fingerprint": "3664a06029e0",
+   "peak": -20.6,
+   "rms": -36.4,
+   "worstPeak": -20.6,
+   "worstRms": -36.4,
+   "lowestPeak": -22.5,
+   "pre": -26,
+   "end": 0.677
+  },
+  "duel-card-land": {
+   "fingerprint": "ffc2cdafcb3c",
+   "peak": -20.8,
+   "rms": -39,
+   "worstPeak": -18.4,
+   "worstRms": -36,
+   "lowestPeak": -27.7,
+   "pre": -23.6,
+   "end": 0.647
+  },
+  "duel-chorus-cast": {
+   "fingerprint": "e3ebf56a40d4",
+   "peak": -21.2,
+   "rms": -36.3,
+   "worstPeak": -17.4,
+   "worstRms": -33.5,
+   "lowestPeak": -23.8,
+   "pre": -22.6,
+   "end": 1.037
+  },
+  "duel-chorus-sum": {
+   "fingerprint": "4c87add05801",
+   "peak": -18.9,
+   "rms": -32.1,
+   "worstPeak": -14.5,
+   "worstRms": -31.5,
+   "lowestPeak": -20.9,
+   "pre": -19.4,
+   "end": 0.927
+  },
+  "duel-clash": {
+   "fingerprint": "3d5729dffc4a",
+   "peak": -16.3,
+   "rms": -37.3,
+   "worstPeak": -14.5,
+   "worstRms": -35.5,
+   "lowestPeak": -18.3,
+   "pre": -19.6,
+   "end": 0.309
+  },
+  "duel-dash-tether": {
+   "fingerprint": "10b5f2da8d1f",
+   "peak": -20.4,
+   "rms": -39.2,
+   "worstPeak": -19.1,
+   "worstRms": -38.8,
+   "lowestPeak": -22.5,
+   "pre": -24.3,
+   "end": 0.238
+  },
+  "duel-exert-tilt": {
+   "fingerprint": "8ae318360871",
+   "peak": -23.4,
+   "rms": -40.1,
+   "worstPeak": -23.4,
+   "worstRms": -38.9,
+   "lowestPeak": -27.8,
+   "pre": -28.8,
+   "end": 0.147
+  },
+  "duel-guard-block": {
+   "fingerprint": "6a7328148a06",
+   "peak": -20.4,
+   "rms": -39.1,
+   "worstPeak": -17.8,
+   "worstRms": -36.1,
+   "lowestPeak": -23.4,
+   "pre": -23.1,
+   "end": 0.107
+  },
+  "duel-hunt-chain": {
+   "fingerprint": "693e6831a7d4",
+   "peak": -17.1,
+   "rms": -39.8,
+   "worstPeak": -17.1,
+   "worstRms": -39.7,
+   "lowestPeak": -20.3,
+   "pre": -22.1,
+   "end": 1.604
+  },
+  "duel-ink-blue": {
+   "fingerprint": "d2f7e069d5de",
+   "peak": -19.1,
+   "rms": -35.1,
+   "worstPeak": -17.4,
+   "worstRms": -31.9,
+   "lowestPeak": -20.9,
+   "pre": -22.6,
+   "end": 0.677
+  },
+  "duel-ink-gold": {
+   "fingerprint": "e9c85a8dddb9",
+   "peak": -19.4,
+   "rms": -35.1,
+   "worstPeak": -17.3,
+   "worstRms": -32.4,
+   "lowestPeak": -20.7,
+   "pre": -22.5,
+   "end": 0.692
+  },
+  "duel-ink-green": {
+   "fingerprint": "06473fdadefc",
+   "peak": -17.9,
+   "rms": -36.7,
+   "worstPeak": -16.9,
+   "worstRms": -35.1,
+   "lowestPeak": -19.2,
+   "pre": -22.1,
+   "end": 0.611
+  },
+  "duel-ink-grey": {
+   "fingerprint": "c13cff60b419",
+   "peak": -18.6,
+   "rms": -37,
+   "worstPeak": -17.5,
+   "worstRms": -36.4,
+   "lowestPeak": -19.6,
+   "pre": -22.7,
+   "end": 0.626
+  },
+  "duel-ink-red": {
+   "fingerprint": "3ac5ccc3dd45",
+   "peak": -19.1,
+   "rms": -35.3,
+   "worstPeak": -17,
+   "worstRms": -34.3,
+   "lowestPeak": -19.9,
+   "pre": -22.2,
+   "end": 0.606
+  },
+  "duel-ink-violet": {
+   "fingerprint": "ec1efc83596c",
+   "peak": -18.1,
+   "rms": -35,
+   "worstPeak": -17.9,
+   "worstRms": -33.8,
+   "lowestPeak": -20.2,
+   "pre": -23.1,
+   "end": 0.659
+  },
+  "duel-ladder-climb": {
+   "fingerprint": "15cb9e874727",
+   "peak": -17.4,
+   "rms": -32,
+   "worstPeak": -17.4,
+   "worstRms": -31.1,
+   "lowestPeak": -19,
+   "pre": -22.6,
+   "end": 1.357
+  },
+  "duel-lend-hop": {
+   "fingerprint": "a1598b53dac1",
+   "peak": -21.3,
+   "rms": -36.2,
+   "worstPeak": -21.3,
+   "worstRms": -35.7,
+   "lowestPeak": -23.8,
+   "pre": -26.6,
+   "end": 0.238
+  },
+  "duel-lore-gain": {
+   "fingerprint": "e78c247ae19d",
+   "peak": -18.2,
+   "rms": -34.9,
+   "worstPeak": -17.6,
+   "worstRms": -34.1,
+   "lowestPeak": -19.1,
+   "pre": -22.8,
+   "end": 0.682
+  },
+  "duel-lore-tick": {
+   "fingerprint": "c20fcd157186",
+   "peak": -26.7,
+   "rms": -40.1,
+   "worstPeak": -25.1,
+   "worstRms": -40,
+   "lowestPeak": -27.3,
+   "pre": -30.5,
+   "end": 0.07
+  },
+  "duel-move-glide": {
+   "fingerprint": "3d16201ae26c",
+   "peak": -25.1,
+   "rms": -40.9,
+   "worstPeak": -22.9,
+   "worstRms": -39.6,
+   "lowestPeak": -25.5,
+   "pre": -28.3,
+   "end": 0.429
+  },
+  "duel-pump-snipe": {
+   "fingerprint": "6568b9bf5b76",
+   "peak": -17.3,
+   "rms": -37.4,
+   "worstPeak": -16.3,
+   "worstRms": -37.1,
+   "lowestPeak": -17.8,
+   "pre": -21.4,
+   "end": 1.159
+  },
+  "duel-quest-pull": {
+   "fingerprint": "73ee9bbb3da0",
+   "peak": -24,
+   "rms": -35,
+   "worstPeak": -23.8,
+   "worstRms": -34.6,
+   "lowestPeak": -24.6,
+   "pre": -29.2,
+   "end": 0.391
+  },
+  "duel-ready-sweep": {
+   "fingerprint": "0c36552ecbaf",
+   "peak": -24,
+   "rms": -42.3,
+   "worstPeak": -23.1,
+   "worstRms": -41.7,
+   "lowestPeak": -26.1,
+   "pre": -28.4,
+   "end": 0.405
+  },
+  "duel-resist-plink": {
+   "fingerprint": "96558e98b911",
+   "peak": -23.7,
+   "rms": -41.1,
+   "worstPeak": -21.8,
+   "worstRms": -41.1,
+   "lowestPeak": -25.1,
+   "pre": -27.1,
+   "end": 0.247
+  },
+  "duel-shift-swell": {
+   "fingerprint": "cc5b1462efb2",
+   "peak": -18.4,
+   "rms": -32.8,
+   "worstPeak": -16.8,
+   "worstRms": -31.1,
+   "lowestPeak": -23.2,
+   "pre": -22,
+   "end": 0.576
+  },
+  "duel-slip-by": {
+   "fingerprint": "c306b8c769be",
+   "peak": -22,
+   "rms": -38,
+   "worstPeak": -20.9,
+   "worstRms": -37.5,
+   "lowestPeak": -23.5,
+   "pre": -26.2,
+   "end": 0.176
+  },
+  "duel-slip-draw": {
+   "fingerprint": "20159992fdbc",
+   "peak": -18,
+   "rms": -36.2,
+   "worstPeak": -17.9,
+   "worstRms": -35.9,
+   "lowestPeak": -19.2,
+   "pre": -23.1,
+   "end": 1.423
+  },
+  "duel-song-rush": {
+   "fingerprint": "01673c69b307",
+   "peak": -16.3,
+   "rms": -32.8,
+   "worstPeak": -16.3,
+   "worstRms": -32.8,
+   "lowestPeak": -17.5,
+   "pre": -21.5,
+   "end": 1.537
+  },
+  "duel-spike-pump": {
+   "fingerprint": "99f7c486e21d",
+   "peak": -21.2,
+   "rms": -43,
+   "worstPeak": -18.6,
+   "worstRms": -41.5,
+   "lowestPeak": -23,
+   "pre": -24,
+   "end": 0.211
+  },
+  "duel-surge-drop": {
+   "fingerprint": "0f5bbc5b654b",
+   "peak": -14.8,
+   "rms": -34.7,
+   "worstPeak": -14.3,
+   "worstRms": -33.5,
+   "lowestPeak": -17.7,
+   "pre": -19.3,
+   "end": 1.395
+  },
+  "duel-sweep-clear": {
+   "fingerprint": "cc8156690cad",
+   "peak": -14.7,
+   "rms": -36,
+   "worstPeak": -14.7,
+   "worstRms": -35.5,
+   "lowestPeak": -17.3,
+   "pre": -19.7,
+   "end": 1.968
+  },
+  "duel-token-mint": {
+   "fingerprint": "b1999db614c3",
+   "peak": -22.2,
+   "rms": -37.9,
+   "worstPeak": -21.1,
+   "worstRms": -37.7,
+   "lowestPeak": -22.5,
+   "pre": -26.4,
+   "end": 0.214
+  },
+  "duel-token-pop": {
+   "fingerprint": "a24ff633a4a2",
+   "peak": -21.8,
+   "rms": -41.7,
+   "worstPeak": -21,
+   "worstRms": -39.8,
+   "lowestPeak": -23.1,
+   "pre": -26.3,
+   "end": 0.192
+  },
+  "duel-under-slide": {
+   "fingerprint": "6b45223d3660",
+   "peak": -21.5,
+   "rms": -40.3,
+   "worstPeak": -21.5,
+   "worstRms": -39.6,
+   "lowestPeak": -24.9,
+   "pre": -26.8,
+   "end": 0.34
+  },
+  "duel-vanish-dust": {
+   "fingerprint": "d71f91b3a246",
+   "peak": -22.4,
+   "rms": -40.5,
+   "worstPeak": -22.3,
+   "worstRms": -39.5,
+   "lowestPeak": -25.1,
+   "pre": -27.6,
+   "end": 0.395
+  },
+  "duel-victory-burst": {
+   "fingerprint": "dd670dcf3feb",
+   "peak": -15.6,
+   "rms": -31.9,
+   "worstPeak": -14.6,
+   "worstRms": -31.4,
+   "lowestPeak": -16.5,
+   "pre": -19.6,
+   "end": 1.617
+  },
+  "duel-ward-bubble": {
+   "fingerprint": "0a076a9d0e2b",
+   "peak": -23.8,
+   "rms": -39.2,
+   "worstPeak": -23.8,
+   "worstRms": -39.2,
+   "lowestPeak": -23.9,
+   "pre": -29.2,
+   "end": 0.294
+  },
+  "duel-well-drip": {
+   "fingerprint": "c27f53b90039",
+   "peak": -23,
+   "rms": -39.2,
+   "worstPeak": -21.7,
+   "worstRms": -38.5,
+   "lowestPeak": -24.6,
+   "pre": -27,
+   "end": 0.405
+  },
+  "duel-wide-payoff": {
+   "fingerprint": "8fac4c853675",
+   "peak": -16,
+   "rms": -34.2,
+   "worstPeak": -15.2,
+   "worstRms": -32.1,
+   "lowestPeak": -17,
+   "pre": -20.2,
+   "end": 1.678
+  },
+  "fx-arc-zap": {
+   "fingerprint": "6fb0868f4743",
+   "peak": -18.4,
+   "rms": -31.2,
+   "worstPeak": -18.1,
+   "worstRms": -30.8,
+   "lowestPeak": -20.3,
+   "pre": -23.2,
+   "end": 0.359
+  },
+  "fx-circuit-pulse": {
+   "fingerprint": "e1f9f302c0f3",
+   "peak": -23.7,
+   "rms": -36.2,
+   "worstPeak": -23.7,
+   "worstRms": -33.8,
+   "lowestPeak": -24.3,
+   "pre": -29.1,
+   "end": 0.514
+  },
+  "fx-confetti-pop": {
+   "fingerprint": "8b186d602edd",
+   "peak": -15.7,
+   "rms": -41.2,
+   "worstPeak": -15.7,
+   "worstRms": -37.1,
+   "lowestPeak": -17.5,
+   "pre": -20.8,
+   "end": 0.813
+  },
+  "fx-crt-power": {
+   "fingerprint": "2b09b01515e6",
+   "peak": -20,
+   "rms": -35.5,
+   "worstPeak": -16.6,
+   "worstRms": -34.4,
+   "lowestPeak": -20.7,
+   "pre": -21.7,
+   "end": 0.799
+  },
+  "fx-disc-throw": {
+   "fingerprint": "51e56aa0adc9",
+   "peak": -19,
+   "rms": -37.8,
+   "worstPeak": -17.8,
+   "worstRms": -36.8,
+   "lowestPeak": -20.4,
+   "pre": -23.1,
+   "end": 0.81
+  },
+  "fx-firework": {
+   "fingerprint": "09f266feaf9c",
+   "peak": -15.5,
+   "rms": -35.2,
+   "worstPeak": -13.8,
+   "worstRms": -33.7,
+   "lowestPeak": -18.5,
+   "pre": -18.7,
+   "end": 1.441
+  },
+  "fx-foil-sheen": {
+   "fingerprint": "86be7c86ddb1",
+   "peak": -20.1,
+   "rms": -37.1,
+   "worstPeak": -19.5,
+   "worstRms": -36.6,
+   "lowestPeak": -22,
+   "pre": -24.8,
+   "end": 0.352
+  },
+  "fx-gear-whir": {
+   "fingerprint": "706daa7dadd9",
+   "peak": -21,
+   "rms": -40.5,
+   "worstPeak": -21,
+   "worstRms": -38,
+   "lowestPeak": -24.7,
+   "pre": -26.3,
+   "end": 0.551
+  },
+  "fx-glitch-burst": {
+   "fingerprint": "3ee22bb9b551",
+   "peak": -22.3,
+   "rms": -31,
+   "worstPeak": -22.1,
+   "worstRms": -28.5,
+   "lowestPeak": -22.4,
+   "pre": -27.5,
+   "end": 0.352
+  },
+  "fx-grid-sweep": {
+   "fingerprint": "4988bf753c47",
+   "peak": -18.8,
+   "rms": -33,
+   "worstPeak": -17.8,
+   "worstRms": -32,
+   "lowestPeak": -19.9,
+   "pre": -23,
+   "end": 1.087
+  },
+  "fx-hologram-in": {
+   "fingerprint": "eb1781244411",
+   "peak": -18.7,
+   "rms": -34.6,
+   "worstPeak": -16.2,
+   "worstRms": -31.8,
+   "lowestPeak": -20.1,
+   "pre": -21.3,
+   "end": 0.84
+  },
+  "fx-liquid-drip": {
+   "fingerprint": "48c66bfc1743",
+   "peak": -21.1,
+   "rms": -38.4,
+   "worstPeak": -20.7,
+   "worstRms": -35.8,
+   "lowestPeak": -23.2,
+   "pre": -26,
+   "end": 0.394
+  },
+  "fx-morph-blob": {
+   "fingerprint": "53d2bb1804fb",
+   "peak": -20,
+   "rms": -33.2,
+   "worstPeak": -19.6,
+   "worstRms": -32.3,
+   "lowestPeak": -20.5,
+   "pre": -24.9,
+   "end": 0.657
+  },
+  "fx-neon-strike": {
+   "fingerprint": "867f2dba6285",
+   "peak": -19.2,
+   "rms": -31.2,
+   "worstPeak": -18.1,
+   "worstRms": -30.5,
+   "lowestPeak": -20.3,
+   "pre": -23.3,
+   "end": 1.06
+  },
+  "fx-rocket-launch": {
+   "fingerprint": "5e4e82a8fc0b",
+   "peak": -15,
+   "rms": -30.7,
+   "worstPeak": -13.8,
+   "worstRms": -29.5,
+   "lowestPeak": -17.1,
+   "pre": -18.7,
+   "end": 1.5
+  },
+  "fx-scramble-decode": {
+   "fingerprint": "51aba87891eb",
+   "peak": -21.3,
+   "rms": -35.1,
+   "worstPeak": -19.7,
+   "worstRms": -34.9,
+   "lowestPeak": -21.6,
+   "pre": -25,
+   "end": 0.795
+  },
+  "fx-shatter": {
+   "fingerprint": "99abdf40c887",
+   "peak": -15.5,
+   "rms": -37.2,
+   "worstPeak": -14.6,
+   "worstRms": -36.5,
+   "lowestPeak": -16.7,
+   "pre": -19.6,
+   "end": 0.795
+  },
+  "fx-signal-tear": {
+   "fingerprint": "febd823d6f40",
+   "peak": -18.1,
+   "rms": -32.3,
+   "worstPeak": -17.9,
+   "worstRms": -31.9,
+   "lowestPeak": -19.8,
+   "pre": -23.1,
+   "end": 0.648
+  },
+  "fx-vortex-spiral": {
+   "fingerprint": "2a8711e39bba",
+   "peak": -19.9,
+   "rms": -38.2,
+   "worstPeak": -19.9,
+   "worstRms": -37.4,
+   "lowestPeak": -23.6,
+   "pre": -25.2,
+   "end": 0.816
   },
   "game-arrow-shot": {
    "fingerprint": "8b8d05c1286b",
@@ -552,6 +2052,16 @@
    "pre": -26.2,
    "end": 0.141
   },
+  "game-whistle": {
+   "fingerprint": "9f94b8e85d40",
+   "peak": -19,
+   "rms": -28.3,
+   "worstPeak": -18.4,
+   "worstRms": -27.6,
+   "lowestPeak": -19.6,
+   "pre": -23.7,
+   "end": 0.331
+  },
   "game-whoosh": {
    "fingerprint": "ee59a91a1bc2",
    "peak": -24.1,
@@ -792,6 +2302,26 @@
    "pre": -23.7,
    "end": 1.485
   },
+  "notify-badge-pop": {
+   "fingerprint": "0bd52275feed",
+   "peak": -26,
+   "rms": -39.5,
+   "worstPeak": -25,
+   "worstRms": -39.5,
+   "lowestPeak": -26,
+   "pre": -30.4,
+   "end": 0.114
+  },
+  "notify-banner-drop": {
+   "fingerprint": "936fe78371cd",
+   "peak": -19,
+   "rms": -35.3,
+   "worstPeak": -19,
+   "worstRms": -34.6,
+   "lowestPeak": -28.9,
+   "pre": -24.3,
+   "end": 0.261
+  },
   "notify-calendar": {
    "fingerprint": "3babb3e652e3",
    "peak": -20.8,
@@ -801,6 +2331,16 @@
    "lowestPeak": -21.6,
    "pre": -26.1,
    "end": 0.492
+  },
+  "notify-critical": {
+   "fingerprint": "655d8a09031a",
+   "peak": -15.7,
+   "rms": -25.7,
+   "worstPeak": -15,
+   "worstRms": -24.8,
+   "lowestPeak": -15.7,
+   "pre": -20,
+   "end": 0.561
   },
   "notify-double-tap": {
    "fingerprint": "e084ccd43dbe",
@@ -902,6 +2442,16 @@
    "pre": -26.1,
    "end": 0.52
   },
+  "notify-presence": {
+   "fingerprint": "7812f3eeb0cf",
+   "peak": -23.5,
+   "rms": -37.7,
+   "worstPeak": -23.4,
+   "worstRms": -37.3,
+   "lowestPeak": -24.8,
+   "pre": -28.8,
+   "end": 0.395
+  },
   "notify-reminder": {
    "fingerprint": "cf1e78e2dfd4",
    "peak": -19.7,
@@ -941,6 +2491,26 @@
    "lowestPeak": -22.6,
    "pre": -25.7,
    "end": 0.61
+  },
+  "notify-toast-in": {
+   "fingerprint": "fad51f585723",
+   "peak": -22.4,
+   "rms": -36.8,
+   "worstPeak": -21.3,
+   "worstRms": -33.4,
+   "lowestPeak": -23.4,
+   "pre": -26.6,
+   "end": 0.269
+  },
+  "notify-toast-out": {
+   "fingerprint": "be57572dd264",
+   "peak": -24.1,
+   "rms": -40.1,
+   "worstPeak": -23.4,
+   "worstRms": -39.2,
+   "lowestPeak": -25.4,
+   "pre": -28.8,
+   "end": 0.138
   },
   "notify-upload-done": {
    "fingerprint": "f24a19659502",
@@ -1092,6 +2662,16 @@
    "pre": -19.5,
    "end": 0.944
   },
+  "ui-cascade": {
+   "fingerprint": "81bd87fc696f",
+   "peak": -23.2,
+   "rms": -39.3,
+   "worstPeak": -23.1,
+   "worstRms": -37.2,
+   "lowestPeak": -25.3,
+   "pre": -28.5,
+   "end": 0.319
+  },
   "ui-checkbox": {
    "fingerprint": "7ae026624b5f",
    "peak": -24.9,
@@ -1192,6 +2772,16 @@
    "pre": -30.2,
    "end": 0.086
   },
+  "ui-dropzone": {
+   "fingerprint": "300e64070b57",
+   "peak": -24,
+   "rms": -39.9,
+   "worstPeak": -22.8,
+   "worstRms": -39.8,
+   "lowestPeak": -27.8,
+   "pre": -28.2,
+   "end": 0.252
+  },
   "ui-expand": {
    "fingerprint": "c3bbea83c192",
    "peak": -25.3,
@@ -1201,6 +2791,16 @@
    "lowestPeak": -26.1,
    "pre": -30.5,
    "end": 0.1
+  },
+  "ui-flyout": {
+   "fingerprint": "eda26075f6df",
+   "peak": -26.7,
+   "rms": -41.7,
+   "worstPeak": -26.3,
+   "worstRms": -40.5,
+   "lowestPeak": -28.2,
+   "pre": -31.7,
+   "end": 0.082
   },
   "ui-focus-ring": {
    "fingerprint": "9d342fc1dca9",
@@ -1242,6 +2842,16 @@
    "pre": -28.7,
    "end": 0.102
   },
+  "ui-menu-radial": {
+   "fingerprint": "67857c42b925",
+   "peak": -26.6,
+   "rms": -41,
+   "worstPeak": -26.6,
+   "worstRms": -41,
+   "lowestPeak": -29.1,
+   "pre": -32,
+   "end": 0.128
+  },
   "ui-menu-slide": {
    "fingerprint": "8f39a6dea41d",
    "peak": -26.6,
@@ -1272,6 +2882,36 @@
    "pre": -28.9,
    "end": 0.223
   },
+  "ui-palette-open": {
+   "fingerprint": "2482420822a0",
+   "peak": -23.5,
+   "rms": -37,
+   "worstPeak": -23.5,
+   "worstRms": -37,
+   "lowestPeak": -30.6,
+   "pre": -28.9,
+   "end": 0.131
+  },
+  "ui-pin-key": {
+   "fingerprint": "aa8ff10a37a9",
+   "peak": -27,
+   "rms": -41.2,
+   "worstPeak": -25.2,
+   "worstRms": -40.1,
+   "lowestPeak": -27,
+   "pre": -30.6,
+   "end": 0.044
+  },
+  "ui-pulse-beat": {
+   "fingerprint": "68dd2c59fab4",
+   "peak": -25.2,
+   "rms": -39.5,
+   "worstPeak": -24.5,
+   "worstRms": -38.5,
+   "lowestPeak": -25.6,
+   "pre": -29.9,
+   "end": 0.273
+  },
   "ui-radio-select": {
    "fingerprint": "4a53d111bd49",
    "peak": -23,
@@ -1281,6 +2921,26 @@
    "lowestPeak": -23.1,
    "pre": -26.3,
    "end": 0.07
+  },
+  "ui-rating-star": {
+   "fingerprint": "c1d2903590c3",
+   "peak": -26.4,
+   "rms": -39.9,
+   "worstPeak": -22.9,
+   "worstRms": -38.6,
+   "lowestPeak": -27.6,
+   "pre": -28.3,
+   "end": 0.173
+  },
+  "ui-record-toggle": {
+   "fingerprint": "387ac4df80eb",
+   "peak": -26.9,
+   "rms": -35.9,
+   "worstPeak": -26.7,
+   "worstRms": -35.7,
+   "lowestPeak": -27,
+   "pre": -32.1,
+   "end": 0.321
   },
   "ui-scroll-detent": {
    "fingerprint": "ddc832817439",
@@ -1292,6 +2952,26 @@
    "pre": -33.7,
    "end": 0.029
   },
+  "ui-shake-no": {
+   "fingerprint": "1ac68219ce0d",
+   "peak": -24.1,
+   "rms": -40.8,
+   "worstPeak": -23,
+   "worstRms": -40.4,
+   "lowestPeak": -24.3,
+   "pre": -28.4,
+   "end": 0.204
+  },
+  "ui-sheet-snap": {
+   "fingerprint": "b60db7b5248d",
+   "peak": -22.3,
+   "rms": -38.6,
+   "worstPeak": -21.5,
+   "worstRms": -38.5,
+   "lowestPeak": -27.6,
+   "pre": -26.9,
+   "end": 0.206
+  },
   "ui-slider-detent": {
    "fingerprint": "a8ccc342950a",
    "peak": -27.6,
@@ -1302,6 +2982,56 @@
    "pre": -30.7,
    "end": 0.028
   },
+  "ui-spring-settle": {
+   "fingerprint": "28f0a1c6c841",
+   "peak": -24.5,
+   "rms": -34.9,
+   "worstPeak": -24.5,
+   "worstRms": -34.8,
+   "lowestPeak": -24.7,
+   "pre": -29.9,
+   "end": 0.365
+  },
+  "ui-stamp": {
+   "fingerprint": "a838c25aa4fe",
+   "peak": -16.6,
+   "rms": -34.8,
+   "worstPeak": -15.9,
+   "worstRms": -33.3,
+   "lowestPeak": -16.9,
+   "pre": -21,
+   "end": 0.232
+  },
+  "ui-step-advance": {
+   "fingerprint": "b352526a9dc8",
+   "peak": -21.5,
+   "rms": -36.2,
+   "worstPeak": -21.5,
+   "worstRms": -36.2,
+   "lowestPeak": -21.8,
+   "pre": -26.9,
+   "end": 0.141
+  },
+  "ui-stepper-tick": {
+   "fingerprint": "e9fb3b60242b",
+   "peak": -27,
+   "rms": -34.5,
+   "worstPeak": -26.7,
+   "worstRms": -34.4,
+   "lowestPeak": -27.9,
+   "pre": -32.1,
+   "end": 0.043
+  },
+  "ui-tab-switch": {
+   "fingerprint": "6f62070b7be8",
+   "peak": -27.1,
+   "rms": -42.4,
+   "worstPeak": -23.3,
+   "worstRms": -39.4,
+   "lowestPeak": -28.7,
+   "pre": -28.6,
+   "end": 0.091
+  },
   "ui-tap": {
    "fingerprint": "01de86755183",
    "peak": -24.6,
@@ -1311,6 +3041,16 @@
    "lowestPeak": -27,
    "pre": -28,
    "end": 0.04
+  },
+  "ui-task-done": {
+   "fingerprint": "e9beadbdc686",
+   "peak": -22.4,
+   "rms": -38.2,
+   "worstPeak": -22.4,
+   "worstRms": -38.2,
+   "lowestPeak": -22.6,
+   "pre": -27.8,
+   "end": 0.261
   },
   "ui-toggle-switch": {
    "fingerprint": "b0a387d97d26",
@@ -1332,6 +3072,16 @@
    "pre": -32.7,
    "end": 0.053
   },
+  "ui-typewriter-bell": {
+   "fingerprint": "0117f8f78442",
+   "peak": -22.5,
+   "rms": -41.2,
+   "worstPeak": -22.5,
+   "worstRms": -41.2,
+   "lowestPeak": -27.3,
+   "pre": -27.9,
+   "end": 0.51
+  },
   "ui-undo": {
    "fingerprint": "de40b58facfb",
    "peak": -25.2,
@@ -1341,6 +3091,26 @@
    "lowestPeak": -26.9,
    "pre": -30.6,
    "end": 0.184
+  },
+  "ui-verdict": {
+   "fingerprint": "8cdd372f3028",
+   "peak": -28.9,
+   "rms": -42.1,
+   "worstPeak": -28.4,
+   "worstRms": -41.4,
+   "lowestPeak": -28.9,
+   "pre": -33.8,
+   "end": 0.131
+  },
+  "ui-wipe": {
+   "fingerprint": "2c1ba3740e26",
+   "peak": -22.1,
+   "rms": -40,
+   "worstPeak": -22.1,
+   "worstRms": -39.4,
+   "lowestPeak": -24.3,
+   "pre": -27.4,
+   "end": 0.339
   },
   "voice-access-denied": {
    "fingerprint": "2cbc28ab53df",
