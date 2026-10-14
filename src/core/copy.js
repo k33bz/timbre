@@ -178,6 +178,9 @@ export const SPEAK_PARAMS = {
   },
 };
 
+/** Other names a speech voice answers to: the announcer is the male voice. */
+export const VOICE_ALIASES = { 'announcer-male': 'announcer' };
+
 /**
  * Copy for a line from the Speak panel: one self-contained function that says (or babbles) it.
  * Speech is baked in as phonemes, so the function carries the engine only (utter, the synthesizer
@@ -190,7 +193,8 @@ export function buildSpeechCopy(T, cfg) {
   cfg = cfg || {};
   const babble = cfg.mode === 'babble';
   const voices = babble ? T.babbleVoices() : T.speechVoices();
-  const vname = Object.hasOwn(voices, cfg.voice) ? cfg.voice : Object.keys(voices)[0];
+  const want = Object.hasOwn(VOICE_ALIASES, String(cfg.voice)) ? VOICE_ALIASES[cfg.voice] : cfg.voice;
+  const vname = Object.hasOwn(voices, want) ? want : Object.keys(voices)[0];
   const text = String(cfg.text == null ? '' : cfg.text);
   const engine = babble ? 'chatter' : 'utter';
   const vals = paramsFor({ params: SPEAK_PARAMS[babble ? 'babble' : 'speak'] }, cfg);

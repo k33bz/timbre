@@ -128,6 +128,9 @@ export const SPEAK_PARAMS = {
   },
 };
 
+/** Other names a speech voice answers to (src/core/copy.js, VOICE_ALIASES). */
+export const VOICE_ALIASES = { 'announcer-male': 'announcer' };
+
 // control characters and the two line separators, which a // comment cannot hold
 const NOT_IN_A_COMMENT = new RegExp('[' + String.fromCharCode(0) + '-' + String.fromCharCode(31) + String.fromCharCode(0x2028, 0x2029) + ']+', 'g');
 
@@ -142,7 +145,8 @@ export function buildSpeechCopy(helperSrc, rt, closure, cfg) {
   cfg = cfg || {};
   const babble = cfg.mode === 'babble';
   const voices = babble ? rt.babbleVoices() : rt.speechVoices();
-  const vname = Object.hasOwn(voices, cfg.voice) ? cfg.voice : Object.keys(voices)[0];
+  const want = Object.hasOwn(VOICE_ALIASES, String(cfg.voice)) ? VOICE_ALIASES[cfg.voice] : cfg.voice;
+  const vname = Object.hasOwn(voices, want) ? want : Object.keys(voices)[0];
   const text = String(cfg.text == null ? '' : cfg.text);
   const engine = babble ? 'chatter' : 'utter';
   const vals = paramsFor({ params: SPEAK_PARAMS[babble ? 'babble' : 'speak'] }, cfg);

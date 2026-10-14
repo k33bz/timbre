@@ -4,7 +4,7 @@
 // returns that field as a second text block (raw code reads better than JSON-escaped code).
 import { ToolError } from '../lib/errors.js';
 import { CATEGORIES } from '../lib/catalog.js';
-import { buildCopy, camel, paramsFor, PREROLL, buildSpeechCopy, SPEAK_PARAMS } from '../lib/copy.js';
+import { buildCopy, camel, paramsFor, PREROLL, buildSpeechCopy, SPEAK_PARAMS, VOICE_ALIASES } from '../lib/copy.js';
 import { speechRuntime, closure as speechClosure } from '../lib/speech.js';
 import { BANDS, BAND_NAMES } from '../lib/levels.js';
 import { search, FilterError } from '../lib/search.js';
@@ -568,7 +568,7 @@ const speakTool = {
   description:
     'Get ONE self-contained JavaScript function that says a line of text in a synthesized voice, or babbles it (Animalese style), with the line baked in. ' +
     'Speech runs the text through the text front end (letter-to-sound rules and a lexicon; numbers and punctuation are understood, and [W EY1 T] in the text spells a word in ARPAbet) and bakes in the phonemes, so the function carries only the formant synthesizer, the voice and the master chain: the same function the gallery\'s Speak rack copies. ' +
-    'Speech voices: announcer (a classic synthesized PA voice, the default), deep and small (robots), whisper, retro (an 8-bit home computer). Babble voices: cute (default), gruff, beep, sprite, elder. ' +
+    'Speech voices: announcer (a classic synthesized PA voice, male, the default; announcer-male names it too), announcer-female (the same PA system with a woman speaking), deep and small (robots), whisper, retro (an 8-bit home computer). Babble voices: cute (default), gruff, beep, sprite, elder. ' +
     'The function keeps the Copy contract, fn(ac, opts, when, dest), returns the end time, and takes pitch, rate and range (speed and spread for babble) and seed in opts at play time. ' +
     'Use it for a custom line; for ready-made announcements, countdowns and babble, search_sounds with category "voice", then get_copy.',
   inputSchema: {
@@ -576,7 +576,7 @@ const speakTool = {
     properties: {
       text: { type: 'string', minLength: 1, maxLength: 500, description: 'The line, in English, e.g. "Access granted. Welcome back, commander."' },
       mode: { type: 'string', enum: ['speech', 'babble'], description: '"speech" (default) says the words; "babble" turns each letter or syllable into a short pitched talk blip.' },
-      voice: { type: 'string', description: 'Speech: announcer (default), deep, small, whisper, retro. Babble: cute (default), gruff, beep, sprite, elder.' },
+      voice: { type: 'string', description: 'Speech: announcer (default, male; also announcer-male), announcer-female, deep, small, whisper, retro. Babble: cute (default), gruff, beep, sprite, elder.' },
       pitch: { type: 'number', description: 'Semitones up or down from the voice\'s own pitch, -12 to 12 (default 0).' },
       rate: { type: 'number', description: 'Speech only: speaking rate, 0.5 to 1.6 (default 1).' },
       range: { type: 'number', description: 'Speech only: intonation, 0 a monotone to 2 animated (default 1).' },
@@ -599,7 +599,8 @@ const speakTool = {
       throw new ToolError(`${wrong.join(' and ')} ${wrong.length > 1 ? 'apply' : 'applies'} to ${mode === 'babble' ? 'speech' : 'babble'}; ${mode === 'babble' ? 'babble' : 'speech'} takes ${Object.keys(defs).join(', ')}.`, { code: 'bad_params' });
     }
     const voices = mode === 'babble' ? rt.babbleVoices() : rt.speechVoices();
-    const voice = args.voice == null ? Object.keys(voices)[0] : String(args.voice).toLowerCase();
+    const asked = args.voice == null ? Object.keys(voices)[0] : String(args.voice).toLowerCase();
+    const voice = mode === 'speak' && Object.hasOwn(VOICE_ALIASES, asked) ? VOICE_ALIASES[asked] : asked;
     if (!Object.hasOwn(voices, voice)) {
       throw new ToolError(`Unknown ${mode === 'babble' ? 'babble' : 'speech'} voice "${args.voice}". Voices: ${Object.keys(voices).join(', ')}.`, { code: 'not_found', data: { voices: Object.keys(voices) } });
     }

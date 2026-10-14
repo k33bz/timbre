@@ -127,7 +127,8 @@ no way to type one), and values outside a range are clamped *and reported*.
 phonemes the text was read as, the line's length and one function,
 `sayContainmentBreachEvacuateThe(ac, opts, when, dest)`, that says it. The text front end ran on the
 server, so the function carries the phonemes and only the synthesizer, the voice and the master chain
-(about 26 KB). Speech voices: announcer (a classic synthesized PA voice), deep and small (robots),
+(about 26 KB). Speech voices: announcer (a classic synthesized PA voice, male; `announcer-male`
+names it too), announcer-female (the same PA system with a woman speaking), deep and small (robots),
 whisper, retro (an 8-bit home computer); `mode: "babble"` gives Animalese style talk instead (cute,
 gruff, beep, sprite, elder). pitch, rate and range (speed and spread for babble) and the seed are
 baked in and can change in `opts` at play time; values out of range are clamped and reported. A word
@@ -136,7 +137,8 @@ engine is compiled from the catalog's own helper sources, so `speak` needs a cat
 voices; `test/speak.test.js` holds its output byte for byte to the gallery's Speak rack.
 
 A parameter with named values (a voice sound's `voice`) is listed with `control: "choice"` and its
-`choices`; `get_copy` and `build_kit` take the name (`{ "voice": "deep" }`) as well as the number.
+`choices`; `get_copy` and `build_kit` take the name (`{ "voice": "deep" }`,
+`{ "voice": "announcer-female" }`, or `announcer-male` for the announcer) as well as the number.
 
 ### The module `build_kit` writes
 

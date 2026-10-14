@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// Listening pass for the voices: renders representative lines in every speech and babble voice, and
-// every voice sound at its defaults, through the page and its master chain (one headless browser),
-// and writes them as WAV files to gates/out/voice/ for a person to listen to.
+// Listening pass for the voices: renders representative lines in every speech and babble voice (so
+// the male and the female announcer say the same two lines), every voice sound at its defaults and
+// every announcer sound with the female announcer, through the page and its master chain (one
+// headless browser), and writes them as WAV files to gates/out/voice/ for a person to listen to.
 //   node gates/voice_wavs.mjs
 import fs from 'node:fs';
 import path from 'node:path';
@@ -32,6 +33,10 @@ async function main() {
     }
     const ids = await b.eval(`Timbre.sounds.filter((s) => s.category === 'voice').map((s) => s.id)`);
     for (const id of ids) save(`${id}.wav`, await b.eval(`Timbre.wav(${JSON.stringify(id)}, null, 1).then((u) => Array.from(u))`));
+    // the announcer sounds (the ones the announcer speaks by default) with the female announcer
+    const female = await b.eval(`Timbre.sounds.filter((s) => s.params.voice && s.params.voice.choices && s.params.voice.choices[s.params.voice.def] === 'announcer')
+      .map((s) => ({ id: s.id, v: s.params.voice.choices.indexOf('announcer-female') })).filter((x) => x.v >= 0)`);
+    for (const { id, v } of female) save(`${id}-female.wav`, await b.eval(`Timbre.wav(${JSON.stringify(id)}, { voice: ${v} }, 1).then((u) => Array.from(u))`));
     if (b.errors.length) throw new Error('page errors: ' + b.errors.join(' | '));
   } finally {
     await b.close();

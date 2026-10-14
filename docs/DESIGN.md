@@ -140,6 +140,27 @@ voice sounds say. Everything is written from those publications; no code or data
 speech engine. Babble (Animalese style talk) reuses the synthesizer: a pitched vowel blip per letter
 or syllable.
 
+The announcer is a pair: one PA system, two speakers. `announcer` is the male voice (`announcer-male`
+names it too) and is exactly what it was. `announcer-female` is a woman's voice, not his pitched up:
+- Vowels: her own table, carried in the voice as `vowels`: Peterson and Barney (1952), women; EY and
+  OW start at the /e/ and /o/ of Hillenbrand et al. (1995), women; every other diphthong target is
+  his times their women-to-men ratio, formant by formant, for the vowel it is nearest (AY and AW
+  start at /a/; EY ends toward /i/, AY and OY toward /I/, AW toward /U/, OW toward /u/). AX is the
+  neutral tube of her shorter tract (585, 1755, 2925 Hz). The women-to-men ratio of the Peterson and
+  Barney formants runs from 1.02 (F1 of ER) to 1.46 (F1 of AH), so no single scale would do.
+- Tract: `formant` 1.17 (the mean of those ratios, F1, F2 and F3 alike) scales what has no table of
+  its own: consonant loci, F4 and F5, the nasals and the frication, so her sibilants and alveolar
+  bursts sit about 15% higher. The vowel table already belongs to her tract, so it is not scaled.
+- Pitch: 210 Hz on his intonation. The contour is multiplicative, so declination, the accents and a
+  question's rise keep their shape a register up; her timing is his (the same rate), so a line lasts
+  as long in either voice and every voice sound's dur holds for both.
+- Source, after Klatt and Klatt (1990) on female talkers: open quotient 0.7 (his 0.55), a steeper
+  tilt (0.75, his 0.25), aspiration under the voice at 0.1 (his 0.02) and every cascade bandwidth 15%
+  wider (`bw` 1.15). Measured on a held vowel: H1-H2 about 5 dB and H1-A3 about 3 to 6 dB above his,
+  harmonics-to-noise about 10 dB below his and still above 30 dB.
+- Chain: his PA horn and hall, with the presence peak (1900 to 2200 Hz) and the top of the horn (4500
+  to 5200 Hz) moved up with her formants; the highpass, the drive and the hall are his.
+
 Every line is normalized to its peak (-15 dBFS after the chain), so a whisper and an announcer read
 alike. Each has a public helper over an engine: `speak` and `babble` resolve the text and the voice
 name, `utter` and `chatter` take phonemes and a whole voice. A voice sound's Copy carries the front
@@ -232,3 +253,24 @@ channel) and Copy pass two channels through; Save WAV writes one channel when bo
   lists, now calls up its own mood. The copy gate measures each channel on its own as well as both
   together, so a Copy that lost or mirrored a sound's placement (`T.pan`) fails; 77 sounds render a
   different left and right, all 34 that use `T.pan` among them.
+- 2026-10-13, female announcer: a sixth speech voice, `announcer-female`, the male announcer's
+  counterpart on the same PA system (see Voices). `announcer` is unchanged and also answers to
+  `announcer-male` (speak, a Speak Copy, `build.mjs --say --voice`, the MCP server's speak, get_copy
+  and build_kit; VOICE_ALIASES in src/core/copy.js, mirrored in the MCP server). The engine reads two
+  new voice fields, each a branch that runs only when a voice sets it: `vowels` (a voice's own vowel
+  table, which `formant` then leaves alone) and `bw` (a bandwidth scale). The male voices render
+  sample for sample what they rendered before: every speech voice, every babble voice and every voice
+  sound at its defaults and six random settings, compared with main on the mock graph, 213 renders,
+  worst difference 0; gates/fixtures/announcer.json keeps him there. The voice sounds offer her as a
+  sixth `voice` choice (number 5, after retro, so every saved number keeps its meaning) rather than a
+  separate male and female switch: their `voice` parameter already names who speaks, and the build
+  test holds every voice sound to the full list of speech voices in order, so the robot, whisper and
+  retro sounds list her too while still speaking with their own voice by default. No default changed,
+  so no existing render did; the speech sounds' fingerprints moved (their Copy carries the new voice
+  table) and were measured again. gates/voice.test.mjs measures her (F1 and F2 of the eleven steady
+  vowels within 10% of the women's table through her tract at 100 Hz and at her own 210 Hz with her
+  intonation, the diphthongs gliding, F0 and the contour, H1-H2, H1-A3 and the aspiration against
+  his, the sibilants and the alveolar burst a little higher); the copy gate runs every voice sound
+  in her voice and a Speak line in it; voice_wavs.mjs writes both announcers saying the same two
+  lines and every announcer sound in her voice. The gallery's Speak rack and the MCP server list her
+  with the other voices.

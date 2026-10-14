@@ -10,7 +10,8 @@
 //   * Vary draws a new seed; Save WAV downloads a RIFF file; Copy copies or offers the code
 //   * at phone width (375 px) nothing scrolls sideways
 //   * the Speak rack: a typed line shows its phonemes and renders, plays by a click and by Ctrl+Enter,
-//     a fader moves by keyboard, babble mode swaps the voices, Copy and Save WAV work
+//     a fader moves by keyboard, babble mode swaps the voices, Copy and Save WAV work, the voice
+//     picker offers the male and the female announcer
 // Screenshots (gates/out): page-dark.png and page-light.png (full page, 1280 wide),
 // page-phone.png (375 wide, top of the page, light), page-phone-speak.png (the Speak rack) and
 // page-phone-dark.png (a card, dark)
@@ -193,6 +194,14 @@ async function main() {
     ok('Speak saves the line as a WAV', spWav && spWav.buf.toString('latin1', 0, 4) === 'RIFF' && spWav.buf.readUInt16LE(22) === 1,
       spWav ? `${spWav.f}, ${spWav.buf.length} bytes, mono` : 'no file');
     await b.click('#speak input[value="speak"] + span');
+    await sleep(150);
+    // the voice picker offers both announcers; the female one takes over the line
+    const spk = await b.eval(`[...document.querySelectorAll('#sp-voice option')].map((o) => o.value + '=' + o.textContent)`);
+    await b.eval(`(() => { const s = document.querySelector('#sp-voice'); s.value = 'announcer-female'; s.dispatchEvent(new Event('change')); })()`);
+    const fem = await waitFor(b, `document.querySelector('#sp-voice').value === 'announcer-female' && /woman/.test(document.querySelector('#sp-desc').textContent) && document.querySelector('#speak').dataset.rendered === '1'`, 5000);
+    ok('the Speak rack offers the male and the female announcer', spk.includes('announcer=Announcer') && spk.includes('announcer-female=Female Announcer') && fem,
+      spk.join(', '));
+    await b.eval(`(() => { const s = document.querySelector('#sp-voice'); s.value = 'announcer'; s.dispatchEvent(new Event('change')); })()`);
 
     // color theme switch
     const bgDark = await b.eval('getComputedStyle(document.body).backgroundColor');

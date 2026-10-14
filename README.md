@@ -14,10 +14,10 @@ gallery.
   can be swapped at once. The first theme is Soft UI.
 - **Voices**: a formant speech synthesizer (Klatt's cascade/parallel design, computed sample by sample,
   so it renders the same everywhere) with an English text front end (the NRL letter-to-sound rules and a
-  lexicon). Five voices (a classic synthesized PA announcer, a deep and a small robot, a whisper, a
-  retro computer), five Animalese style babble voices, and a `voice` category of announcements,
-  countdowns, robot lines and babble. The **Speak** rack says any typed line, and its Copy bakes the
-  line into one function that carries only the engine.
+  lexicon). Six voices (a classic synthesized PA announcer, male or female, a deep and a small
+  robot, a whisper, a retro computer), five Animalese style babble voices, and a `voice` category of
+  announcements, countdowns, robot lines and babble. The **Speak** rack says any typed line, and its
+  Copy bakes the line into one function that carries only the engine.
 - **Measured levels**: every sound is rendered through the same master chain (gain, a limiter, a
   ceiling) and gated to the house range, at its defaults and at random settings. The numbers are
   kept in `catalog/levels.json` and carried in the catalog.
@@ -63,7 +63,8 @@ options are in [mcp-server/README.md](mcp-server/README.md).
 ## Add a sound in three steps
 1. Write `src/sounds/<category>/<id>.js`: id, name, category, tags, desc, dur, params and a
    `play(T, out, t, p)` that uses the helper kit `T`. Start from a seed sound in the same category.
-   A spoken line uses `T.speak` (`node build.mjs --say "Your line."` prints its phonemes and length).
+   A spoken line uses `T.speak` (`node build.mjs --say "Your line."` prints its phonemes and length;
+   `--voice announcer-female` for one voice).
 2. Run `node build.mjs`. It validates every sound (fields, parameter ranges, `play` run in isolation
    at the defaults, the extremes and random settings) and rebuilds `dist/timbre.html` and the
    catalog.
@@ -82,7 +83,7 @@ node gates/check_page.mjs       # the page: cards, Play, keyboard, filters, them
 node gates/check_copy.mjs       # each Copy pasted into a blank page matches the gallery within 0.5 dB
 node mcp-server/scripts/check_kit.mjs   # a build_kit module renders what each Copy renders
 bash gates/run_all.sh           # all of the above, browser gates one at a time
-node gates/voice_wavs.mjs       # a listening pass: every voice as WAV files in gates/out/voice/
+node gates/voice_wavs.mjs       # a listening pass: every voice, both announcers, as WAVs in gates/out/voice/
 ```
 The browser gates need Edge or Chrome (set `TIMBRE_BROWSER` to use another Chromium-family
 binary). Each launches one headless browser with muted audio and kills its whole process tree when

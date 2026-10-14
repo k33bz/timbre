@@ -23,7 +23,7 @@ import vm from 'node:vm';
 import crypto from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { T, HELPER_MODULES } from './src/core/t.js';
-import { stripCode, usedHelpers, playSource, splitFunction, copyHelpers, helperDeps, dedent } from './src/core/copy.js';
+import { stripCode, usedHelpers, playSource, splitFunction, copyHelpers, helperDeps, dedent, VOICE_ALIASES } from './src/core/copy.js';
 import { paramsFor, PREROLL, SAMPLE_RATE, MASTER_CHAIN } from './src/core/render.js';
 import { MOMENTS, FAMILIES, ROLES } from './src/vocabulary.js';
 import { MockContext } from './gates/lib/mockaudio.mjs';
@@ -455,21 +455,23 @@ export function writeAtomic(file, text) {
 }
 
 /**
- * node build.mjs --say "Access denied." [--voice announcer] [--babble]: the phonemes of a line and
- * how long it lasts in each voice at three rates (speed for babble), tail included, to set a
- * voice sound's dur (it must cover the slowest setting its parameters allow).
+ * node build.mjs --say "Access denied." [--voice announcer-female] [--babble]: the phonemes of a
+ * line and how long it lasts in each voice at three rates (speed for babble), tail included, to set
+ * a voice sound's dur (it must cover the slowest setting its parameters allow). --voice also takes
+ * an alias (announcer-male is the announcer).
  */
 function say(args) {
   const opt = (name) => { const i = args.indexOf('--' + name); return i >= 0 ? args[i + 1] : null; };
   const text = opt('say') || '';
   const babble = args.includes('--babble');
   const voices = babble ? T.babbleVoices() : T.speechVoices();
-  const names = opt('voice') ? [opt('voice')] : Object.keys(voices);
+  const asked = opt('voice');
+  const names = asked ? [!babble && Object.hasOwn(VOICE_ALIASES, asked) ? VOICE_ALIASES[asked] : asked] : Object.keys(voices);
   if (!babble) console.log('phonemes: ' + T.phonemize(text));
   for (const v of names) {
-    if (!voices[v]) { console.error(`unknown voice "${v}" (${Object.keys(voices).join(', ')})`); process.exit(1); }
+    if (!Object.hasOwn(voices, v)) { console.error(`unknown voice "${v}" (${Object.keys(voices).join(', ')}${babble ? '' : '; ' + Object.keys(VOICE_ALIASES).map((a) => a + ' is ' + VOICE_ALIASES[a]).join(', ')})`); process.exit(1); }
     const lens = [0.75, 1, 1.3].map((r) => (babble ? T.babble(null, 0, { text, voice: v, speed: r }) : T.speak(null, 0, { text, voice: v, rate: r })).toFixed(2));
-    console.log(`  ${v.padEnd(10)} ${lens.join(' s, ')} s at ${babble ? 'speed' : 'rate'} 0.75, 1, 1.3`);
+    console.log(`  ${v.padEnd(16)} ${lens.join(' s, ')} s at ${babble ? 'speed' : 'rate'} 0.75, 1, 1.3`);
   }
 }
 

@@ -7,7 +7,8 @@
 // bypass) for fricatives and bursts. A resonator is y[n] = A x[n] + B y[n-1] + C y[n-2] with
 // C = -exp(-2 pi BW T), B = 2 exp(-pi BW T) cos(2 pi F T), A = 1 - B - C; the nasal zero is its
 // inverse. The source is a smooth glottal flow pulse (a polynomial open phase, as in Klatt and Klatt
-// 1990), differenced for the radiation at the lips. Vowel targets: Peterson and Barney (1952), men;
+// 1990), differenced for the radiation at the lips. Vowel targets: Peterson and Barney (1952), men,
+// and a voice's own table for another talker (the female announcer: the women's averages);
 // durations: the inherent and minimum durations and rules of Klatt (1979); consonants coarticulate
 // with their vowel by locus equations (F2 onset = k F2 vowel + (1 - k) locus, Sussman et al. 1991).
 // Written from those publications, with no code or data from any other speech engine.
@@ -89,7 +90,10 @@ export function phones() {
  *   ph  ARPAbet separated by spaces, vowels with stress 0, 1 or 2 (AE1), '/' between words,
  *       . , ? ! ; : ... as pauses with their intonation, PH*2 to hold a phoneme twice as long
  *   o   f0 (Hz), rate (x), range (intonation: 0 a monotone, 1 natural), formant (scales every
- *       resonance: above 1 a smaller vocal tract), whisper, breath (aspiration under the voice)
+ *       resonance: above 1 a smaller vocal tract), whisper, breath (aspiration under the voice),
+ *       vowels (the voice's own vowel targets, { IY: [F1, F2, F3], EY: [F1, F2, F3, end F1, F2, F3],
+ *       ... }: they belong to its tract already, so formant then scales only the consonants, F4, F5,
+ *       the nasals and the frication), bw (times every cascade bandwidth)
  * Returns { dur (s), f0: [t, Hz, ...], amp: [t, AV, AH, AF, AB, A2..A6, ...], form: [t, F1..F5,
  * B1..B5, FNZ, F6, ...], segs: [{ ph, t0, t1 }] }.
  */
@@ -153,13 +157,21 @@ export function speechPlan(ph, o) {
     s.ms = ((d.min + (d.inh - d.min) * pr) / rate) * s.x;
   }
   // targets: an unstressed vowel moves 30% toward the neutral tube; a consonant's locus is pulled
-  // toward the vowel it leans on (the next one, or the one before when it closes its word)
-  const AX = P.AX.F;
+  // toward the vowel it leans on (the next one, or the one before when it closes its word). A voice
+  // with its own vowel table takes its targets (and its neutral tube) from it, unscaled
+  const own = o.vowels || null;
+  const AX = own && own.AX ? own.AX : P.AX.F;
   const sc = (f) => [f[0] * fs, f[1] * fs, f[2] * fs];
   for (const s of segs) {
     if (!isV(s)) continue;
     const red = s.st === 0 && s.n !== 'AX' ? 0.3 : 0;
     const mix = (f) => [f[0] + (AX[0] - f[0]) * red, f[1] + (AX[1] - f[1]) * red, f[2] + (AX[2] - f[2]) * red];
+    const e = own && own[s.n];
+    if (e) {
+      s.F = mix(e);
+      s.G = s.d.G && e.length > 5 ? mix(e.slice(3)) : s.F;
+      continue;
+    }
     s.F = sc(mix(s.d.F));
     s.G = s.d.G ? sc(mix(s.d.G)) : s.F;
   }
@@ -177,7 +189,7 @@ export function speechPlan(ph, o) {
     const next = nearV(i, 1);
     const coda = prev && prev.w === s.w && !(next && next.w === s.w);
     const v = coda ? prev : next || prev;
-    const vf = v ? (v === prev ? v.G : v.F) : sc(AX);
+    const vf = v ? (v === prev ? v.G : v.F) : own && own.AX ? AX.slice(0, 3) : sc(AX);
     const d = s.d;
     if (d.kind === 'asp') { s.F = vf.slice(); continue; }
     const L = sc(d.L);
@@ -255,13 +267,14 @@ export function speechPlan(ph, o) {
   // onset, then glides), a consonant holds its target, a glide is mostly transition
   const form = [];
   const FNP = 270 * fs;
+  const bk = o.bw || 1;
   let lastKey = -1;
   const key = (tk, F, s) => {
     tk = Math.max(tk, lastKey);
     lastKey = tk;
     const nas = s.d.kind === 'nasal';
-    form.push(tk, F[0], F[1], F[2], 3500 * fs, 4500 * fs, nas ? 70 : 50 + 0.04 * F[0], nas ? 200 : 60 + 0.025 * F[1],
-      nas ? 220 : 100 + 0.02 * F[2], 250, 300, nas ? 450 * fs : FNP, (s.d.sp ? s.d.sp[6] : 6000) * fs);
+    form.push(tk, F[0], F[1], F[2], 3500 * fs, 4500 * fs, (nas ? 70 : 50 + 0.04 * F[0]) * bk, (nas ? 200 : 60 + 0.025 * F[1]) * bk,
+      (nas ? 220 : 100 + 0.02 * F[2]) * bk, 250 * bk, 300 * bk, nas ? 450 * fs : FNP, (s.d.sp ? s.d.sp[6] : 6000) * fs);
   };
   for (const s of segs) {
     if (s.pause != null) continue;
@@ -586,8 +599,10 @@ export function voiceOut(out, t, y, o) {
 }
 
 /**
- * The speech voices: f0 (Hz), rate, range, formant (vocal tract scale), oq and tilt (a low oq and
- * tilt is buzzier), jitter, shimmer, breath, whisper and the effect chain fx (voiceOut).
+ * The speech voices: f0 (Hz), rate, range, formant (vocal tract scale), vowels (the voice's own
+ * vowel table) and bw (bandwidth scale), oq and tilt (a low oq and tilt is buzzier), jitter,
+ * shimmer, breath, whisper and the effect chain fx (voiceOut). The announcer is the male voice
+ * ('announcer-male' names it too); announcer-female is the same PA system with a woman speaking.
  */
 export function speechVoices() {
   return {
@@ -611,6 +626,26 @@ export function speechVoices() {
     retro: {
       name: 'Retro Computer', desc: 'A flat, buzzy home computer voice through an 8-bit converter',
       f0: 96, rate: 0.96, range: 0, formant: 1, oq: 0.3, tilt: 0, fx: { crush: { bits: 7, hz: 8000 }, lp: 3800 },
+    },
+    // A woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at the /e/
+    // and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his times
+    // their women-to-men ratio for the nearest vowel, formant by formant (AY and AW start at /a/,
+    // EY ends toward /i/, AY and OY toward /I/, AW toward /U/, OW toward /u/); AX is the neutral
+    // tube of her shorter tract. formant 1.17 (the women-to-men ratio of the Peterson and Barney
+    // means, F1 to F3 alike) moves her consonant loci, F4, F5, nasals and frication up. Voice
+    // quality after Klatt and Klatt (1990) female talkers: a longer open phase, a steeper tilt,
+    // more aspiration in the voicing, wider bandwidths. The same horn and hall, its presence peak
+    // and top end moved up with her formants
+    'announcer-female': {
+      name: 'Female Announcer', desc: 'The same PA voice system with a woman speaking: clear and level, through the horn into the hall',
+      f0: 210, rate: 0.92, range: 0.7, formant: 1.17, bw: 1.15, oq: 0.7, tilt: 0.75, jitter: 0.003, shimmer: 0.02, breath: 0.1,
+      vowels: {
+        IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],
+        AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],
+        AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],
+        AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],
+      },
+      fx: { hp: 300, lp: 5200, eq: { f: 2200, q: 1.2, db: 5 }, drive: 0.25, room: { time: 1.1, mix: 0.18, pre: 0.02 } },
     },
   };
 }
@@ -636,14 +671,15 @@ export function utter(out, t, o) {
 
 /**
  * Speak a line: o.text (English; [W EY1 T] spells a word in ARPAbet) or o.ph (phonemes), o.voice (a
- * name from speechVoices, default 'announcer', or a voice object), o.pitch (semitones), o.rate,
- * o.range, o.peak (default 0.18), o.fx (false: no effect chain). Returns the end time; with
- * out = null it schedules nothing, so speak(null, 0, o) is the line's length in seconds.
+ * name from speechVoices, default 'announcer', 'announcer-male' the same voice, or a voice object),
+ * o.pitch (semitones), o.rate, o.range, o.peak (default 0.18), o.fx (false: no effect chain).
+ * Returns the end time; with out = null it schedules nothing, so speak(null, 0, o) is the line's
+ * length in seconds.
  */
 export function speak(out, t, o) {
   o = o || {};
   const all = speechVoices();
-  const v = o.voice && typeof o.voice === 'object' ? o.voice : all[o.voice] || all.announcer;
+  const v = o.voice && typeof o.voice === 'object' ? o.voice : all[o.voice === 'announcer-male' ? 'announcer' : o.voice] || all.announcer;
   return utter(out, t, Object.assign({}, o, { ph: o.ph != null ? o.ph : phonemize(o.text || ''), voice: v }));
 }
 

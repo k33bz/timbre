@@ -8,7 +8,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { HAVE_REPO, REPO, REAL_CATALOG, DASHES, makeServer, call, tmpDir, writeCatalog } from './helper.js';
 import { fixtureManifest } from './fixture.js';
-import { buildSpeechCopy, SPEAK_PARAMS } from '../lib/copy.js';
+import { buildSpeechCopy, SPEAK_PARAMS, VOICE_ALIASES } from '../lib/copy.js';
 import { speechRuntime, closure } from '../lib/speech.js';
 import { Catalog } from '../lib/catalog.js';
 import { MockContext } from '../lib/mockaudio.js';
@@ -37,6 +37,8 @@ const CFGS = [
   { mode: 'speak', text: 'Is the system online? 3, 2, 1...', voice: 'retro', pitch: 3, rate: 1.2, range: 1.5, seed: 9 },
   { mode: 'speak', text: 'Press [S T AA1 R T] </script>', voice: 'whisper', pitch: 40 },
   { mode: 'speak', text: 'Hello', voice: 'nobody' },
+  { mode: 'speak', text: 'Attention, please. The doors are closing.', voice: 'announcer-female', pitch: -1, rate: 0.9, range: 1.2, seed: 3 },
+  { mode: 'speak', text: 'Warning.', voice: 'announcer-male' },
   { mode: 'babble', text: 'Oh, hi there! Are you new in town?', voice: 'cute' },
   { mode: 'babble', text: 'Hmph.', voice: 'gruff', speed: 0.8, spread: 1.5, seed: 0 },
 ];
@@ -51,6 +53,7 @@ test('the speak Copy equals the gallery\'s Speak rack Copy, byte for byte', asyn
     assert.ok(!DASHES.test(port));
   }
   assert.deepEqual(SPEAK_PARAMS, copy.SPEAK_PARAMS, 'the same controls and ranges');
+  assert.deepEqual(VOICE_ALIASES, copy.VOICE_ALIASES, 'the same voice aliases');
 });
 
 test('speak: one function with the line baked in, the engine only, the gallery\'s samples', async (t) => {
@@ -77,6 +80,26 @@ test('speak: one function with the line baked in, the engine only, the gallery\'
   assert.deepEqual(got, gc.nodes.find((n) => n.buffer).buffer.getChannelData(0));
   assert.ok(Math.abs(end - gEnd) < 1e-9);
   assert.ok(Math.abs(end - 0.2 - r.data.dur) < 0.002, `${end} vs dur ${r.data.dur}`);
+  // the female announcer: her line, her name, the gallery's samples
+  const f = await call(s, 'speak', { text: 'Attention, please.', voice: 'announcer-female' });
+  assert.equal(f.isError, false, JSON.stringify(f.data));
+  assert.equal(f.data.voice, 'announcer-female');
+  assert.equal(f.data.voiceName, 'Female Announcer');
+  const fctx = vm.createContext({});
+  vm.runInContext(f.code, fctx);
+  const fac = new MockContext(48000, { strict: true });
+  fctx[f.data.functionName](fac);
+  const fgc = new MockContext(48000);
+  const fout = fgc.createGain();
+  T.seed(1);
+  T.speak(fout, 0.2, { text: 'Attention, please.', voice: 'announcer-female', pitch: 0, rate: 1, range: 1 });
+  assert.deepEqual(fac.nodes.find((n) => n.buffer).buffer.getChannelData(0), fgc.nodes.find((n) => n.buffer).buffer.getChannelData(0));
+  // announcer-male is the announcer
+  const m = await call(s, 'speak', { text: 'Attention, please.', voice: 'Announcer-Male' });
+  assert.equal(m.isError, false);
+  assert.equal(m.data.voice, 'announcer');
+  assert.equal(m.code, (await call(s, 'speak', { text: 'Attention, please.', voice: 'announcer' })).code);
+  assert.deepEqual(m.data.voices.speech, ['announcer', 'deep', 'small', 'whisper', 'retro', 'announcer-female']);
   // babble
   const b = await call(s, 'speak', { text: 'Yay! You found me!', mode: 'babble', voice: 'sprite', speed: 1.2 });
   assert.equal(b.isError, false);
@@ -96,7 +119,8 @@ test('speak checks its arguments and clamps values, saying so', async (t) => {
     assert.equal(r.data.code, code, JSON.stringify(r.data));
     if (re) assert.match(r.data.error, re);
   };
-  await bad({ text: 'Hi', voice: 'nobody' }, 'not_found', /Voices: announcer, deep, small, whisper, retro/);
+  await bad({ text: 'Hi', voice: 'nobody' }, 'not_found', /Voices: announcer, deep, small, whisper, retro, announcer-female\./);
+  await bad({ text: 'Hi', mode: 'babble', voice: 'announcer-male' }, 'not_found', /cute, gruff, beep, sprite, elder/);
   await bad({ text: 'Hi', mode: 'babble', voice: 'announcer' }, 'not_found', /cute, gruff, beep, sprite, elder/);
   await bad({ text: 'Hi', mode: 'babble', rate: 1.2 }, 'bad_params', /rate applies to speech; babble takes pitch, speed, spread/);
   await bad({ text: '...!' }, 'invalid_arguments', /nothing to say/);
@@ -126,14 +150,23 @@ test('voice sounds: choices show in get_sound, and get_copy takes a voice by nam
   assert.equal(g.isError, false);
   const voice = g.data.params.find((p) => p.name === 'voice');
   assert.equal(voice.control, 'choice');
-  assert.deepEqual(voice.choices, ['announcer', 'deep', 'small', 'whisper', 'retro']);
+  assert.deepEqual(voice.choices, ['announcer', 'deep', 'small', 'whisper', 'retro', 'announcer-female']);
+  assert.equal(voice.default, 0);
   const byName = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'deep' } });
   const byNumber = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 1 } });
   assert.equal(byName.code, byNumber.code);
   assert.equal(byName.data.params.voice, 1);
+  // the female announcer by name, and announcer-male for the announcer
+  const female = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'announcer-female' } });
+  assert.equal(female.isError, false);
+  assert.equal(female.data.params.voice, 5);
+  assert.equal(female.code, (await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 5 } })).code);
+  const male = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'announcer-male' } });
+  assert.equal(male.data.params.voice, 0);
+  assert.equal(male.code, (await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'announcer' } })).code);
   const wrong = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'robot' } });
   assert.equal(wrong.isError, true);
-  assert.match(wrong.data.error, /or one of "announcer", "deep", "small", "whisper", "retro"/);
+  assert.match(wrong.data.error, /or one of "announcer", "deep", "small", "whisper", "retro", "announcer-female"/);
   // the voice category and the voice moments reach search and suggestions
   const v = await call(s, 'search_sounds', { category: 'voice', limit: 50 });
   assert.ok(v.data.items.length >= 15 && v.data.items.every((x) => x.category === 'voice'));

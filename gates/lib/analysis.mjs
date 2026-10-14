@@ -175,3 +175,56 @@ export function rmsDb(x, a = 0, b = x.length) {
   for (let i = a; i < b; i++) s += x[i] * x[i];
   return 10 * Math.log10(s / Math.max(1, b - a) + 1e-30);
 }
+
+/**
+ * F0 of the voiced frames of x: 40 ms frames every 10 ms, normalized autocorrelation at lags from
+ * sr / hi to sr / lo; the shortest lag whose local peak comes within 10% of the highest (so a period
+ * is not read as two), refined by a parabola through its neighbours. A frame counts as voiced when
+ * that peak is above `voiced`. Returns the F0 of each voiced frame, Hz.
+ */
+export function pitchTrack(x, sr, lo = 60, hi = 500, voiced = 0.6) {
+  const fl = Math.round(0.04 * sr);
+  const hop = Math.round(0.01 * sr);
+  const l0 = Math.floor(sr / hi);
+  const l1 = Math.ceil(sr / lo);
+  const out = [];
+  for (let s = 0; s + fl + l1 <= x.length; s += hop) {
+    let e0 = 0;
+    for (let i = 0; i < fl; i++) e0 += x[s + i] * x[s + i];
+    if (e0 < 1e-12) continue;
+    const r = new Float64Array(l1 + 2);
+    for (let lag = l0 - 1; lag <= l1 + 1; lag++) {
+      let c = 0;
+      let e1 = 0;
+      for (let i = 0; i < fl; i++) { c += x[s + i] * x[s + i + lag]; e1 += x[s + i + lag] * x[s + i + lag]; }
+      r[lag] = c / Math.sqrt(e0 * e1 + 1e-30);
+    }
+    let top = l0;
+    for (let lag = l0; lag <= l1; lag++) if (r[lag] > r[top]) top = lag;
+    if (r[top] < voiced) continue;
+    let best = top;
+    for (let lag = l0; lag < top; lag++) if (r[lag] >= 0.9 * r[top] && r[lag] >= r[lag - 1] && r[lag] >= r[lag + 1]) { best = lag; break; }
+    const a = r[best - 1];
+    const b = r[best];
+    const c = r[best + 1];
+    const d = a - 2 * b + c;
+    out.push(sr / (best + (d < 0 ? (0.5 * (a - c)) / d : 0)));
+  }
+  return out;
+}
+
+/** The level in dB of the strongest spectral line within f0 / 3 of each frequency in `fs`, from one
+ *  Hann-windowed 16384-point frame of x starting at `at` (H1, H2, A3 and the like). */
+export function lineDb(x, sr, at, fs, f0) {
+  const N = 16384;
+  const re = new Float64Array(N);
+  const im = new Float64Array(N);
+  for (let i = 0; i < N; i++) re[i] = (x[at + i] || 0) * (0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (N - 1)));
+  fft(re, im);
+  const hz = sr / N;
+  return fs.map((f) => {
+    let m = 0;
+    for (let k = Math.max(1, Math.round((f - f0 / 3) / hz)); k <= Math.round((f + f0 / 3) / hz); k++) m = Math.max(m, re[k] * re[k] + im[k] * im[k]);
+    return 10 * Math.log10(m + 1e-30);
+  });
+}

@@ -1,6 +1,9 @@
 // The voices, measured: nobody can listen in a test, so each check renders through the engine
 // (src/core/speech.js) on the mock graph and measures the buffer it computed.
 //   * vowels: LPC on a sustained render puts F1 and F2 within 10% of the table (Peterson and Barney)
+//   * the female announcer: F1 and F2 within 10% of the women's table, F0 200 to 220 Hz with his
+//     intonation scaled, a longer open phase, steeper tilt and more aspiration (Klatt and Klatt 1990),
+//     sibilants and bursts a little higher; and the male announcer still renders what main rendered
 //   * fricatives put their energy in the right bands; stops close, burst and aspirate; nasals murmur
 //   * prosody: statements fall, questions rise, rate scales length, range 0 is a monotone
 //   * determinism, lengths (speak(null) is the render's length), levels, every voice
@@ -12,10 +15,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { T } from '../src/core/t.js';
-import { buildSpeechCopy, SPEAK_PARAMS } from '../src/core/copy.js';
+import { buildSpeechCopy, SPEAK_PARAMS, VOICE_ALIASES } from '../src/core/copy.js';
 import { ROOT } from '../build.mjs';
 import { MockContext } from './lib/mockaudio.mjs';
-import { decimate, formants, bandEnergy, rmsDb } from './lib/analysis.mjs';
+import { decimate, formants, bandEnergy, rmsDb, pitchTrack, lineDb, fft } from './lib/analysis.mjs';
 
 const SR = 48000;
 // a neutral voice for measuring: steady pitch, no jitter, no effect chain
@@ -73,6 +76,168 @@ test('diphthongs glide from their onset toward their end target (in the formant 
     const got = fk(0.75, 0.9) - fk(0.1, 0.25);
     assert.ok(Math.sign(got) === Math.sign(want) && Math.abs(got) > Math.abs(want) * 0.4, `${v}: F${k + 1} moved ${got.toFixed(0)} Hz, the targets ${want} Hz`);
   }
+});
+
+// The female announcer: her own vowel table (Peterson and Barney 1952, women; diphthongs after
+// Hillenbrand et al. 1995, women), her shorter tract and the voice quality of Klatt and Klatt (1990)
+// female talkers. Measured twice: through her tract at the men's 100 Hz measuring pitch, where LPC
+// reads the resonances cleanly, and at her own pitch and intonation, where her harmonics lie 210 Hz
+// apart and LPC leans toward the nearest one (most in UW, whose F1 of 370 Hz sits by H2 at 420).
+const MALE = T.speechVoices().announcer;
+const FEMALE = T.speechVoices()['announcer-female'];
+test('female vowels: LPC puts F1 and F2 within 10% of the women\'s targets, at 100 Hz and at her own pitch', (t) => {
+  const rows = [];
+  for (const [label, voice] of [['her tract, 100 Hz source, monotone', { ...FEMALE, f0: 100, range: 0 }], [`her own voice, ${FEMALE.f0} Hz and her intonation`, FEMALE]]) {
+    rows.push(label + ':');
+    for (const v of VOWELS) {
+      const y = utter(v + '1*5', voice);
+      const d = decimate(y.subarray(Math.floor(y.length * 0.3), Math.floor(y.length * 0.7)), SR, 4, 5000);
+      const f = formants(d, SR / 4, 12);
+      const target = FEMALE.vowels[v];
+      const e1 = (100 * (f[0] - target[0])) / target[0];
+      const e2 = (100 * (f[1] - target[1])) / target[1];
+      rows.push(`  ${v.padEnd(3)} F1 ${f[0].toFixed(0).padStart(4)} (${target[0]}, ${e1.toFixed(1)}%)  F2 ${f[1].toFixed(0).padStart(4)} (${target[1]}, ${e2.toFixed(1)}%)`);
+      assert.ok(Math.abs(e1) <= 10, `${label}: ${v} F1 ${f[0].toFixed(0)} vs ${target[0]}`);
+      assert.ok(Math.abs(e2) <= 10, `${label}: ${v} F2 ${f[1].toFixed(0)} vs ${target[1]}`);
+    }
+  }
+  t.diagnostic('\n' + rows.join('\n'));
+  // her table is not his scaled: the women-to-men ratio differs from vowel to vowel (Peterson and
+  // Barney: F1 of AE 1.30, of ER 1.02)
+  const P = T.phones();
+  const r = VOWELS.filter((v) => v !== 'AX').map((v) => FEMALE.vowels[v][0] / P[v].F[0]);
+  assert.ok(Math.max(...r) - Math.min(...r) > 0.25, r.join(' '));
+  for (const v of Object.keys(P).filter((k) => P[k].vowel)) assert.equal(FEMALE.vowels[v].length, P[v].G ? 6 : 3, v);
+});
+
+test('female diphthongs glide from her onset toward her end target', () => {
+  for (const v of ['EY', 'AY', 'AW', 'OW', 'OY']) {
+    const y = utter(v + '1*5', { ...FEMALE, f0: 100, range: 0 });
+    const n = y.length;
+    const F = FEMALE.vowels[v].slice(0, 3);
+    const G = FEMALE.vowels[v].slice(3);
+    const k = Math.abs(G[0] - F[0]) > Math.abs(G[1] - F[1]) ? 0 : 1;
+    const fk = (a, b) => formants(decimate(y.subarray(Math.floor(n * a), Math.floor(n * b)), SR, 4, 5000), SR / 4, 12)[k];
+    const want = G[k] - F[k];
+    const got = fk(0.75, 0.9) - fk(0.1, 0.25);
+    assert.ok(Math.sign(got) === Math.sign(want) && Math.abs(got) > Math.abs(want) * 0.4, `${v}: F${k + 1} moved ${got.toFixed(0)} Hz, the targets ${want} Hz`);
+  }
+});
+
+test('female pitch: 200 to 220 Hz, with his intonation scaled to her register', (t) => {
+  assert.ok(FEMALE.f0 >= 200 && FEMALE.f0 <= 220, `f0 ${FEMALE.f0}`);
+  const med = (a) => a.slice().sort((p, q) => p - q)[a.length >> 1];
+  // a held vowel on a monotone sounds at her f0
+  const held = pitchTrack(utter('AA1*5', { ...FEMALE, range: 0 }), SR);
+  assert.ok(held.length > 20 && Math.abs(med(held) / FEMALE.f0 - 1) < 0.015, `held ${med(held)}`);
+  // the same shape as his: for every line her pitch track is his times the ratio of their f0, so the
+  // declination, the accents and a question's rise are his, a register higher; the timing is his
+  for (const text of ['Access granted. Welcome back, commander.', 'Is the system online? Three, two, one... go!']) {
+    const ph = T.phonemize(text);
+    const m = T.speechPlan(ph, MALE);
+    const f = T.speechPlan(ph, FEMALE);
+    assert.equal(f.dur, m.dur);
+    for (let i = 1; i < m.f0.length; i += 2) assert.ok(Math.abs(f.f0[i] / m.f0[i] - FEMALE.f0 / MALE.f0) < 1e-9, text);
+  }
+  // measured in her render (no effect chain): a statement centres near her f0 and falls on its last
+  // vowel; a question rises on it
+  const line = (text) => {
+    const y = render((out) => T.speak(out, 0, { text, voice: 'announcer-female', fx: false })).y;
+    const last = T.speechPlan(T.phonemize(text), FEMALE).segs.filter((x) => /[0-2]$/.test(x.ph)).pop();
+    const [a, b] = span(last, 0.3, 0);
+    return { all: med(pitchTrack(y, SR)), end: med(pitchTrack(y.subarray(a, b + Math.round(0.04 * SR)), SR)) };
+  };
+  const st = line('The system is online.');
+  const q = line('Is the system online?');
+  t.diagnostic(`statement: median ${st.all.toFixed(0)} Hz, its last vowel ${st.end.toFixed(0)} Hz; question: median ${q.all.toFixed(0)} Hz, its last vowel ${q.end.toFixed(0)} Hz`);
+  assert.ok(st.all > 185 && st.all < 235, `statement median ${st.all}`);
+  assert.ok(st.end < st.all * 0.92 && q.end > q.all * 1.1, `statement ends ${st.end}, question ends ${q.end}`);
+});
+
+test('female voice quality, after Klatt and Klatt (1990): a longer open phase, a steeper tilt, more aspiration', (t) => {
+  // H1-H2 (open quotient) and H1-A3 (spectral tilt) on a held vowel, and the aspiration: the same
+  // vowel rendered with and without breath (jitter off, so only the aspiration draws noise) gives
+  // the noise on its own; harmonics-to-noise in dB, over 0 to 8 kHz and in the F3 region
+  const measure = (voice, v) => {
+    const cfg = { ...voice, range: 0, jitter: 0, shimmer: 0 };
+    const own = voice.vowels ? voice.vowels[v] : T.phones()[v].F.map((x) => x * (voice.formant || 1));
+    T.seed(1);
+    const y = T.klatt(SR, T.speechPlan(v + '1*5', cfg), cfg);
+    T.seed(1);
+    const dry = { ...cfg, breath: 0 };
+    const y0 = T.klatt(SR, T.speechPlan(v + '1*5', dry), dry);
+    const at = Math.floor(y.length * 0.35);
+    const [h1, h2, a3] = lineDb(y0, SR, at, [cfg.f0, 2 * cfg.f0, Math.round(own[2] / cfg.f0) * cfg.f0], cfg.f0);
+    const noise = y.map((x, i) => x - y0[i]);
+    const hnr = [[0, 8000], [2500, 5000]].map(([lo, hi]) => 10 * Math.log10(bandPow(y0, at, lo, hi) / bandPow(noise, at, lo, hi)));
+    return { h12: h1 - h2, h13: h1 - a3, hnr };
+  };
+  // power between lo and hi Hz in one Hann-windowed 16384-point frame from `at`
+  const bandPow = (x, at, lo, hi) => {
+    const N = 16384;
+    const re = new Float64Array(N);
+    const im = new Float64Array(N);
+    for (let i = 0; i < N; i++) re[i] = x[at + i] * (0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (N - 1)));
+    fft(re, im);
+    let e = 0;
+    for (let k = Math.ceil((lo * N) / SR); k < (hi * N) / SR; k++) e += re[k] * re[k] + im[k] * im[k];
+    return e;
+  };
+  const rows = [];
+  for (const v of ['AA', 'AE']) {
+    const m = measure(MALE, v);
+    const f = measure(FEMALE, v);
+    rows.push(`${v} H1-H2 ${m.h12.toFixed(1)} -> ${f.h12.toFixed(1)} dB, H1-A3 ${m.h13.toFixed(1)} -> ${f.h13.toFixed(1)} dB, HNR ${m.hnr[0].toFixed(1)} -> ${f.hnr[0].toFixed(1)} dB (2.5 to 5 kHz ${m.hnr[1].toFixed(1)} -> ${f.hnr[1].toFixed(1)})`);
+    assert.ok(f.h12 > m.h12 + 3, `${v} H1-H2 ${m.h12} -> ${f.h12}`);
+    assert.ok(f.h13 > m.h13 + 2, `${v} H1-A3 ${m.h13} -> ${f.h13}`);
+    assert.ok(f.hnr[1] < m.hnr[1] - 6 && f.hnr[0] < m.hnr[0] - 6, `${v} more aspiration ${m.hnr} -> ${f.hnr}`);
+    assert.ok(f.hnr[0] > 25, `${v} still clearly voiced: ${f.hnr[0]}`);
+  }
+  t.diagnostic('\nmale -> female\n' + rows.join('\n'));
+});
+
+test('female consonants: the sibilants and the alveolar burst sit a little higher with her shorter tract', (t) => {
+  // spectral centroid between 300 Hz and 8 kHz, averaged over 12 seeds so a short burst is stable
+  const N = 2048;
+  const centroid = (voice, ph, pick) => {
+    const pw = new Float64Array(N / 2);
+    const cfg = { ...voice, range: 0, jitter: 0, shimmer: 0 };
+    for (let seed = 1; seed <= 12; seed++) {
+      const c = new MockContext(SR);
+      const out = c.createGain();
+      out.connect(c.destination);
+      T.seed(seed);
+      T.utter(out, 0, { ph, voice: cfg, fx: false });
+      const y = c.nodes.find((x) => x.buffer).buffer.getChannelData(0);
+      const [a, b] = pick(T.speechPlan(ph, cfg));
+      const len = Math.min(N, b - a);
+      let e = 0;
+      for (let i = 0; i < len; i++) e += y[a + i] * y[a + i];
+      const re = new Float64Array(N);
+      const im = new Float64Array(N);
+      for (let i = 0; i < len; i++) re[i] = (y[a + i] / Math.sqrt(e)) * (0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (len - 1)));
+      fft(re, im);
+      for (let k = 0; k < N / 2; k++) pw[k] += re[k] * re[k] + im[k] * im[k];
+    }
+    let cs = 0;
+    let tot = 0;
+    for (let k = Math.ceil((300 * N) / SR); k < (8000 * N) / SR; k++) { cs += ((k * SR) / N) * pw[k]; tot += pw[k]; }
+    return cs / tot;
+  };
+  const fric = (f) => (plan) => { const s = at(plan, f); return span(s); };
+  const burst = (f) => (plan) => {
+    const s = at(plan, f);
+    const rel = Math.min((s.t1 - s.t0) * 0.4, T.phones()[f].burst / 1000);
+    return [Math.round((s.t1 - rel) * SR), Math.round(s.t1 * SR) - 24];
+  };
+  const rows = [];
+  for (const [f, ph, pick] of [['S', 'AA1*2 S*6 AA1*2', fric('S')], ['SH', 'AA1*2 SH*6 AA1*2', fric('SH')], ['T', 'AA1*2 T AA1*2', burst('T')]]) {
+    const m = centroid(MALE, ph, pick);
+    const w = centroid(FEMALE, ph, pick);
+    rows.push(`${f.padEnd(2)} ${m.toFixed(0)} -> ${w.toFixed(0)} Hz (${((100 * (w - m)) / m).toFixed(1)}%)`);
+    assert.ok(w > m * 1.05 && w < m * 1.3, `${f}: ${m} -> ${w}`);
+  }
+  t.diagnostic('\nmale -> female, centroid 300 Hz to 8 kHz\n' + rows.join('\n'));
 });
 
 test('fricatives: S high, SH lower, F and TH flat and weak, voiced ones voiced', (t) => {
@@ -262,6 +427,8 @@ test('a Speak Copy bakes the line, carries the engine only and renders the galle
   for (const cfg of [
     { mode: 'speak', text: 'Containment breach.', voice: 'announcer', pitch: 2, rate: 1.1, range: 1.4, seed: 4 },
     { mode: 'speak', text: 'Hello </script> world', voice: 'retro' },
+    { mode: 'speak', text: 'Attention, please. The doors are closing.', voice: 'announcer-female', pitch: -1, rate: 0.9, range: 1.2, seed: 3 },
+    { mode: 'speak', text: 'Warning.', voice: 'announcer-male' },
     { mode: 'babble', text: 'Oh, hi there!', voice: 'elder', speed: 0.8, spread: 1.5 },
   ]) {
     const text = buildSpeechCopy(T, cfg);
@@ -282,5 +449,32 @@ test('a Speak Copy bakes the line, carries the engine only and renders the galle
     const ac2 = new MockContext(SR);
     ctx[fname](ac2, { pitch: -5, seed: 2 });
     assert.notDeepEqual(ac2.nodes.find((n) => n.buffer).buffer.getChannelData(0), copied);
+  }
+});
+
+test('announcer-male names the announcer: the same voice in speak and in a Speak Copy, not a second voice', () => {
+  const a = render((out) => T.speak(out, 0, { text: 'Warning.', voice: 'announcer' })).y;
+  assert.deepEqual(render((out) => T.speak(out, 0, { text: 'Warning.', voice: 'announcer-male' })).y, a);
+  assert.equal(buildSpeechCopy(T, { mode: 'speak', text: 'Warning.', voice: 'announcer-male' }), buildSpeechCopy(T, { mode: 'speak', text: 'Warning.', voice: 'announcer' }));
+  assert.equal(VOICE_ALIASES['announcer-male'], 'announcer');
+  assert.ok(!Object.hasOwn(T.speechVoices(), 'announcer-male'), 'an alias is not a second voice');
+  assert.notDeepEqual(render((out) => T.speak(out, 0, { text: 'Warning.', voice: 'announcer-female' })).y, a, 'the female announcer is another voice');
+});
+
+test('the male announcer is the voice main rendered (gates/fixtures/announcer.json)', () => {
+  // the female voice is new data and new branches, never a change to him: his renders match the
+  // ones main made within 7.7e-6 a sample (the engine's run-to-run noise in the browser; in Node
+  // they are identical)
+  const fx = JSON.parse(fs.readFileSync(path.join(ROOT, 'gates/fixtures/announcer.json'), 'utf8'));
+  assert.equal(fx.lines.length, 2);
+  for (const l of fx.lines) {
+    const { y } = render((out) => T.speak(out, 0, { text: l.text, pitch: l.pitch, rate: l.rate, range: l.range, voice: 'announcer' }));
+    assert.equal(y.length, l.n, l.text);
+    let e = 0;
+    for (const x of y) e += x * x;
+    assert.ok(Math.abs(Math.sqrt(e / y.length) - l.rms) < 1e-7, `${l.text}: rms ${Math.sqrt(e / y.length)} vs ${l.rms}`);
+    let worst = 0;
+    l.y.forEach((v, k) => { worst = Math.max(worst, Math.abs(y[Math.floor(((k + 0.5) * y.length) / 96)] - v)); });
+    assert.ok(worst < 7.7e-6, `${l.text}: ${worst}`);
   }
 });

@@ -7,8 +7,9 @@
 //      on its own, so a sound that places voices in stereo (T.pan) must keep its left and right
 //      levels in the Copy (a Copy that lost or mirrored the panning would fail here)
 // The Copy carries its parameter values and seed, so the pasted function is called with no options.
-// Then the same for five lines from the Speak rack (speech and babble): the Copy with the line baked
-// in against the gallery's render of the line, and its end time against the line's length.
+// Every voice sound is also run spoken by the female announcer. Then the same for six lines from the
+// Speak rack (speech and babble, both announcers): the Copy with the line baked in against the
+// gallery's render of the line, and its end time against the line's length.
 //   node gates/check_copy.mjs [id-filter]     (the filter "speak-line" runs only the lines)
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -21,6 +22,7 @@ const only = process.argv[2] || '';
 // lines for the Speak rack's Copy (filter "speak-line" runs only these)
 const LINES = [
   { mode: 'speak', text: 'Access granted. Welcome back, commander.', voice: 'announcer', seed: 1 },
+  { mode: 'speak', text: 'Access granted. Welcome back, commander.', voice: 'announcer-female', seed: 1 },
   { mode: 'speak', text: 'Is the system online?', voice: 'retro', pitch: 3, rate: 1.2, range: 1.5, seed: 1 },
   { mode: 'speak', text: 'Behind you...', voice: 'whisper', seed: 7 },
   { mode: 'babble', text: 'Oh, hi there! Are you new in town?', voice: 'cute', seed: 1 },
@@ -40,6 +42,9 @@ async function main() {
     for (const s of sounds) {
       cases.push({ s, label: 'defaults', params: null, seed: 1 });
       cases.push({ s, label: 'random', params: randomParamSets(s, 1, 0xc0b1)[0], seed: 5 });
+      // a voice sound spoken by the female announcer
+      const fv = s.params.voice && s.params.voice.choices ? s.params.voice.choices.indexOf('announcer-female') : -1;
+      if (fv >= 0) cases.push({ s, label: 'female', params: { voice: fv }, seed: 1 });
     }
     for (const c of cases) {
       const g = await b.eval(`(async () => {
