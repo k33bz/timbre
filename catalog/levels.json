@@ -3113,17 +3113,17 @@
    "end": 0.339
   },
   "voice-access-denied": {
-   "fingerprint": "a85a3572ad69",
+   "fingerprint": "0d115c2c3194",
    "peak": -15,
    "rms": -27.4,
    "worstPeak": -15,
-   "worstRms": -27.4,
+   "worstRms": -26.8,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.566
   },
   "voice-access-granted": {
-   "fingerprint": "398cb01b94df",
+   "fingerprint": "98d9d5c8409a",
    "peak": -15,
    "rms": -27.7,
    "worstPeak": -15,
@@ -3133,7 +3133,7 @@
    "end": 1.576
   },
   "voice-babble-beep": {
-   "fingerprint": "b47299c87bfb",
+   "fingerprint": "12c806a4cc94",
    "peak": -15,
    "rms": -22.1,
    "worstPeak": -15,
@@ -3143,7 +3143,7 @@
    "end": 2.256
   },
   "voice-babble-cute": {
-   "fingerprint": "f59c896ac0f5",
+   "fingerprint": "6b01b4cf3cc8",
    "peak": -15,
    "rms": -32.3,
    "worstPeak": -15,
@@ -3153,7 +3153,7 @@
    "end": 2.197
   },
   "voice-babble-elder": {
-   "fingerprint": "56e4722ae498",
+   "fingerprint": "bc0eb1cda421",
    "peak": -15,
    "rms": -31.6,
    "worstPeak": -15,
@@ -3163,7 +3163,7 @@
    "end": 2.949
   },
   "voice-babble-gruff": {
-   "fingerprint": "3391eced5dca",
+   "fingerprint": "467a3b2c531b",
    "peak": -15,
    "rms": -27.9,
    "worstPeak": -15,
@@ -3173,7 +3173,7 @@
    "end": 2.704
   },
   "voice-babble-sprite": {
-   "fingerprint": "06ffd817b7db",
+   "fingerprint": "9f6851d42bc1",
    "peak": -15,
    "rms": -33.3,
    "worstPeak": -15,
@@ -3183,77 +3183,77 @@
    "end": 1.778
   },
   "voice-containment-breach": {
-   "fingerprint": "1a5e35d2acad",
+   "fingerprint": "983542ed1f3b",
    "peak": -15,
    "rms": -30.2,
    "worstPeak": -15,
-   "worstRms": -30.1,
+   "worstRms": -29.1,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 3.761
   },
   "voice-countdown": {
-   "fingerprint": "8b1dbf1d6f4f",
+   "fingerprint": "761619c1faf4",
    "peak": -15,
    "rms": -27,
    "worstPeak": -15,
-   "worstRms": -26.9,
+   "worstRms": -25.9,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 2.89
   },
   "voice-game-over": {
-   "fingerprint": "597ff7d1d47d",
+   "fingerprint": "14a2333d06c7",
    "peak": -15,
    "rms": -28.7,
    "worstPeak": -15,
-   "worstRms": -25.6,
+   "worstRms": -27.3,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 0.844
   },
   "voice-level-complete": {
-   "fingerprint": "ca437b72bb39",
+   "fingerprint": "a1b900f0b3b9",
    "peak": -15,
    "rms": -27.3,
    "worstPeak": -15,
-   "worstRms": -27.2,
+   "worstRms": -26,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.482
   },
   "voice-mission-complete": {
-   "fingerprint": "15f09f3cd162",
+   "fingerprint": "d3266762db95",
    "peak": -15,
    "rms": -26,
    "worstPeak": -15,
-   "worstRms": -25.9,
+   "worstRms": -25.8,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.543
   },
   "voice-ready-go": {
-   "fingerprint": "f1a9a3dcba3d",
+   "fingerprint": "d437cb978c66",
    "peak": -15,
    "rms": -27.5,
    "worstPeak": -15,
-   "worstRms": -27.5,
+   "worstRms": -27.4,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 2.046
   },
   "voice-retro-greetings": {
-   "fingerprint": "f06ff0c61d7b",
+   "fingerprint": "daa55e3683bb",
    "peak": -15,
    "rms": -28.9,
    "worstPeak": -15,
-   "worstRms": -28.8,
+   "worstRms": -28.9,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 3.864
   },
   "voice-robot-affirmative": {
-   "fingerprint": "b49f8ce6751a",
+   "fingerprint": "d639a84a1b37",
    "peak": -15,
    "rms": -31.5,
    "worstPeak": -15,
@@ -3263,41 +3263,41 @@
    "end": 2.748
   },
   "voice-robot-processing": {
-   "fingerprint": "a7e2b750e120",
+   "fingerprint": "635726e84c24",
    "peak": -15,
    "rms": -33.1,
    "worstPeak": -15,
-   "worstRms": -30.4,
+   "worstRms": -26.9,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 2.087
   },
   "voice-system-online": {
-   "fingerprint": "9d0a16eb354d",
+   "fingerprint": "e0f192862df7",
    "peak": -15,
    "rms": -28.3,
    "worstPeak": -15,
-   "worstRms": -28.2,
+   "worstRms": -26.8,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.641
   },
   "voice-warning": {
-   "fingerprint": "49349aec7954",
+   "fingerprint": "300b4cd1371b",
    "peak": -15,
    "rms": -26.8,
    "worstPeak": -15,
-   "worstRms": -25.3,
+   "worstRms": -24.5,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 0.98
   },
   "voice-whisper-behind-you": {
-   "fingerprint": "31b35f183310",
+   "fingerprint": "5406efa4ffe6",
    "peak": -15,
    "rms": -32.9,
    "worstPeak": -15,
-   "worstRms": -29.6,
+   "worstRms": -30.6,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 0.973
