@@ -10,7 +10,7 @@ export default {
   desc: 'A fairy strike: a bright rush climbs with a shimmering pair of tones and glints, then lands as a soft chime and a twinkle. For a fairy attack.',
   dur: 1.09,
   family: 'glass',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the shimmer climbs before it lands: short a snap, long a slow approach' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light, high chime up to a lower, fuller one' },

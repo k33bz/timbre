@@ -10,7 +10,7 @@ export default {
   desc: 'A dragon strike: a growling rush rises with a low tone wavering, then lands as a rough falling roar and a breath of air. For a dragon attack.',
   dur: 1.21,
   family: 'organic',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the growl rises before it lands: short a snap, long a slow approach' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light, high roar up to a deeper, longer one' },

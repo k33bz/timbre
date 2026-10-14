@@ -10,7 +10,7 @@ export default {
   desc: 'A strike of three elements at once: fire, water and lightning rush in under one swell, then land crack, whoomph and splash with a glint. For a multi-element attack.',
   dur: 1.15,
   family: 'glass',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the layered swell flies before it lands: short a snap, long a slow approach' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light burst up to deeper, longer layers' },

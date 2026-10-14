@@ -10,7 +10,7 @@ export default {
   desc: 'A lightning bolt: a charge builds with a fizzing hum and sparks, then lands as a bright crack, a sizzle and a low rumble. For an electric attack.',
   dur: 1.16,
   family: 'synthetic',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the charge builds before the bolt lands: short a snap, long a slow build' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a thin snap up to a deeper crack and longer sizzle' },

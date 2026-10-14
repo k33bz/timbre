@@ -10,7 +10,7 @@ export default {
   desc: 'A metal strike: a bright rush with a thin singing tone, then lands as a steel clang with a hard tick and a short ring. For a steel attack.',
   dur: 1.21,
   family: 'metal',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the blade sings before it lands: short a snap, long a slow approach' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light, high tink up to a lower, heavier clang' },

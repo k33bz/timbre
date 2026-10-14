@@ -9,7 +9,7 @@ export default {
   desc: 'A fighting strike: air rushes in with a low tone rising, then lands as a deep thud with a slap and a puff of dust. For a punch or kick attack.',
   dur: 1.2,
   family: 'impact',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the rush lasts before the blow lands: short a snap, long a slow wind-up' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light thud up to a deeper, longer, dustier blow' },

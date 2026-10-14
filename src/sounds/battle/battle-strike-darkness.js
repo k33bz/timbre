@@ -10,7 +10,7 @@ export default {
   desc: 'A darkness strike: a shadow smears downward with a faint wail, then lands as a deep, dull thud that throbs and fades. For a dark attack.',
   dur: 1.11,
   family: 'impact',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the shadow sinks before it lands: short a snap, long a slow dread' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light smear up to a deeper, longer, heavier one' },

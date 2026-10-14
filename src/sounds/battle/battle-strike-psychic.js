@@ -10,7 +10,7 @@ export default {
   desc: 'A psychic strike: two wavering tones rise and beat against each other, then land as a falling pulse with a soft ping. For a mind attack.',
   dur: 1.11,
   family: 'synthetic',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the tones rise before they land: short a snap, long a slow approach' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light, high pulse up to a lower, longer one' },

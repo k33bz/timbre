@@ -10,7 +10,7 @@ export default {
   desc: 'A grass strike: leaves rush in with a resonant rustle and a thin whistle, then land as a thwack and a scatter of leaves. For a plant attack.',
   dur: 1.19,
   family: 'organic',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the leaves rush before they land: short a snap, long a slow approach' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light brush up to a heavier thwack and longer scatter' },

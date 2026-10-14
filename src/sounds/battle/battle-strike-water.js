@@ -10,7 +10,7 @@ export default {
   desc: 'A water strike: a wave rushes in with bubbles popping, then splashes down with a thump, spray and falling droplets. For a water attack.',
   dur: 1.17,
   family: 'organic',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the wave rushes before it lands: short a snap, long a slow approach' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light splash up to a deeper, longer burst' },

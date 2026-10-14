@@ -10,7 +10,7 @@ export default {
   desc: 'A fire strike: a flare rushes in with embers spitting, then lands as a low whoomph and a roar that crackles out. For a fire attack.',
   dur: 1.16,
   family: 'organic',
-  moments: ['crit'],
+  moments: ['attack', 'hit'],
   params: {
     travel: { min: 0.2, max: 0.8, def: 0.5, unit: 's', desc: 'How long the flare flies before it lands: short a snap, long a slow approach' },
     power: { min: 0, max: 1, def: 0.5, desc: 'How hard it lands: from a light burst up to a deeper, longer blow' },
