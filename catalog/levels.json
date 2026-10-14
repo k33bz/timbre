@@ -3113,7 +3113,7 @@
    "end": 0.339
   },
   "voice-access-denied": {
-   "fingerprint": "2cbc28ab53df",
+   "fingerprint": "a85a3572ad69",
    "peak": -15,
    "rms": -27.4,
    "worstPeak": -15,
@@ -3123,7 +3123,7 @@
    "end": 1.566
   },
   "voice-access-granted": {
-   "fingerprint": "6cf46e8de22b",
+   "fingerprint": "398cb01b94df",
    "peak": -15,
    "rms": -27.7,
    "worstPeak": -15,
@@ -3183,57 +3183,57 @@
    "end": 1.778
   },
   "voice-containment-breach": {
-   "fingerprint": "b23eccaae325",
+   "fingerprint": "1a5e35d2acad",
    "peak": -15,
    "rms": -30.2,
    "worstPeak": -15,
-   "worstRms": -29.2,
+   "worstRms": -30.1,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 3.761
   },
   "voice-countdown": {
-   "fingerprint": "79b485365ec0",
+   "fingerprint": "8b1dbf1d6f4f",
    "peak": -15,
    "rms": -27,
    "worstPeak": -15,
-   "worstRms": -25.9,
+   "worstRms": -26.9,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 2.89
   },
   "voice-game-over": {
-   "fingerprint": "3f7eea9de654",
+   "fingerprint": "597ff7d1d47d",
    "peak": -15,
    "rms": -28.7,
    "worstPeak": -15,
-   "worstRms": -27.2,
+   "worstRms": -25.6,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 0.844
   },
   "voice-level-complete": {
-   "fingerprint": "b08a5b306135",
+   "fingerprint": "ca437b72bb39",
    "peak": -15,
    "rms": -27.3,
    "worstPeak": -15,
-   "worstRms": -26.8,
+   "worstRms": -27.2,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.482
   },
   "voice-mission-complete": {
-   "fingerprint": "5c8af860c22d",
+   "fingerprint": "15f09f3cd162",
    "peak": -15,
    "rms": -26,
    "worstPeak": -15,
    "worstRms": -25.9,
-   "lowestPeak": -15.1,
+   "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.543
   },
   "voice-ready-go": {
-   "fingerprint": "596292bc2d52",
+   "fingerprint": "f1a9a3dcba3d",
    "peak": -15,
    "rms": -27.5,
    "worstPeak": -15,
@@ -3243,27 +3243,27 @@
    "end": 2.046
   },
   "voice-retro-greetings": {
-   "fingerprint": "0f109f0c7dba",
+   "fingerprint": "f06ff0c61d7b",
    "peak": -15,
    "rms": -28.9,
    "worstPeak": -15,
-   "worstRms": -28.9,
+   "worstRms": -28.8,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 3.864
   },
   "voice-robot-affirmative": {
-   "fingerprint": "bec7e0f3d869",
+   "fingerprint": "b49f8ce6751a",
    "peak": -15,
    "rms": -31.5,
    "worstPeak": -15,
-   "worstRms": -31.5,
-   "lowestPeak": -15.1,
+   "worstRms": -29.4,
+   "lowestPeak": -15,
    "pre": -20.1,
    "end": 2.748
   },
   "voice-robot-processing": {
-   "fingerprint": "92eb06ddd4e2",
+   "fingerprint": "a7e2b750e120",
    "peak": -15,
    "rms": -33.1,
    "worstPeak": -15,
@@ -3273,7 +3273,7 @@
    "end": 2.087
   },
   "voice-system-online": {
-   "fingerprint": "79e53ff54c89",
+   "fingerprint": "9d0a16eb354d",
    "peak": -15,
    "rms": -28.3,
    "worstPeak": -15,
@@ -3283,21 +3283,21 @@
    "end": 1.641
   },
   "voice-warning": {
-   "fingerprint": "5ed8ae863ce2",
+   "fingerprint": "49349aec7954",
    "peak": -15,
    "rms": -26.8,
    "worstPeak": -15,
-   "worstRms": -25.5,
+   "worstRms": -25.3,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 0.98
   },
   "voice-whisper-behind-you": {
-   "fingerprint": "413e96cebe6e",
+   "fingerprint": "31b35f183310",
    "peak": -15,
    "rms": -32.9,
    "worstPeak": -15,
-   "worstRms": -31.7,
+   "worstRms": -29.6,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 0.973
