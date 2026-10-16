@@ -27,7 +27,7 @@ It serves two audiences from the same source of truth:
 
 ## Quick start (just open the file)
 
-Open `dist/timbre.html` in a browser. It works from disk, offline; nothing is fetched. Sound starts on your first click (browsers require a gesture). Press `/` to search.
+Try it live at **[timbre.k33bz.com](https://timbre.k33bz.com)**, or open `dist/timbre.html` in a browser. It works from disk, offline; nothing is fetched. Sound starts on your first click (browsers require a gesture). Press `/` to search.
 
 Every card shows a waveform rendered offline, the sound's duration, peak and RMS, its parameters as sliders, and a **Vary** switch that draws a new noise seed on each play. Pick a **theme** to hear a whole app's worth of moments as one set.
 
