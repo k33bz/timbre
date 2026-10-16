@@ -47,6 +47,9 @@ export default {
     critical: { sound: 'notify-alarm', params: { pitch: 880, rounds: 3, pace: 0.12, swell: 0 } },
     info: { sound: 'notify-info', params: { pitch: 880, decay: 0.3, bright: 0.2 } },
     notify: { sound: 'magic-sparkle', params: { notes: 3, pitch: 880, gap: 0.07, space: 0.2 } },
+    // a shared session hands you the floor (pairing, a whiteboard, a review): two soft mallet
+    // notes, C5 up to G5
+    'your-turn': { sound: 'cards-your-turn', params: { pitch: 523.25, interval: 7, bright: 0.15, ring: 0.3 } },
     dismiss: { sound: 'notify-toast-out', params: { speed: 1, drain: 0, pat: 0.4 } },
     message: { sound: 'notify-message-in', params: { pitch: 659.25, interval: 5, pop: 0.3 } },
     // E5 up a fourth to A5 coming online, one E5 sagging away going offline

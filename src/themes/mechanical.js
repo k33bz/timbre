@@ -35,6 +35,8 @@ export default {
     // the typewriter bell (C6), one short ding
     info: { sound: 'notify-info', params: { pitch: 1046.5, decay: 0.5, bright: 0.9 } },
     notify: { sound: 'notify-reminder', params: { pitch: 880, drop: 7, gap: 0.2, ring: 0.5, space: 0 } },
+    // your move: two hard, dry strikes, E5 up to A5
+    'your-turn': { sound: 'cards-your-turn', params: { pitch: 659.25, interval: 5, bright: 0.9, ring: 0.2 } },
     reminder: { sound: 'notify-calendar', params: { pitch: 440, interval: 5, gap: 0.14, bright: 0.6, tick: 1 } },
     // a wind-up alarm clock: one short burst of bell
     timer: { sound: 'notify-incoming-call', params: { pitch: 783.99, rate: 14, rings: 1, tone: 3000 } },

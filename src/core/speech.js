@@ -95,7 +95,8 @@ export function phones() {
  *       ... }: they belong to its tract already, so formant then scales only the consonants, F4, F5,
  *       the nasals and the frication), vowelScale ([k1, k2, k3]: times that table's F1, F2, F3),
  *       bw (times every cascade bandwidth), accent (times the accents' height), fall (times the
- *       declination and a statement's closing fall)
+ *       declination and a statement's closing fall), vowelTime (times every vowel's length),
+ *       transition (times a vowel's formant transitions)
  * Returns { dur (s), f0: [t, Hz, ...], amp: [t, AV, AH, AF, AB, A2..A6, ...], form: [t, F1..F5,
  * B1..B5, FNZ, F6, ...], segs: [{ ph, t0, t1 }] }.
  */
@@ -108,6 +109,10 @@ export function speechPlan(ph, o) {
   const fs = o.formant || 1;
   const whisper = !!o.whisper;
   const breath = Math.max(0, o.breath || 0);
+  // vowelTime scales a vowel's length (a brisker talker shortens the steady states more than the
+  // consonants) and transition the time the formants take to reach a vowel's target and leave it
+  const vt = o.vowelTime == null ? 1 : o.vowelTime;
+  const tk = o.transition == null ? 1 : o.transition;
   const segs = [];
   let word = 0;
   let phrase = 0;
@@ -156,7 +161,7 @@ export function speechPlan(ph, o) {
       if (isC(segs[i - 1]) || isC(segs[i + 1])) pr *= 0.7;
       if (fin) pr *= 1.3;
     }
-    s.ms = ((d.min + (d.inh - d.min) * pr) / rate) * s.x;
+    s.ms = ((d.min + (d.inh - d.min) * pr) / rate) * s.x * (d.vowel ? vt : 1);
   }
   // targets: an unstressed vowel moves 30% toward the neutral tube; a consonant's locus is pulled
   // toward the vowel it leans on (the next one, or the one before when it closes its word). A voice
@@ -285,7 +290,7 @@ export function speechPlan(ph, o) {
     if (s.pause != null) continue;
     const span = s.t1 - s.t0;
     if (s.d.vowel) {
-      const tr = Math.min(0.05, span * 0.35);
+      const tr = Math.min(0.05, span * 0.35) * tk;
       key(s.t0 + tr, s.F, s);
       if (s.d.G) key(s.t0 + Math.max(tr, span * 0.35), s.F, s);
       key(s.t1 - tr, s.G, s);
@@ -609,38 +614,43 @@ export function voiceOut(out, t, y, o) {
 }
 
 /**
- * The speech voices, in the order a person sees them (by display name): f0 (Hz), rate, range,
- * accent and fall (the planner's contour), formant (vocal tract scale), vowels (the voice's own
- * vowel table), vowelScale and bw (its formant and bandwidth scales), oq and tilt (a low oq and tilt
- * is buzzier), jitter, shimmer, breath, whisper and the effect chain fx (voiceOut). The announcer is
- * a pair on one PA system: announcer (male; 'announcer-male' names it too) and announcer-female.
+ * The speech voices, in the order a person sees them (by display name): f0 (Hz), rate, vowelTime
+ * and transition (vowel lengths and formant transitions), range, accent and fall (the planner's
+ * contour), formant (vocal tract scale), vowels (the voice's own vowel table), vowelScale and bw
+ * (its formant and bandwidth scales), oq and tilt (a low oq and tilt is buzzier), jitter, shimmer,
+ * breath, whisper and the effect chain fx (voiceOut). The announcer is a pair on one PA system:
+ * announcer (male; 'announcer-male' names it too) and announcer-female.
  */
 export function speechVoices() {
   return {
-    // A woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at the /e/
-    // and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his times
-    // their women-to-men ratio for the nearest vowel (AY and AW start at /a/, EY ends toward /i/, AY
-    // and OY toward /I/, AW toward /U/, OW toward /u/); AX is the neutral tube of her shorter tract.
-    // vowelScale lifts that table past the women's averages, more in the upper formants (a shorter
-    // tract, a wider formant dispersion: F0 and formants both mark a voice as female, Hillenbrand
-    // and Clark 2009), and formant 1.29 (1.17, the women-to-men ratio of the Peterson and Barney
-    // means, times 1.10) moves her consonant loci, F4, F5, nasals and frication with the top
-    // formants. Pitch 230 Hz; range, accent and fall give her about 1.5 times his span in
-    // semitones: livelier accents, a brighter question rise, a gentler statement fall that never
-    // drops into a low, creaky end. Source after Klatt and Klatt (1990) female talkers: a long open
-    // phase, a steep tilt, aspiration in the voicing, wider bandwidths. His horn's drive and hall,
-    // its high-pass lowered so her fundamental passes, presence and air up to a 7 kHz top
+    // A young woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at
+    // the /e/ and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his
+    // times their women-to-men ratio for the nearest vowel (AY and AW start at /a/, EY ends toward
+    // /i/, AY and OY toward /I/, AW toward /U/, OW toward /u/); AX is the neutral tube of her
+    // shorter tract. vowelScale lifts that table past the women's averages, more in the upper
+    // formants (a short tract, a wide formant dispersion: F0 and formants both mark a voice as
+    // female, Hillenbrand and Clark 2009), and formant 1.3 (1.17, the women-to-men ratio of the
+    // Peterson and Barney means, times 1.11) moves her consonant loci, F4, F5, nasals and frication
+    // with the top formants. Pitch 240 Hz; range, accent and fall give her about 1.5 times his span
+    // in semitones: lively accents, a bright question rise, a gentle statement fall that never drops
+    // into a low, creaky end. Young, not old: the cues of perceived age (Linville 2001; Harnsberger
+    // et al. 2008; Schotz 2006) are a low F0, jitter and shimmer, a noisy, hoarse source, tremor, a
+    // slow rate and slack articulation, so her source is clean (little aspiration, almost no jitter
+    // or shimmer, no vibrato) while a long open phase and a soft tilt keep it light, not pressed;
+    // she talks about 13% faster than he does (rate, and vowelTime shortening the steady states) with
+    // quicker formant transitions (transition). His horn and hall with less drive and a little less
+    // hall, its high-pass lowered so her fundamental passes, presence and air up to a 7 kHz top
     'announcer-female': {
-      name: 'Announcer (Female)', desc: 'The same PA system with a woman speaking: bright, breathy and lively, through the horn into the hall',
-      f0: 230, rate: 0.92, range: 1.1, accent: 1.8, fall: 0.5, formant: 1.29, vowelScale: [1.06, 1.08, 1.1], bw: 1.15,
-      oq: 0.8, tilt: 0.8, jitter: 0.003, shimmer: 0.02, breath: 0.16,
+      name: 'Announcer (Female)', desc: 'The same PA system with a young woman speaking: bright, clear and lively, through the horn into the hall',
+      f0: 240, rate: 1, vowelTime: 0.92, transition: 0.7, range: 1.1, accent: 1.8, fall: 0.5, formant: 1.3, vowelScale: [1.07, 1.09, 1.11],
+      bw: 1.15, oq: 0.8, tilt: 0.8, jitter: 0.0015, shimmer: 0.008, breath: 0.055,
       vowels: {
         IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],
         AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],
         AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],
         AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],
       },
-      fx: { hp: 150, lp: 7000, eq: [{ f: 2600, q: 1.2, db: 4 }, { f: 6000, q: 0.9, db: 3 }], drive: 0.25, room: { time: 1.1, mix: 0.18, pre: 0.02 } },
+      fx: { hp: 150, lp: 7000, eq: [{ f: 2600, q: 1.2, db: 4 }, { f: 6000, q: 0.9, db: 3 }], drive: 0.12, room: { time: 0.95, mix: 0.14, pre: 0.02 } },
     },
     announcer: {
       name: 'Announcer (Male)', desc: 'The classic synthesized PA voice: clear and level, through a horn into a hall',

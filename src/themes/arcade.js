@@ -25,6 +25,8 @@ export default {
     error: { sound: 'notify-error-buzz', params: { pitch: 130, pulses: 3, rough: 0.9, tone: 2200 } },
     warning: { sound: 'scifi-alert-siren', params: { pitch: 698.46, cycles: 1, interval: 7, rate: 0.2, tone: 2500 } },
     notify: { sound: 'notify-mention', params: { pitch: 1318.5, glass: 0.8, ring: 0.35, echo: 0.35 } },
+    // player up: a bright swoop and a C major arpeggio to C6
+    'your-turn': { sound: 'game-your-turn', params: { chip: 0, pitch: 523.25, notes: 4, gap: 0.045, hold: 0.24 } },
     message: { sound: 'notify-message-in', params: { pitch: 659.25, interval: 7, gap: 0.08, pop: 0.8 } },
     timer: { sound: 'notify-alarm', params: { pitch: 880, rounds: 3, pace: 0.12, swell: 0.2 } },
     countdown: { sound: 'game-countdown-beep', params: { chip: 0, go: 0, pitch: 880, length: 0.12 } },

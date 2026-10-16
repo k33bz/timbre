@@ -409,6 +409,11 @@ export const MOMENTS = {
     tags: ['dice', 'roll', 'shake', 'rattle', 'craps', 'cup'], terms: ['roll the dice', 'throw dice'],
     categories: ['cards'], avoid: [], maxDur: 2.0, loud: ['quiet', 'medium'],
   },
+  'your-turn': {
+    about: 'Control passes to you in a turn-based game or a shared session: your move.',
+    tags: ['your-turn', 'your-move', 'turn-start', 'player-up'], terms: ['your turn', 'your move', 'their turn', 'whose turn', 'you are up', 'my turn', 'turn starts', 'turn to play', 'next player', 'player turn', 'turn order', 'pass the turn', 'hand off', 'take turns'],
+    categories: ['cards', 'game', 'notify', 'voice', 'battle', 'duel'], avoid: ['error', 'fail'], maxDur: 2.5, loud: ['medium', 'quiet'],
+  },
   // ---- card duels and creature battles (cards, duel, battle)
   'card-tap': {
     about: 'A card turns sideways to act or pay (tap, exert) or stands up again: a sound for it carries an on switch, 1 taps, 0 untaps or readies.',

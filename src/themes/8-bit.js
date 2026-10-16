@@ -32,6 +32,8 @@ export default {
     warning: { sound: 'notify-warning', params: { pitch: 523.25, drop: 5, tone: 4000 } },
     info: { sound: 'game-countdown-beep', params: { chip: 1, go: 0, pitch: 783.99, length: 0.12 } },
     notify: { sound: 'game-combo-ping', params: { chip: 1, pitch: 659.25, streak: 1, ring: 0.35 } },
+    // your move: a square swoop into C5, G5, C6
+    'your-turn': { sound: 'game-your-turn', params: { chip: 1, pitch: 523.25, notes: 3, gap: 0.05, hold: 0.2 } },
     message: { sound: 'game-pickup-item', params: { chip: 1, pitch: 659.25, interval: 5, gap: 0.06 } },
     reminder: { sound: 'music-menu-confirm', params: { key: 0, notes: 2, speed: 1.1, echo: 0.6 } },
     timer: { sound: 'game-countdown-beep', params: { chip: 1, go: 1, pitch: 880, length: 0.14 } },

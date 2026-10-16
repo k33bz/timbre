@@ -38,6 +38,8 @@ export default {
     warning: { sound: 'notify-warning', params: { pitch: 392, drop: 3, tone: 1200 } },
     info: { sound: 'ui-click-wood', params: { pitch: 880, ring: 0.7, hollow: 0.7 } },
     notify: { sound: 'notify-double-tap', params: { pitch: 330, taps: 2 } },
+    // your move: two soft mallet strokes on wood, A4 up to E5 (success climbs C5 to G5)
+    'your-turn': { sound: 'cards-your-turn', params: { pitch: 440, interval: 7, bright: 0.25, ring: 0.3 } },
     message: { sound: 'cards-deal', params: { reach: 0.2, tone: 0.5, land: 0.5 } },
     // plucked strings, G4 up a fourth to C5
     reminder: { sound: 'notify-calendar', params: { pitch: 392, interval: 5, gap: 0.18, bright: 0.3, tick: 0.6 } },

@@ -2,9 +2,10 @@
 // (src/core/speech.js) on the mock graph and measures the buffer it computed.
 //   * vowels: LPC on a sustained render puts F1 and F2 within 10% of the table (Peterson and Barney)
 //   * the female announcer: F1 and F2 within 10% of her targets (the women's table lifted by her
-//     vowelScale), F0 225 to 235 Hz with about 1.5 times his span, a longer open phase, steeper tilt
-//     and more aspiration (Klatt and Klatt 1990), sibilants and bursts higher; the male announcer
-//     still renders what main rendered; every voice list a person sees is in display-name order
+//     vowelScale), F0 235 to 245 Hz with about 1.5 times his span, 10 to 15% faster, a long open
+//     phase and soft tilt on a clean source (harmonics-to-noise above 32 dB), sibilants and bursts
+//     higher; the male announcer still renders what main rendered; every voice list a person sees
+//     is in display-name order
 //   * fricatives put their energy in the right bands; stops close, burst and aspirate; nasals murmur
 //   * prosody: statements fall, questions rise, rate scales length, range 0 is a monotone
 //   * determinism, lengths (speak(null) is the render's length), levels, every voice
@@ -140,8 +141,8 @@ test('female diphthongs glide from her onset toward her end target', () => {
   }
 });
 
-test('female pitch: 225 to 235 Hz, about 1.5 times his range, livelier accents, a gentle fall', (t) => {
-  assert.ok(FEMALE.f0 >= 225 && FEMALE.f0 <= 235, `f0 ${FEMALE.f0}`);
+test('female pitch and pace: 235 to 245 Hz, about 1.5 times his range, a gentle fall, 10 to 15% faster', (t) => {
+  assert.ok(FEMALE.f0 >= 235 && FEMALE.f0 <= 245, `f0 ${FEMALE.f0}`);
   const med = (a) => a.slice().sort((p, q) => p - q)[a.length >> 1];
   const st = (a, b) => 12 * Math.log2(a / b);
   // a held vowel on a monotone sounds at her f0
@@ -178,9 +179,15 @@ test('female pitch: 225 to 235 Hz, about 1.5 times his range, livelier accents, 
   assert.ok(f.fall < 0 && f.fall > m.fall + 0.5, `a gentler statement fall: ${m.fall} -> ${f.fall}`);
   assert.ok(f.rise > m.rise * 1.4, `a brighter question rise: ${m.rise} -> ${f.rise}`);
   assert.ok(f.low > 190, `never down in a low, creaky end: ${f.low}`);
-  // the timing is his: the same rate, so a line lasts as long in either voice
-  const ph = T.phonemize('Access granted. Welcome back, commander.');
-  assert.equal(T.speechPlan(ph, FEMALE).dur, T.speechPlan(ph, MALE).dur);
+  // a young talker's pace: over the six lines her speech (pauses left out) takes 10 to 15% less time
+  // than his, the vowels shortened more than the consonants, and no vibrato or slow wobble
+  const talk = (v) => LINES.reduce((sum, text) => sum + T.speechPlan(T.phonemize(text), v).segs.filter((x) => /^[A-Z]/.test(x.ph)).reduce((a, x) => a + x.t1 - x.t0, 0), 0);
+  const pace = talk(MALE) / talk(FEMALE);
+  t.diagnostic(`speaking rate ${pace.toFixed(3)} times his`);
+  assert.ok(pace >= 1.1 && pace <= 1.15, `rate ${pace}`);
+  const vowelsOnly = (v) => LINES.reduce((sum, text) => sum + T.speechPlan(T.phonemize(text), v).segs.filter((x) => /[0-2]$/.test(x.ph)).reduce((a, x) => a + x.t1 - x.t0, 0), 0);
+  assert.ok(vowelsOnly(MALE) / vowelsOnly(FEMALE) > pace, 'the vowels shorten most');
+  assert.ok(!FEMALE.vib, 'no vibrato');
   // measured in her render (no effect chain): a statement falls on its last vowel; a question rises
   const line = (text) => {
     const y = render((out) => T.speak(out, 0, { text, voice: 'announcer-female', fx: false })).y;
@@ -195,7 +202,7 @@ test('female pitch: 225 to 235 Hz, about 1.5 times his range, livelier accents, 
   assert.ok(sl.end < sl.all * 0.95 && ql.end > ql.all * 1.1, `statement ends ${sl.end}, question ends ${ql.end}`);
 });
 
-test('female voice quality, after Klatt and Klatt (1990): a longer open phase, a steeper tilt, more aspiration', (t) => {
+test('female voice quality: a long open phase and a soft tilt (Klatt and Klatt 1990) on a clean, young source', (t) => {
   // H1-H2 (open quotient) and H1-A3 (spectral tilt) on a held vowel, and the aspiration: the same
   // vowel rendered with and without breath (jitter off, so only the aspiration draws noise) gives
   // the noise on its own; harmonics-to-noise in dB, over 0 to 8 kHz and in the F3 region
@@ -231,10 +238,13 @@ test('female voice quality, after Klatt and Klatt (1990): a longer open phase, a
     rows.push(`${v} H1-H2 ${m.h12.toFixed(1)} -> ${f.h12.toFixed(1)} dB, H1-A3 ${m.h13.toFixed(1)} -> ${f.h13.toFixed(1)} dB, HNR ${m.hnr[0].toFixed(1)} -> ${f.hnr[0].toFixed(1)} dB (2.5 to 5 kHz ${m.hnr[1].toFixed(1)} -> ${f.hnr[1].toFixed(1)})`);
     assert.ok(f.h12 > m.h12 + 3, `${v} H1-H2 ${m.h12} -> ${f.h12}`);
     assert.ok(f.h13 > m.h13 + 2, `${v} H1-A3 ${m.h13} -> ${f.h13}`);
-    assert.ok(f.hnr[1] < m.hnr[1] - 6 && f.hnr[0] < m.hnr[0] - 6, `${v} more aspiration ${m.hnr} -> ${f.hnr}`);
-    assert.ok(f.hnr[0] > 20, `${v} still clearly voiced: ${f.hnr[0]}`);
+    // clean: harmonics-to-noise above 32 dB (aspiration noise and a hoarse source read as an older
+    // voice, Linville 2001), with a touch more breath than his
+    assert.ok(f.hnr[0] > 32 && f.hnr[0] < m.hnr[0], `${v} a clean source with a little breath: ${m.hnr} -> ${f.hnr}`);
   }
   t.diagnostic('\nmale -> female\n' + rows.join('\n'));
+  // and almost no jitter or shimmer: a steady voice reads young
+  assert.ok(FEMALE.jitter <= 0.002 && FEMALE.shimmer <= 0.01, `jitter ${FEMALE.jitter}, shimmer ${FEMALE.shimmer}`);
 });
 
 test('female consonants: the sibilants and the alveolar burst sit higher with her shorter tract', (t) => {

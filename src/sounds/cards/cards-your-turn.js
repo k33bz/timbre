@@ -9,7 +9,7 @@ export default {
   desc: 'A gentle two-note mallet cue that says it is your move, with a soft tap of a card underneath.',
   dur: 0.65,
   family: 'orchestral',
-  moments: ['notify'],
+  moments: ['your-turn', 'notify'],
   params: {
     pitch: { min: 440, max: 880, def: 659, unit: 'Hz', desc: 'Frequency of the first mallet note' },
     interval: { min: 3, max: 12, def: 7, unit: 'st', desc: 'How far the second note leaps above the first, default a fifth' },

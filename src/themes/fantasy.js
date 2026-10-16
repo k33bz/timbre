@@ -32,6 +32,8 @@ export default {
     // a horn call falling a fifth, A4 to D4
     warning: { sound: 'notify-warning', params: { pitch: 440, drop: 7, gap: 0.2, tone: 1500 } },
     notify: { sound: 'notify-reminder', params: { pitch: 587.33, drop: 7, ring: 0.8, space: 0.45 } },
+    // your move at the table: two bright mallet strokes, D5 up to F#5
+    'your-turn': { sound: 'cards-your-turn', params: { pitch: 587.33, interval: 4, bright: 0.6, ring: 0.45 } },
     // a letter arrives: a swish and two bells, D5 and A5
     message: { sound: 'notify-new-mail', params: { pitch: 587.33, interval: 7, swish: 0.6, ring: 0.5 } },
     // a lute: A4 up a fourth to D5

@@ -148,32 +148,39 @@ do not change with names: code and Copy say `announcer-female` and `announcer` (
 and the gallery shows a voice sound's choice by the voice's display name.
 
 The announcer is a pair: one PA system, two speakers. `announcer`, Announcer (Male), is exactly what
-it was. `announcer-female`, Announcer (Female), is a woman's voice, not his pitched up, tuned on the
-cues listening studies tie to a female voice (F0 and formants both, Hillenbrand and Clark 2009;
-breathiness, Klatt and Klatt 1990; a wider pitch range):
+it was. `announcer-female`, Announcer (Female), is a young woman's voice, not his pitched up, tuned
+on the cues listening studies tie to a female voice (F0 and formants both, Hillenbrand and Clark
+2009; a wider pitch range) and away from the cues they tie to an older one (a low F0, jitter and
+shimmer, a noisy, hoarse source, tremor, a slow rate and slack articulation: Linville 2001,
+Harnsberger et al. 2008, Schotz 2006):
 - Vowels: her own table, carried in the voice as `vowels`: Peterson and Barney (1952), women; EY and
   OW start at the /e/ and /o/ of Hillenbrand et al. (1995), women; every other diphthong target is
   his times their women-to-men ratio, formant by formant, for the vowel it is nearest (AY and AW
   start at /a/; EY ends toward /i/, AY and OY toward /I/, AW toward /U/, OW toward /u/). AX is the
   neutral tube of a woman's tract (585, 1755, 2925 Hz). The women-to-men ratio of the Peterson and
   Barney formants runs from 1.02 (F1 of ER) to 1.46 (F1 of AH), so no single scale would do.
-- Tract: `vowelScale` [1.06, 1.08, 1.10] lifts that table past the women's averages, more in the upper
-  formants: a shorter tract than the average woman's and a wider formant dispersion. `formant` 1.29
-  (1.17, the mean women-to-men ratio of the Peterson and Barney formants, times 1.10) moves what has
+- Tract: `vowelScale` [1.07, 1.09, 1.11] lifts that table past the women's averages, more in the upper
+  formants: a shorter tract than the average woman's and a wider formant dispersion. `formant` 1.3
+  (1.17, the mean women-to-men ratio of the Peterson and Barney formants, times 1.11) moves what has
   no table of its own with the top formants: consonant loci, F4 and F5, the nasals and the frication,
-  so her sibilants and alveolar burst sit 19 to 27% above his.
-- Pitch: 230 Hz. `range` 1.1, `accent` 1.8 and `fall` 0.5 give her contour 1.5 times his span in
-  semitones (7.7 against 5.1 over six test lines), with livelier accents, a question that ends 7
+  so her sibilants and alveolar burst sit 20 to 28% above his.
+- Pitch: 240 Hz. `range` 1.1, `accent` 1.8 and `fall` 0.5 give her contour 1.5 times his span in
+  semitones (7.7 against 5.1 over six test lines), with lively accents, a question that ends 7
   semitones above her F0 (his: 4) and a statement that ends 2 below it (his: 3); her F0 stays above
-  195 Hz, never down where a voice turns creaky. Her timing is his (the same rate), so a line lasts
-  as long in either voice and every voice sound's dur holds for both.
-- Source, after Klatt and Klatt (1990) on female talkers: open quotient 0.8 (his 0.55), a steep tilt
-  (0.8, his 0.25), aspiration in the voicing at 0.16 (his 0.02) and every cascade bandwidth 15% wider
-  (`bw` 1.15). Measured on a held vowel: H1-H2 6 to 7 dB above his (a strong first harmonic), H1-A3
-  7 to 8 dB above, harmonics-to-noise 15 dB below his and still above 25 dB.
-- Chain: his horn's drive and hall, with the high-pass lowered from 300 to 150 Hz so her fundamental
-  passes (at 230 Hz it loses 0.7 dB, where his horn takes 6), a presence peak at 2.6 kHz and air at
-  6 kHz (`eq` takes a list), under a 7 kHz top instead of his 4.5: still a PA, a woman on it.
+  205 Hz, never down where a voice turns creaky.
+- Pace: `rate` 1 (his 0.92), `vowelTime` 0.92 (the steady states shorten more than the consonants)
+  and `transition` 0.7 (the formants reach and leave each vowel in 70% of his time): her speech takes
+  12% less time than his over the six lines, 1.13 times his rate. Every voice sound's dur, set by the
+  slowest voice, holds for her.
+- Source: a long open phase (0.8, his 0.55) and a soft tilt (0.8, his 0.25) keep it light rather than
+  pressed (Klatt and Klatt 1990), on a clean source: aspiration in the voicing at 0.055 (his 0.02),
+  jitter 0.0015 and shimmer 0.008 (his 0.003 and 0.02), no vibrato, every cascade bandwidth 15% wider
+  (`bw` 1.15). Measured on a held vowel: H1-H2 about 8 dB above his (a strong first harmonic), H1-A3
+  4 to 6 dB above, harmonics-to-noise 34 to 35 dB (his 42).
+- Chain: his horn and hall with less drive (0.12, his 0.25) and a little less hall (0.95 s at 0.14,
+  his 1.1 s at 0.18), the high-pass lowered from 300 to 150 Hz so her fundamental passes (at 240 Hz it
+  loses under 1 dB, where his horn takes 6), a presence peak at 2.6 kHz and air at 6 kHz (`eq` takes
+  a list), under a 7 kHz top instead of his 4.5: still a PA, a young woman on it.
 
 Every line is normalized to its peak (-15 dBFS after the chain), so a whisper and an announcer read
 alike. Each has a public helper over an engine: `speak` and `babble` resolve the text and the voice
@@ -311,3 +318,18 @@ channel) and Copy pass two channels through; Save WAV writes one channel when bo
   sounds' sliders, `--say`, the docs, the speak description) is out of order. The male voices,
   babble and every non-female setting of the voice sounds render sample for sample as before (242
   renders against main on the mock graph, worst difference 0).
+- 2026-10-16, a younger Announcer (Female) and a your-turn set: after a listening pass she read old,
+  so she moves off the cues of perceived age (see Voices): F0 230 to 240 Hz, aspiration 0.16 to
+  0.055 (harmonics-to-noise 27 to 35 dB), jitter 0.003 to 0.0015 and shimmer 0.02 to 0.008, about 13%
+  faster speech with quicker formant transitions, vowelScale and formant a touch higher, less drive
+  (0.25 to 0.12) and a little less hall (1.1 s at 0.18 to 0.95 s at 0.14); the soft tilt and the long
+  open phase stay. Two new planner fields, each a branch that runs only when a voice sets it:
+  `vowelTime` and `transition`. Her ids and names are unchanged, and every other voice renders as
+  before (238 renders against main, worst difference 0). A new moment, `your-turn` (control passes
+  to you in a turn-based game or a shared session), in cards, game, notify, voice, battle and duel;
+  cards-your-turn now lists it, and two sounds join it: voice-your-turn (the announcer says "Your
+  turn.", "Your move." or "You're up.", Announcer (Female) by default, the same sorted `voice`
+  choices as the other voice sounds) and game-your-turn (a bright arcade swoop into an arpeggio that
+  lands on a held octave, with a chip switch). Six themes map it in their key and level: 8-bit and
+  Arcade the arcade cue (chip on and off), Fantasy, Wood and Paper and Mechanical the mallet cue, and
+  Soft UI the mallet cue at its quietest, for a shared session that hands a person the floor.

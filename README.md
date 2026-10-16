@@ -4,9 +4,9 @@
 
 **Every sound, synthesized. Nothing downloaded.**
 
-A single-file gallery of **330** offline, synthesized sound effects, built to be auditioned by humans *and* driven by AI agents. Every sound is a small WebAudio recipe, not a sample, so anything you copy out of Timbre plays anywhere, forever, including fully offline. Ships with a **zero-dependency MCP server** so Claude (Desktop, Code, or the API) can pick sounds for an app and hand back ready-to-paste code.
+A single-file gallery of **332** offline, synthesized sound effects, built to be auditioned by humans *and* driven by AI agents. Every sound is a small WebAudio recipe, not a sample, so anything you copy out of Timbre plays anywhere, forever, including fully offline. Ships with a **zero-dependency MCP server** so Claude (Desktop, Code, or the API) can pick sounds for an app and hand back ready-to-paste code.
 
-![Sounds](https://img.shields.io/badge/sounds-330-ff9900) ![Categories](https://img.shields.io/badge/categories-14-4493f8) ![Themes](https://img.shields.io/badge/themes-8-e0a52b) ![Dependencies](https://img.shields.io/badge/dependencies-0-3fb950) ![Offline](https://img.shields.io/badge/offline-100%25-3fb950) ![MCP](https://img.shields.io/badge/MCP-server%20included-c879ff) ![Single file](https://img.shields.io/badge/single%20file-HTML-e0a52b)
+![Sounds](https://img.shields.io/badge/sounds-332-ff9900) ![Categories](https://img.shields.io/badge/categories-14-4493f8) ![Themes](https://img.shields.io/badge/themes-8-e0a52b) ![Dependencies](https://img.shields.io/badge/dependencies-0-3fb950) ![Offline](https://img.shields.io/badge/offline-100%25-3fb950) ![MCP](https://img.shields.io/badge/MCP-server%20included-c879ff) ![Single file](https://img.shields.io/badge/single%20file-HTML-e0a52b)
 
 </div>
 
@@ -41,7 +41,7 @@ Every card shows a waveform rendered offline, the sound's duration, peak and RMS
 | Notifications | 25 | Toast Arrive, Critical Alarm, Badge Pop, Banner Drop, Presence Change, Achievement Unlocked |
 | Data | 27 | Load Pulse, Spinner Ticks, Progress Fill, Bar Rise, Gauge Needle, Pin Drop, Packet Hop, Failover |
 | AI | 10 | Thinking Hum, Typing Dots, Token Stream, Tool Call, Agent Handoff, Retrieval Sweep, Guardrail Verdict |
-| Game | 28 | Coin Flip, Arrow Shot, Bounce, Checkpoint, Combo Ping, Countdown Beep, Referee Whistle |
+| Game | 29 | Coin Flip, Arrow Shot, Bounce, Checkpoint, Combo Ping, Countdown Beep, Your Turn Jingle, Referee Whistle |
 | Battle | 35 | eleven element strikes, eight attack archetypes, status conditions, Knockout, Evolve, Coin Chain |
 | Cards | 27 | Card Deal, Card Reveal, Card Tap, Table Wash, Hand Sweep, Chip Stack, Dice Roll |
 | Ink Duel | 42 | Well Drip, Exert Tilt, Lore Gain, Duel Clash, Banish Shatter, six ink hues, ten keywords |
@@ -50,7 +50,7 @@ Every card shows a waveform rendered offline, the sound's duration, peak and RMS
 | Sci-fi | 13 | Facility Klaxon, Laser Zap, Blaster Bolt, Data Stream, Hologram Flicker |
 | Ambience | 19 | Aurora Pad, Cave Drips, Distant Thunder, Night Crickets, Storm Roar, Grid Hum (8 s fading beds) |
 | Music | 9 | Short Fanfare, Level Complete, Defeat Jingle, Intro Logo Sting, Menu Confirm Melody |
-| Voice | 19 | Warning, Access Denied, Countdown, Containment Breach, robot lines, five babble voices |
+| Voice | 20 | Warning, Access Denied, Countdown, Containment Breach, Your Turn Call, robot lines, five babble voices |
 
 Battle and Ink Duel are fan-made, unbranded sounds for the generic mechanics of creature-battle and ink-and-lore trading card games: no game, card or character names anywhere.
 
@@ -62,7 +62,7 @@ Loaders, thinking states and live-data sounds are **loop cells**: one short cell
 
 A theme maps app moments (`click`, `toggle-on`, `success`, `error`, `loading`, `critical`, `select`, `thinking`, `score`, ...) to a sound and parameter overrides in the theme's own key, register and loudness, so a whole set can be swapped at once.
 
-**Soft UI** (the default), **Glass**, **Wood and Paper**, **Mechanical**, **8-bit**, **Arcade**, **Sci-fi Console** and **Fantasy**. One shared list of 100 moment names (`src/vocabulary.js`) is used by the themes, the build and the MCP server.
+**Soft UI** (the default), **Glass**, **Wood and Paper**, **Mechanical**, **8-bit**, **Arcade**, **Sci-fi Console** and **Fantasy**. One shared list of 101 moment names (`src/vocabulary.js`) is used by the themes, the build and the MCP server.
 
 ---
 
@@ -70,7 +70,7 @@ A theme maps app moments (`click`, `toggle-on`, `success`, `error`, `loading`, `
 
 A formant speech synthesizer in the page: Klatt's cascade/parallel design computed sample by sample, so it renders the same everywhere, with an English text front end (the NRL letter-to-sound rules and a small lexicon).
 
-- **Speech voices:** **Announcer (Female)** and **Announcer (Male)**, one classic synthesized PA system with two speakers (vowel targets from Peterson and Barney's 1952 women's and men's averages, hers lifted for a shorter vocal tract, with a higher, livelier and breathier voice), Deep Robot, Retro Computer, Small Robot and Whisper.
+- **Speech voices:** **Announcer (Female)** and **Announcer (Male)**, one classic synthesized PA system with two speakers (vowel targets from Peterson and Barney's 1952 women's and men's averages, hers lifted for a shorter vocal tract, with a young, higher, quicker and livelier voice), Deep Robot, Retro Computer, Small Robot and Whisper.
 - **Babble voices:** Cute, Gruff, Robot Beep, Tiny Sprite and Wise Elder, for text boxes and speech bubbles.
 - Every voice list (the Speak rack, a voice sound's slider, `build.mjs --say`, the MCP server) is in display-name order.
 - The **Speak** rack says any typed line; its Copy bakes the line into one function that carries only the engine.
