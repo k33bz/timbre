@@ -2,7 +2,7 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 330,
+  "count": 332,
   "categories": [
     "ui",
     "notify",
@@ -44,7 +44,7 @@
   },
   "levels": {
     "source": "catalog/levels.json",
-    "measured": 330,
+    "measured": 332,
     "about": "Measured by gates/check_levels.mjs in dBFS after the master chain on a warm chain. peak and rms: at the defaults (the worst peak and the mean RMS of 3 seeds). worstPeak, worstRms and lowestPeak: over all 12 renders (the defaults and 3 random parameter sets, 3 seeds each). pre: the highest peak before the limiter over all renders. end: where the default render falls below -60 dBFS, in seconds."
   },
   "vocabulary": {
@@ -148,6 +148,7 @@
       "card-flip": "A card is turned face up.",
       "shuffle": "A deck is shuffled or riffled.",
       "dice": "Dice are shaken and rolled.",
+      "your-turn": "Control passes to you in a turn-based game or a shared session: your move.",
       "card-tap": "A card turns sideways to act or pay (tap, exert) or stands up again: a sound for it carries an on switch, 1 taps, 0 untaps or readies.",
       "resource": "A resource is added: mana, ink, an energy attached.",
       "score": "Points are scored: lore, prizes, victory points.",
@@ -10110,6 +10111,95 @@
       }
     },
     {
+      "id": "game-your-turn",
+      "name": "Your Turn Jingle",
+      "category": "game",
+      "tags": [
+        "your-turn",
+        "your-move",
+        "turn-start",
+        "player-up",
+        "arcade",
+        "arpeggio",
+        "flourish",
+        "chiptune"
+      ],
+      "desc": "A bright arcade cue for the start of your turn: a swoop up into a quick arpeggio that lands on a held, shimmering octave.",
+      "dur": 0.7,
+      "family": "chip",
+      "moments": [
+        "your-turn"
+      ],
+      "params": {
+        "pitch": {
+          "min": 392,
+          "max": 1047,
+          "def": 523.25,
+          "unit": "Hz",
+          "desc": "Root note; the arpeggio climbs to the octave above it"
+        },
+        "notes": {
+          "min": 2,
+          "max": 4,
+          "def": 3,
+          "step": 1,
+          "desc": "Notes in the arpeggio: 2 root and octave, 3 adds the fifth, 4 the third"
+        },
+        "gap": {
+          "min": 0.035,
+          "max": 0.09,
+          "def": 0.05,
+          "unit": "s",
+          "desc": "Time between the arpeggio notes"
+        },
+        "hold": {
+          "min": 0.12,
+          "max": 0.35,
+          "def": 0.22,
+          "unit": "s",
+          "desc": "How long the last, highest note holds"
+        },
+        "chip": {
+          "min": 0,
+          "max": 1,
+          "def": 0,
+          "step": 1,
+          "role": "chip",
+          "desc": "1 a bitcrushed square, 0 a bright pulse with a soft octave"
+        }
+      },
+      "file": "src/sounds/game/game-your-turn.js",
+      "play": "function (T, out, t, p) {\n  const chip = p.chip >= 0.5;\n  const steps = [[0, 12], [0, 7, 12], [0, 4, 7, 12]][Math.round(p.notes) - 2];\n  const peak = chip ? 0.08 : 0.085;\n  const dest = chip ? T.crush(out, t, { bits: 5, ref: 0.1 }) : out;\n  const voice = (at, o) => (chip ? T.osc(dest, at, Object.assign({ type: 'square' }, o)) : T.pulse(dest, at, Object.assign({ duty: 0.25 }, o)));\n  // the swoop: an octave below the root up into it\n  voice(t, { f: p.pitch / 2, to: p.pitch, glide: 0.055, dur: 0.07, peak: peak * 0.5, a: 0.004 });\n  let at = t + 0.06;\n  for (let k = 0; k < steps.length; k++) {\n    const last = k === steps.length - 1;\n    const f = p.pitch * Math.pow(2, steps[k] / 12);\n    if (last) {\n      voice(at, { f, dur: p.hold, peak, a: 0.003, s: 0.75, d: 0.03, r: p.hold * 0.45, vib: { rate: 7, depth: 14 } });\n      if (!chip) T.osc(out, at, { type: 'triangle', f: f * 2, dur: p.hold * 0.7, peak: 0.014, a: 0.004 });\n      // a sparkle over the landing note\n      T.noise(out, at + 0.01, { filter: 'highpass', f: 7000, to: 11000, q: 0.7, dur: 0.14, peak: 0.01, a: 0.01 });\n    } else {\n      voice(at, { f, dur: p.gap * 1.25, peak: peak * 0.8, a: 0.003, s: 0.6, d: 0.02, r: p.gap * 0.4 });\n      at += p.gap;\n    }\n  }\n}",
+      "uses": [
+        "crush",
+        "osc",
+        "pulse",
+        "noise"
+      ],
+      "helpers": [
+        "crush",
+        "env",
+        "glide",
+        "osc",
+        "pulse",
+        "rand",
+        "noiseBuffer",
+        "noise",
+        "seed",
+        "master"
+      ],
+      "fingerprint": "5ea59fd63160",
+      "levels": {
+        "peak": -20.8,
+        "rms": -32.1,
+        "worstPeak": -20.8,
+        "worstRms": -28,
+        "lowestPeak": -21.6,
+        "pre": -26.2,
+        "end": 0.353
+      }
+    },
+    {
       "id": "battle-ability",
       "name": "Ability Trigger",
       "category": "battle",
@@ -14666,6 +14756,7 @@
       "dur": 0.65,
       "family": "orchestral",
       "moments": [
+        "your-turn",
         "notify"
       ],
       "params": {
@@ -23812,12 +23903,12 @@
         "seed",
         "master"
       ],
-      "fingerprint": "0d115c2c3194",
+      "fingerprint": "e27a7112b74e",
       "levels": {
         "peak": -15,
         "rms": -27.4,
         "worstPeak": -15,
-        "worstRms": -26.8,
+        "worstRms": -27.4,
         "lowestPeak": -15,
         "pre": -20.1,
         "end": 1.566
@@ -23898,7 +23989,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "98d9d5c8409a",
+      "fingerprint": "aa3aa532de0d",
       "levels": {
         "peak": -15,
         "rms": -27.7,
@@ -24341,7 +24432,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "983542ed1f3b",
+      "fingerprint": "b872efcd64ec",
       "levels": {
         "peak": -15,
         "rms": -30.2,
@@ -24427,7 +24518,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "761619c1faf4",
+      "fingerprint": "3e66810a82cb",
       "levels": {
         "peak": -15,
         "rms": -27,
@@ -24512,7 +24603,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "14a2333d06c7",
+      "fingerprint": "565206608867",
       "levels": {
         "peak": -15,
         "rms": -28.7,
@@ -24597,12 +24688,12 @@
         "seed",
         "master"
       ],
-      "fingerprint": "a1b900f0b3b9",
+      "fingerprint": "f512c232e9ae",
       "levels": {
         "peak": -15,
         "rms": -27.3,
         "worstPeak": -15,
-        "worstRms": -26,
+        "worstRms": -27.2,
         "lowestPeak": -15,
         "pre": -20.1,
         "end": 1.482
@@ -24682,7 +24773,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "d3266762db95",
+      "fingerprint": "e3b3bce72ca2",
       "levels": {
         "peak": -15,
         "rms": -26,
@@ -24768,12 +24859,12 @@
         "seed",
         "master"
       ],
-      "fingerprint": "d437cb978c66",
+      "fingerprint": "5b0462dc7764",
       "levels": {
         "peak": -15,
         "rms": -27.5,
         "worstPeak": -15,
-        "worstRms": -27.4,
+        "worstRms": -27.5,
         "lowestPeak": -15,
         "pre": -20.1,
         "end": 2.046
@@ -24854,7 +24945,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "daa55e3683bb",
+      "fingerprint": "ac732c74d098",
       "levels": {
         "peak": -15,
         "rms": -28.9,
@@ -24940,7 +25031,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "d639a84a1b37",
+      "fingerprint": "90f0d52006a6",
       "levels": {
         "peak": -15,
         "rms": -31.5,
@@ -25026,12 +25117,12 @@
         "seed",
         "master"
       ],
-      "fingerprint": "635726e84c24",
+      "fingerprint": "a0f821920f29",
       "levels": {
         "peak": -15,
         "rms": -33.1,
         "worstPeak": -15,
-        "worstRms": -26.9,
+        "worstRms": -28.9,
         "lowestPeak": -15,
         "pre": -20.1,
         "end": 2.087
@@ -25112,7 +25203,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "e0f192862df7",
+      "fingerprint": "c9da58208240",
       "levels": {
         "peak": -15,
         "rms": -28.3,
@@ -25195,12 +25286,12 @@
         "seed",
         "master"
       ],
-      "fingerprint": "300b4cd1371b",
+      "fingerprint": "94aa50e958ee",
       "levels": {
         "peak": -15,
         "rms": -26.8,
         "worstPeak": -15,
-        "worstRms": -24.5,
+        "worstRms": -23.9,
         "lowestPeak": -15,
         "pre": -20.1,
         "end": 0.98
@@ -25281,7 +25372,7 @@
         "seed",
         "master"
       ],
-      "fingerprint": "5406efa4ffe6",
+      "fingerprint": "ae0de035354a",
       "levels": {
         "peak": -15,
         "rms": -32.9,
@@ -25290,6 +25381,105 @@
         "lowestPeak": -15,
         "pre": -20.1,
         "end": 0.973
+      }
+    },
+    {
+      "id": "voice-your-turn",
+      "name": "Your Turn Call",
+      "category": "voice",
+      "tags": [
+        "voice",
+        "speech",
+        "your-turn",
+        "your-move",
+        "turn-start",
+        "announcer",
+        "game",
+        "cards"
+      ],
+      "desc": "A synthesized announcer says \"Your turn.\" when control passes to the player: a turn-based game, a card table, a shared session.",
+      "dur": 2.8,
+      "family": "voice",
+      "moments": [
+        "your-turn",
+        "announce"
+      ],
+      "params": {
+        "voice": {
+          "min": 0,
+          "max": 5,
+          "def": 0,
+          "step": 1,
+          "choices": [
+            "announcer-female",
+            "announcer",
+            "deep",
+            "retro",
+            "small",
+            "whisper"
+          ],
+          "desc": "Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"
+        },
+        "line": {
+          "min": 0,
+          "max": 2,
+          "def": 0,
+          "step": 1,
+          "choices": [
+            "your-turn",
+            "your-move",
+            "you-are-up"
+          ],
+          "desc": "What is said: Your turn, Your move or You are up"
+        },
+        "pitch": {
+          "min": -6,
+          "max": 6,
+          "def": 0,
+          "unit": "st",
+          "desc": "Pitch shift from the voice, down or up"
+        },
+        "rate": {
+          "min": 0.75,
+          "max": 1.3,
+          "def": 1,
+          "unit": "x",
+          "desc": "Slow and deliberate to brisk"
+        },
+        "range": {
+          "min": 0,
+          "max": 2,
+          "def": 1,
+          "desc": "Intonation: 0 flat, 1 the voice's own, 2 animated"
+        }
+      },
+      "file": "src/sounds/voice/voice-your-turn.js",
+      "play": "function (T, out, t, p) {\n  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];\n  const text = ['Your turn.', 'Your move.', \"You're up.\"][Math.round(p.line)];\n  T.speak(out, t, { text, voice, pitch: p.pitch, rate: p.rate, range: p.range });\n}",
+      "uses": [
+        "speak"
+      ],
+      "helpers": [
+        "phonemize",
+        "speechVoices",
+        "rand",
+        "klatt",
+        "phones",
+        "speechPlan",
+        "voiceOut",
+        "utter",
+        "speak",
+        "seed",
+        "master"
+      ],
+      "fingerprint": "81791e9281c4",
+      "levels": {
+        "peak": -15,
+        "rms": -27.5,
+        "worstPeak": -15,
+        "worstRms": -27.5,
+        "lowestPeak": -15,
+        "pre": -20.1,
+        "end": 1.014
       }
     }
   ],
@@ -25505,6 +25695,15 @@
             "pitch": 880,
             "gap": 0.07,
             "space": 0.2
+          }
+        },
+        "your-turn": {
+          "sound": "cards-your-turn",
+          "params": {
+            "pitch": 523.25,
+            "interval": 7,
+            "bright": 0.15,
+            "ring": 0.3
           }
         },
         "dismiss": {
@@ -25838,6 +26037,16 @@
             "pitch": 659.25,
             "streak": 1,
             "ring": 0.35
+          }
+        },
+        "your-turn": {
+          "sound": "game-your-turn",
+          "params": {
+            "chip": 1,
+            "pitch": 523.25,
+            "notes": 3,
+            "gap": 0.05,
+            "hold": 0.2
           }
         },
         "message": {
@@ -26240,6 +26449,16 @@
             "glass": 0.8,
             "ring": 0.35,
             "echo": 0.35
+          }
+        },
+        "your-turn": {
+          "sound": "game-your-turn",
+          "params": {
+            "chip": 0,
+            "pitch": 523.25,
+            "notes": 4,
+            "gap": 0.045,
+            "hold": 0.24
           }
         },
         "message": {
@@ -26647,6 +26866,15 @@
             "drop": 7,
             "ring": 0.8,
             "space": 0.45
+          }
+        },
+        "your-turn": {
+          "sound": "cards-your-turn",
+          "params": {
+            "pitch": 587.33,
+            "interval": 4,
+            "bright": 0.6,
+            "ring": 0.45
           }
         },
         "message": {
@@ -27602,6 +27830,15 @@
             "space": 0
           }
         },
+        "your-turn": {
+          "sound": "cards-your-turn",
+          "params": {
+            "pitch": 659.25,
+            "interval": 5,
+            "bright": 0.9,
+            "ring": 0.2
+          }
+        },
         "reminder": {
           "sound": "notify-calendar",
           "params": {
@@ -28493,6 +28730,15 @@
             "taps": 2
           }
         },
+        "your-turn": {
+          "sound": "cards-your-turn",
+          "params": {
+            "pitch": 440,
+            "interval": 7,
+            "bright": 0.25,
+            "ring": 0.3
+          }
+        },
         "message": {
           "sound": "cards-deal",
           "params": {
@@ -28872,11 +29118,11 @@
       "deps": [
         "phones"
       ],
-      "src": "function speechPlan(ph, o) {\n  o = o || {};\n  const P = phones();\n  const rate = Math.min(3, Math.max(0.25, o.rate || 1));\n  const base = Math.max(30, o.f0 || 110);\n  const range = Math.max(0, o.range == null ? 1 : o.range);\n  const fs = o.formant || 1;\n  const whisper = !!o.whisper;\n  const breath = Math.max(0, o.breath || 0);\n  const segs = [];\n  let word = 0;\n  let phrase = 0;\n  for (const tok of String(ph || '').toUpperCase().match(/\\.\\.\\.|[.,?!;:/]|[A-Z]+[0-2]?(\\*\\d*\\.?\\d+)?/g) || []) {\n    if (tok === '/') { word++; continue; }\n    if (/^(\\.\\.\\.|[.,?!;:])$/.test(tok)) { segs.push({ pause: tok, w: word++, q: phrase++ }); continue; }\n    const m = /^([A-Z]+?)([0-2])?(?:\\*(\\d*\\.?\\d+))?$/.exec(tok);\n    const d = m && P[m[1]];\n    if (d) segs.push({ n: m[1], d, st: d.vowel ? (m[2] == null ? 1 : Number(m[2])) : -1, w: word, q: phrase, x: m[3] ? Math.min(20, Number(m[3])) : 1 });\n  }\n  if (!segs.length || segs[segs.length - 1].pause == null) segs.push({ pause: '', w: word, q: phrase });\n  const N = segs.length;\n  const isV = (s) => s && s.pause == null && s.d.vowel;\n  const isC = (s) => s && s.pause == null && !s.d.vowel;\n  const lastV = {};\n  const wordVowels = {};\n  for (let i = 0; i < N; i++) {\n    if (!isV(segs[i])) continue;\n    lastV[segs[i].q] = i;\n    wordVowels[segs[i].w] = (wordVowels[segs[i].w] || 0) + 1;\n  }\n  // durations, Klatt (1979): MIN + (INH - MIN) x a percentage that each rule multiplies\n  const PAUSE = { '.': 380, '!': 380, '?': 420, ',': 200, ';': 260, ':': 260, '...': 650, '': 0 };\n  for (let i = 0; i < N; i++) {\n    const s = segs[i];\n    if (s.pause != null) { s.ms = PAUSE[s.pause] / rate; continue; }\n    const d = s.d;\n    const fin = lastV[s.q] != null && i >= lastV[s.q];\n    let pr = 1;\n    if (d.vowel) {\n      if (!fin) pr *= 0.6;\n      if (wordVowels[s.w] > 1) pr *= 0.8;\n      if (s.st === 0) pr *= 0.5; else if (s.st === 2) pr *= 0.85;\n      const nx = segs[i + 1];\n      if (isC(nx) && nx.w === s.w) {\n        const nk = nx.d.kind;\n        if (!nx.d.voiced && (nk === 'stop' || nk === 'affr')) pr *= fin ? 0.7 : 0.85;\n        else if (nx.d.voiced && nk === 'fric') pr *= fin ? 1.4 : 1.15;\n        else if (nx.d.voiced && nk === 'stop') pr *= fin ? 1.2 : 1.05;\n        else if (nk === 'nasal') pr *= 0.9;\n      }\n    } else {\n      let k = i - 1;\n      while (k >= 0 && segs[k].w === s.w && !isV(segs[k]) && segs[k].pause == null) k--;\n      if (k >= 0 && segs[k].w === s.w && isV(segs[k])) pr *= 0.85;\n      if (isC(segs[i - 1]) || isC(segs[i + 1])) pr *= 0.7;\n      if (fin) pr *= 1.3;\n    }\n    s.ms = ((d.min + (d.inh - d.min) * pr) / rate) * s.x;\n  }\n  // targets: an unstressed vowel moves 30% toward the neutral tube; a consonant's locus is pulled\n  // toward the vowel it leans on (the next one, or the one before when it closes its word). A voice\n  // with its own vowel table takes its targets (and its neutral tube) from it, unscaled\n  const own = o.vowels || null;\n  // vowelScale [k1, k2, k3] moves the voice's own table, formant by formant (a shorter tract)\n  const vk = own && o.vowelScale ? o.vowelScale : null;\n  const ow = (f) => (vk ? [f[0] * vk[0], f[1] * vk[1], f[2] * vk[2]] : f);\n  const AX = own && own.AX ? ow(own.AX) : P.AX.F;\n  const sc = (f) => [f[0] * fs, f[1] * fs, f[2] * fs];\n  for (const s of segs) {\n    if (!isV(s)) continue;\n    const red = s.st === 0 && s.n !== 'AX' ? 0.3 : 0;\n    const mix = (f) => [f[0] + (AX[0] - f[0]) * red, f[1] + (AX[1] - f[1]) * red, f[2] + (AX[2] - f[2]) * red];\n    const e = own && own[s.n];\n    if (e) {\n      s.F = mix(ow(e));\n      s.G = s.d.G && e.length > 5 ? mix(ow(e.slice(3))) : s.F;\n      continue;\n    }\n    s.F = sc(mix(s.d.F));\n    s.G = s.d.G ? sc(mix(s.d.G)) : s.F;\n  }\n  const nearV = (i, dir) => {\n    for (let j = i + dir; j >= 0 && j < N; j += dir) {\n      if (segs[j].pause != null) return null;\n      if (isV(segs[j])) return segs[j];\n    }\n    return null;\n  };\n  for (let i = 0; i < N; i++) {\n    const s = segs[i];\n    if (!isC(s)) continue;\n    const prev = nearV(i, -1);\n    const next = nearV(i, 1);\n    const coda = prev && prev.w === s.w && !(next && next.w === s.w);\n    const v = coda ? prev : next || prev;\n    const vf = v ? (v === prev ? v.G : v.F) : own && own.AX ? AX.slice(0, 3) : sc(AX);\n    const d = s.d;\n    if (d.kind === 'asp') { s.F = vf.slice(); continue; }\n    const L = sc(d.L);\n    const k1 = d.kind === 'glide' ? 0.1 : d.kind === 'nasal' ? 0.15 : 0;\n    s.F = [L[0] + (vf[0] - L[0]) * k1, L[1] + (vf[1] - L[1]) * d.k, L[2] + (vf[2] - L[2]) * d.k];\n    // F1 cutback: an aspirated release already has its vowel's F1 (the rise hides in the\n    // aspiration); with the locus F1 the cascade would bury the aspiration about 20 dB down\n    s.Fr = d.kind === 'stop' && !d.voiced && v && v === next && !coda ? [vf[0], s.F[1], s.F[2]] : s.F;\n  }\n  let now = 0.04;\n  for (const s of segs) {\n    s.t0 = now;\n    s.t1 = s.pause === '' ? now + 0.06 : now + Math.max(0.012, s.ms / 1000);\n    now = s.t1;\n  }\n  const dur = now;\n  // amplitude phases [t0, t1, AV, AH, AF, AB, A2..A6, edge]: a stop is a closure (silent, or a low\n  // voice bar) and a burst; a voiceless stop before a vowel aspirates the vowel's onset (its voice\n  // onset time). edge: 1 a pause, 2 a burst\n  const db = (v) => (v <= -99 ? 0 : Math.pow(10, v / 20));\n  const phs = [];\n  const voice = (av, ah) => (whisper ? [0, ah + av * 0.55] : [av, ah + breath * av]);\n  const noisy = (sp, lev) => [lev, db(sp[0]), db(sp[1]), db(sp[2]), db(sp[3]), db(sp[4]), db(sp[5])];\n  let aspUntil = 0;\n  for (let i = 0; i < N; i++) {\n    const s = segs[i];\n    const d = s.d;\n    if (s.pause != null) { phs.push([s.t0, s.t1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]); continue; }\n    let t0 = s.t0;\n    if (aspUntil > t0) {\n      const vs = voice(0, 0.2);\n      phs.push([t0, aspUntil, vs[0], vs[1], 0, 0, 0, 0, 0, 0, 0, 0]);\n      t0 = aspUntil;\n      aspUntil = 0;\n    }\n    if (d.vowel || d.kind === 'glide' || d.kind === 'nasal') {\n      const vs = voice(d.vowel ? (s.st === 1 ? 1 : s.st === 2 ? 0.92 : 0.8) : d.kind === 'glide' ? 0.72 : 0.8, 0);\n      phs.push([t0, s.t1, vs[0], vs[1], 0, 0, 0, 0, 0, 0, 0, 0]);\n    } else if (d.kind === 'asp') {\n      phs.push([t0, s.t1, 0, d.lev, 0, 0, 0, 0, 0, 0, 0, 0]);\n    } else if (d.kind === 'fric') {\n      const vs = voice(d.voiced ? 0.22 : 0, 0);\n      phs.push([t0, s.t1, vs[0], vs[1], ...noisy(d.sp, d.lev), 0]);\n    } else {\n      const span = s.t1 - t0;\n      const rel = d.kind === 'affr' ? span * 0.55 : Math.min(span * 0.4, d.burst / 1000);\n      const bar = voice(d.voiced ? 0.14 : 0, 0);\n      phs.push([t0, s.t1 - rel, bar[0], bar[1], 0, 0, 0, 0, 0, 0, 0, 0]);\n      const vs = voice(d.voiced && d.kind === 'affr' ? 0.35 : 0, 0);\n      phs.push([s.t1 - rel, s.t1, vs[0], vs[1], ...noisy(d.sp, d.lev), 2]);\n      const nx = segs[i + 1];\n      if (!d.voiced && d.kind === 'stop' && nx && nx.pause == null && (nx.d.vowel || nx.d.kind === 'glide')) {\n        const afterS = i > 0 && segs[i - 1].n === 'S' && segs[i - 1].w === s.w;\n        const vot = (afterS || (nx.d.vowel && !(nx.st > 0)) ? 0.018 : { P: 0.05, T: 0.058, K: 0.068 }[s.n]) / Math.sqrt(rate);\n        aspUntil = nx.t0 + Math.min(vot, (nx.t1 - nx.t0) * 0.6);\n      }\n    }\n  }\n  // each phase holds its values and crossfades into the next: short ramps between phonemes, longer\n  // ones into and out of a pause, a sharp edge into a burst\n  const amp = [];\n  for (let j = 0; j < phs.length; j++) {\n    const a = phs[j];\n    const prev = phs[j - 1];\n    const next = phs[j + 1];\n    const hOn = !prev ? 0.008 : a[11] === 2 ? 0.0004 : prev[11] === 1 ? 0.012 : a[11] === 1 ? 0.02 : 0.003;\n    const hOff = !next ? 0.02 : next[11] === 2 ? 0.0004 : next[11] === 1 ? 0.022 : a[11] === 2 ? 0.0015 : 0.003;\n    let k0 = a[0] + hOn;\n    let k1 = a[1] - hOff;\n    if (k1 < k0) k0 = k1 = (a[0] + a[1]) / 2;\n    amp.push(k0, a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10]);\n    if (k1 > k0) amp.push(k1, a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10]);\n  }\n  // formant keys: a vowel moves in and out over its first and last 50 ms (a diphthong holds its\n  // onset, then glides), a consonant holds its target, a glide is mostly transition\n  const form = [];\n  const FNP = 270 * fs;\n  const bk = o.bw || 1;\n  let lastKey = -1;\n  const key = (tk, F, s) => {\n    tk = Math.max(tk, lastKey);\n    lastKey = tk;\n    const nas = s.d.kind === 'nasal';\n    form.push(tk, F[0], F[1], F[2], 3500 * fs, 4500 * fs, (nas ? 70 : 50 + 0.04 * F[0]) * bk, (nas ? 200 : 60 + 0.025 * F[1]) * bk,\n      (nas ? 220 : 100 + 0.02 * F[2]) * bk, 250 * bk, 300 * bk, nas ? 450 * fs : FNP, (s.d.sp ? s.d.sp[6] : 6000) * fs);\n  };\n  for (const s of segs) {\n    if (s.pause != null) continue;\n    const span = s.t1 - s.t0;\n    if (s.d.vowel) {\n      const tr = Math.min(0.05, span * 0.35);\n      key(s.t0 + tr, s.F, s);\n      if (s.d.G) key(s.t0 + Math.max(tr, span * 0.35), s.F, s);\n      key(s.t1 - tr, s.G, s);\n    } else if (s.d.kind === 'glide') {\n      key(s.t0 + span * 0.4, s.F, s);\n      key(s.t1 - span * 0.4, s.F, s);\n    } else {\n      key(s.t0, s.F, s);\n      key(s.t1, s.Fr || s.F, s);\n    }\n  }\n  if (!form.length) form.push(0, 500, 1500, 2500, 3500, 4500, 70, 90, 150, 250, 300, FNP, 6000);\n  // pitch: a declining line per phrase, a hat-shaped accent on each stressed vowel, and the end of\n  // the phrase from its last stressed vowel: a fall, a question's rise, a lift before a comma\n  const phr = {};\n  for (const s of segs) {\n    if (s.pause != null) { if (phr[s.q]) phr[s.q].type = s.pause; continue; }\n    const p = phr[s.q] || (phr[s.q] = { t0: s.t0, t1: s.t1, type: '', acc: [], tf: s.t0, fs: 0 });\n    p.t1 = s.t1;\n    if (!isV(s)) continue;\n    if (s.st > 0) p.acc.push(s);\n    if (s.st === 1 || !p.fs) { p.tf = s.t0; p.fs = s.st === 1 ? 1 : p.fs; }\n  }\n  const plist = Object.keys(phr).map((k) => phr[k]);\n  // accent scales the accents' height and fall the declination and a statement's closing fall (1 the\n  // planner's own; a livelier talker accents more and falls less)\n  const ac = o.accent == null ? 1 : o.accent;\n  const fl = o.fall == null ? 1 : o.fall;\n  for (const p of plist) {\n    const em = p.type === '!' ? 1.5 : 1;\n    p.acc = p.acc.map((s, j) => ({ a: s.t0 - 0.02, m: s.t0 + (s.t1 - s.t0) * 0.4, b: s.t1 + 0.03, h: range * ac * em * (s.st === 1 ? (j === 0 ? 0.2 : 0.15) : 0.06) }));\n  }\n  const f0At = (tt) => {\n    let p = plist[0];\n    for (const q of plist) if (q.t0 <= tt) p = q;\n    if (!p) return base;\n    const x = Math.min(1, Math.max(0, (tt - p.t0) / Math.max(0.05, p.t1 - p.t0)));\n    let f = base * (1 + range * fl * (0.08 - 0.16 * x));\n    let acc = 0;\n    for (const c of p.acc) {\n      if (tt <= c.a || tt >= c.b) continue;\n      acc += c.h * (tt < c.m ? 0.5 - 0.5 * Math.cos((Math.PI * (tt - c.a)) / (c.m - c.a)) : 0.5 + 0.5 * Math.cos((Math.PI * (tt - c.m)) / (c.b - c.m)));\n    }\n    f *= 1 + acc;\n    const z = Math.min(1, Math.max(0, (tt - p.tf) / Math.max(0.05, p.t1 - p.tf)));\n    const y = z * z * (3 - 2 * z);\n    return f * (p.type === '?' ? 1 + range * 0.5 * y : p.type === ',' ? 1 + range * 0.08 * y : p.type === '...' ? 1 - range * 0.08 * y : 1 - range * fl * 0.2 * y);\n  };\n  const f0 = [];\n  for (let tt = 0; tt < dur + 0.01; tt += 0.01) f0.push(tt, f0At(tt));\n  return { dur, f0, amp, form, segs: segs.map((s) => ({ ph: s.pause != null ? s.pause : s.n + (s.st >= 0 ? s.st : ''), t0: s.t0, t1: s.t1 })) };\n}"
+      "src": "function speechPlan(ph, o) {\n  o = o || {};\n  const P = phones();\n  const rate = Math.min(3, Math.max(0.25, o.rate || 1));\n  const base = Math.max(30, o.f0 || 110);\n  const range = Math.max(0, o.range == null ? 1 : o.range);\n  const fs = o.formant || 1;\n  const whisper = !!o.whisper;\n  const breath = Math.max(0, o.breath || 0);\n  // vowelTime scales a vowel's length (a brisker talker shortens the steady states more than the\n  // consonants) and transition the time the formants take to reach a vowel's target and leave it\n  const vt = o.vowelTime == null ? 1 : o.vowelTime;\n  const tk = o.transition == null ? 1 : o.transition;\n  const segs = [];\n  let word = 0;\n  let phrase = 0;\n  for (const tok of String(ph || '').toUpperCase().match(/\\.\\.\\.|[.,?!;:/]|[A-Z]+[0-2]?(\\*\\d*\\.?\\d+)?/g) || []) {\n    if (tok === '/') { word++; continue; }\n    if (/^(\\.\\.\\.|[.,?!;:])$/.test(tok)) { segs.push({ pause: tok, w: word++, q: phrase++ }); continue; }\n    const m = /^([A-Z]+?)([0-2])?(?:\\*(\\d*\\.?\\d+))?$/.exec(tok);\n    const d = m && P[m[1]];\n    if (d) segs.push({ n: m[1], d, st: d.vowel ? (m[2] == null ? 1 : Number(m[2])) : -1, w: word, q: phrase, x: m[3] ? Math.min(20, Number(m[3])) : 1 });\n  }\n  if (!segs.length || segs[segs.length - 1].pause == null) segs.push({ pause: '', w: word, q: phrase });\n  const N = segs.length;\n  const isV = (s) => s && s.pause == null && s.d.vowel;\n  const isC = (s) => s && s.pause == null && !s.d.vowel;\n  const lastV = {};\n  const wordVowels = {};\n  for (let i = 0; i < N; i++) {\n    if (!isV(segs[i])) continue;\n    lastV[segs[i].q] = i;\n    wordVowels[segs[i].w] = (wordVowels[segs[i].w] || 0) + 1;\n  }\n  // durations, Klatt (1979): MIN + (INH - MIN) x a percentage that each rule multiplies\n  const PAUSE = { '.': 380, '!': 380, '?': 420, ',': 200, ';': 260, ':': 260, '...': 650, '': 0 };\n  for (let i = 0; i < N; i++) {\n    const s = segs[i];\n    if (s.pause != null) { s.ms = PAUSE[s.pause] / rate; continue; }\n    const d = s.d;\n    const fin = lastV[s.q] != null && i >= lastV[s.q];\n    let pr = 1;\n    if (d.vowel) {\n      if (!fin) pr *= 0.6;\n      if (wordVowels[s.w] > 1) pr *= 0.8;\n      if (s.st === 0) pr *= 0.5; else if (s.st === 2) pr *= 0.85;\n      const nx = segs[i + 1];\n      if (isC(nx) && nx.w === s.w) {\n        const nk = nx.d.kind;\n        if (!nx.d.voiced && (nk === 'stop' || nk === 'affr')) pr *= fin ? 0.7 : 0.85;\n        else if (nx.d.voiced && nk === 'fric') pr *= fin ? 1.4 : 1.15;\n        else if (nx.d.voiced && nk === 'stop') pr *= fin ? 1.2 : 1.05;\n        else if (nk === 'nasal') pr *= 0.9;\n      }\n    } else {\n      let k = i - 1;\n      while (k >= 0 && segs[k].w === s.w && !isV(segs[k]) && segs[k].pause == null) k--;\n      if (k >= 0 && segs[k].w === s.w && isV(segs[k])) pr *= 0.85;\n      if (isC(segs[i - 1]) || isC(segs[i + 1])) pr *= 0.7;\n      if (fin) pr *= 1.3;\n    }\n    s.ms = ((d.min + (d.inh - d.min) * pr) / rate) * s.x * (d.vowel ? vt : 1);\n  }\n  // targets: an unstressed vowel moves 30% toward the neutral tube; a consonant's locus is pulled\n  // toward the vowel it leans on (the next one, or the one before when it closes its word). A voice\n  // with its own vowel table takes its targets (and its neutral tube) from it, unscaled\n  const own = o.vowels || null;\n  // vowelScale [k1, k2, k3] moves the voice's own table, formant by formant (a shorter tract)\n  const vk = own && o.vowelScale ? o.vowelScale : null;\n  const ow = (f) => (vk ? [f[0] * vk[0], f[1] * vk[1], f[2] * vk[2]] : f);\n  const AX = own && own.AX ? ow(own.AX) : P.AX.F;\n  const sc = (f) => [f[0] * fs, f[1] * fs, f[2] * fs];\n  for (const s of segs) {\n    if (!isV(s)) continue;\n    const red = s.st === 0 && s.n !== 'AX' ? 0.3 : 0;\n    const mix = (f) => [f[0] + (AX[0] - f[0]) * red, f[1] + (AX[1] - f[1]) * red, f[2] + (AX[2] - f[2]) * red];\n    const e = own && own[s.n];\n    if (e) {\n      s.F = mix(ow(e));\n      s.G = s.d.G && e.length > 5 ? mix(ow(e.slice(3))) : s.F;\n      continue;\n    }\n    s.F = sc(mix(s.d.F));\n    s.G = s.d.G ? sc(mix(s.d.G)) : s.F;\n  }\n  const nearV = (i, dir) => {\n    for (let j = i + dir; j >= 0 && j < N; j += dir) {\n      if (segs[j].pause != null) return null;\n      if (isV(segs[j])) return segs[j];\n    }\n    return null;\n  };\n  for (let i = 0; i < N; i++) {\n    const s = segs[i];\n    if (!isC(s)) continue;\n    const prev = nearV(i, -1);\n    const next = nearV(i, 1);\n    const coda = prev && prev.w === s.w && !(next && next.w === s.w);\n    const v = coda ? prev : next || prev;\n    const vf = v ? (v === prev ? v.G : v.F) : own && own.AX ? AX.slice(0, 3) : sc(AX);\n    const d = s.d;\n    if (d.kind === 'asp') { s.F = vf.slice(); continue; }\n    const L = sc(d.L);\n    const k1 = d.kind === 'glide' ? 0.1 : d.kind === 'nasal' ? 0.15 : 0;\n    s.F = [L[0] + (vf[0] - L[0]) * k1, L[1] + (vf[1] - L[1]) * d.k, L[2] + (vf[2] - L[2]) * d.k];\n    // F1 cutback: an aspirated release already has its vowel's F1 (the rise hides in the\n    // aspiration); with the locus F1 the cascade would bury the aspiration about 20 dB down\n    s.Fr = d.kind === 'stop' && !d.voiced && v && v === next && !coda ? [vf[0], s.F[1], s.F[2]] : s.F;\n  }\n  let now = 0.04;\n  for (const s of segs) {\n    s.t0 = now;\n    s.t1 = s.pause === '' ? now + 0.06 : now + Math.max(0.012, s.ms / 1000);\n    now = s.t1;\n  }\n  const dur = now;\n  // amplitude phases [t0, t1, AV, AH, AF, AB, A2..A6, edge]: a stop is a closure (silent, or a low\n  // voice bar) and a burst; a voiceless stop before a vowel aspirates the vowel's onset (its voice\n  // onset time). edge: 1 a pause, 2 a burst\n  const db = (v) => (v <= -99 ? 0 : Math.pow(10, v / 20));\n  const phs = [];\n  const voice = (av, ah) => (whisper ? [0, ah + av * 0.55] : [av, ah + breath * av]);\n  const noisy = (sp, lev) => [lev, db(sp[0]), db(sp[1]), db(sp[2]), db(sp[3]), db(sp[4]), db(sp[5])];\n  let aspUntil = 0;\n  for (let i = 0; i < N; i++) {\n    const s = segs[i];\n    const d = s.d;\n    if (s.pause != null) { phs.push([s.t0, s.t1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]); continue; }\n    let t0 = s.t0;\n    if (aspUntil > t0) {\n      const vs = voice(0, 0.2);\n      phs.push([t0, aspUntil, vs[0], vs[1], 0, 0, 0, 0, 0, 0, 0, 0]);\n      t0 = aspUntil;\n      aspUntil = 0;\n    }\n    if (d.vowel || d.kind === 'glide' || d.kind === 'nasal') {\n      const vs = voice(d.vowel ? (s.st === 1 ? 1 : s.st === 2 ? 0.92 : 0.8) : d.kind === 'glide' ? 0.72 : 0.8, 0);\n      phs.push([t0, s.t1, vs[0], vs[1], 0, 0, 0, 0, 0, 0, 0, 0]);\n    } else if (d.kind === 'asp') {\n      phs.push([t0, s.t1, 0, d.lev, 0, 0, 0, 0, 0, 0, 0, 0]);\n    } else if (d.kind === 'fric') {\n      const vs = voice(d.voiced ? 0.22 : 0, 0);\n      phs.push([t0, s.t1, vs[0], vs[1], ...noisy(d.sp, d.lev), 0]);\n    } else {\n      const span = s.t1 - t0;\n      const rel = d.kind === 'affr' ? span * 0.55 : Math.min(span * 0.4, d.burst / 1000);\n      const bar = voice(d.voiced ? 0.14 : 0, 0);\n      phs.push([t0, s.t1 - rel, bar[0], bar[1], 0, 0, 0, 0, 0, 0, 0, 0]);\n      const vs = voice(d.voiced && d.kind === 'affr' ? 0.35 : 0, 0);\n      phs.push([s.t1 - rel, s.t1, vs[0], vs[1], ...noisy(d.sp, d.lev), 2]);\n      const nx = segs[i + 1];\n      if (!d.voiced && d.kind === 'stop' && nx && nx.pause == null && (nx.d.vowel || nx.d.kind === 'glide')) {\n        const afterS = i > 0 && segs[i - 1].n === 'S' && segs[i - 1].w === s.w;\n        const vot = (afterS || (nx.d.vowel && !(nx.st > 0)) ? 0.018 : { P: 0.05, T: 0.058, K: 0.068 }[s.n]) / Math.sqrt(rate);\n        aspUntil = nx.t0 + Math.min(vot, (nx.t1 - nx.t0) * 0.6);\n      }\n    }\n  }\n  // each phase holds its values and crossfades into the next: short ramps between phonemes, longer\n  // ones into and out of a pause, a sharp edge into a burst\n  const amp = [];\n  for (let j = 0; j < phs.length; j++) {\n    const a = phs[j];\n    const prev = phs[j - 1];\n    const next = phs[j + 1];\n    const hOn = !prev ? 0.008 : a[11] === 2 ? 0.0004 : prev[11] === 1 ? 0.012 : a[11] === 1 ? 0.02 : 0.003;\n    const hOff = !next ? 0.02 : next[11] === 2 ? 0.0004 : next[11] === 1 ? 0.022 : a[11] === 2 ? 0.0015 : 0.003;\n    let k0 = a[0] + hOn;\n    let k1 = a[1] - hOff;\n    if (k1 < k0) k0 = k1 = (a[0] + a[1]) / 2;\n    amp.push(k0, a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10]);\n    if (k1 > k0) amp.push(k1, a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10]);\n  }\n  // formant keys: a vowel moves in and out over its first and last 50 ms (a diphthong holds its\n  // onset, then glides), a consonant holds its target, a glide is mostly transition\n  const form = [];\n  const FNP = 270 * fs;\n  const bk = o.bw || 1;\n  let lastKey = -1;\n  const key = (tk, F, s) => {\n    tk = Math.max(tk, lastKey);\n    lastKey = tk;\n    const nas = s.d.kind === 'nasal';\n    form.push(tk, F[0], F[1], F[2], 3500 * fs, 4500 * fs, (nas ? 70 : 50 + 0.04 * F[0]) * bk, (nas ? 200 : 60 + 0.025 * F[1]) * bk,\n      (nas ? 220 : 100 + 0.02 * F[2]) * bk, 250 * bk, 300 * bk, nas ? 450 * fs : FNP, (s.d.sp ? s.d.sp[6] : 6000) * fs);\n  };\n  for (const s of segs) {\n    if (s.pause != null) continue;\n    const span = s.t1 - s.t0;\n    if (s.d.vowel) {\n      const tr = Math.min(0.05, span * 0.35) * tk;\n      key(s.t0 + tr, s.F, s);\n      if (s.d.G) key(s.t0 + Math.max(tr, span * 0.35), s.F, s);\n      key(s.t1 - tr, s.G, s);\n    } else if (s.d.kind === 'glide') {\n      key(s.t0 + span * 0.4, s.F, s);\n      key(s.t1 - span * 0.4, s.F, s);\n    } else {\n      key(s.t0, s.F, s);\n      key(s.t1, s.Fr || s.F, s);\n    }\n  }\n  if (!form.length) form.push(0, 500, 1500, 2500, 3500, 4500, 70, 90, 150, 250, 300, FNP, 6000);\n  // pitch: a declining line per phrase, a hat-shaped accent on each stressed vowel, and the end of\n  // the phrase from its last stressed vowel: a fall, a question's rise, a lift before a comma\n  const phr = {};\n  for (const s of segs) {\n    if (s.pause != null) { if (phr[s.q]) phr[s.q].type = s.pause; continue; }\n    const p = phr[s.q] || (phr[s.q] = { t0: s.t0, t1: s.t1, type: '', acc: [], tf: s.t0, fs: 0 });\n    p.t1 = s.t1;\n    if (!isV(s)) continue;\n    if (s.st > 0) p.acc.push(s);\n    if (s.st === 1 || !p.fs) { p.tf = s.t0; p.fs = s.st === 1 ? 1 : p.fs; }\n  }\n  const plist = Object.keys(phr).map((k) => phr[k]);\n  // accent scales the accents' height and fall the declination and a statement's closing fall (1 the\n  // planner's own; a livelier talker accents more and falls less)\n  const ac = o.accent == null ? 1 : o.accent;\n  const fl = o.fall == null ? 1 : o.fall;\n  for (const p of plist) {\n    const em = p.type === '!' ? 1.5 : 1;\n    p.acc = p.acc.map((s, j) => ({ a: s.t0 - 0.02, m: s.t0 + (s.t1 - s.t0) * 0.4, b: s.t1 + 0.03, h: range * ac * em * (s.st === 1 ? (j === 0 ? 0.2 : 0.15) : 0.06) }));\n  }\n  const f0At = (tt) => {\n    let p = plist[0];\n    for (const q of plist) if (q.t0 <= tt) p = q;\n    if (!p) return base;\n    const x = Math.min(1, Math.max(0, (tt - p.t0) / Math.max(0.05, p.t1 - p.t0)));\n    let f = base * (1 + range * fl * (0.08 - 0.16 * x));\n    let acc = 0;\n    for (const c of p.acc) {\n      if (tt <= c.a || tt >= c.b) continue;\n      acc += c.h * (tt < c.m ? 0.5 - 0.5 * Math.cos((Math.PI * (tt - c.a)) / (c.m - c.a)) : 0.5 + 0.5 * Math.cos((Math.PI * (tt - c.m)) / (c.b - c.m)));\n    }\n    f *= 1 + acc;\n    const z = Math.min(1, Math.max(0, (tt - p.tf) / Math.max(0.05, p.t1 - p.tf)));\n    const y = z * z * (3 - 2 * z);\n    return f * (p.type === '?' ? 1 + range * 0.5 * y : p.type === ',' ? 1 + range * 0.08 * y : p.type === '...' ? 1 - range * 0.08 * y : 1 - range * fl * 0.2 * y);\n  };\n  const f0 = [];\n  for (let tt = 0; tt < dur + 0.01; tt += 0.01) f0.push(tt, f0At(tt));\n  return { dur, f0, amp, form, segs: segs.map((s) => ({ ph: s.pause != null ? s.pause : s.n + (s.st >= 0 ? s.st : ''), t0: s.t0, t1: s.t1 })) };\n}"
     },
     "speechVoices": {
       "deps": [],
-      "src": "function speechVoices() {\n  return {\n    // A woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at the /e/\n    // and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his times\n    // their women-to-men ratio for the nearest vowel (AY and AW start at /a/, EY ends toward /i/, AY\n    // and OY toward /I/, AW toward /U/, OW toward /u/); AX is the neutral tube of her shorter tract.\n    // vowelScale lifts that table past the women's averages, more in the upper formants (a shorter\n    // tract, a wider formant dispersion: F0 and formants both mark a voice as female, Hillenbrand\n    // and Clark 2009), and formant 1.29 (1.17, the women-to-men ratio of the Peterson and Barney\n    // means, times 1.10) moves her consonant loci, F4, F5, nasals and frication with the top\n    // formants. Pitch 230 Hz; range, accent and fall give her about 1.5 times his span in\n    // semitones: livelier accents, a brighter question rise, a gentler statement fall that never\n    // drops into a low, creaky end. Source after Klatt and Klatt (1990) female talkers: a long open\n    // phase, a steep tilt, aspiration in the voicing, wider bandwidths. His horn's drive and hall,\n    // its high-pass lowered so her fundamental passes, presence and air up to a 7 kHz top\n    'announcer-female': {\n      name: 'Announcer (Female)', desc: 'The same PA system with a woman speaking: bright, breathy and lively, through the horn into the hall',\n      f0: 230, rate: 0.92, range: 1.1, accent: 1.8, fall: 0.5, formant: 1.29, vowelScale: [1.06, 1.08, 1.1], bw: 1.15,\n      oq: 0.8, tilt: 0.8, jitter: 0.003, shimmer: 0.02, breath: 0.16,\n      vowels: {\n        IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],\n        AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],\n        AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],\n        AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],\n      },\n      fx: { hp: 150, lp: 7000, eq: [{ f: 2600, q: 1.2, db: 4 }, { f: 6000, q: 0.9, db: 3 }], drive: 0.25, room: { time: 1.1, mix: 0.18, pre: 0.02 } },\n    },\n    announcer: {\n      name: 'Announcer (Male)', desc: 'The classic synthesized PA voice: clear and level, through a horn into a hall',\n      f0: 104, rate: 0.92, range: 0.7, formant: 1, oq: 0.55, tilt: 0.25, jitter: 0.003, shimmer: 0.02, breath: 0.02,\n      fx: { hp: 300, lp: 4500, eq: { f: 1900, q: 1.2, db: 5 }, drive: 0.25, room: { time: 1.1, mix: 0.18, pre: 0.02 } },\n    },\n    deep: {\n      name: 'Deep Robot', desc: 'A slow, low machine voice with a metallic ring',\n      f0: 64, rate: 0.82, range: 0.25, formant: 0.86, oq: 0.4, tilt: 0.1, fx: { comb: { ms: 5.5, fb: 0.55, mix: 0.5 }, lp: 6000 },\n    },\n    retro: {\n      name: 'Retro Computer', desc: 'A flat, buzzy home computer voice through an 8-bit converter',\n      f0: 96, rate: 0.96, range: 0, formant: 1, oq: 0.3, tilt: 0, fx: { crush: { bits: 7, hz: 8000 }, lp: 3800 },\n    },\n    small: {\n      name: 'Small Robot', desc: 'A quick, bright little robot in a tin box',\n      f0: 230, rate: 1.12, range: 1.1, formant: 1.2, oq: 0.5, tilt: 0.2, fx: { comb: { ms: 1.6, fb: 0.35, mix: 0.3 }, hp: 160 },\n    },\n    whisper: {\n      name: 'Whisper', desc: 'Breath only: no voicing, close and airy',\n      f0: 120, rate: 0.9, range: 0.4, formant: 1.04, whisper: 1, fx: { hp: 220 },\n    },\n  };\n}"
+      "src": "function speechVoices() {\n  return {\n    // A young woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at\n    // the /e/ and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his\n    // times their women-to-men ratio for the nearest vowel (AY and AW start at /a/, EY ends toward\n    // /i/, AY and OY toward /I/, AW toward /U/, OW toward /u/); AX is the neutral tube of her\n    // shorter tract. vowelScale lifts that table past the women's averages, more in the upper\n    // formants (a short tract, a wide formant dispersion: F0 and formants both mark a voice as\n    // female, Hillenbrand and Clark 2009), and formant 1.3 (1.17, the women-to-men ratio of the\n    // Peterson and Barney means, times 1.11) moves her consonant loci, F4, F5, nasals and frication\n    // with the top formants. Pitch 240 Hz; range, accent and fall give her about 1.5 times his span\n    // in semitones: lively accents, a bright question rise, a gentle statement fall that never drops\n    // into a low, creaky end. Young, not old: the cues of perceived age (Linville 2001; Harnsberger\n    // et al. 2008; Schotz 2006) are a low F0, jitter and shimmer, a noisy, hoarse source, tremor, a\n    // slow rate and slack articulation, so her source is clean (little aspiration, almost no jitter\n    // or shimmer, no vibrato) while a long open phase and a soft tilt keep it light, not pressed;\n    // she talks about 13% faster than he does (rate, and vowelTime shortening the steady states) with\n    // quicker formant transitions (transition). His horn and hall with less drive and a little less\n    // hall, its high-pass lowered so her fundamental passes, presence and air up to a 7 kHz top\n    'announcer-female': {\n      name: 'Announcer (Female)', desc: 'The same PA system with a young woman speaking: bright, clear and lively, through the horn into the hall',\n      f0: 240, rate: 1, vowelTime: 0.92, transition: 0.7, range: 1.1, accent: 1.8, fall: 0.5, formant: 1.3, vowelScale: [1.07, 1.09, 1.11],\n      bw: 1.15, oq: 0.8, tilt: 0.8, jitter: 0.0015, shimmer: 0.008, breath: 0.055,\n      vowels: {\n        IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],\n        AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],\n        AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],\n        AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],\n      },\n      fx: { hp: 150, lp: 7000, eq: [{ f: 2600, q: 1.2, db: 4 }, { f: 6000, q: 0.9, db: 3 }], drive: 0.12, room: { time: 0.95, mix: 0.14, pre: 0.02 } },\n    },\n    announcer: {\n      name: 'Announcer (Male)', desc: 'The classic synthesized PA voice: clear and level, through a horn into a hall',\n      f0: 104, rate: 0.92, range: 0.7, formant: 1, oq: 0.55, tilt: 0.25, jitter: 0.003, shimmer: 0.02, breath: 0.02,\n      fx: { hp: 300, lp: 4500, eq: { f: 1900, q: 1.2, db: 5 }, drive: 0.25, room: { time: 1.1, mix: 0.18, pre: 0.02 } },\n    },\n    deep: {\n      name: 'Deep Robot', desc: 'A slow, low machine voice with a metallic ring',\n      f0: 64, rate: 0.82, range: 0.25, formant: 0.86, oq: 0.4, tilt: 0.1, fx: { comb: { ms: 5.5, fb: 0.55, mix: 0.5 }, lp: 6000 },\n    },\n    retro: {\n      name: 'Retro Computer', desc: 'A flat, buzzy home computer voice through an 8-bit converter',\n      f0: 96, rate: 0.96, range: 0, formant: 1, oq: 0.3, tilt: 0, fx: { crush: { bits: 7, hz: 8000 }, lp: 3800 },\n    },\n    small: {\n      name: 'Small Robot', desc: 'A quick, bright little robot in a tin box',\n      f0: 230, rate: 1.12, range: 1.1, formant: 1.2, oq: 0.5, tilt: 0.2, fx: { comb: { ms: 1.6, fb: 0.35, mix: 0.3 }, hp: 160 },\n    },\n    whisper: {\n      name: 'Whisper', desc: 'Breath only: no voicing, close and airy',\n      f0: 120, rate: 0.9, range: 0.4, formant: 1.04, whisper: 1, fx: { hp: 220 },\n    },\n  };\n}"
     },
     "tick": {
       "deps": [
