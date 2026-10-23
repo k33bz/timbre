@@ -87,14 +87,14 @@ async function main() {
   const color = (c) => ' style="--c: var(--cat-' + c + ')"';
   const heroPads = HERO.map(({ id, label }) => {
     const s = byId.get(id);
-    return '        <button class="hpad" type="button" data-id="' + id + '"' + color(s.category) + '><svg class="ic glyph"><use href="#i-play"/></svg><b>' + esc(label) + '</b><span>' + esc(CAT_NAMES[s.category].toUpperCase()) + '</span></button>';
+    return '        <button class="hpad" type="button" data-fs="tile" data-id="' + id + '"' + color(s.category) + '><svg class="ic glyph"><use href="#i-play"/></svg><b>' + esc(label) + '</b><span>' + esc(CAT_NAMES[s.category].toUpperCase()) + '</span></button>';
   }).join('\n');
   const cards = CARDS.map((id) => {
     const s = byId.get(id);
     const ci = String(cats.indexOf(s.category) + 1).padStart(2, '0');
     const ref = String(sounds.filter((x) => x.category === s.category).indexOf(s) + 1).padStart(3, '0');
     return [
-      '      <article class="card" data-id="' + id + '"' + color(s.category) + '>',
+      '      <article class="card" data-fs="tile" data-id="' + id + '"' + color(s.category) + '>',
       '        <div class="card-top"><span>' + ci + ' / ' + esc(CAT_NAMES[s.category].toUpperCase()) + '</span><span class="live">LIVE</span></div>',
       '        <div class="scope" role="button" tabindex="0" aria-label="Play ' + esc(s.name) + '"><canvas aria-hidden="true"></canvas><span class="big-play" aria-hidden="true"><svg class="ic"><use href="#i-play"/></svg></span></div>',
       '        <div class="card-body"><h3>' + esc(s.name) + '</h3><p class="ref">' + esc(id) + '</p><p>' + esc(s.desc.split(/(?<=\.)\s/)[0]) + '</p></div>',

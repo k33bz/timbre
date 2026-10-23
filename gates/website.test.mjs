@@ -21,6 +21,11 @@ test('website build writes the landing page beside the gallery', () => {
     assert.match(html, new RegExp('<b>' + manifest.count + '</b><span>sounds</span>'));
     assert.match(html, new RegExp('<b>' + manifest.themes.length + '</b><span>app sound kits</span>'));
     for (const c of manifest.categories) assert.ok(html.includes('href="timbre.html#' + c + '"'), 'category link ' + c);
+    // First Sound: the veil, the before-paint mode pick, its CSS failsafe, and what it animates
+    assert.match(html, /<div class="fs-veil" aria-hidden="true">/);
+    assert.match(html, /r\.setAttribute\('data-fs', fs\)/);
+    assert.match(html, /animation: fs-failsafe/);
+    assert.equal((html.match(/<(?:button|a|div|article)\b[^>]*data-fs="tile"/g) || []).length, 3 + 1 + 5 + 8, 'hero pads, the more pad, stats and cards');
     const script = html.match(/<script>(\(function \(\) \{[\s\S]*\}\)\(\);)<\/script>/);
     assert.ok(script, 'the bundled script is inline');
     assert.doesNotThrow(() => new vm.Script(script[1]), 'the bundled script parses');

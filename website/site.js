@@ -326,6 +326,13 @@ function babbleSound(c) {
 const fig = { cv: null, g: null, raf: 0, until: 0, t0: performance.now(), seen: true };
 const rays = 28;
 const hold = new Float32Array(rays);
+const FAN_SPAN = 1.15;
+const FAN_HUES = ['--cat-notify', '--cat-game', '--cat-battle', '--cat-magic', '--cat-ai', '--cat-cards', '--cat-duel', '--cat-scifi', '--cat-ui', '--cat-ambience'];
+const rayColor = (u) => css(FAN_HUES[Math.floor(u * (FAN_HUES.length - 1))]);
+// a ray's resting length (a fraction of the room right of the resonator): the harmonic series, swaying
+const restLen = (i, t, still) => (0.5 + 0.5 / (1 + i * 0.22)) * (still ? 1 : 0.86 + 0.14 * Math.sin(t * 1.6 + i * 0.7));
+// the incoming tone's height at u (0 at the figure's left margin, 1 at the resonator), as in frame()
+const toneY = (u, t, still, h) => Math.sin(u * 14 - (still ? 0 : t * 3)) * h * 0.035 * (0.6 + 0.4 * Math.min(1, Math.max(0, u)));
 let freq = null;
 let wave = null;
 function wake() {
@@ -366,7 +373,7 @@ function frame(now) {
   const x0 = w * 0.04;
   for (let x = x0; x <= cx; x += 2 * dpr) {
     const u = (x - x0) / (cx - x0);
-    const y = cy + Math.sin(u * 14 - (still ? 0 : t * 3)) * h * 0.035 * (0.6 + 0.4 * u);
+    const y = cy + toneY(u, t, still, h);
     if (x === x0) g.moveTo(x, y); else g.lineTo(x, y);
   }
   g.stroke();
@@ -390,8 +397,6 @@ function frame(now) {
   g.beginPath(); g.arc(cx, cy, rr * 1.2, 0, Math.PI * 2); g.fill();
   g.globalAlpha = 1;
   // the fan out: harmonics at rest, the live spectrum while a sound plays
-  const hues = ['--cat-notify', '--cat-game', '--cat-battle', '--cat-magic', '--cat-ai', '--cat-cards', '--cat-duel', '--cat-scifi', '--cat-ui', '--cat-ambience'];
-  const span = 1.15;
   const live = level > 0.02 && freq;
   if (live) {
     // each ray is the loudest bin of its band (log-spaced, ~50 Hz to ~12 kHz), spread a little to
@@ -413,11 +418,11 @@ function frame(now) {
   }
   for (let i = 0; i < rays; i++) {
     const u = i / (rays - 1);
-    const ang = -span / 2 + u * span;
-    const rest = (0.5 + 0.5 / (1 + i * 0.22)) * (still ? 1 : 0.86 + 0.14 * Math.sin(t * 1.6 + i * 0.7));
+    const ang = -FAN_SPAN / 2 + u * FAN_SPAN;
+    const rest = restLen(i, t, still);
     const len = Math.max(rest * (live ? 0.3 : 1 - Math.min(1, hold[i] * 1.5)), 0.14 + 0.86 * hold[i]);
     const L = (w - cx) * 0.9 * len;
-    const col = hold[i] > 0.05 && lastColor ? lastColor : css(hues[Math.floor(u * (hues.length - 1))]);
+    const col = hold[i] > 0.05 && lastColor ? lastColor : rayColor(u);
     const gr = g.createLinearGradient(cx, cy, cx + Math.cos(ang) * L, cy + Math.sin(ang) * L);
     gr.addColorStop(0, 'transparent');
     gr.addColorStop(0.18, col);
@@ -460,6 +465,179 @@ function drawScope(cv, col) {
   g.stroke();
 }
 
+// ---------------------------------------------------------------- First Sound
+// The welcome. Timbre's answer to Prism's First Light, told with sound instead of light: on a dark
+// veil one sine draws in from the left edge, strikes the hero figure's resonator and blooms into
+// the harmonic fan; the veil lifts onto the figure's own resting frame (same geometry, same phase,
+// so it reads as one shot) while the header fades up, the text rises out of a soft blur and the
+// pads and cards ring into place, each pulsing once in its category color. It is silent: browsers
+// allow no sound before a gesture.
+//   full  the first visit, about 1.6 s ('timbre.fs-seen' in localStorage after)
+//   echo  later visits: the veil lifts in 0.3 s with the resonator's flash
+//   fade  reduced motion, or a link to a section further down: the veil fades, nothing moves
+//   none  ?fs=off
+// The inline <head> snippet picks the mode before first paint (html[data-fs]) so the veil covers
+// the page from the first frame; if this script never runs, a CSS failsafe lifts it at 2.5 s. Any
+// key, click, wheel or touch skips to the end. ?fs=full:900 freezes the full play at 900 ms (QA).
+const FS = { beam0: 60, impact: 430, fan0: 450, fan1: 900, veil0: 880, veil1: 1140, head: 880, text: 860, tile: 1000, step: 30, end: 1700 };
+function firstSound() {
+  const mode = root.dataset.fs;
+  const veil = qs('.fs-veil');
+  if (!veil || !mode || mode === 'none') { if (veil) veil.remove(); root.removeAttribute('data-fs'); return; }
+  const q = /^(?:(full|echo|fade):)?(\d+)$/.exec(new URLSearchParams(location.search).get('fs') || '');
+  const freezeAt = q ? Number(q[2]) : null;
+  const cv = qs('canvas', veil);
+  const g = cv.getContext('2d');
+  const anims = [];
+  const lowPower = (navigator.hardwareConcurrency || 8) <= 4;
+  let raf = 0;
+  let done = false;
+  const t0 = performance.now();
+  const ease = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+  const anim = (el, frames, o) => { const a = el.animate(frames, Object.assign({ fill: 'backwards', easing: 'cubic-bezier(.16,1,.3,1)' }, o)); anims.push(a); return a; };
+  const inView = (el) => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.width > 0; };
+
+  // where the scene plays: the hero figure when it is on screen (one continuous shot), otherwise a
+  // figure-sized box in the middle of the viewport (one column, the figure below the fold)
+  const figR = fig.cv.getBoundingClientRect();
+  const onFig = figR.top >= 0 && figR.bottom <= innerHeight + 1;
+  const box = onFig ? figR : (() => {
+    const w = Math.min(innerWidth * 0.92, 560);
+    const h = w / 1.12;
+    return { left: (innerWidth - w) / 2, top: (innerHeight - h) / 2, width: w, height: h, right: (innerWidth + w) / 2 };
+  })();
+  const cx = box.left + box.width * 0.46;
+  const cy = box.top + box.height * 0.47;
+  const x0 = box.left + box.width * 0.04;
+  const rr = Math.min(box.width, box.height) * 0.11;
+
+  function draw(ms) {
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = Math.round(innerWidth * dpr);
+    const h = Math.round(innerHeight * dpr);
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, innerWidth, innerHeight);
+    if (mode === 'fade') return;
+    const accent = css('--accent');
+    const t = (performance.now() - fig.t0) / 1000;
+    const tFig = freezeAt == null ? t : 0;
+    if (mode === 'full') {
+      // the tone draws in from the left edge, its head racing the resonator
+      const p = ease((ms - FS.beam0) / (FS.impact - FS.beam0));
+      if (p > 0) {
+        const head = p * cx;
+        g.lineWidth = 2;
+        g.strokeStyle = accent;
+        g.shadowColor = accent;
+        g.shadowBlur = 10;
+        g.beginPath();
+        for (let x = 0; x <= head; x += 2) {
+          const u = (x - x0) / (cx - x0);
+          const y = cy + toneY(u, tFig, false, box.height) * Math.min(1, x / 60);
+          if (x === 0) g.moveTo(x, y); else g.lineTo(x, y);
+        }
+        g.stroke();
+        g.shadowBlur = 0;
+      }
+    }
+    // impact: the resonator flashes and its rings open out
+    const k0 = mode === 'full' ? FS.impact : 0;
+    const k = (ms - k0) / (mode === 'full' ? 420 : 300);
+    if (k > 0) {
+      const flash = Math.max(0, 1 - k);
+      const glow = g.createRadialGradient(cx, cy, 0, cx, cy, rr * (1.2 + 1.8 * ease(k)));
+      glow.addColorStop(0, accent);
+      glow.addColorStop(1, 'transparent');
+      g.fillStyle = glow;
+      g.globalAlpha = 0.35 + 0.65 * flash;
+      g.beginPath(); g.arc(cx, cy, rr * (1.2 + 1.8 * ease(k)), 0, Math.PI * 2); g.fill();
+      g.globalAlpha = 1;
+      const open = ease(k * 1.4);
+      for (let i = 3; i >= 1; i--) {
+        g.beginPath();
+        g.ellipse(cx, cy, rr * (0.55 + i * 0.22) * open, rr * (0.9 + i * 0.32) * open, 0, 0, Math.PI * 2);
+        g.strokeStyle = css('--muted');
+        g.globalAlpha = 0.18 + 0.1 * (3 - i);
+        g.lineWidth = 1;
+        g.stroke();
+      }
+      g.globalAlpha = 1;
+    }
+    if (mode !== 'full') return;
+    // the fan: rays grow out to a touch past their resting length and settle onto it
+    const f = (ms - FS.fan0) / (FS.fan1 - FS.fan0);
+    if (f <= 0) return;
+    const grow = f >= 1 ? 1 : ease(f) * (1 + 0.08 * Math.sin(Math.PI * Math.min(1, f)));
+    for (let i = 0; i < rays; i++) {
+      const u = i / (rays - 1);
+      const lag = Math.min(1, Math.max(0, f * 1.6 - u * 0.6));
+      const ang = -FAN_SPAN / 2 + u * FAN_SPAN;
+      const L = (box.right - cx) * 0.9 * restLen(i, tFig, false) * grow * ease(lag);
+      if (L <= rr) continue;
+      const gr = g.createLinearGradient(cx, cy, cx + Math.cos(ang) * L, cy + Math.sin(ang) * L);
+      gr.addColorStop(0, 'transparent');
+      gr.addColorStop(0.18, rayColor(u));
+      gr.addColorStop(1, 'transparent');
+      g.strokeStyle = gr;
+      g.lineWidth = 2.2 - u;
+      g.beginPath();
+      g.moveTo(cx + Math.cos(ang) * rr * 0.9, cy + Math.sin(ang) * rr * 0.9);
+      g.lineTo(cx + Math.cos(ang) * L, cy + Math.sin(ang) * L);
+      g.stroke();
+    }
+  }
+
+  const veilEnd = mode === 'full' ? FS.veil1 : 300;
+  function tick(now) {
+    raf = 0;
+    if (done) return;
+    const ms = now - t0;
+    draw(ms);
+    if (ms < veilEnd) raf = requestAnimationFrame(tick);
+  }
+
+  // the veil lifts (its own background with it); the page beneath was laid out the whole time
+  anim(veil, [{ opacity: 1 }, { opacity: 0 }], mode === 'full'
+    ? { delay: FS.veil0, duration: FS.veil1 - FS.veil0, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' }
+    : { duration: mode === 'echo' ? 300 : 220, easing: 'ease-out', fill: 'forwards' });
+  if (mode === 'full') {
+    if (onFig) anim(fig.cv, [{ opacity: 0 }, { opacity: 1 }], { delay: FS.veil0 - 20, duration: FS.veil1 - FS.veil0, easing: 'linear' });
+    anim(qs('.top'), [{ opacity: 0 }, { opacity: 1 }], { delay: FS.head, duration: 320 });
+    qsa('[data-fs="text"]').filter(inView).forEach((el, i) => anim(el,
+      [{ transform: 'translateY(6px)', filter: 'blur(3px)' }, { transform: 'none', filter: 'blur(0px)' }],
+      { delay: FS.text + Math.min(i, 8) * 24, duration: 380 }));
+    qsa('[data-fs="tile"]').filter(inView).forEach((el, i) => {
+      const c = getComputedStyle(el).getPropertyValue('--c').trim() || css('--accent');
+      const ring = lowPower ? [] : [{ filter: 'drop-shadow(0 0 0 transparent)' }, { filter: 'drop-shadow(0 0 12px ' + c + ')', offset: 0.5 }, { filter: 'drop-shadow(0 0 0 transparent)' }];
+      anim(el, [{ opacity: 0, transform: 'translateY(8px) scale(.97)' }, { opacity: 1, transform: 'none' }], { delay: FS.tile + Math.min(i, 14) * FS.step, duration: 420 });
+      if (ring.length) anim(el, ring, { delay: FS.tile + Math.min(i, 14) * FS.step + 140, duration: 520, easing: 'ease-out', fill: 'none' });
+    });
+    try { localStorage.setItem('timbre.fs-seen', '1'); } catch (e) { /* private mode */ }
+  }
+
+  function finish() {
+    if (done) return;
+    done = true;
+    cancelAnimationFrame(raf);
+    for (const a of anims) { try { a.finish(); } catch (e) { /* already done */ } }
+    off();
+    veil.remove();
+    root.dataset.fs = 'done';
+  }
+  const skipOn = ['keydown', 'pointerdown', 'wheel', 'touchstart'];
+  const off = () => { for (const ev of skipOn) removeEventListener(ev, finish, true); };
+  if (freezeAt != null) {
+    for (const a of anims) { a.pause(); a.currentTime = freezeAt; }
+    draw(freezeAt);
+    return;
+  }
+  for (const ev of skipOn) addEventListener(ev, finish, { capture: true, passive: true });
+  const last = anims.reduce((m, a) => Math.max(m, (a.effect.getComputedTiming().endTime) || 0), 0);
+  setTimeout(finish, Math.max(veilEnd, last) + 40);
+  raf = requestAnimationFrame(tick);
+}
+
 // ---------------------------------------------------------------- boot
 function boot() {
   fig.cv = qs('#fig');
@@ -469,6 +647,7 @@ function boot() {
   }
   for (const b of qsa('.mode button')) b.addEventListener('click', () => setMode(b.dataset.mode, true));
   setMode(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
+  firstSound();
   document.addEventListener('pointerdown', () => audio(), { capture: true, once: true });
   for (const ev of ['touchend', 'click', 'keydown']) document.addEventListener(ev, unlock, true);
   document.addEventListener('visibilitychange', () => {

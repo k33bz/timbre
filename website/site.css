@@ -98,6 +98,16 @@ button, input, select { font: inherit; color: inherit; }
 .status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--signal); margin-right: 10px; vertical-align: 1px; box-shadow: 0 0 10px var(--signal); }
 .spectrum-text { background: var(--spectrum); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
+/* ---- First Sound (site.js): the welcome veil. html[data-fs] is set before first paint by the
+   inline <head> snippet; the failsafe lifts the veil at 2.5 s if the script never runs. */
+.fs-veil { display: none; }
+html[data-fs="full"] .fs-veil, html[data-fs="echo"] .fs-veil, html[data-fs="fade"] .fs-veil {
+  display: block; position: fixed; inset: 0; z-index: 60; background: var(--bg); pointer-events: none;
+  animation: fs-failsafe 0.3s 2.5s forwards;
+}
+.fs-veil canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+@keyframes fs-failsafe { to { opacity: 0; visibility: hidden; } }
+
 /* ---- buttons */
 .btn {
   display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 10px;

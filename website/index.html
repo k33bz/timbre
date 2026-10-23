@@ -14,10 +14,21 @@
 <script>
   // the saved Night/Day choice, applied before first paint
   try { var m = localStorage.getItem('timbre.mode'); if (m === 'light' || m === 'dark') document.documentElement.setAttribute('data-theme', m); else if (matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light'); } catch (e) {}
+  // First Sound (site.js): pick the welcome before first paint so its veil covers the first frame
+  (function (r) {
+    var q = (/[?&]fs=([a-z]+)/.exec(location.search) || [])[1], fs, seen = false;
+    try { seen = localStorage.getItem('timbre.fs-seen') === '1'; } catch (e) {}
+    if (q === 'off') fs = 'none';
+    else if (q === 'full' || q === 'echo' || q === 'fade') fs = q;
+    else if (matchMedia('(prefers-reduced-motion: reduce)').matches || (location.hash && location.hash.length > 1)) fs = 'fade';
+    else fs = seen ? 'echo' : 'full';
+    r.setAttribute('data-fs', fs);
+  })(document.documentElement);
 </script>
 <style>/*@STYLE@*/</style>
 </head>
 <body>
+<div class="fs-veil" aria-hidden="true"><canvas></canvas></div>
 <a class="skip" href="#main">Skip to content</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-mark" viewBox="0 0 32 32"><path d="M2 16h5l3-9 4 18 4-14 3 8 3-5h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -49,19 +60,19 @@
 <main id="main">
   <section class="hero wrap" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <p class="eyebrow"><span class="status-dot"></span>THE OFFLINE SOUND LIBRARY<span class="sep">·</span><span class="meta">WEB · APPS · AGENTS</span></p>
-      <h1 id="hero-title">One oscillator.<br>Every <span class="spectrum-text">sound.</span></h1>
-      <p class="lede">A free library of clicks, chimes, alerts, spells and voices that you can copy into your own site or app as one small function, or just play with.</p>
-      <p class="lede-2">Every sound is built in your browser from oscillators, noise and filters. No recordings, nothing to download, and every one has knobs.</p>
-      <div class="cta">
+      <p class="eyebrow" data-fs="text"><span class="status-dot"></span>THE OFFLINE SOUND LIBRARY<span class="sep">·</span><span class="meta">WEB · APPS · AGENTS</span></p>
+      <h1 id="hero-title" data-fs="text">One oscillator.<br>Every <span class="spectrum-text">sound.</span></h1>
+      <p class="lede" data-fs="text">A free library of clicks, chimes, alerts, spells and voices that you can copy into your own site or app as one small function, or just play with.</p>
+      <p class="lede-2" data-fs="text">Every sound is built in your browser from oscillators, noise and filters. No recordings, nothing to download, and every one has knobs.</p>
+      <div class="cta" data-fs="text">
         <a class="btn primary" href="timbre.html">Open the library<svg class="ic"><use href="#i-arrow"/></svg></a>
         <a class="btn" href="#start">Get Timbre<svg class="ic"><use href="#i-down"/></svg></a>
       </div>
       <div class="hero-pads" role="group" aria-label="Try a sound">
 @@HERO_PADS@@
-        <a class="hpad more" href="timbre.html"><b>@@SOUNDS@@</b><span>SOUNDS</span><em>Hear all<svg class="ic"><use href="#i-arrow"/></svg></em></a>
+        <a class="hpad more" href="timbre.html" data-fs="tile"><b>@@SOUNDS@@</b><span>SOUNDS</span><em>Hear all<svg class="ic"><use href="#i-arrow"/></svg></em></a>
       </div>
-      <p class="fine">One HTML file · zero dependencies · no samples · works offline</p>
+      <p class="fine" data-fs="text">One HTML file · zero dependencies · no samples · works offline</p>
     </div>
     <figure class="fig" aria-labelledby="fig-cap">
       <canvas id="fig" aria-hidden="true"></canvas>
@@ -72,11 +83,11 @@
   </section>
 
   <section class="stats wrap" aria-label="Timbre at a glance">
-    <div class="stat"><p class="eyebrow">LIBRARY <span>ƒ 440</span></p><b>@@SOUNDS@@</b><span>sounds</span></div>
-    <div class="stat"><p class="eyebrow">CATEGORIES <span>ƒ 523</span></p><b>@@CATS@@</b><span>from UI to ambience</span></div>
-    <div class="stat"><p class="eyebrow">THEMES <span>ƒ 659</span></p><b>@@THEMES@@</b><span>app sound kits</span></div>
-    <div class="stat"><p class="eyebrow">AGENTS <span>MCP</span></p><b>@@TOOLS@@</b><span>MCP tools</span></div>
-    <div class="stat"><p class="eyebrow">SAMPLES</p><b>0</b><span>all synthesized</span></div>
+    <div class="stat" data-fs="tile"><p class="eyebrow">LIBRARY <span>ƒ 440</span></p><b>@@SOUNDS@@</b><span>sounds</span></div>
+    <div class="stat" data-fs="tile"><p class="eyebrow">CATEGORIES <span>ƒ 523</span></p><b>@@CATS@@</b><span>from UI to ambience</span></div>
+    <div class="stat" data-fs="tile"><p class="eyebrow">THEMES <span>ƒ 659</span></p><b>@@THEMES@@</b><span>app sound kits</span></div>
+    <div class="stat" data-fs="tile"><p class="eyebrow">AGENTS <span>MCP</span></p><b>@@TOOLS@@</b><span>MCP tools</span></div>
+    <div class="stat" data-fs="tile"><p class="eyebrow">SAMPLES</p><b>0</b><span>all synthesized</span></div>
   </section>
 
   <section class="section wrap" id="hear" aria-labelledby="hear-title">
