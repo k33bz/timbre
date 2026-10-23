@@ -329,6 +329,9 @@ main:focus { outline: none; }
 }
 .strip::before { content: ""; height: 3px; background: var(--c, var(--accent)); }
 .strip[hidden] { display: none; }
+.strip.linked { animation: linked 2.4s ease-out; }
+@keyframes linked { 0%, 30% { box-shadow: 0 0 0 2px var(--accent), var(--shadow); } 100% { box-shadow: var(--shadow); } }
+@media (prefers-reduced-motion: reduce) { .strip.linked { animation: none; outline: 2px solid var(--accent); } }
 .strip-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px 2px; }
 .strip-head h3 { font-size: 16px; font-weight: 700; min-width: 0; }
 .chip {
@@ -12082,6 +12085,11 @@ function audio() {
   if (!actx) {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
+    // iOS files WebAudio under the ringer, so the silent switch mutes every sound; 'playback' is
+    // the media category (Safari 16.4+). Older iOS gets the same effect from a silent <audio> loop.
+    if (navigator.audioSession) {
+      try { navigator.audioSession.type = 'playback'; } catch (e) { /* read-only in some builds */ }
+    }
     actx = new AC();
     const tap = actx.createGain();
     monitorGain = actx.createGain();
@@ -12094,8 +12102,50 @@ function audio() {
     tap.connect(analyser);
     monitorGain.connect(actx.destination);
   }
-  if (actx.state === 'suspended') actx.resume().catch(() => {});
+  // Safari also reports 'interrupted' (a call, Siri, the page in the background)
+  if (actx.state !== 'running') actx.resume().catch(() => {});
   return actx;
+}
+
+/**
+ * Unlock audio inside a gesture WebKit accepts. iOS only lets a context start from touchend,
+ * click or keydown (pointerdown and touchstart do not count), and starting one silent buffer in
+ * that gesture is what actually releases it.
+ */
+let unlocked = false;
+function unlock() {
+  const c = audio();
+  if (!c) return;
+  if (c.state !== 'running') c.resume().catch(() => {});
+  if (unlocked) return;
+  unlocked = true;
+  const src = c.createBufferSource();
+  src.buffer = c.createBuffer(1, 1, c.sampleRate);
+  src.connect(c.destination);
+  src.start(0);
+  if (!navigator.audioSession) {
+    const el = document.createElement('audio');
+    el.setAttribute('x-webkit-airplay', 'deny');
+    el.loop = true;
+    el.src = silentWav();
+    el.play().catch(() => {});
+  }
+}
+
+/** A tenth of a second of 8 kHz silence as a WAV data URI (the pre-16.4 iOS silent-switch fix). */
+function silentWav() {
+  const n = 800;
+  const b = new DataView(new ArrayBuffer(44 + n));
+  const str = (o, s) => { for (let i = 0; i < s.length; i++) b.setUint8(o + i, s.charCodeAt(i)); };
+  str(0, 'RIFF'); b.setUint32(4, 36 + n, true); str(8, 'WAVEfmt '); b.setUint32(16, 16, true);
+  b.setUint16(20, 1, true); b.setUint16(22, 1, true); b.setUint32(24, 8000, true);
+  b.setUint32(28, 8000, true); b.setUint16(32, 1, true); b.setUint16(34, 8, true);
+  str(36, 'data'); b.setUint32(40, n, true);
+  for (let i = 0; i < n; i++) b.setUint8(44 + i, 128);
+  let bin = '';
+  const u = new Uint8Array(b.buffer);
+  for (let i = 0; i < u.length; i++) bin += String.fromCharCode(u[i]);
+  return 'data:audio/wav;base64,' + btoa(bin);
 }
 
 /** Play a sound now. Returns the scheduled start time, or null without WebAudio. */
@@ -12532,6 +12582,31 @@ function applyFilter() {
   qs('#empty').hidden = shown > 0;
 }
 
+/**
+ * Deep links from the landing page: #<category> filters to a category, #<sound-id> clears the
+ * filters and brings that sound's strip into view (ids always carry a category prefix, so the two
+ * never collide).
+ */
+function followHash() {
+  const key = decodeURIComponent(location.hash.slice(1));
+  if (!key) return;
+  if (CAT_ORDER.includes(key)) {
+    view.cat = key;
+    applyFilter();
+    return;
+  }
+  const st = strips.get(key);
+  if (!st) return;
+  view.cat = 'all';
+  view.q = '';
+  qs('#q').value = '';
+  applyFilter();
+  st.el.scrollIntoView({ block: 'center' });
+  st.el.classList.remove('linked');
+  void st.el.offsetWidth;
+  st.el.classList.add('linked');
+}
+
 // ---------------------------------------------------------------- sound themes: app moments
 function buildThemes() {
   const sel = qs('#theme');
@@ -12734,9 +12809,13 @@ function setMode(mode, remember) {
 }
 
 function wire() {
-  const early = () => { audio(); document.removeEventListener('pointerdown', early, true); document.removeEventListener('keydown', early, true); };
-  document.addEventListener('pointerdown', early, true);
-  document.addEventListener('keydown', early, true);
+  // pointerdown starts the limiter's warm-up early on desktop; the others are the gestures iOS
+  // accepts, and they stay attached so a context Safari interrupts comes back on the next tap
+  document.addEventListener('pointerdown', () => audio(), { capture: true, once: true });
+  for (const ev of ['touchend', 'click', 'keydown']) document.addEventListener(ev, unlock, true);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && actx && actx.state !== 'running') actx.resume().catch(() => {});
+  });
   setMode(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark', false);
   qs('#mode').addEventListener('click', () => setMode(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true));
   if (darkQuery && darkQuery.addEventListener) {
@@ -12785,6 +12864,8 @@ function boot() {
   spBuild();
   wire();
   applyFilter();
+  followHash();
+  window.addEventListener('hashchange', followHash);
   const canRender = typeof OfflineAudioContext !== 'undefined';
   if (!canRender) {
     for (const st of strips.values()) qs('.scope-msg', st.el).textContent = 'offline rendering is unavailable here';
