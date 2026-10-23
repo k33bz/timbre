@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timbre: One oscillator. Every sound.</title>
+<meta name="description" content="A free library of @@SOUNDS@@ synthesized sound effects: clicks, chimes, alerts, spells and voices you can copy into your own site or app as one small function. No samples, nothing to download.">
+<meta name="color-scheme" content="dark light">
+<meta property="og:title" content="Timbre: One oscillator. Every sound.">
+<meta property="og:description" content="@@SOUNDS@@ synthesized sound effects for the web. One HTML file, zero dependencies, no samples.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://timbre.k33bz.com/">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script>
+  // the saved Night/Day choice, applied before first paint
+  try { var m = localStorage.getItem('timbre.mode'); if (m === 'light' || m === 'dark') document.documentElement.setAttribute('data-theme', m); else if (matchMedia('(prefers-color-scheme: light)').matches) document.documentElement.setAttribute('data-theme', 'light'); } catch (e) {}
+</script>
+<style>/*@STYLE@*/</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mark" viewBox="0 0 32 32"><path d="M2 16h5l3-9 4 18 4-14 3 8 3-5h6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 16 16"><path d="M4.5 2.8v10.4L13 8z" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 16 16"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 3.5v-.4A1.6 1.6 0 0 0 8.9 1.5H4.1A1.6 1.6 0 0 0 2.5 3.1v4.8a1.6 1.6 0 0 0 1.6 1.6h.4" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 16 16"><path d="M8 2.5v9.5M4 8l4 4 4-4M3 14h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 16 16"><path d="M13.2 10.2A5.6 5.6 0 0 1 5.8 2.8a5.6 5.6 0 1 0 7.4 7.4z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 16 16"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.2v1.6M8 13.2v1.6M1.2 8h1.6M13.2 8h1.6M3.2 3.2l1.1 1.1M11.7 11.7l1.1 1.1M3.2 12.8l1.1-1.1M11.7 4.3l1.1-1.1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-github" viewBox="0 0 16 16"><path fill="currentColor" d="M8 .2a8 8 0 0 0-2.5 15.6c.4 0 .5-.2.5-.4v-1.5c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.3 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8a7.6 7.6 0 0 1 4 0c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.7-3.6 3.9.3.3.5.8.5 1.5v2.2c0 .2.1.5.6.4A8 8 0 0 0 8 .2z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="./" aria-label="Timbre home"><svg class="ic s22"><use href="#i-mark"/></svg><span>timbre<b>.</b></span></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#hear">Sounds</a><a href="#themes">Themes</a><a href="#voices">Voices</a><a href="#agents">Agents</a>
+    </nav>
+    <div class="top-tools">
+      <div class="mode" role="group" aria-label="Page theme">
+        <button type="button" data-mode="dark" aria-pressed="true"><svg class="ic"><use href="#i-moon"/></svg>Night</button>
+        <button type="button" data-mode="light" aria-pressed="false"><svg class="ic"><use href="#i-sun"/></svg>Day</button>
+      </div>
+      <a class="icon-link" href="https://github.com/k33bz/timbre" aria-label="Timbre on GitHub"><svg class="ic s18"><use href="#i-github"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="status-dot"></span>THE OFFLINE SOUND LIBRARY<span class="sep">·</span><span class="meta">WEB · APPS · AGENTS</span></p>
+      <h1 id="hero-title">One oscillator.<br>Every <span class="spectrum-text">sound.</span></h1>
+      <p class="lede">A free library of clicks, chimes, alerts, spells and voices that you can copy into your own site or app as one small function, or just play with.</p>
+      <p class="lede-2">Every sound is built in your browser from oscillators, noise and filters. No recordings, nothing to download, and every one has knobs.</p>
+      <div class="cta">
+        <a class="btn primary" href="timbre.html">Open the library<svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a class="btn" href="#start">Get Timbre<svg class="ic"><use href="#i-down"/></svg></a>
+      </div>
+      <div class="hero-pads" role="group" aria-label="Try a sound">
+@@HERO_PADS@@
+        <a class="hpad more" href="timbre.html"><b>@@SOUNDS@@</b><span>SOUNDS</span><em>Hear all<svg class="ic"><use href="#i-arrow"/></svg></em></a>
+      </div>
+      <p class="fine">One HTML file · zero dependencies · no samples · works offline</p>
+    </div>
+    <figure class="fig" aria-labelledby="fig-cap">
+      <canvas id="fig" aria-hidden="true"></canvas>
+      <span class="fig-tag in">ONE TONE IN</span>
+      <span class="fig-tag out">EVERY TIMBRE OUT</span>
+      <figcaption id="fig-cap"><span class="sr-only">A single sine wave enters a resonator and leaves as a fan of harmonics; when a sound plays, the fan becomes its live spectrum. </span>FIG. 001 / THE TIMBRE PRINCIPLE · 20 HZ TO 20 KHZ</figcaption>
+    </figure>
+  </section>
+
+  <section class="stats wrap" aria-label="Timbre at a glance">
+    <div class="stat"><p class="eyebrow">LIBRARY <span>ƒ 440</span></p><b>@@SOUNDS@@</b><span>sounds</span></div>
+    <div class="stat"><p class="eyebrow">CATEGORIES <span>ƒ 523</span></p><b>@@CATS@@</b><span>from UI to ambience</span></div>
+    <div class="stat"><p class="eyebrow">THEMES <span>ƒ 659</span></p><b>@@THEMES@@</b><span>app sound kits</span></div>
+    <div class="stat"><p class="eyebrow">AGENTS <span>MCP</span></p><b>@@TOOLS@@</b><span>MCP tools</span></div>
+    <div class="stat"><p class="eyebrow">SAMPLES</p><b>0</b><span>all synthesized</span></div>
+  </section>
+
+  <section class="section wrap" id="hear" aria-labelledby="hear-title">
+    <div class="section-head">
+      <div><p class="eyebrow">01 / A WINDOW INTO TIMBRE<span class="sep">·</span><span class="meta">LIVE</span></p><h2 id="hear-title">Silence is optional.</h2><p>Real sounds from the library, rendered right here. Press play, then take the code.</p></div>
+    </div>
+    <div class="cards">
+@@CARDS@@
+    </div>
+    <p class="section-foot"><span>Each Copy is one self-contained function: call <code>uiCascade(ac)</code> and it plays.</span> <a class="text-link" href="timbre.html">Hear every sound in the library<svg class="ic"><use href="#i-arrow"/></svg></a></p>
+  </section>
+
+  <section class="section wrap" id="find" aria-labelledby="find-title">
+    <div class="section-head">
+      <div><p class="eyebrow">02 / FIND YOUR SOUND<span class="sep">·</span><span class="meta">@@CATS@@ CATEGORIES</span></p><h2 id="find-title">A whole mixing desk to explore.</h2><p>Every category is its own channel, from the quietest hover tick to an eight-second rainstorm.</p></div>
+      <label class="find"><span class="sr-only">Find a sound</span><input id="find-q" type="search" placeholder="Find a sound: coin, error, rain…" autocomplete="off" spellcheck="false"></label>
+    </div>
+    <ol class="results" id="find-results" hidden></ol>
+    <ul class="cats" id="cats">
+@@CATEGORIES@@
+    </ul>
+  </section>
+
+  <section class="section wrap" id="themes" aria-labelledby="themes-title">
+    <div class="section-head">
+      <div><p class="eyebrow">03 / SOUND THEMES<span class="sep">·</span><span class="meta">@@THEMES@@ KITS</span></p><h2 id="themes-title">One app. @@THEMES_WORD@@ moods.</h2><p>A theme maps your app's moments to sounds that belong together. Pick one, then press the pads.</p></div>
+    </div>
+    <div class="desk">
+      <div class="theme-tabs" role="tablist" aria-label="Sound theme" id="theme-tabs">
+@@THEME_TABS@@
+      </div>
+      <p class="theme-desc" id="theme-desc"></p>
+      <div class="pads" id="pads" role="group" aria-label="App moments">
+@@PADS@@
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="voices" aria-labelledby="voices-title">
+    <div class="voice-panel">
+      <div class="voice-copy">
+        <p class="eyebrow">04 / VOICES<span class="sep">·</span><span class="meta">@@VOICES@@ VOICES</span></p>
+        <h2 id="voices-title">Say anything.<br>No recordings.</h2>
+        <p>A formant synthesizer turns text into speech right in the page: a PA announcer, a robot, a whisper, or game-style babble. Type a line and press Speak.</p>
+      </div>
+      <form class="speak" id="speak" autocomplete="off">
+        <label class="sr-only" for="sp-text">Line to speak</label>
+        <input id="sp-text" maxlength="120" value="Access granted. Welcome back, commander." spellcheck="false">
+        <div class="speak-row">
+          <label class="sr-only" for="sp-voice">Voice</label>
+          <select id="sp-voice">
+@@VOICE_OPTIONS@@
+          </select>
+          <button class="btn primary" type="submit"><svg class="ic"><use href="#i-play"/></svg>Speak</button>
+          <button class="btn ghost" type="button" id="sp-copy"><svg class="ic"><use href="#i-copy"/></svg>Copy</button>
+        </div>
+        <canvas class="speak-scope" id="sp-scope" aria-hidden="true"></canvas>
+      </form>
+    </div>
+  </section>
+
+  <section class="principles wrap" aria-labelledby="principles-title"><h2 id="principles-title" class="sr-only">Built to go anywhere</h2>
+    <div><p class="eyebrow">01 / OFFLINE</p><h3>Nothing to download.</h3><p>The whole library is one HTML file. Save it and it plays on a plane.</p></div>
+    <div><p class="eyebrow">02 / YOURS</p><h3>One function, yours.</h3><p>Copy hands you plain JavaScript with no imports. MIT licensed, ship it anywhere.</p></div>
+    <div><p class="eyebrow">03 / MEASURED</p><h3>Levels you can trust.</h3><p>Every sound is rendered and metered, so a click never shouts over a chime.</p></div>
+  </section>
+
+  <section class="section wrap" id="agents" aria-labelledby="agents-title">
+    <div class="agent-panel">
+      <div class="agent-copy">
+        <p class="eyebrow">05 / HUMAN EARS. AGENT HANDS.</p>
+        <h2 id="agents-title">Your agent has<br>good ears now.</h2>
+        <p>The catalog is readable by your AI tools. Timbre's MCP server suggests sounds for a moment, builds a whole theme kit, and hands back the same code the Copy button gives you.</p>
+        <ul class="tools" aria-label="MCP tools">
+@@TOOL_CHIPS@@
+        </ul>
+      </div>
+      <div class="term" aria-label="Example agent session">
+        <div class="term-bar"><i></i><i></i><i></i><span>claude</span></div>
+<pre><span class="t-dim">$</span> claude mcp add timbre -- node timbre/mcp-server/cli.js start
+<span class="t-ok">✓</span> timbre connected · @@TOOLS@@ tools
+
+<span class="t-you">&gt;</span> Give my settings page quiet sounds for
+  toggles, saving and errors.
+
+<span class="t-tool">● timbre.build_kit</span>(theme: "soft-ui",
+    moments: ["toggle-on", "toggle-off", "success", "error"])
+  <span class="t-dim">└ 4 functions, one shared master chain</span>
+
+<span class="t-ok">✓</span> Added sounds.js and wired the toggles.</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="start" aria-labelledby="start-title">
+    <div class="section-head"><div><p class="eyebrow">06 / FROM IDEA TO IN YOUR EARS</p><h2 id="start-title">Make some noise.</h2><p>Three ways in, all free.</p></div></div>
+    <ol class="steps">
+      <li><span class="n">01</span><h3>Open the library</h3><p>Browse, tweak the knobs, save WAVs. Keep a copy offline with one file.</p><a class="btn" href="timbre.html">Open timbre.html<svg class="ic"><use href="#i-arrow"/></svg></a></li>
+      <li><span class="n">02</span><h3>Copy one function</h3><p>Paste it into your project and call it from any click handler.</p><pre class="snip">const ac = new AudioContext();
+btn.onclick = () =&gt;
+  uiClickSoft(ac);</pre></li>
+      <li><span class="n">03</span><h3>Hand it to your agent</h3><p>Clone the repo and add the MCP server to Claude Code or any MCP client.</p><a class="btn" href="https://github.com/k33bz/timbre">Get it on GitHub<svg class="ic"><use href="#i-arrow"/></svg></a></li>
+    </ol>
+  </section>
+
+  <section class="closing wrap" aria-label="Open the library">
+    <svg class="ic s32 closing-mark" aria-hidden="true"><use href="#i-mark"/></svg>
+    <p>One oscillator in. <span class="spectrum-text">Every sound out.</span></p>
+    <a class="btn primary" href="timbre.html">Open the library<svg class="ic"><use href="#i-arrow"/></svg></a>
+  </section>
+</main>
+
+<footer class="foot wrap">
+  <span>Timbre @@VERSION@@ · MIT · sibling of <a href="https://prism.k33bz.com/">Prism</a></span>
+  <span>Every sound on this page is synthesized live with WebAudio.</span>
+</footer>
+
+<dialog class="copy-dialog" id="copy-dialog"><h2>Copy your code</h2><p>Your browser blocked the clipboard. Select the code and copy it.</p><textarea id="copy-text" readonly aria-label="Code"></textarea><form method="dialog"><button class="btn">Done</button></form></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>/*@SCRIPT@*/</script>
+</body>
+</html>

@@ -18,7 +18,7 @@ step() {
   "$@" || { echo "!! failed: $*"; fail=1; }
 }
 step node build.mjs --check
-step node --test --test-reporter=spec gates/build.test.mjs gates/copy.test.mjs gates/core.test.mjs gates/wav.test.mjs gates/voice.test.mjs
+step node --test --test-reporter=spec gates/build.test.mjs gates/copy.test.mjs gates/core.test.mjs gates/wav.test.mjs gates/voice.test.mjs gates/website.test.mjs
 step npm test --prefix mcp-server
 for g in gates/check_levels.mjs gates/check_page.mjs gates/check_copy.mjs mcp-server/scripts/check_kit.mjs; do
   # shellcheck disable=SC2086  # WRAP is a command prefix and must split into words

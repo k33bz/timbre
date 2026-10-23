@@ -27,7 +27,7 @@ It serves two audiences from the same source of truth:
 
 ## Quick start (just open the file)
 
-Try it live at **[timbre.k33bz.com](https://timbre.k33bz.com)**, or open `dist/timbre.html` in a browser. It works from disk, offline; nothing is fetched. Sound starts on your first click (browsers require a gesture). Press `/` to search.
+Try it live at **[timbre.k33bz.com](https://timbre.k33bz.com)** (the gallery itself is at [/timbre.html](https://timbre.k33bz.com/timbre.html); `#ui` opens a category, `#ui-cascade` a sound), or open `dist/timbre.html` in a browser. It works from disk, offline; nothing is fetched. Sound starts on your first click (browsers require a gesture). Press `/` to search.
 
 Every card shows a waveform rendered offline, the sound's duration, peak and RMS, its parameters as sliders, and a **Vary** switch that draws a new noise seed on each play. Pick a **theme** to hear a whole app's worth of moments as one set.
 
@@ -171,6 +171,8 @@ build.mjs          validates, writes catalog/manifest.json and catalog/index.jso
 catalog/           manifest.json (every field, play source, helpers, Copy contract, vocabulary,
                    measured levels); index.json (search fields); levels.json (the level gate)
 dist/timbre.html   the single page (generated; do not edit by hand)
+website/           the timbre.k33bz.com landing page; `node website/build.mjs <outdir>` writes it
+                   with the gallery beside it (Pages runs this on every push to main)
 gates/             unit tests and the level, page and copy gates
 mcp-server/        MCP server over the catalog (tools, tests, smoke run)
 ```
