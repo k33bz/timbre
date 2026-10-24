@@ -520,6 +520,29 @@ function buildCats() {
   };
   mk('all', 'All', SOUNDS.length);
   for (const c of CAT_ORDER) if (counts[c]) mk(c, CAT_NAMES[c] || c, counts[c]);
+  // the intro's category bar: one segment per category, as wide as its share of the library;
+  // pressing one filters to it (pressing it again shows everything) and jumps to the sounds
+  const bar = qs('#catbar');
+  const used = CAT_ORDER.filter((c) => counts[c]);
+  for (const c of used) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cbar-seg';
+    b.dataset.cat = c;
+    b.style.setProperty('--c', 'var(--cat-' + c + ', var(--accent))');
+    b.style.setProperty('--n', String(counts[c]));
+    b.setAttribute('aria-label', (CAT_NAMES[c] || c) + ', ' + counts[c] + ' sounds');
+    b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = '<span aria-hidden="true">' + esc((CAT_NAMES[c] || c).toUpperCase()) + ' ' + counts[c] + '</span>';
+    b.addEventListener('click', () => {
+      view.cat = view.cat === c ? 'all' : c;
+      applyFilter();
+      qs('#sounds-h').scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+    bar.appendChild(b);
+  }
+  qs('#lib-n').textContent = String(SOUNDS.length);
+  qs('#lib-c').textContent = String(used.length);
 }
 
 function applyFilter() {
@@ -530,7 +553,7 @@ function applyFilter() {
     st.el.hidden = !ok;
     if (ok) shown++;
   }
-  for (const b of document.querySelectorAll('.cat')) b.setAttribute('aria-pressed', String(b.dataset.cat === view.cat));
+  for (const b of document.querySelectorAll('.cat, .cbar-seg')) b.setAttribute('aria-pressed', String(b.dataset.cat === view.cat));
   qs('#count').textContent = shown === SOUNDS.length ? String(SOUNDS.length) : shown + ' of ' + SOUNDS.length;
   qs('#empty').hidden = shown > 0;
 }
@@ -565,6 +588,7 @@ function buildThemes() {
   const sel = qs('#theme');
   const sec = qs('#themes');
   if (!THEMES.length) { sec.hidden = true; return; }
+  qs('#themes-n').textContent = THEMES.length + (THEMES.length === 1 ? ' KIT' : ' KITS');
   const saved = store.get('timbre.theme');
   if (saved && THEMES.some((th) => th.id === saved)) view.theme = saved;
   for (const th of THEMES) {

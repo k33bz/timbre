@@ -24,9 +24,9 @@
   <div class="top-in">
     <a class="brand" href="#main" aria-label="Timbre, back to top">
       <svg class="logo" viewBox="0 0 44 24" aria-hidden="true" focusable="false"><path d="M2 12h6l3-8 5 16 5-12 3 6 3-2h15"/></svg>
-      <span class="word">Timbre</span>
+      <span class="word">timbre<b>.</b></span>
     </a>
-    <p class="tagline">Synthesized sound effects. No samples, nothing fetched.</p>
+    <a class="home" href="https://timbre.k33bz.com/"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M13 8H3.5M7.5 4l-4 4 4 4"/></svg>Home</a>
     <div class="search">
       <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M13 13l4.5 4.5"/></svg>
       <input id="q" type="search" placeholder="Search sounds, tags, moods" aria-label="Search sounds" autocomplete="off" spellcheck="false">
@@ -44,6 +44,15 @@
   <nav class="cats" id="cats" aria-label="Categories"></nav>
 </header>
 <main id="main" tabindex="-1">
+  <section class="intro" aria-labelledby="intro-h">
+    <div class="intro-copy">
+      <p class="eyebrow"><span class="status-dot"></span>THE LIBRARY<span class="sep">·</span><span class="meta"><span id="lib-n"></span> SOUNDS · <span id="lib-c"></span> CATEGORIES · ALL SYNTHESIZED</span></p>
+      <h1 id="intro-h">Every sound,<br><span class="spectrum-text">on the desk.</span></h1>
+      <p class="lede">Press play on anything and turn the knobs, then take it with you: Copy gives one self-contained function, WAV saves the file.</p>
+    </div>
+    <div class="catbar" id="catbar" role="group" aria-label="The library by category: press one to show it"></div>
+  </section>
+  <div class="sec-head"><p class="eyebrow">01 / SOUND THEMES<span class="sep">·</span><span class="meta" id="themes-n"></span></p><h2 class="big">One app, every mood.</h2></div>
   <section class="rack" id="themes" aria-labelledby="themes-h">
     <div class="rack-head">
       <h2 id="themes-h">Sound theme</h2>
@@ -52,6 +61,7 @@
     </div>
     <div class="pads" id="moments" role="group" aria-label="App moments: press one to hear it"></div>
   </section>
+  <div class="sec-head"><p class="eyebrow">02 / VOICES<span class="sep">·</span><span class="meta">SPEECH AND BABBLE, NO RECORDINGS</span></p><h2 class="big">Say anything.</h2></div>
   <section class="rack speak" id="speak" aria-labelledby="speak-h">
     <div class="rack-head">
       <h2 id="speak-h">Speak</h2>
@@ -76,7 +86,8 @@
     </div>
   </section>
   <div class="grid-head">
-    <h2 id="sounds-h">Sounds <span class="count" id="count"></span></h2>
+    <div><p class="eyebrow">03 / THE LIBRARY<span class="sep">·</span><span class="meta">PLAY, TWEAK, COPY</span></p>
+    <h2 class="big" id="sounds-h">Every sound <span class="count" id="count"></span></h2></div>
     <p class="hint">Waveforms are rendered offline through the master chain. Level scale in dBFS; the dashed line is the house ceiling, -12.</p>
   </div>
   <section class="grid" id="sounds" aria-labelledby="sounds-h" tabindex="-1"></section>
