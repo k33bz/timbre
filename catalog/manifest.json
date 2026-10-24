@@ -45,7 +45,7 @@
   },
   "levels": {
     "source": "catalog/levels.json",
-    "measured": 359,
+    "measured": 360,
     "about": "Measured by gates/check_levels.mjs in dBFS after the master chain on a warm chain. peak and rms: at the defaults (the worst peak and the mean RMS of 3 seeds). worstPeak, worstRms and lowestPeak: over all 12 renders (the defaults and 3 random parameter sets, 3 seeds each). pre: the highest peak before the limiter over all renders. end: where the default render falls below -60 dBFS, in seconds."
   },
   "vocabulary": {
@@ -21670,7 +21670,16 @@
         "seed",
         "master"
       ],
-      "fingerprint": "538da7ed54b9"
+      "fingerprint": "538da7ed54b9",
+      "levels": {
+        "peak": -14.5,
+        "rms": -28,
+        "worstPeak": -14.5,
+        "worstRms": -26.3,
+        "lowestPeak": -19.4,
+        "pre": -19.4,
+        "end": 7.295
+      }
     },
     {
       "id": "dark-bell-knell",
