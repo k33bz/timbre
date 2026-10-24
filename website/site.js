@@ -332,7 +332,17 @@ const rayColor = (u) => css(FAN_HUES[Math.floor(u * (FAN_HUES.length - 1))]);
 // a ray's resting length (a fraction of the room right of the resonator): the harmonic series, swaying
 const restLen = (i, t, still) => (0.5 + 0.5 / (1 + i * 0.22)) * (still ? 1 : 0.86 + 0.14 * Math.sin(t * 1.6 + i * 0.7));
 // the incoming tone's height at u (0 at the figure's left margin, 1 at the resonator), as in frame()
-const toneY = (u, t, still, h) => Math.sin(u * 14 - (still ? 0 : t * 3)) * h * 0.035 * (0.6 + 0.4 * Math.min(1, Math.max(0, u)));
+const toneY = (u, t, still, h) => Math.sin(u * 14 - (still ? 0 : t * TONE_SPEED)) * h * 0.035 * (0.6 + 0.4 * Math.min(1, Math.max(0, u)));
+const TONE_SPEED = 4.5;
+// The resonator is a speaker: each crest that reaches it (the tone at u = 1) pushes it out, with a
+// small rebound on the trough; the outer rings follow a beat later, so the push ripples outward.
+// Returns the scale for ring k (1 inner .. 3 outer); 1 when still.
+const CONE_AMP = [0, 0.09, 0.065, 0.045];
+function cone(t, still, k) {
+  if (still) return 1;
+  const s = Math.sin(14 - t * TONE_SPEED - k * 0.35);
+  return 1 + CONE_AMP[k] * (s > 0 ? s * s : -0.3 * s * s);
+}
 let freq = null;
 let wave = null;
 function wake() {
@@ -382,7 +392,8 @@ function frame(now) {
   const rr = Math.min(w, h) * 0.11;
   for (let k = 3; k >= 1; k--) {
     g.beginPath();
-    g.ellipse(cx, cy, rr * (0.55 + k * 0.22) * (1 + level * 0.08), rr * (0.9 + k * 0.32) * (1 + level * 0.08), 0, 0, Math.PI * 2);
+    const sc = cone(t, still, k) * (1 + level * 0.08);
+    g.ellipse(cx, cy, rr * (0.55 + k * 0.22) * sc, rr * (0.9 + k * 0.32) * sc, 0, 0, Math.PI * 2);
     g.strokeStyle = ink;
     g.globalAlpha = 0.18 + 0.1 * (3 - k) + level * 0.3;
     g.lineWidth = dpr;
@@ -393,8 +404,9 @@ function frame(now) {
   glow.addColorStop(0, accent);
   glow.addColorStop(1, 'transparent');
   g.fillStyle = glow;
-  g.globalAlpha = 0.35 + level * 0.5;
-  g.beginPath(); g.arc(cx, cy, rr * 1.2, 0, Math.PI * 2); g.fill();
+  const push = Math.max(0, cone(t, still, 1) - 1) / CONE_AMP[1];
+  g.globalAlpha = Math.min(1, 0.35 + 0.18 * push + level * 0.5);
+  g.beginPath(); g.arc(cx, cy, rr * 1.2 * (1 + 0.06 * push), 0, Math.PI * 2); g.fill();
   g.globalAlpha = 1;
   // the fan out: harmonics at rest, the live spectrum while a sound plays
   const live = level > 0.02 && freq;
@@ -553,10 +565,14 @@ function firstSound() {
       g.globalAlpha = 0.35 + 0.65 * flash;
       g.beginPath(); g.arc(cx, cy, rr * (1.2 + 1.8 * ease(k)), 0, Math.PI * 2); g.fill();
       g.globalAlpha = 1;
-      const open = ease(k * 1.4);
+      const open = ease(k * 5);
+      // the first crest lands hard: a damped kick on top of the speaker's steady pumping
+      const x = Math.max(0, ms - k0) / 1000;
       for (let i = 3; i >= 1; i--) {
+        const kick = 1 + 0.36 * Math.exp(-x * 6) * Math.sin(2 * Math.PI * 2.6 * Math.max(0, x - i * 0.03)) * (1.2 - i * 0.2);
+        const sc = open * kick * cone(tFig, false, i);
         g.beginPath();
-        g.ellipse(cx, cy, rr * (0.55 + i * 0.22) * open, rr * (0.9 + i * 0.32) * open, 0, 0, Math.PI * 2);
+        g.ellipse(cx, cy, rr * (0.55 + i * 0.22) * sc, rr * (0.9 + i * 0.32) * sc, 0, 0, Math.PI * 2);
         g.strokeStyle = css('--muted');
         g.globalAlpha = 0.18 + 0.1 * (3 - i);
         g.lineWidth = 1;
