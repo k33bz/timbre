@@ -963,7 +963,7 @@
    "end": 0.16
   },
   "dark-cathedral-choir": {
-   "fingerprint": "cc5f3877aac6",
+   "fingerprint": "52a36f60b477",
    "peak": -15.5,
    "rms": -31.5,
    "worstPeak": -13.6,
@@ -993,7 +993,7 @@
    "end": 0.357
   },
   "dark-choir-amen": {
-   "fingerprint": "dcc8bbd29b54",
+   "fingerprint": "a4c7bff18d4c",
    "peak": -19.1,
    "rms": -32.6,
    "worstPeak": -18.9,
@@ -1063,7 +1063,7 @@
    "end": 6.07
   },
   "dark-haunted-corridor": {
-   "fingerprint": "dd2b018f6643",
+   "fingerprint": "b7ce79b0addf",
    "peak": -21.6,
    "rms": -37.3,
    "worstPeak": -17.6,
@@ -1103,7 +1103,7 @@
    "end": 1.535
   },
   "dark-monk-chant": {
-   "fingerprint": "a97424d4beb4",
+   "fingerprint": "11f1dfcd6183",
    "peak": -16,
    "rms": -29.7,
    "worstPeak": -14.7,
@@ -1183,7 +1183,7 @@
    "end": 4.609
   },
   "dark-whisper-swarm": {
-   "fingerprint": "1f3706a91b08",
+   "fingerprint": "f6008adb7661",
    "peak": -17.6,
    "rms": -35.7,
    "worstPeak": -16.7,
@@ -3403,17 +3403,17 @@
    "end": 0.339
   },
   "voice-access-denied": {
-   "fingerprint": "e27a7112b74e",
+   "fingerprint": "0eca636f7fc2",
    "peak": -15,
    "rms": -27.4,
    "worstPeak": -15,
-   "worstRms": -27.4,
+   "worstRms": -27,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.566
   },
   "voice-access-granted": {
-   "fingerprint": "aa3aa532de0d",
+   "fingerprint": "961753074ebf",
    "peak": -15,
    "rms": -27.7,
    "worstPeak": -15,
@@ -3423,7 +3423,7 @@
    "end": 1.576
   },
   "voice-babble-beep": {
-   "fingerprint": "12c806a4cc94",
+   "fingerprint": "e93c165fac7c",
    "peak": -15,
    "rms": -22.1,
    "worstPeak": -15,
@@ -3433,7 +3433,7 @@
    "end": 2.256
   },
   "voice-babble-cute": {
-   "fingerprint": "6b01b4cf3cc8",
+   "fingerprint": "d2afcd6109e5",
    "peak": -15,
    "rms": -32.3,
    "worstPeak": -15,
@@ -3443,7 +3443,7 @@
    "end": 2.197
   },
   "voice-babble-elder": {
-   "fingerprint": "bc0eb1cda421",
+   "fingerprint": "97edf329edd1",
    "peak": -15,
    "rms": -31.6,
    "worstPeak": -15,
@@ -3453,7 +3453,7 @@
    "end": 2.949
   },
   "voice-babble-gruff": {
-   "fingerprint": "467a3b2c531b",
+   "fingerprint": "75c3c743c38b",
    "peak": -15,
    "rms": -27.9,
    "worstPeak": -15,
@@ -3463,7 +3463,7 @@
    "end": 2.704
   },
   "voice-babble-sprite": {
-   "fingerprint": "9f6851d42bc1",
+   "fingerprint": "f3c2504699ad",
    "peak": -15,
    "rms": -33.3,
    "worstPeak": -15,
@@ -3473,17 +3473,17 @@
    "end": 1.778
   },
   "voice-containment-breach": {
-   "fingerprint": "b872efcd64ec",
+   "fingerprint": "ac71e360c5c2",
    "peak": -15,
    "rms": -30.2,
    "worstPeak": -15,
-   "worstRms": -29.1,
+   "worstRms": -27.8,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 3.761
   },
   "voice-countdown": {
-   "fingerprint": "3e66810a82cb",
+   "fingerprint": "1c6ca6a655c6",
    "peak": -15,
    "rms": -27,
    "worstPeak": -15,
@@ -3493,7 +3493,7 @@
    "end": 2.89
   },
   "voice-game-over": {
-   "fingerprint": "565206608867",
+   "fingerprint": "4edeb9ab718d",
    "peak": -15,
    "rms": -28.7,
    "worstPeak": -15,
@@ -3503,27 +3503,27 @@
    "end": 0.844
   },
   "voice-level-complete": {
-   "fingerprint": "f512c232e9ae",
+   "fingerprint": "72032bc189d2",
    "peak": -15,
    "rms": -27.3,
    "worstPeak": -15,
-   "worstRms": -27.2,
+   "worstRms": -25.8,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.482
   },
   "voice-mission-complete": {
-   "fingerprint": "e3b3bce72ca2",
+   "fingerprint": "ba8f7fdafa7c",
    "peak": -15,
    "rms": -26,
    "worstPeak": -15,
-   "worstRms": -25.8,
+   "worstRms": -25.9,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.543
   },
   "voice-ready-go": {
-   "fingerprint": "5b0462dc7764",
+   "fingerprint": "caf8d9812551",
    "peak": -15,
    "rms": -27.5,
    "worstPeak": -15,
@@ -3533,27 +3533,27 @@
    "end": 2.046
   },
   "voice-retro-greetings": {
-   "fingerprint": "ac732c74d098",
+   "fingerprint": "993345e08d4c",
    "peak": -15,
    "rms": -28.9,
    "worstPeak": -15,
-   "worstRms": -28.9,
+   "worstRms": -28.6,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 3.864
   },
   "voice-robot-affirmative": {
-   "fingerprint": "90f0d52006a6",
+   "fingerprint": "a22380c5394e",
    "peak": -15,
    "rms": -31.5,
    "worstPeak": -15,
-   "worstRms": -29.4,
+   "worstRms": -27,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 2.748
   },
   "voice-robot-processing": {
-   "fingerprint": "a0f821920f29",
+   "fingerprint": "4c5cdfd893c2",
    "peak": -15,
    "rms": -33.1,
    "worstPeak": -15,
@@ -3563,41 +3563,41 @@
    "end": 2.087
   },
   "voice-system-online": {
-   "fingerprint": "c9da58208240",
+   "fingerprint": "499583a37743",
    "peak": -15,
    "rms": -28.3,
    "worstPeak": -15,
-   "worstRms": -26.8,
+   "worstRms": -26.2,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.641
   },
   "voice-warning": {
-   "fingerprint": "94aa50e958ee",
+   "fingerprint": "3d8f132f0e62",
    "peak": -15,
    "rms": -26.8,
    "worstPeak": -15,
-   "worstRms": -23.9,
+   "worstRms": -25.5,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 0.98
   },
   "voice-whisper-behind-you": {
-   "fingerprint": "ae0de035354a",
+   "fingerprint": "580bc859bd48",
    "peak": -15,
    "rms": -32.9,
    "worstPeak": -15,
-   "worstRms": -30.6,
+   "worstRms": -25.8,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 0.973
   },
   "voice-your-turn": {
-   "fingerprint": "81791e9281c4",
+   "fingerprint": "f34ed9db70d1",
    "peak": -15,
    "rms": -27.5,
    "worstPeak": -15,
-   "worstRms": -27.5,
+   "worstRms": -26,
    "lowestPeak": -15,
    "pre": -20.1,
    "end": 1.014

@@ -121,7 +121,53 @@ export function phonemize(text) {
       'weather=W EH1 DH ER0|welcome=W EH1 L K AX0 M|were=W ER0|what=W AH1 T|what\'s=W AH1 T S|' +
       'whatever=W AH0 T EH1 V ER0|wind=W IH1 N D|window=W IH1 N D OW0|with=W IH0 DH|wizard=W IH1 Z ER0 D|' +
       'wolf=W UH1 L F|woman=W UH1 M AX0 N|women=W IH1 M AX0 N|yes=Y EH1 S|you=Y UW1|you\'re=Y UH1 R|your=Y AO1 R|' +
-      'zero=Z IH1 R OW0').split('|');
+      'zero=Z IH1 R OW0|' +
+      // common app, game and interface words the rules got wrong (2026-10-24; checked against a
+      // reference pronunciation, the kind of word a line of UI copy carries)
+      'reactor=R IY0 AE1 K T ER0|completed=K AX0 M P L IY1 T IH0 D|update=AH0 P D EY1 T|updated=AH0 P D EY1 T IH0 D|' +
+      'login=L AO1 G IH0 N|profile=P R OW1 F AY2 L|database=D EY1 T AX0 B EY2 S|enabled=EH0 N EY1 B AX0 L D|' +
+      'disabled=D IH0 S EY1 B AX0 L D|connected=K AX0 N EH1 K T IH0 D|' +
+      'disconnected=D IH0 S K AX0 N EH1 K T IH0 D|objective=AX0 B JH EH1 K T IH0 V|enemies=EH1 N AX0 M IY0 Z|' +
+      'achievement=AX0 CH IY1 V M AX0 N T|unlocked=AH0 N L AA1 K T|emergency=IH0 M ER1 JH AX0 N S IY0|' +
+      'acquired=AX0 K W AY1 ER0 D|destroyed=D IH0 S T R OY1 D|calibration=K AE2 L AX0 B R EY1 SH AX0 N|' +
+      'diagnostic=D AY2 AX0 G N AA1 S T IH0 K|navigation=N AE2 V AX0 G EY1 SH AX0 N|' +
+      'coordinates=K OW0 AO1 R D AX0 N AX0 T S|altitude=AE1 L T AX0 T UW2 D|velocity=V AX0 L AA1 S AX0 T IY0|' +
+      'airlock=EH1 R L AA2 K|unauthorized=AH0 N AO1 TH ER0 AY2 Z D|confirm=K AX0 N F ER1 M|' +
+      'confirmed=K AX0 N F ER1 M D|continue=K AX0 N T IH1 N Y UW0|restart=R IY0 S T AA1 R T|select=S AX0 L EH1 K T|' +
+      'selected=S AX0 L EH1 K T IH0 D|inventory=IH1 N V AX0 N T AO2 R IY0|ancient=EY1 N SH AX0 N T|' +
+      'legend=L EH1 JH AX0 N D|heroes=HH IH1 R OW0 Z|tournament=T UH1 R N AX0 M AX0 N T|final=F AY1 N AX0 L|' +
+      'finish=F IH1 N IH0 SH|finished=F IH1 N IH0 SH T|evening=IY1 V N IH0 NG|' +
+      'congratulations=K AX0 N G R AE2 CH AX0 L EY1 SH AX0 N Z|amazing=AX0 M EY1 Z IH0 NG|' +
+      'incredible=IH0 N K R EH1 D AX0 B AX0 L|legendary=L EH1 JH AX0 N D EH2 R IY0|' +
+      'impossible=IH0 M P AA1 S AX0 B AX0 L|important=IH0 M P AO1 R T AX0 N T|failure=F EY1 L Y ER0|' +
+      'success=S AX0 K S EH1 S|successful=S AX0 K S EH1 S F AX0 L|operation=AA2 P ER0 EY1 SH AX0 N|' +
+      'operational=AA2 P ER0 EY1 SH AX0 N AX0 L|available=AX0 V EY1 L AX0 B AX0 L|' +
+      'unavailable=AH2 N AX0 V EY1 L AX0 B AX0 L|temporary=T EH1 M P ER0 EH2 R IY0|permanent=P ER1 M AX0 N AX0 N T|' +
+      'automatic=AO2 T AX0 M AE1 T IH0 K|artificial=AA2 R T AX0 F IH1 SH AX0 L|' +
+      'intelligence=IH0 N T EH1 L AX0 JH AX0 N S|algorithm=AE1 L G ER0 IH2 DH AX0 M|processor=P R AA1 S EH2 S ER0|' +
+      'microphone=M AY1 K R AX0 F OW2 N|volume=V AA1 L Y UW0 M|notification=N OW2 T AX0 F AX0 K EY1 SH AX0 N|' +
+      'schedule=S K EH1 JH UW0 L|appointment=AX0 P OY1 N T M AX0 N T|photo=F OW1 T OW0|favorite=F EY1 V ER0 IH0 T|' +
+      'library=L AY1 B R EH2 R IY0|category=K AE1 T AX0 G AO2 R IY0|version=V ER1 ZH AX0 N|release=R IY0 L IY1 S|' +
+      'experimental=IH0 K S P EH2 R AX0 M EH1 N T AX0 L|beta=B EY1 T AX0|preview=P R IY1 V Y UW2|' +
+      'pilot=P AY1 L AX0 T|sergeant=S AA1 R JH AX0 N T|general=JH EH1 N ER0 AX0 L|soldier=S OW1 L JH ER0|' +
+      'ally=AE1 L AY0|allies=AE1 L AY0 Z|dungeon=D AH1 N JH AX0 N|arrow=AE1 R OW0|mana=M AA1 N AX0|' +
+      'respawn=R IY0 S P AO1 N|multiplayer=M AH1 L T IY0 P L EY2 ER0|leaderboard=L IY1 D ER0 B AO2 R D|' +
+      'trophy=T R OW1 F IY0|challenge=CH AE1 L AX0 N JH|coffee=K AO1 F IY0|breakfast=B R EH1 K F AX0 S T|' +
+      'forecast=F AO1 R K AE2 S T|thunderstorm=TH AH1 N D ER0 S T AO2 R M|fahrenheit=F EH1 R AX0 N HH AY2 T|' +
+      'equals=IY1 K W AX0 L Z|total=T OW1 T AX0 L|increase=IH0 N K R IY1 S|decrease=D IH0 K R IY1 S|' +
+      'percentage=P ER0 S EH1 N T IH0 JH|account=AX0 K AW1 N T|purchase=P ER1 CH AX0 S|receipt=R IH0 S IY1 T|' +
+      'premium=P R IY1 M IY0 AX0 M|arrived=ER0 AY1 V D|arriving=ER0 AY1 V IH0 NG|boarding=B AO1 R D IH0 NG|' +
+      'platform=P L AE1 T F AO2 R M|elevator=EH1 L AX0 V EY2 T ER0|basement=B EY1 S M AX0 N T|' +
+      'opening=OW1 P AX0 N IH0 NG|restricted=R IH0 S T R IH1 K T IH0 D|register=R EH1 JH IH0 S T ER0|' +
+      'laboratory=L AE1 B R AX0 T AO2 R IY0|protocol=P R OW1 T AX0 K AO2 L|quarantine=K W AO1 R AX0 N T IY2 N|' +
+      'biohazard=B AY1 OW0 HH AE2 Z ER0 D|anomaly=AX0 N AA1 M AX0 L IY0|anomalies=AX0 N AA1 M AX0 L IY0 Z|' +
+      'generator=JH EH1 N ER0 EY2 T ER0|turbine=T ER1 B AY0 N|hyperdrive=HH AY1 P ER0 D R AY2 V|' +
+      'frequency=F R IY1 K W AX0 N S IY0|encrypted=EH0 N K R IH1 P T IH0 D|decrypted=D IY0 K R IH1 P T IH0 D|' +
+      'firewall=F AY1 ER0 W AO2 L|malware=M AE1 L W EH2 R|analysis=AX0 N AE1 L AX0 S IH0 S|' +
+      'analyzing=AE1 N AX0 L AY2 Z IH0 NG|calculating=K AE1 L K Y AX0 L EY2 T IH0 NG|' +
+      'compiling=K AX0 M P AY1 L IH0 NG|rendering=R EH1 N D ER0 IH0 NG|' +
+      'synchronizing=S IH1 NG K R AX0 N AY2 Z IH0 NG|initializing=IH0 N IH1 SH AX0 L AY2 Z IH0 NG|' +
+      'generating=JH EH1 N ER0 EY2 T IH0 NG|searching=S ER1 CH IH0 NG').split('|');
     Z.x = {};
     for (const s of L) { const k = s.indexOf('='); Z.x[s.slice(0, k)] = s.slice(k + 1); }
     Z.l = 'EY1|B IY1|S IY1|D IY1|IY1|EH1 F|JH IY1|EY1 CH|AY1|JH EY1|K EY1|EH1 L|EH1 M|EH1 N|OW1|P IY1|K Y UW1|AA1 R|EH1 S|T IY1|Y UW1|V IY1|D AH1 B AX0 L Y UW0|EH1 K S|W AY1|Z IY1'.split('|');

@@ -129,8 +129,10 @@ phonemes the text was read as, the line's length and one function,
 server, so the function carries the phonemes and only the synthesizer, the voice and the master chain
 (about 26 KB). Speech voices, by display name with their ids: Announcer (Female) `announcer-female`
 (the same PA system with a woman speaking), Announcer (Male) `announcer` (the classic synthesized PA
-voice and the default; `announcer-male` names it too), Deep Robot `deep`, Retro Computer `retro` (an
-8-bit home computer), Small Robot `small`, Whisper `whisper`; `mode: "babble"` gives Animalese style
+voice and the default; `announcer-male` names it too), Deep Robot `deep`, Narrator (Female)
+`narrator-female` and Narrator (Male) `narrator` (natural readers on the LF glottal source, close and
+dry), Retro Computer `retro` (an 8-bit home computer), Small Robot `small`, Soft Guide `guide` (a calm,
+breathy woman), Whisper `whisper`; `mode: "babble"` gives Animalese style
 talk instead (Cute `cute`, Gruff `gruff`, Robot Beep `beep`, Tiny Sprite `sprite`, Wise Elder
 `elder`). Every list of voices the server returns (speak's `voices`, its unknown-voice error, `info`'s
 `voices`, id to display name, a voice sound's `choices`) is in that display-name order. pitch, rate and range (speed and spread for babble) and the seed are

@@ -1682,7 +1682,53 @@ function phonemize(text) {
       'weather=W EH1 DH ER0|welcome=W EH1 L K AX0 M|were=W ER0|what=W AH1 T|what\'s=W AH1 T S|' +
       'whatever=W AH0 T EH1 V ER0|wind=W IH1 N D|window=W IH1 N D OW0|with=W IH0 DH|wizard=W IH1 Z ER0 D|' +
       'wolf=W UH1 L F|woman=W UH1 M AX0 N|women=W IH1 M AX0 N|yes=Y EH1 S|you=Y UW1|you\'re=Y UH1 R|your=Y AO1 R|' +
-      'zero=Z IH1 R OW0').split('|');
+      'zero=Z IH1 R OW0|' +
+      // common app, game and interface words the rules got wrong (2026-10-24; checked against a
+      // reference pronunciation, the kind of word a line of UI copy carries)
+      'reactor=R IY0 AE1 K T ER0|completed=K AX0 M P L IY1 T IH0 D|update=AH0 P D EY1 T|updated=AH0 P D EY1 T IH0 D|' +
+      'login=L AO1 G IH0 N|profile=P R OW1 F AY2 L|database=D EY1 T AX0 B EY2 S|enabled=EH0 N EY1 B AX0 L D|' +
+      'disabled=D IH0 S EY1 B AX0 L D|connected=K AX0 N EH1 K T IH0 D|' +
+      'disconnected=D IH0 S K AX0 N EH1 K T IH0 D|objective=AX0 B JH EH1 K T IH0 V|enemies=EH1 N AX0 M IY0 Z|' +
+      'achievement=AX0 CH IY1 V M AX0 N T|unlocked=AH0 N L AA1 K T|emergency=IH0 M ER1 JH AX0 N S IY0|' +
+      'acquired=AX0 K W AY1 ER0 D|destroyed=D IH0 S T R OY1 D|calibration=K AE2 L AX0 B R EY1 SH AX0 N|' +
+      'diagnostic=D AY2 AX0 G N AA1 S T IH0 K|navigation=N AE2 V AX0 G EY1 SH AX0 N|' +
+      'coordinates=K OW0 AO1 R D AX0 N AX0 T S|altitude=AE1 L T AX0 T UW2 D|velocity=V AX0 L AA1 S AX0 T IY0|' +
+      'airlock=EH1 R L AA2 K|unauthorized=AH0 N AO1 TH ER0 AY2 Z D|confirm=K AX0 N F ER1 M|' +
+      'confirmed=K AX0 N F ER1 M D|continue=K AX0 N T IH1 N Y UW0|restart=R IY0 S T AA1 R T|select=S AX0 L EH1 K T|' +
+      'selected=S AX0 L EH1 K T IH0 D|inventory=IH1 N V AX0 N T AO2 R IY0|ancient=EY1 N SH AX0 N T|' +
+      'legend=L EH1 JH AX0 N D|heroes=HH IH1 R OW0 Z|tournament=T UH1 R N AX0 M AX0 N T|final=F AY1 N AX0 L|' +
+      'finish=F IH1 N IH0 SH|finished=F IH1 N IH0 SH T|evening=IY1 V N IH0 NG|' +
+      'congratulations=K AX0 N G R AE2 CH AX0 L EY1 SH AX0 N Z|amazing=AX0 M EY1 Z IH0 NG|' +
+      'incredible=IH0 N K R EH1 D AX0 B AX0 L|legendary=L EH1 JH AX0 N D EH2 R IY0|' +
+      'impossible=IH0 M P AA1 S AX0 B AX0 L|important=IH0 M P AO1 R T AX0 N T|failure=F EY1 L Y ER0|' +
+      'success=S AX0 K S EH1 S|successful=S AX0 K S EH1 S F AX0 L|operation=AA2 P ER0 EY1 SH AX0 N|' +
+      'operational=AA2 P ER0 EY1 SH AX0 N AX0 L|available=AX0 V EY1 L AX0 B AX0 L|' +
+      'unavailable=AH2 N AX0 V EY1 L AX0 B AX0 L|temporary=T EH1 M P ER0 EH2 R IY0|permanent=P ER1 M AX0 N AX0 N T|' +
+      'automatic=AO2 T AX0 M AE1 T IH0 K|artificial=AA2 R T AX0 F IH1 SH AX0 L|' +
+      'intelligence=IH0 N T EH1 L AX0 JH AX0 N S|algorithm=AE1 L G ER0 IH2 DH AX0 M|processor=P R AA1 S EH2 S ER0|' +
+      'microphone=M AY1 K R AX0 F OW2 N|volume=V AA1 L Y UW0 M|notification=N OW2 T AX0 F AX0 K EY1 SH AX0 N|' +
+      'schedule=S K EH1 JH UW0 L|appointment=AX0 P OY1 N T M AX0 N T|photo=F OW1 T OW0|favorite=F EY1 V ER0 IH0 T|' +
+      'library=L AY1 B R EH2 R IY0|category=K AE1 T AX0 G AO2 R IY0|version=V ER1 ZH AX0 N|release=R IY0 L IY1 S|' +
+      'experimental=IH0 K S P EH2 R AX0 M EH1 N T AX0 L|beta=B EY1 T AX0|preview=P R IY1 V Y UW2|' +
+      'pilot=P AY1 L AX0 T|sergeant=S AA1 R JH AX0 N T|general=JH EH1 N ER0 AX0 L|soldier=S OW1 L JH ER0|' +
+      'ally=AE1 L AY0|allies=AE1 L AY0 Z|dungeon=D AH1 N JH AX0 N|arrow=AE1 R OW0|mana=M AA1 N AX0|' +
+      'respawn=R IY0 S P AO1 N|multiplayer=M AH1 L T IY0 P L EY2 ER0|leaderboard=L IY1 D ER0 B AO2 R D|' +
+      'trophy=T R OW1 F IY0|challenge=CH AE1 L AX0 N JH|coffee=K AO1 F IY0|breakfast=B R EH1 K F AX0 S T|' +
+      'forecast=F AO1 R K AE2 S T|thunderstorm=TH AH1 N D ER0 S T AO2 R M|fahrenheit=F EH1 R AX0 N HH AY2 T|' +
+      'equals=IY1 K W AX0 L Z|total=T OW1 T AX0 L|increase=IH0 N K R IY1 S|decrease=D IH0 K R IY1 S|' +
+      'percentage=P ER0 S EH1 N T IH0 JH|account=AX0 K AW1 N T|purchase=P ER1 CH AX0 S|receipt=R IH0 S IY1 T|' +
+      'premium=P R IY1 M IY0 AX0 M|arrived=ER0 AY1 V D|arriving=ER0 AY1 V IH0 NG|boarding=B AO1 R D IH0 NG|' +
+      'platform=P L AE1 T F AO2 R M|elevator=EH1 L AX0 V EY2 T ER0|basement=B EY1 S M AX0 N T|' +
+      'opening=OW1 P AX0 N IH0 NG|restricted=R IH0 S T R IH1 K T IH0 D|register=R EH1 JH IH0 S T ER0|' +
+      'laboratory=L AE1 B R AX0 T AO2 R IY0|protocol=P R OW1 T AX0 K AO2 L|quarantine=K W AO1 R AX0 N T IY2 N|' +
+      'biohazard=B AY1 OW0 HH AE2 Z ER0 D|anomaly=AX0 N AA1 M AX0 L IY0|anomalies=AX0 N AA1 M AX0 L IY0 Z|' +
+      'generator=JH EH1 N ER0 EY2 T ER0|turbine=T ER1 B AY0 N|hyperdrive=HH AY1 P ER0 D R AY2 V|' +
+      'frequency=F R IY1 K W AX0 N S IY0|encrypted=EH0 N K R IH1 P T IH0 D|decrypted=D IY0 K R IH1 P T IH0 D|' +
+      'firewall=F AY1 ER0 W AO2 L|malware=M AE1 L W EH2 R|analysis=AX0 N AE1 L AX0 S IH0 S|' +
+      'analyzing=AE1 N AX0 L AY2 Z IH0 NG|calculating=K AE1 L K Y AX0 L EY2 T IH0 NG|' +
+      'compiling=K AX0 M P AY1 L IH0 NG|rendering=R EH1 N D ER0 IH0 NG|' +
+      'synchronizing=S IH1 NG K R AX0 N AY2 Z IH0 NG|initializing=IH0 N IH1 SH AX0 L AY2 Z IH0 NG|' +
+      'generating=JH EH1 N ER0 EY2 T IH0 NG|searching=S ER1 CH IH0 NG').split('|');
     Z.x = {};
     for (const s of L) { const k = s.indexOf('='); Z.x[s.slice(0, k)] = s.slice(k + 1); }
     Z.l = 'EY1|B IY1|S IY1|D IY1|IY1|EH1 F|JH IY1|EY1 CH|AY1|JH EY1|K EY1|EH1 L|EH1 M|EH1 N|OW1|P IY1|K Y UW1|AA1 R|EH1 S|T IY1|Y UW1|V IY1|D AH1 B AX0 L Y UW0|EH1 K S|W AY1|Z IY1'.split('|');
@@ -1951,7 +1997,15 @@ function phones() {
  *       the nasals and the frication), vowelScale ([k1, k2, k3]: times that table's F1, F2, F3),
  *       bw (times every cascade bandwidth), accent (times the accents' height), fall (times the
  *       declination and a statement's closing fall), vowelTime (times every vowel's length),
- *       transition (times a vowel's formant transitions)
+ *       transition (times a vowel's formant transitions), prosody (2: the richer rules below;
+ *       1 or absent: the original rules, which never change)
+ * Prosody 2 (a voice with prosody: 2): the last syllable before a major boundary lengthens, and so
+ * does the last word a little; stressed vowels gain and unstressed ones lose a few percent of length;
+ * the phrase starts low and rises into its first accent; accents downstep (each a little lower than
+ * the last) with the nuclear accent, the last one, lifted again and peaking later in its vowel; a
+ * statement falls from the nuclear accent to a low that settles before the end; a question dips at the
+ * nuclear accent and rises; and vowel onsets carry the consonant before them (a touch high after a
+ * voiceless one, low after a voiced obstruent).
  * Returns { dur (s), f0: [t, Hz, ...], amp: [t, AV, AH, AF, AB, A2..A6, ...], form: [t, F1..F5,
  * B1..B5, FNZ, F6, ...], segs: [{ ph, t0, t1 }] }.
  */
@@ -2017,6 +2071,22 @@ function speechPlan(ph, o) {
       if (fin) pr *= 1.3;
     }
     s.ms = ((d.min + (d.inh - d.min) * pr) / rate) * s.x * (d.vowel ? vt : 1);
+  }
+  const pro2 = (o.prosody || 1) >= 2;
+  if (pro2) {
+    const ptype = {};
+    for (const s of segs) if (s.pause != null) ptype[s.q] = s.pause;
+    for (let i = 0; i < N; i++) {
+      const s = segs[i];
+      if (s.pause != null) continue;
+      const lv = lastV[s.q];
+      const pt = ptype[s.q] || '';
+      const major = pt === '.' || pt === '!' || pt === '?' || pt === '...';
+      // the final syllable (its vowel and what closes it), then the rest of the last word
+      if (lv != null && i >= lv) s.ms *= major ? 1.18 : 1.08;
+      else if (lv != null && s.w === segs[lv].w) s.ms *= 1.05;
+      if (isV(s)) { if (s.st === 1) s.ms *= 1.08; else if (s.st === 0) s.ms *= 0.92; }
+    }
   }
   // targets: an unstressed vowel moves 30% toward the neutral tube; a consonant's locus is pulled
   // toward the vowel it leans on (the next one, or the one before when it closes its word). A voice
@@ -2194,9 +2264,112 @@ function speechPlan(ph, o) {
     const y = z * z * (3 - 2 * z);
     return f * (p.type === '?' ? 1 + range * 0.5 * y : p.type === ',' ? 1 + range * 0.08 * y : p.type === '...' ? 1 - range * 0.08 * y : 1 - range * fl * 0.2 * y);
   };
+  // prosody 2: downstepped accents with a lifted, later nuclear accent, an onset rise, a deeper
+  // settling fall, and the consonants' marks on the vowel onsets
+  const micro = [];
+  if (pro2) {
+    for (const q of Object.keys(phr)) {
+      const p = phr[q];
+      const em = p.type === '!' ? 1.4 : 1;
+      const vs = segs.filter((s) => isV(s) && String(s.q) === q && s.st > 0);
+      const prim = vs.filter((s) => s.st === 1);
+      const last = prim.length ? prim[prim.length - 1] : null;
+      let j = 0;
+      p.acc2 = vs.map((s) => {
+        const nuclear = s === last;
+        const h = s.st === 1 ? 0.22 * Math.pow(0.86, j++) * (nuclear ? 1.12 : 1) : 0.05;
+        const len = s.t1 - s.t0;
+        return { a: s.t0 - 0.03, m: s.t0 + len * (nuclear ? 0.55 : 0.4), b: s.t1 + 0.04, h: range * ac * em * h };
+      });
+      const nuc = p.acc2.length ? p.acc2[p.acc2.length - 1] : null;
+      p.tn = nuc ? nuc.m : p.tf;
+    }
+    for (let i = 1; i < N; i++) {
+      const s = segs[i];
+      const c = segs[i - 1];
+      if (!isV(s) || !isC(c) || c.w !== s.w) continue;
+      const k = c.d.kind;
+      if (k === 'stop' || k === 'fric' || k === 'affr') micro.push({ t: s.t0, k: c.d.voiced ? -0.015 : 0.03 });
+    }
+  }
+  const f0At2 = (tt) => {
+    let p = plist[0];
+    for (const q of plist) if (q.t0 <= tt) p = q;
+    if (!p) return base;
+    const len = Math.max(0.05, p.t1 - p.t0);
+    const x = Math.min(1, Math.max(0, (tt - p.t0) / len));
+    let f = base * (1 + range * fl * (0.1 - 0.2 * x));
+    const on = 1 - Math.min(1, Math.max(0, (tt - p.t0) / 0.12));
+    f *= 1 - range * 0.05 * on * on;
+    let acc = 0;
+    for (const c of p.acc2 || []) {
+      if (tt <= c.a || tt >= c.b) continue;
+      acc += c.h * (tt < c.m ? 0.5 - 0.5 * Math.cos((Math.PI * (tt - c.a)) / (c.m - c.a)) : 0.5 + 0.5 * Math.cos((Math.PI * (tt - c.m)) / (c.b - c.m)));
+    }
+    f *= 1 + acc;
+    for (const m of micro) if (tt >= m.t && tt < m.t + 0.06) f *= 1 + m.k * (1 - (tt - m.t) / 0.06);
+    const z = Math.min(1, Math.max(0, (tt - p.tn) / Math.max(0.05, p.t1 - p.tn)));
+    const y = z * z * (3 - 2 * z);
+    const settle = 1 - Math.pow(1 - z, 2.2);
+    if (p.type === '?') return f * (1 - range * 0.06 * Math.sin(Math.PI * Math.min(1, z * 2))) * (1 + range * 0.6 * y);
+    if (p.type === ',' || p.type === ';' || p.type === ':') return f * (1 + range * 0.06 * y);
+    if (p.type === '...') return f * (1 - range * 0.1 * y);
+    return f * (1 - range * fl * 0.3 * settle);
+  };
   const f0 = [];
-  for (let tt = 0; tt < dur + 0.01; tt += 0.01) f0.push(tt, f0At(tt));
+  for (let tt = 0; tt < dur + 0.01; tt += 0.01) f0.push(tt, (pro2 ? f0At2 : f0At)(tt));
   return { dur, f0, amp, form, segs: segs.map((s) => ({ ph: s.pause != null ? s.pause : s.n + (s.st >= 0 ? s.st : ''), t0: s.t0, t1: s.t1 })) };
+}
+
+/**
+ * The LF glottal flow derivative (Fant, Liljencrants and Lin 1985) over one period, from Fant's shape
+ * parameter Rd (1995): about 0.3 a pressed, tense voice, 1 modal, 2 and above lax and breathy. Rd
+ * sets the pulse's three times (Ra, Rk, Rg): the opening grows as a damped sine to its closing peak at
+ * te, then returns to the closed phase with a time constant that reaches it exactly at the period's
+ * end; the growth rate is solved by bisection so the net flow over a period is zero. Returns { d, u,
+ * te, n }: d the derivative sampled at n points with the closing peak -1 at te (a fraction of the
+ * period), u the flow itself 0..1 (the aspiration rides on an open glottis).
+ */
+function lfShape(rd, n) {
+  n = n || 2048;
+  rd = Math.min(2.7, Math.max(0.3, rd || 1));
+  const ra = (-1 + 4.8 * rd) / 100;
+  const rk = (22.4 + 11.8 * rd) / 100;
+  const rg = ((rk / 4) * (0.5 + 1.2 * rk)) / (0.11 * rd - ra * (0.5 + 1.2 * rk));
+  const tp = 1 / (2 * rg);
+  const te = Math.min(0.95, tp * (1 + rk));
+  const ta = Math.max(0.002, ra);
+  let eps = 1 / ta;
+  for (let i = 0; i < 60; i++) eps = (1 - Math.exp(-eps * (1 - te))) / ta;
+  const wg = Math.PI / tp;
+  const d = new Float64Array(n);
+  const fill = (alpha) => {
+    const e0 = -1 / (Math.exp(alpha * te) * Math.sin(wg * te));
+    let area = 0;
+    for (let i = 0; i < n; i++) {
+      const t = i / n;
+      const v = t < te ? e0 * Math.exp(alpha * t) * Math.sin(wg * t) : -(1 / (eps * ta)) * (Math.exp(-eps * (t - te)) - Math.exp(-eps * (1 - te)));
+      d[i] = v;
+      area += v;
+    }
+    return area;
+  };
+  // the area falls as alpha rises: bisect it to zero
+  let lo = -40;
+  let hi = 120;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if (fill(mid) > 0) lo = mid; else hi = mid;
+  }
+  fill((lo + hi) / 2);
+  const u = new Float64Array(n);
+  let acc = 0;
+  let mn = Infinity;
+  let mx = -Infinity;
+  for (let i = 0; i < n; i++) { acc += d[i]; u[i] = acc; if (acc < mn) mn = acc; if (acc > mx) mx = acc; }
+  const span = mx - mn || 1;
+  for (let i = 0; i < n; i++) u[i] = (u[i] - mn) / span;
+  return { d, u, te, n };
 }
 
 /**
@@ -2204,7 +2377,9 @@ function speechPlan(ph, o) {
  * Tracks are read every 16 samples (formants through a 6 ms smoother, amplitudes interpolated per
  * sample). o: oq (open quotient, default 0.6), tilt (0..0.95, a lowpass on the source), jitter and
  * shimmer (per-period pitch and level variation), vib { rate, depth in semitones }, formant, raw (a
- * plain square, no vocal tract). Noise comes from the seeded generator.
+ * plain square, no vocal tract), source ('lf': the LF glottal model, lfShape, with rd its shape
+ * parameter; absent: the original polynomial pulse, whose code path never changes). Noise comes from
+ * the seeded generator.
  */
 function klatt(sr, plan, o) {
   o = o || {};
@@ -2219,6 +2394,7 @@ function klatt(sr, plan, o) {
   const vibR = o.vib ? o.vib.rate || 5 : 0;
   const vibD = o.vib ? o.vib.depth || 0 : 0;
   const raw = !!o.raw;
+  const lf = !raw && o.source === 'lf' ? lfShape(o.rd, 2048) : null;
   const fnp = 270 * (o.formant || 1);
   // key frame readers, linear between keys, each track with its own cursor
   const cur = [0, 0, 0];
@@ -2311,12 +2487,25 @@ function klatt(sr, plan, o) {
         y[i0 + j] = lp;
         continue;
       }
-      const q = phase / oq;
-      const u = q < 1 ? 6.75 * q * q * (1 - q) : 0;
-      lp += ((u - uPrev) * (sr / 4800) - lp) * (1 - tilt);
-      uPrev = u;
-      let x = av * pamp * lp;
-      if (ah > 0) x += ah * (rand() * 2 - 1) * (av > 0 && u === 0 ? 0.5 : 1) * 0.12;
+      let x;
+      if (lf) {
+        // the LF source read from its table at this phase; aspiration rides on the open glottis
+        // (full where the flow is, about a third of that where the glottis is closed)
+        const fi = phase * lf.n;
+        const i1 = fi < lf.n ? fi | 0 : lf.n - 1;
+        const i2 = i1 + 1 < lf.n ? i1 + 1 : 0;
+        const dv = lf.d[i1] + (lf.d[i2] - lf.d[i1]) * (fi - i1);
+        lp += (dv * 0.25 - lp) * (1 - tilt);
+        x = av * pamp * lp;
+        if (ah > 0) x += ah * (rand() * 2 - 1) * (0.35 + 0.65 * lf.u[i1]) * 0.12;
+      } else {
+        const q = phase / oq;
+        const u = q < 1 ? 6.75 * q * q * (1 - q) : 0;
+        lp += ((u - uPrev) * (sr / 4800) - lp) * (1 - tilt);
+        uPrev = u;
+        x = av * pamp * lp;
+        if (ah > 0) x += ah * (rand() * 2 - 1) * (av > 0 && u === 0 ? 0.5 : 1) * 0.12;
+      }
       let v = ra[0] * x + rb[0] * m1[0] + rc[0] * m2[0];
       m2[0] = m1[0];
       m1[0] = v;
@@ -2474,9 +2663,18 @@ function voiceOut(out, t, y, o) {
  * contour), formant (vocal tract scale), vowels (the voice's own vowel table), vowelScale and bw
  * (its formant and bandwidth scales), oq and tilt (a low oq and tilt is buzzier), jitter, shimmer,
  * breath, whisper and the effect chain fx (voiceOut). The announcer is a pair on one PA system:
- * announcer (male; 'announcer-male' names it too) and announcer-female.
+ * announcer (male; 'announcer-male' names it too) and announcer-female. The narrators and the guide
+ * are the second family: the LF glottal source (source 'lf', rd) and prosody 2, close and dry, no
+ * horn; every older voice keeps the original source and rules, and renders what it always did.
  */
 function speechVoices() {
+  // Peterson and Barney (1952), women, as the female announcer carries them (see her notes below)
+  const WOMEN = {
+    IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],
+    AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],
+    AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],
+    AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],
+  };
   return {
     // A young woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at
     // the /e/ and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his
@@ -2499,12 +2697,7 @@ function speechVoices() {
       name: 'Announcer (Female)', desc: 'The same PA system with a young woman speaking: bright, clear and lively, through the horn into the hall',
       f0: 240, rate: 1, vowelTime: 0.92, transition: 0.7, range: 1.1, accent: 1.8, fall: 0.5, formant: 1.3, vowelScale: [1.07, 1.09, 1.11],
       bw: 1.15, oq: 0.8, tilt: 0.8, jitter: 0.0015, shimmer: 0.008, breath: 0.055,
-      vowels: {
-        IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],
-        AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],
-        AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],
-        AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],
-      },
+      vowels: WOMEN,
       fx: { hp: 150, lp: 7000, eq: [{ f: 2600, q: 1.2, db: 4 }, { f: 6000, q: 0.9, db: 3 }], drive: 0.12, room: { time: 0.95, mix: 0.14, pre: 0.02 } },
     },
     announcer: {
@@ -2516,6 +2709,22 @@ function speechVoices() {
       name: 'Deep Robot', desc: 'A slow, low machine voice with a metallic ring',
       f0: 64, rate: 0.82, range: 0.25, formant: 0.86, oq: 0.4, tilt: 0.1, fx: { comb: { ms: 5.5, fb: 0.55, mix: 0.5 }, lp: 6000 },
     },
+    // The narrators: a woman and a man reading close to the microphone, dry. The LF source (Rd 1.3
+    // for her, 1.0 for him: modal, a little softer for her), a touch of jitter and shimmer at the
+    // levels of a healthy voice (Titze 1994), a clean source with some breath, prosody 2 for the
+    // reading contour, and a small room instead of the announcers' horn and hall.
+    'narrator-female': {
+      name: 'Narrator (Female)', desc: 'A woman reading close and clear, warm and unhurried: the natural voice for stories, guides and long lines',
+      f0: 196, rate: 0.98, vowelTime: 1, transition: 0.8, range: 1, accent: 1.4, fall: 0.8, formant: 1.25, vowelScale: [1.05, 1.07, 1.09],
+      bw: 1.1, source: 'lf', rd: 1.3, tilt: 0.12, jitter: 0.003, shimmer: 0.012, breath: 0.06, prosody: 2,
+      vowels: WOMEN,
+      fx: { hp: 90, lp: 10000, eq: [{ f: 220, q: 1, db: 1.5 }, { f: 3200, q: 1, db: 2 }], room: { time: 0.45, mix: 0.07, pre: 0.01 } },
+    },
+    narrator: {
+      name: 'Narrator (Male)', desc: 'A man reading close and steady, warm and even: the natural voice for stories, guides and long lines',
+      f0: 108, rate: 0.95, range: 0.9, accent: 1.1, fall: 1, formant: 1, source: 'lf', rd: 1, tilt: 0.1, jitter: 0.004, shimmer: 0.02, breath: 0.04, prosody: 2,
+      fx: { hp: 70, lp: 9500, eq: [{ f: 160, q: 1, db: 1.5 }, { f: 2800, q: 1, db: 2 }], room: { time: 0.45, mix: 0.07, pre: 0.01 } },
+    },
     retro: {
       name: 'Retro Computer', desc: 'A flat, buzzy home computer voice through an 8-bit converter',
       f0: 96, rate: 0.96, range: 0, formant: 1, oq: 0.3, tilt: 0, fx: { crush: { bits: 7, hz: 8000 }, lp: 3800 },
@@ -2523,6 +2732,16 @@ function speechVoices() {
     small: {
       name: 'Small Robot', desc: 'A quick, bright little robot in a tin box',
       f0: 230, rate: 1.12, range: 1.1, formant: 1.2, oq: 0.5, tilt: 0.2, fx: { comb: { ms: 1.6, fb: 0.35, mix: 0.3 }, hp: 160 },
+    },
+    // a calm, breathy woman for wellness and meditation: a lax LF pulse (Rd 2), more breath, a
+    // narrow range, a slow rate with long vowels, and a softer room (its length and her pace are
+    // what the voice sounds' durations allow for their slowest voice)
+    guide: {
+      name: 'Soft Guide', desc: 'A calm, breathy woman speaking slowly and gently, for meditation, wellness and quiet instructions',
+      f0: 184, rate: 0.9, vowelTime: 1.05, transition: 0.85, range: 0.6, accent: 0.8, fall: 0.9, formant: 1.22, vowelScale: [1.05, 1.07, 1.09],
+      bw: 1.15, source: 'lf', rd: 2, tilt: 0.15, jitter: 0.003, shimmer: 0.015, breath: 0.12, prosody: 2,
+      vowels: WOMEN,
+      fx: { hp: 100, lp: 8000, eq: [{ f: 2600, q: 1, db: 1.5 }], room: { time: 1, mix: 0.18, pre: 0.02 } },
     },
     whisper: {
       name: 'Whisper', desc: 'Breath only: no voicing, close and airy',
@@ -3053,7 +3272,7 @@ function shepard(out, t, o) {
   return t + dur;
 }
 
-const T = Object.freeze({ jitter, noiseBuffer, rand, seed, env, glide, bell, crackle, fm, noise, osc, pluck, pulse, tick, bus, crush, dcblock, delay, drive, filter, gain, lfo, pan, reverb, master, chord, note, phonemize, babble, babblePlan, babbleVoices, chatter, klatt, phones, speak, speechPlan, speechVoices, utter, voiceOut, bow, choir, membrane, organ, shepard });
+const T = Object.freeze({ jitter, noiseBuffer, rand, seed, env, glide, bell, crackle, fm, noise, osc, pluck, pulse, tick, bus, crush, dcblock, delay, drive, filter, gain, lfo, pan, reverb, master, chord, note, phonemize, babble, babblePlan, babbleVoices, chatter, klatt, lfShape, phones, speak, speechPlan, speechVoices, utter, voiceOut, bow, choir, membrane, organ, shepard });
 // ---- sounds (src/sounds) ----
 const SOUNDS = [
 {"id":"ui-cascade","name":"Stagger Cascade","category":"ui","tags":["cascade","stagger","pop-in","list","chips","rolling","sequence","reveal"],"desc":"A quick roll of soft pops climbing in pitch from left to right, the last one ringing slightly. For staggered lists, chips and words appearing one by one.","dur":0.75,"family":"soft","moments":["reveal","chart-reveal"],"params":{"items":{"min":3,"max":9,"def":6,"step":1,"desc":"How many pops roll by"},"gap":{"min":0.02,"max":0.07,"def":0.04,"unit":"s","desc":"Time between pops: short a tight roll, long a stepped cascade"},"pitch":{"min":520,"max":1100,"def":700,"unit":"Hz","desc":"Note of the first pop; the rest climb from it"},"fan":{"min":0,"max":1,"def":0.55,"desc":"How far the pops fan upward: 0 every pop on one note, 1 about two octaves"}},"play":function (T, out, t, p) {
@@ -9002,12 +9221,12 @@ const SOUNDS = [
   }
   T.osc(chip, at + t, { type: 'triangle', f: n('C3'), dur: hold, peak: 0.04 * p.bass + 0.004, a: 0.004, s: 0.85, d: 0.08, r: 0.1 });
 }},
-{"id":"voice-access-denied","name":"Access Denied","category":"voice","tags":["voice","speech","access","denied","error","security","locked","rejected"],"desc":"A synthesized announcer says \"Access denied.\" with a firm falling close: for a locked door, a wrong password, a refused action.","dur":3.2,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-access-denied","name":"Access Denied","category":"voice","tags":["voice","speech","access","denied","error","security","locked","rejected"],"desc":"A synthesized announcer says \"Access denied.\" with a firm falling close: for a locked door, a wrong password, a refused action.","dur":3.2,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Access denied.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-access-granted","name":"Access Granted","category":"voice","tags":["voice","speech","access","granted","success","security","unlocked","approved"],"desc":"A synthesized announcer says \"Access granted.\" for an unlocked door, an accepted password or an approved request.","dur":3.3,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-access-granted","name":"Access Granted","category":"voice","tags":["voice","speech","access","granted","success","security","unlocked","approved"],"desc":"A synthesized announcer says \"Access granted.\" for an unlocked door, an accepted password or an approved request.","dur":3.3,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Access granted.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
 {"id":"voice-babble-beep","name":"Robot Beep Babble","category":"voice","tags":["voice","babble","talk","dialogue","robot","beep","chiptune","8-bit","retro"],"desc":"Square-wave talk beeps on a pentatonic scale, a letter at a time: a robot or an 8-bit hero talking in a text box.","dur":3.7,"family":"voice","moments":["dialogue"],"params":{"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"speed":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Drawn out to rapid fire"},"spread":{"min":0,"max":2,"def":1,"desc":"Pitch spread: 0 a monotone, 1 the voice's own, 2 wild"}},"play":function (T, out, t, p) {
@@ -9025,58 +9244,58 @@ const SOUNDS = [
 {"id":"voice-babble-sprite","name":"Sprite Babble","category":"voice","tags":["voice","babble","talk","dialogue","fairy","sprite","tiny","magic","squeaky"],"desc":"A tiny, very fast, very high chatter: a fairy or a sprite talking, a blip per letter.","dur":2.8,"family":"voice","moments":["dialogue"],"params":{"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"speed":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Drawn out to rapid fire"},"spread":{"min":0,"max":2,"def":1,"desc":"Pitch spread: 0 a monotone, 1 the voice's own, 2 wild"}},"play":function (T, out, t, p) {
   T.babble(out, t, { text: 'Yay! You found me! Follow the lights!', voice: 'sprite', pitch: p.pitch, speed: p.speed, spread: p.spread });
 }},
-{"id":"voice-containment-breach","name":"Containment Breach","category":"voice","tags":["voice","speech","breach","evacuate","alarm","facility","lockdown","warning","sci-fi"],"desc":"A facility PA voice says \"Containment breach. Evacuate the facility.\" To play with scifi-facility-klaxon in a lockdown.","dur":6.1,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-containment-breach","name":"Containment Breach","category":"voice","tags":["voice","speech","breach","evacuate","alarm","facility","lockdown","warning","sci-fi"],"desc":"A facility PA voice says \"Containment breach. Evacuate the facility.\" To play with scifi-facility-klaxon in a lockdown.","dur":6.1,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Containment breach. Evacuate the facility.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-countdown","name":"Countdown","category":"voice","tags":["voice","speech","countdown","three-two-one","start","launch","race"],"desc":"A synthesized announcer counts down \"Three. Two. One.\" on a steady beat, for a launch, a race start or a timer.","dur":6.9,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who counts: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"from":{"min":3,"max":5,"def":3,"step":1,"desc":"The number the count starts from"},"beat":{"min":0.7,"max":1.2,"def":1,"unit":"s","desc":"Time between the numbers"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-countdown","name":"Countdown","category":"voice","tags":["voice","speech","countdown","three-two-one","start","launch","race"],"desc":"A synthesized announcer counts down \"Three. Two. One.\" on a steady beat, for a launch, a race start or a timer.","dur":6.9,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who counts: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"from":{"min":3,"max":5,"def":3,"step":1,"desc":"The number the count starts from"},"beat":{"min":0.7,"max":1.2,"def":1,"unit":"s","desc":"Time between the numbers"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   const words = ['one', 'two', 'three', 'four', 'five'];
   const n = Math.round(p.from);
   for (let k = 0; k < n; k++) T.speak(out, t + k * p.beat, { text: words[n - 1 - k] + '.', voice, pitch: p.pitch });
 }},
-{"id":"voice-game-over","name":"Game Over","category":"voice","tags":["voice","speech","game-over","defeat","lose","arcade","game"],"desc":"A deep robot voice says \"Game over.\" with a slow falling close, for the end of a run.","dur":2.65,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":2,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-game-over","name":"Game Over","category":"voice","tags":["voice","speech","game-over","defeat","lose","arcade","game"],"desc":"A deep robot voice says \"Game over.\" with a slow falling close, for the end of a run.","dur":2.65,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":2,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Game over.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-level-complete","name":"Level Complete","category":"voice","tags":["voice","speech","level-complete","victory","stage-clear","win","game"],"desc":"A synthesized announcer says \"Level complete.\" at the end of a stage.","dur":3.1,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-level-complete","name":"Level Complete","category":"voice","tags":["voice","speech","level-complete","victory","stage-clear","win","game"],"desc":"A synthesized announcer says \"Level complete.\" at the end of a stage.","dur":3.1,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Level complete.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-mission-complete","name":"Mission Complete","category":"voice","tags":["voice","speech","mission","complete","victory","success","objective"],"desc":"A synthesized announcer says \"Mission complete.\" when an objective is done.","dur":3.1,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-mission-complete","name":"Mission Complete","category":"voice","tags":["voice","speech","mission","complete","victory","success","objective"],"desc":"A synthesized announcer says \"Mission complete.\" when an objective is done.","dur":3.1,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Mission complete.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-ready-go","name":"Ready Go","category":"voice","tags":["voice","speech","ready","go","start","countdown","race","round"],"desc":"A synthesized announcer says \"Ready... go!\" with a held breath between the words: the start of a round or a race.","dur":3.65,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-ready-go","name":"Ready Go","category":"voice","tags":["voice","speech","ready","go","start","countdown","race","round"],"desc":"A synthesized announcer says \"Ready... go!\" with a held breath between the words: the start of a round or a race.","dur":3.65,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Ready... go!', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-retro-greetings","name":"Retro Computer","category":"voice","tags":["voice","speech","retro","computer","8-bit","loading","terminal","lo-fi"],"desc":"A flat, buzzy home computer voice through an 8-bit converter says \"Greetings, user. Loading program. Please wait.\"","dur":7.05,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":3,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-retro-greetings","name":"Retro Computer","category":"voice","tags":["voice","speech","retro","computer","8-bit","loading","terminal","lo-fi"],"desc":"A flat, buzzy home computer voice through an 8-bit converter says \"Greetings, user. Loading program. Please wait.\"","dur":7.05,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":5,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Greetings, user. Loading program. Please wait.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-robot-affirmative","name":"Robot Affirmative","category":"voice","tags":["voice","speech","robot","affirmative","confirm","command","accepted","mech"],"desc":"A deep metallic robot says \"Affirmative. Command accepted.\" for a confirmed order.","dur":4.95,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":2,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-robot-affirmative","name":"Robot Affirmative","category":"voice","tags":["voice","speech","robot","affirmative","confirm","command","accepted","mech"],"desc":"A deep metallic robot says \"Affirmative. Command accepted.\" for a confirmed order.","dur":4.95,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":2,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Affirmative. Command accepted.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-robot-processing","name":"Robot Processing","category":"voice","tags":["voice","speech","robot","processing","computer","beep","cute","loading"],"desc":"A small bright robot says \"Beep boop. Processing request.\" in a tin-box voice: a helper bot thinking.","dur":5.05,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":4,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-robot-processing","name":"Robot Processing","category":"voice","tags":["voice","speech","robot","processing","computer","beep","cute","loading"],"desc":"A small bright robot says \"Beep boop. Processing request.\" in a tin-box voice: a helper bot thinking.","dur":5.05,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":6,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Beep boop. Processing request.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-system-online","name":"System Online","category":"voice","tags":["voice","speech","system","online","boot","startup","power-up","ready"],"desc":"A synthesized announcer says \"System online.\" for a boot, a power-up or a reconnect.","dur":3.25,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-system-online","name":"System Online","category":"voice","tags":["voice","speech","system","online","boot","startup","power-up","ready"],"desc":"A synthesized announcer says \"System online.\" for a boot, a power-up or a reconnect.","dur":3.25,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'System online.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-warning","name":"Warning","category":"voice","tags":["voice","speech","warning","alert","caution"],"desc":"A synthesized announcer says \"Warning.\" through a PA horn into a hall: the classic computer voice of an alert.","dur":2.55,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":5,"def":1,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-warning","name":"Warning","category":"voice","tags":["voice","speech","warning","alert","caution"],"desc":"A synthesized announcer says \"Warning.\" through a PA horn into a hall: the classic computer voice of an alert.","dur":2.55,"family":"voice","moments":["announce"],"params":{"voice":{"min":0,"max":8,"def":1,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Warning.', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-whisper-behind-you","name":"Whisper Behind You","category":"voice","tags":["voice","speech","whisper","horror","eerie","creepy","ghost","scare"],"desc":"A breathy whisper says \"Behind you...\" close to the ear: a horror sting.","dur":3.35,"family":"voice","moments":["scare"],"params":{"voice":{"min":0,"max":5,"def":5,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-whisper-behind-you","name":"Whisper Behind You","category":"voice","tags":["voice","speech","whisper","horror","eerie","creepy","ghost","scare"],"desc":"A breathy whisper says \"Behind you...\" close to the ear: a horror sting.","dur":3.35,"family":"voice","moments":["scare"],"params":{"voice":{"min":0,"max":8,"def":8,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   T.speak(out, t, { text: 'Behind you...', voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }},
-{"id":"voice-your-turn","name":"Your Turn Call","category":"voice","tags":["voice","speech","your-turn","your-move","turn-start","announcer","game","cards"],"desc":"A synthesized announcer says \"Your turn.\" when control passes to the player: a turn-based game, a card table, a shared session.","dur":2.8,"family":"voice","moments":["your-turn","announce"],"params":{"voice":{"min":0,"max":5,"def":0,"step":1,"choices":["announcer-female","announcer","deep","retro","small","whisper"],"desc":"Who speaks: Announcer (Female) or (Male), Deep Robot, Retro Computer, Small Robot, Whisper"},"line":{"min":0,"max":2,"def":0,"step":1,"choices":["your-turn","your-move","you-are-up"],"desc":"What is said: Your turn, Your move or You are up"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
-  const voice = ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'][Math.round(p.voice)];
+{"id":"voice-your-turn","name":"Your Turn Call","category":"voice","tags":["voice","speech","your-turn","your-move","turn-start","announcer","game","cards"],"desc":"A synthesized announcer says \"Your turn.\" when control passes to the player: a turn-based game, a card table, a shared session.","dur":2.8,"family":"voice","moments":["your-turn","announce"],"params":{"voice":{"min":0,"max":8,"def":0,"step":1,"choices":["announcer-female","announcer","deep","narrator-female","narrator","retro","small","guide","whisper"],"desc":"Who speaks: announcers, Deep Robot, narrators, Retro Computer, Small Robot, Soft Guide, Whisper"},"line":{"min":0,"max":2,"def":0,"step":1,"choices":["your-turn","your-move","you-are-up"],"desc":"What is said: Your turn, Your move or You are up"},"pitch":{"min":-6,"max":6,"def":0,"unit":"st","desc":"Pitch shift from the voice, down or up"},"rate":{"min":0.75,"max":1.3,"def":1,"unit":"x","desc":"Slow and deliberate to brisk"},"range":{"min":0,"max":2,"def":1,"desc":"Intonation: 0 flat, 1 the voice's own, 2 animated"}},"play":function (T, out, t, p) {
+  const voice = ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'][Math.round(p.voice)];
   const text = ['Your turn.', 'Your move.', "You're up."][Math.round(p.line)];
   T.speak(out, t, { text, voice, pitch: p.pitch, rate: p.rate, range: p.range });
 }}

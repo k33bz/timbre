@@ -96,7 +96,15 @@ export function phones() {
  *       the nasals and the frication), vowelScale ([k1, k2, k3]: times that table's F1, F2, F3),
  *       bw (times every cascade bandwidth), accent (times the accents' height), fall (times the
  *       declination and a statement's closing fall), vowelTime (times every vowel's length),
- *       transition (times a vowel's formant transitions)
+ *       transition (times a vowel's formant transitions), prosody (2: the richer rules below;
+ *       1 or absent: the original rules, which never change)
+ * Prosody 2 (a voice with prosody: 2): the last syllable before a major boundary lengthens, and so
+ * does the last word a little; stressed vowels gain and unstressed ones lose a few percent of length;
+ * the phrase starts low and rises into its first accent; accents downstep (each a little lower than
+ * the last) with the nuclear accent, the last one, lifted again and peaking later in its vowel; a
+ * statement falls from the nuclear accent to a low that settles before the end; a question dips at the
+ * nuclear accent and rises; and vowel onsets carry the consonant before them (a touch high after a
+ * voiceless one, low after a voiced obstruent).
  * Returns { dur (s), f0: [t, Hz, ...], amp: [t, AV, AH, AF, AB, A2..A6, ...], form: [t, F1..F5,
  * B1..B5, FNZ, F6, ...], segs: [{ ph, t0, t1 }] }.
  */
@@ -162,6 +170,22 @@ export function speechPlan(ph, o) {
       if (fin) pr *= 1.3;
     }
     s.ms = ((d.min + (d.inh - d.min) * pr) / rate) * s.x * (d.vowel ? vt : 1);
+  }
+  const pro2 = (o.prosody || 1) >= 2;
+  if (pro2) {
+    const ptype = {};
+    for (const s of segs) if (s.pause != null) ptype[s.q] = s.pause;
+    for (let i = 0; i < N; i++) {
+      const s = segs[i];
+      if (s.pause != null) continue;
+      const lv = lastV[s.q];
+      const pt = ptype[s.q] || '';
+      const major = pt === '.' || pt === '!' || pt === '?' || pt === '...';
+      // the final syllable (its vowel and what closes it), then the rest of the last word
+      if (lv != null && i >= lv) s.ms *= major ? 1.18 : 1.08;
+      else if (lv != null && s.w === segs[lv].w) s.ms *= 1.05;
+      if (isV(s)) { if (s.st === 1) s.ms *= 1.08; else if (s.st === 0) s.ms *= 0.92; }
+    }
   }
   // targets: an unstressed vowel moves 30% toward the neutral tube; a consonant's locus is pulled
   // toward the vowel it leans on (the next one, or the one before when it closes its word). A voice
@@ -339,9 +363,112 @@ export function speechPlan(ph, o) {
     const y = z * z * (3 - 2 * z);
     return f * (p.type === '?' ? 1 + range * 0.5 * y : p.type === ',' ? 1 + range * 0.08 * y : p.type === '...' ? 1 - range * 0.08 * y : 1 - range * fl * 0.2 * y);
   };
+  // prosody 2: downstepped accents with a lifted, later nuclear accent, an onset rise, a deeper
+  // settling fall, and the consonants' marks on the vowel onsets
+  const micro = [];
+  if (pro2) {
+    for (const q of Object.keys(phr)) {
+      const p = phr[q];
+      const em = p.type === '!' ? 1.4 : 1;
+      const vs = segs.filter((s) => isV(s) && String(s.q) === q && s.st > 0);
+      const prim = vs.filter((s) => s.st === 1);
+      const last = prim.length ? prim[prim.length - 1] : null;
+      let j = 0;
+      p.acc2 = vs.map((s) => {
+        const nuclear = s === last;
+        const h = s.st === 1 ? 0.22 * Math.pow(0.86, j++) * (nuclear ? 1.12 : 1) : 0.05;
+        const len = s.t1 - s.t0;
+        return { a: s.t0 - 0.03, m: s.t0 + len * (nuclear ? 0.55 : 0.4), b: s.t1 + 0.04, h: range * ac * em * h };
+      });
+      const nuc = p.acc2.length ? p.acc2[p.acc2.length - 1] : null;
+      p.tn = nuc ? nuc.m : p.tf;
+    }
+    for (let i = 1; i < N; i++) {
+      const s = segs[i];
+      const c = segs[i - 1];
+      if (!isV(s) || !isC(c) || c.w !== s.w) continue;
+      const k = c.d.kind;
+      if (k === 'stop' || k === 'fric' || k === 'affr') micro.push({ t: s.t0, k: c.d.voiced ? -0.015 : 0.03 });
+    }
+  }
+  const f0At2 = (tt) => {
+    let p = plist[0];
+    for (const q of plist) if (q.t0 <= tt) p = q;
+    if (!p) return base;
+    const len = Math.max(0.05, p.t1 - p.t0);
+    const x = Math.min(1, Math.max(0, (tt - p.t0) / len));
+    let f = base * (1 + range * fl * (0.1 - 0.2 * x));
+    const on = 1 - Math.min(1, Math.max(0, (tt - p.t0) / 0.12));
+    f *= 1 - range * 0.05 * on * on;
+    let acc = 0;
+    for (const c of p.acc2 || []) {
+      if (tt <= c.a || tt >= c.b) continue;
+      acc += c.h * (tt < c.m ? 0.5 - 0.5 * Math.cos((Math.PI * (tt - c.a)) / (c.m - c.a)) : 0.5 + 0.5 * Math.cos((Math.PI * (tt - c.m)) / (c.b - c.m)));
+    }
+    f *= 1 + acc;
+    for (const m of micro) if (tt >= m.t && tt < m.t + 0.06) f *= 1 + m.k * (1 - (tt - m.t) / 0.06);
+    const z = Math.min(1, Math.max(0, (tt - p.tn) / Math.max(0.05, p.t1 - p.tn)));
+    const y = z * z * (3 - 2 * z);
+    const settle = 1 - Math.pow(1 - z, 2.2);
+    if (p.type === '?') return f * (1 - range * 0.06 * Math.sin(Math.PI * Math.min(1, z * 2))) * (1 + range * 0.6 * y);
+    if (p.type === ',' || p.type === ';' || p.type === ':') return f * (1 + range * 0.06 * y);
+    if (p.type === '...') return f * (1 - range * 0.1 * y);
+    return f * (1 - range * fl * 0.3 * settle);
+  };
   const f0 = [];
-  for (let tt = 0; tt < dur + 0.01; tt += 0.01) f0.push(tt, f0At(tt));
+  for (let tt = 0; tt < dur + 0.01; tt += 0.01) f0.push(tt, (pro2 ? f0At2 : f0At)(tt));
   return { dur, f0, amp, form, segs: segs.map((s) => ({ ph: s.pause != null ? s.pause : s.n + (s.st >= 0 ? s.st : ''), t0: s.t0, t1: s.t1 })) };
+}
+
+/**
+ * The LF glottal flow derivative (Fant, Liljencrants and Lin 1985) over one period, from Fant's shape
+ * parameter Rd (1995): about 0.3 a pressed, tense voice, 1 modal, 2 and above lax and breathy. Rd
+ * sets the pulse's three times (Ra, Rk, Rg): the opening grows as a damped sine to its closing peak at
+ * te, then returns to the closed phase with a time constant that reaches it exactly at the period's
+ * end; the growth rate is solved by bisection so the net flow over a period is zero. Returns { d, u,
+ * te, n }: d the derivative sampled at n points with the closing peak -1 at te (a fraction of the
+ * period), u the flow itself 0..1 (the aspiration rides on an open glottis).
+ */
+export function lfShape(rd, n) {
+  n = n || 2048;
+  rd = Math.min(2.7, Math.max(0.3, rd || 1));
+  const ra = (-1 + 4.8 * rd) / 100;
+  const rk = (22.4 + 11.8 * rd) / 100;
+  const rg = ((rk / 4) * (0.5 + 1.2 * rk)) / (0.11 * rd - ra * (0.5 + 1.2 * rk));
+  const tp = 1 / (2 * rg);
+  const te = Math.min(0.95, tp * (1 + rk));
+  const ta = Math.max(0.002, ra);
+  let eps = 1 / ta;
+  for (let i = 0; i < 60; i++) eps = (1 - Math.exp(-eps * (1 - te))) / ta;
+  const wg = Math.PI / tp;
+  const d = new Float64Array(n);
+  const fill = (alpha) => {
+    const e0 = -1 / (Math.exp(alpha * te) * Math.sin(wg * te));
+    let area = 0;
+    for (let i = 0; i < n; i++) {
+      const t = i / n;
+      const v = t < te ? e0 * Math.exp(alpha * t) * Math.sin(wg * t) : -(1 / (eps * ta)) * (Math.exp(-eps * (t - te)) - Math.exp(-eps * (1 - te)));
+      d[i] = v;
+      area += v;
+    }
+    return area;
+  };
+  // the area falls as alpha rises: bisect it to zero
+  let lo = -40;
+  let hi = 120;
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    if (fill(mid) > 0) lo = mid; else hi = mid;
+  }
+  fill((lo + hi) / 2);
+  const u = new Float64Array(n);
+  let acc = 0;
+  let mn = Infinity;
+  let mx = -Infinity;
+  for (let i = 0; i < n; i++) { acc += d[i]; u[i] = acc; if (acc < mn) mn = acc; if (acc > mx) mx = acc; }
+  const span = mx - mn || 1;
+  for (let i = 0; i < n; i++) u[i] = (u[i] - mn) / span;
+  return { d, u, te, n };
 }
 
 /**
@@ -349,7 +476,9 @@ export function speechPlan(ph, o) {
  * Tracks are read every 16 samples (formants through a 6 ms smoother, amplitudes interpolated per
  * sample). o: oq (open quotient, default 0.6), tilt (0..0.95, a lowpass on the source), jitter and
  * shimmer (per-period pitch and level variation), vib { rate, depth in semitones }, formant, raw (a
- * plain square, no vocal tract). Noise comes from the seeded generator.
+ * plain square, no vocal tract), source ('lf': the LF glottal model, lfShape, with rd its shape
+ * parameter; absent: the original polynomial pulse, whose code path never changes). Noise comes from
+ * the seeded generator.
  */
 export function klatt(sr, plan, o) {
   o = o || {};
@@ -364,6 +493,7 @@ export function klatt(sr, plan, o) {
   const vibR = o.vib ? o.vib.rate || 5 : 0;
   const vibD = o.vib ? o.vib.depth || 0 : 0;
   const raw = !!o.raw;
+  const lf = !raw && o.source === 'lf' ? lfShape(o.rd, 2048) : null;
   const fnp = 270 * (o.formant || 1);
   // key frame readers, linear between keys, each track with its own cursor
   const cur = [0, 0, 0];
@@ -456,12 +586,25 @@ export function klatt(sr, plan, o) {
         y[i0 + j] = lp;
         continue;
       }
-      const q = phase / oq;
-      const u = q < 1 ? 6.75 * q * q * (1 - q) : 0;
-      lp += ((u - uPrev) * (sr / 4800) - lp) * (1 - tilt);
-      uPrev = u;
-      let x = av * pamp * lp;
-      if (ah > 0) x += ah * (rand() * 2 - 1) * (av > 0 && u === 0 ? 0.5 : 1) * 0.12;
+      let x;
+      if (lf) {
+        // the LF source read from its table at this phase; aspiration rides on the open glottis
+        // (full where the flow is, about a third of that where the glottis is closed)
+        const fi = phase * lf.n;
+        const i1 = fi < lf.n ? fi | 0 : lf.n - 1;
+        const i2 = i1 + 1 < lf.n ? i1 + 1 : 0;
+        const dv = lf.d[i1] + (lf.d[i2] - lf.d[i1]) * (fi - i1);
+        lp += (dv * 0.25 - lp) * (1 - tilt);
+        x = av * pamp * lp;
+        if (ah > 0) x += ah * (rand() * 2 - 1) * (0.35 + 0.65 * lf.u[i1]) * 0.12;
+      } else {
+        const q = phase / oq;
+        const u = q < 1 ? 6.75 * q * q * (1 - q) : 0;
+        lp += ((u - uPrev) * (sr / 4800) - lp) * (1 - tilt);
+        uPrev = u;
+        x = av * pamp * lp;
+        if (ah > 0) x += ah * (rand() * 2 - 1) * (av > 0 && u === 0 ? 0.5 : 1) * 0.12;
+      }
       let v = ra[0] * x + rb[0] * m1[0] + rc[0] * m2[0];
       m2[0] = m1[0];
       m1[0] = v;
@@ -619,9 +762,18 @@ export function voiceOut(out, t, y, o) {
  * contour), formant (vocal tract scale), vowels (the voice's own vowel table), vowelScale and bw
  * (its formant and bandwidth scales), oq and tilt (a low oq and tilt is buzzier), jitter, shimmer,
  * breath, whisper and the effect chain fx (voiceOut). The announcer is a pair on one PA system:
- * announcer (male; 'announcer-male' names it too) and announcer-female.
+ * announcer (male; 'announcer-male' names it too) and announcer-female. The narrators and the guide
+ * are the second family: the LF glottal source (source 'lf', rd) and prosody 2, close and dry, no
+ * horn; every older voice keeps the original source and rules, and renders what it always did.
  */
 export function speechVoices() {
+  // Peterson and Barney (1952), women, as the female announcer carries them (see her notes below)
+  const WOMEN = {
+    IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],
+    AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],
+    AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],
+    AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],
+  };
   return {
     // A young woman at the same PA. Vowels: Peterson and Barney (1952), women; EY and OW start at
     // the /e/ and /o/ of Hillenbrand et al. (1995), women, and every other diphthong target is his
@@ -644,12 +796,7 @@ export function speechVoices() {
       name: 'Announcer (Female)', desc: 'The same PA system with a young woman speaking: bright, clear and lively, through the horn into the hall',
       f0: 240, rate: 1, vowelTime: 0.92, transition: 0.7, range: 1.1, accent: 1.8, fall: 0.5, formant: 1.3, vowelScale: [1.07, 1.09, 1.11],
       bw: 1.15, oq: 0.8, tilt: 0.8, jitter: 0.0015, shimmer: 0.008, breath: 0.055,
-      vowels: {
-        IY: [310, 2790, 3310], IH: [430, 2480, 3070], EH: [610, 2330, 2990], AE: [860, 2050, 2850], AH: [760, 1400, 2780],
-        AA: [850, 1220, 2810], AO: [590, 920, 2710], UH: [470, 1160, 2680], UW: [370, 950, 2670], ER: [500, 1640, 1960],
-        AX: [585, 1755, 2925], EY: [536, 2530, 3047, 447, 2616, 3203], AY: [914, 1513, 2790, 475, 2267, 2901],
-        AW: [914, 1513, 2790, 498, 1092, 2671], OW: [555, 1035, 2828, 461, 975, 2626], OY: [590, 920, 2710, 475, 2267, 2901],
-      },
+      vowels: WOMEN,
       fx: { hp: 150, lp: 7000, eq: [{ f: 2600, q: 1.2, db: 4 }, { f: 6000, q: 0.9, db: 3 }], drive: 0.12, room: { time: 0.95, mix: 0.14, pre: 0.02 } },
     },
     announcer: {
@@ -661,6 +808,22 @@ export function speechVoices() {
       name: 'Deep Robot', desc: 'A slow, low machine voice with a metallic ring',
       f0: 64, rate: 0.82, range: 0.25, formant: 0.86, oq: 0.4, tilt: 0.1, fx: { comb: { ms: 5.5, fb: 0.55, mix: 0.5 }, lp: 6000 },
     },
+    // The narrators: a woman and a man reading close to the microphone, dry. The LF source (Rd 1.3
+    // for her, 1.0 for him: modal, a little softer for her), a touch of jitter and shimmer at the
+    // levels of a healthy voice (Titze 1994), a clean source with some breath, prosody 2 for the
+    // reading contour, and a small room instead of the announcers' horn and hall.
+    'narrator-female': {
+      name: 'Narrator (Female)', desc: 'A woman reading close and clear, warm and unhurried: the natural voice for stories, guides and long lines',
+      f0: 196, rate: 0.98, vowelTime: 1, transition: 0.8, range: 1, accent: 1.4, fall: 0.8, formant: 1.25, vowelScale: [1.05, 1.07, 1.09],
+      bw: 1.1, source: 'lf', rd: 1.3, tilt: 0.12, jitter: 0.003, shimmer: 0.012, breath: 0.06, prosody: 2,
+      vowels: WOMEN,
+      fx: { hp: 90, lp: 10000, eq: [{ f: 220, q: 1, db: 1.5 }, { f: 3200, q: 1, db: 2 }], room: { time: 0.45, mix: 0.07, pre: 0.01 } },
+    },
+    narrator: {
+      name: 'Narrator (Male)', desc: 'A man reading close and steady, warm and even: the natural voice for stories, guides and long lines',
+      f0: 108, rate: 0.95, range: 0.9, accent: 1.1, fall: 1, formant: 1, source: 'lf', rd: 1, tilt: 0.1, jitter: 0.004, shimmer: 0.02, breath: 0.04, prosody: 2,
+      fx: { hp: 70, lp: 9500, eq: [{ f: 160, q: 1, db: 1.5 }, { f: 2800, q: 1, db: 2 }], room: { time: 0.45, mix: 0.07, pre: 0.01 } },
+    },
     retro: {
       name: 'Retro Computer', desc: 'A flat, buzzy home computer voice through an 8-bit converter',
       f0: 96, rate: 0.96, range: 0, formant: 1, oq: 0.3, tilt: 0, fx: { crush: { bits: 7, hz: 8000 }, lp: 3800 },
@@ -668,6 +831,16 @@ export function speechVoices() {
     small: {
       name: 'Small Robot', desc: 'A quick, bright little robot in a tin box',
       f0: 230, rate: 1.12, range: 1.1, formant: 1.2, oq: 0.5, tilt: 0.2, fx: { comb: { ms: 1.6, fb: 0.35, mix: 0.3 }, hp: 160 },
+    },
+    // a calm, breathy woman for wellness and meditation: a lax LF pulse (Rd 2), more breath, a
+    // narrow range, a slow rate with long vowels, and a softer room (its length and her pace are
+    // what the voice sounds' durations allow for their slowest voice)
+    guide: {
+      name: 'Soft Guide', desc: 'A calm, breathy woman speaking slowly and gently, for meditation, wellness and quiet instructions',
+      f0: 184, rate: 0.9, vowelTime: 1.05, transition: 0.85, range: 0.6, accent: 0.8, fall: 0.9, formant: 1.22, vowelScale: [1.05, 1.07, 1.09],
+      bw: 1.15, source: 'lf', rd: 2, tilt: 0.15, jitter: 0.003, shimmer: 0.015, breath: 0.12, prosody: 2,
+      vowels: WOMEN,
+      fx: { hp: 100, lp: 8000, eq: [{ f: 2600, q: 1, db: 1.5 }], room: { time: 1, mix: 0.18, pre: 0.02 } },
     },
     whisper: {
       name: 'Whisper', desc: 'Breath only: no voicing, close and airy',

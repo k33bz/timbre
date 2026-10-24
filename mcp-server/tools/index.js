@@ -571,7 +571,7 @@ const speakTool = {
   description:
     'Get ONE self-contained JavaScript function that says a line of text in a synthesized voice, or babbles it (Animalese style), with the line baked in. ' +
     'Speech runs the text through the text front end (letter-to-sound rules and a lexicon; numbers and punctuation are understood, and [W EY1 T] in the text spells a word in ARPAbet) and bakes in the phonemes, so the function carries only the formant synthesizer, the voice and the master chain: the same function the gallery\'s Speak rack copies. ' +
-    'Speech voices (display name, then id): Announcer (Female) announcer-female (the same PA system with a woman speaking); Announcer (Male) announcer (the classic synthesized PA voice, the default; announcer-male names it too); Deep Robot deep; Retro Computer retro (an 8-bit home computer); Small Robot small; Whisper whisper. ' +
+    'Speech voices (display name, then id): Announcer (Female) announcer-female (the same PA system with a woman speaking); Announcer (Male) announcer (the classic synthesized PA voice, the default; announcer-male names it too); Deep Robot deep; Narrator (Female) narrator-female and Narrator (Male) narrator (natural readers on the LF glottal source, close and dry, for stories, guides and long lines); Retro Computer retro (an 8-bit home computer); Small Robot small; Soft Guide guide (a calm, breathy woman for meditation and quiet instructions); Whisper whisper. ' +
     'Babble voices: Cute cute (the default), Gruff gruff, Robot Beep beep, Tiny Sprite sprite, Wise Elder elder. ' +
     'The function keeps the Copy contract, fn(ac, opts, when, dest), returns the end time, and takes pitch, rate and range (speed and spread for babble) and seed in opts at play time. ' +
     'Use it for a custom line; for ready-made announcements, countdowns and babble, search_sounds with category "voice", then get_copy.',
@@ -580,7 +580,7 @@ const speakTool = {
     properties: {
       text: { type: 'string', minLength: 1, maxLength: 500, description: 'The line, in English, e.g. "Access granted. Welcome back, commander."' },
       mode: { type: 'string', enum: ['speech', 'babble'], description: '"speech" (default) says the words; "babble" turns each letter or syllable into a short pitched talk blip.' },
-      voice: { type: 'string', description: 'A voice id. Speech: announcer-female (Announcer (Female)), announcer (Announcer (Male), the default; also announcer-male), deep, retro, small, whisper. Babble: cute (the default), gruff, beep, sprite, elder.' },
+      voice: { type: 'string', description: 'A voice id. Speech: announcer-female (Announcer (Female)), announcer (Announcer (Male), the default; also announcer-male), deep, narrator-female, narrator, retro, small, guide, whisper. Babble: cute (the default), gruff, beep, sprite, elder.' },
       pitch: { type: 'number', description: 'Semitones up or down from the voice\'s own pitch, -12 to 12 (default 0).' },
       rate: { type: 'number', description: 'Speech only: speaking rate, 0.5 to 1.6 (default 1).' },
       range: { type: 'number', description: 'Speech only: intonation, 0 a monotone to 2 animated (default 1).' },

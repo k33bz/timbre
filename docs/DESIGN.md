@@ -166,8 +166,8 @@ or syllable.
 
 Every voice list a person sees (the Speak rack's picker, a voice sound's slider, `build.mjs --say`,
 the MCP server's listings, these docs) is in display-name order, the order of the voice tables
-themselves: the speech voices Announcer (Female), Announcer (Male), Deep Robot, Retro Computer,
-Small Robot and Whisper, the babble voices Cute, Gruff, Robot Beep, Tiny Sprite and Wise Elder. Ids
+themselves: the speech voices Announcer (Female), Announcer (Male), Deep Robot, Narrator (Female),
+Narrator (Male), Retro Computer, Small Robot, Soft Guide and Whisper, the babble voices Cute, Gruff, Robot Beep, Tiny Sprite and Wise Elder. Ids
 do not change with names: code and Copy say `announcer-female` and `announcer` (or `announcer-male`),
 and the gallery shows a voice sound's choice by the voice's display name.
 
@@ -212,6 +212,35 @@ name, `utter` and `chatter` take phonemes and a whole voice. A voice sound's Cop
 end; a Copy of a typed line (the gallery's Speak rack, the MCP server's `speak` tool) bakes the line
 in as phonemes and carries the engine only. With `out = null` the helpers return a line's length
 without playing it.
+
+### The second family: the LF source and prosody 2 (2026-10-24)
+Narrator (Female), Narrator (Male) and Soft Guide are built on two additions that every older voice
+leaves switched off, so those voices render exactly what they did (`gates/fixtures/voices-v1.json`
+holds all eleven to it):
+- **The glottal source.** A voice with `source: 'lf'` drives the synthesizer with the Liljencrants-Fant
+  flow derivative (`lfShape`) instead of the differentiated polynomial pulse. One shape parameter,
+  `rd` (Fant 1995), sets the pulse: about 0.3 pressed and tense, 1 modal, 2 and above lax and
+  breathy; the opening grows as a damped sine to the closing peak, the return phase reaches the
+  closed phase exactly at the period's end, and the growth rate is solved so the net flow is zero.
+  Aspiration on an LF voice rides on the open glottis (full where the flow is, a third of that where
+  it is closed) instead of a steady hiss. The polynomial path keeps its code unchanged.
+- **Prosody 2.** A voice with `prosody: 2` gets the planner's second set of rules on top of Klatt's
+  durations: the last syllable before a major boundary lengthens (the last word a little), stressed
+  vowels gain and unstressed ones lose a few percent, the phrase starts low and rises into its first
+  accent, accents downstep with the nuclear accent lifted and peaking later in its vowel, a statement
+  falls from the nuclear accent to a low that settles before the end, a question dips there and
+  rises, and vowel onsets carry the consonant before them (a touch high after a voiceless one, low
+  after a voiced obstruent). The original rules are what `prosody` 1 or absent runs.
+- **The lexicon** grew by 136 common app and game words the rules got wrong (final, finish, photo,
+  volume, version, library, success, congratulations and such), checked against a reference
+  pronunciation; these apply to every voice, since a mispronounced word is a bug, and none of the
+  shipped voice lines carried one.
+The narrators are a woman (Rd 1.3, 196 Hz, the women's vowel table and a 1.25 tract scale) and a man
+(Rd 1, 108 Hz) reading close and dry: jitter and shimmer at a healthy voice's levels, some breath, a
+small room, no horn. Soft Guide is a lax, breathy woman (Rd 2, 184 Hz, breath 0.12) at a slow rate
+with long vowels and a longer, softer room, for meditation and quiet instructions. A speech Copy of
+an LF voice carries `lfShape` with the engine; a Copy of an older voice carries the (now longer)
+engine but renders the same samples.
 
 ## Level range (dBFS, worst of several seeds)
 Peak at most -12 for the loudest hits, typically -15 to -25 for effects, -21 to -28 for small

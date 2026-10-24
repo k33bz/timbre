@@ -519,7 +519,8 @@ export function writeAtomic(file, text) {
  * line and how long it lasts in each voice at three rates (speed for babble), tail included, to set
  * a voice sound's dur (it must cover the slowest setting its parameters allow). The voices are
  * listed by display name: Announcer (Female) announcer-female, Announcer (Male) announcer (also
- * announcer-male), Deep Robot deep, Retro Computer retro, Small Robot small, Whisper whisper; with
+ * announcer-male), Deep Robot deep, Narrator (Female) narrator-female, Narrator (Male) narrator,
+ * Retro Computer retro, Small Robot small, Soft Guide guide, Whisper whisper; with
  * --babble Cute cute, Gruff gruff, Robot Beep beep, Tiny Sprite sprite, Wise Elder elder.
  */
 /** A voice table's ids in the order a person sees them: by display name. */

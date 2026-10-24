@@ -88,7 +88,7 @@ A theme maps app moments (`click`, `toggle-on`, `success`, `error`, `loading`, `
 
 A formant speech synthesizer in the page: Klatt's cascade/parallel design computed sample by sample, so it renders the same everywhere, with an English text front end (the NRL letter-to-sound rules and a small lexicon).
 
-- **Speech voices:** **Announcer (Female)** and **Announcer (Male)**, one classic synthesized PA system with two speakers (vowel targets from Peterson and Barney's 1952 women's and men's averages, hers lifted for a shorter vocal tract, with a young, higher, quicker and livelier voice), Deep Robot, Retro Computer, Small Robot and Whisper.
+- **Speech voices:** **Announcer (Female)** and **Announcer (Male)**, one classic synthesized PA system with two speakers (vowel targets from Peterson and Barney's 1952 women's and men's averages, hers lifted for a shorter vocal tract, with a young, higher, quicker and livelier voice), Deep Robot, **Narrator (Female)** and **Narrator (Male)** (the second family: a Liljencrants-Fant glottal source, prosody rules that downstep and settle like reading aloud, close and dry), Retro Computer, Small Robot, **Soft Guide** (a calm, breathy voice for meditation) and Whisper.
 - **Babble voices:** Cute, Gruff, Robot Beep, Tiny Sprite and Wise Elder, for text boxes and speech bubbles.
 - Every voice list (the Speak rack, a voice sound's slider, `build.mjs --say`, the MCP server) is in display-name order.
 - The **Speak** rack says any typed line; its Copy bakes the line into one function that carries only the engine.

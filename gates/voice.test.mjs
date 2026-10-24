@@ -565,3 +565,117 @@ test('every voice list a person sees is in display-name order; the announcers ar
   };
   for (const f of ['README.md', 'docs/DESIGN.md', 'mcp-server/README.md', 'mcp-server/tools/index.js']) listed(fs.readFileSync(path.join(ROOT, f), 'utf8'), f);
 });
+
+// ---- the second family (2026-10-24): the LF source, prosody 2, the narrators and the guide
+
+test('every voice of the version before the LF source renders what it did (gates/fixtures/voices-v1.json)', () => {
+  // the narrators and the guide are new data and new branches, never a change to an older voice:
+  // every speech and babble voice matches the snapshot main made before them, within the engine's
+  // run-to-run noise in the browser (in Node they are identical)
+  const fx = JSON.parse(fs.readFileSync(path.join(ROOT, 'gates/fixtures/voices-v1.json'), 'utf8'));
+  for (const kind of ['speak', 'babble']) {
+    for (const [voice, lines] of Object.entries(fx[kind])) {
+      assert.equal(lines.length, 2, `${kind} ${voice}`);
+      for (const l of lines) {
+        const { y } = render((out) => T[kind](out, 0, { text: l.text, pitch: l.pitch, rate: l.rate, range: l.range, voice }));
+        assert.equal(y.length, l.n, `${kind} ${voice}: ${l.text}`);
+        let e = 0;
+        for (const x of y) e += x * x;
+        assert.ok(Math.abs(Math.sqrt(e / y.length) - l.rms) < 1e-7, `${kind} ${voice}: rms ${Math.sqrt(e / y.length)} vs ${l.rms}`);
+        let worst = 0;
+        l.y.forEach((v, k) => { worst = Math.max(worst, Math.abs(y[Math.floor(((k + 0.5) * y.length) / 96)] - v)); });
+        assert.ok(worst < 7.7e-6, `${kind} ${voice}: ${l.text}: ${worst}`);
+      }
+    }
+  }
+  assert.deepEqual(Object.keys(fx.speak), ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper']);
+});
+
+test('lfShape: the closing peak is -1 at te, the net flow is zero, the flow runs 0..1; a higher Rd opens later and softer', () => {
+  for (const rd of [0.4, 1, 1.6, 2.4]) {
+    const g = T.lfShape(rd, 1024);
+    assert.equal(g.d.length, 1024);
+    let mn = 0;
+    let at = -1;
+    let area = 0;
+    let abs = 0;
+    for (let i = 0; i < g.n; i++) { if (g.d[i] < mn) { mn = g.d[i]; at = i; } area += g.d[i]; abs += Math.abs(g.d[i]); }
+    assert.ok(Math.abs(mn + 1) < 0.015, `rd ${rd}: closing peak ${mn}`);
+    assert.ok(Math.abs(at / g.n - g.te) < 2 / g.n, `rd ${rd}: the peak sits at te (${at / g.n} vs ${g.te})`);
+    assert.ok(Math.abs(area) / abs < 2e-3, `rd ${rd}: net flow ${area / abs}`);
+    assert.ok(g.u.every((v) => v >= -1e-9 && v <= 1 + 1e-9) && g.u[0] < 0.02, `rd ${rd}: the flow runs 0..1 from closed`);
+  }
+  assert.ok(T.lfShape(2.4).te > T.lfShape(0.4).te, 'a lax pulse closes later');
+  // the source in a voice: a sustained vowel on Rd 2.4 has less high-frequency energy than on 0.4
+  // (the first difference's RMS against the signal's: a steeper spectral tilt)
+  const tiltOf = (rd) => {
+    const y = utter('AA1 AA1 AA1 .', { ...PLAIN, source: 'lf', rd, tilt: 0 });
+    let e = 0;
+    let d = 0;
+    for (let i = 1; i < y.length; i++) { e += y[i] * y[i]; d += (y[i] - y[i - 1]) * (y[i] - y[i - 1]); }
+    return Math.sqrt(d / e);
+  };
+  const pressed = tiltOf(0.4);
+  const lax = tiltOf(2.4);
+  assert.ok(lax < pressed * 0.8, `lax ${lax} vs pressed ${pressed}`);
+  // the LF path renders cleanly and differs from the polynomial pulse at the same settings
+  const a = utter('AA1 .', { ...PLAIN, source: 'lf', rd: 1 });
+  const b = utter('AA1 .', PLAIN);
+  assert.ok(a.every(Number.isFinite) && a.length === b.length);
+  assert.notDeepEqual(Array.from(a.slice(4000, 4100)), Array.from(b.slice(4000, 4100)));
+});
+
+test('prosody 2: a deeper settling fall, a longer final syllable, downstepped accents, a rise after a voiceless stop; prosody 1 untouched', () => {
+  const ph = 'DH AX0 / B IH1 G / R EH1 D / D AO1 G .';
+  const p1 = T.speechPlan(ph, { f0: 100 });
+  const p0 = T.speechPlan(ph, { f0: 100, prosody: 1 });
+  assert.deepEqual(p0, p1, 'prosody 1 is the planner as it was');
+  const p2 = T.speechPlan(ph, { f0: 100, prosody: 2 });
+  const f0 = (plan, t) => { let v = plan.f0[1]; for (let i = 0; i < plan.f0.length; i += 2) if (plan.f0[i] <= t) v = plan.f0[i + 1]; return v; };
+  const seg = (plan, name) => plan.segs.find((s) => s.ph === name);
+  // the end of the statement sits lower
+  assert.ok(f0(p2, p2.dur - 0.07) < f0(p1, p1.dur - 0.07) - 2, `end ${f0(p2, p2.dur - 0.07)} vs ${f0(p1, p1.dur - 0.07)}`);
+  // the last syllable is longer
+  const v1 = seg(p1, 'AO1');
+  const v2 = seg(p2, 'AO1');
+  assert.ok(v2.t1 - v2.t0 > (v1.t1 - v1.t0) * 1.15, 'final vowel lengthened');
+  // accents downstep: the peak over the second accent is below the first's
+  const peak = (plan, name) => { const s = seg(plan, name); let m = 0; for (let t = s.t0 - 0.03; t < s.t1 + 0.04; t += 0.005) m = Math.max(m, f0(plan, t)); return m; };
+  assert.ok(peak(p2, 'EH1') < peak(p2, 'IH1'), `downstep ${peak(p2, 'IH1')} -> ${peak(p2, 'EH1')}`);
+  // a question still rises
+  const q2 = T.speechPlan('DH AX0 / B IH1 G / R EH1 D / D AO1 G ?', { f0: 100, prosody: 2 });
+  assert.ok(f0(q2, q2.dur - 0.07) > 115, 'the question rises');
+  // the vowel after a voiceless stop starts higher than after a voiced one
+  const tAA = T.speechPlan('T AA1 .', { f0: 100, prosody: 2 });
+  const dAA = T.speechPlan('D AA1 .', { f0: 100, prosody: 2 });
+  assert.ok(f0(tAA, seg(tAA, 'AA1').t0 + 0.005) > f0(dAA, seg(dAA, 'AA1').t0 + 0.005), 'the consonant marks the onset');
+});
+
+test('the narrators and the guide: LF source and prosody 2; they render, and apart from the announcers', () => {
+  const sv = T.speechVoices();
+  for (const id of ['narrator-female', 'narrator', 'guide']) {
+    assert.equal(sv[id].source, 'lf', id);
+    assert.equal(sv[id].prosody, 2, id);
+    assert.ok(sv[id].rd >= 0.8 && sv[id].rd <= 2.2, id);
+  }
+  for (const id of ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper']) assert.ok(!sv[id].source && !sv[id].prosody, `${id} keeps the original engine`);
+  assert.ok(sv.guide.rd > sv['narrator-female'].rd && sv['narrator-female'].rd > sv.narrator.rd, 'the guide is the laxest, the man the firmest');
+  const a = render((out) => T.speak(out, 0, { text: 'Welcome back.', voice: 'narrator' })).y;
+  const b = render((out) => T.speak(out, 0, { text: 'Welcome back.', voice: 'announcer' })).y;
+  assert.notDeepEqual(Array.from(a.slice(3000, 3100)), Array.from(b.slice(3000, 3100)));
+  // their vowels still land: LPC on the man's AA within 10% of the table
+  const y = utter('AA1*5', { ...sv.narrator, f0: 100, range: 0, prosody: 1 });
+  const F = formants(decimate(y.subarray(Math.floor(y.length * 0.3), Math.floor(y.length * 0.7)), SR, 4, 5000), SR / 4, 12);
+  assert.ok(Math.abs(F[0] - 730) / 730 < 0.1 && Math.abs(F[1] - 1090) / 1090 < 0.1, `AA ${F.slice(0, 2)}`);
+});
+
+test('the lexicon: the words a line of app or game copy carries come out right', () => {
+  const say = (w) => T.phonemize(w);
+  assert.equal(say('final'), 'F AY1 N AX0 L');
+  assert.equal(say('finish'), 'F IH1 N IH0 SH');
+  assert.equal(say('photos'), 'F OW1 T OW0 Z');
+  assert.equal(say('version'), 'V ER1 ZH AX0 N');
+  assert.equal(say('success'), 'S AX0 K S EH1 S');
+  assert.equal(say('reactor level critical'), 'R IY0 AE1 K T ER0 / L EH1 V AX0 L / K R IH1 T IH0 K AX0 L');
+  assert.equal(say('Notifications muted.'), 'N OW2 T AX0 F AX0 K EY1 SH AX0 N Z / M Y UW1 T IH0 D .');
+});

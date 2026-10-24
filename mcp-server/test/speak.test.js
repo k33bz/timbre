@@ -100,7 +100,7 @@ test('speak: one function with the line baked in, the engine only, the gallery\'
   assert.equal(m.data.voice, 'announcer');
   assert.equal(m.code, (await call(s, 'speak', { text: 'Attention, please.', voice: 'announcer' })).code);
   assert.equal(m.data.voiceName, 'Announcer (Male)');
-  assert.deepEqual(m.data.voices.speech, ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'], 'by display name');
+  assert.deepEqual(m.data.voices.speech, ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'], 'by display name');
   assert.deepEqual(m.data.voices.babble, ['cute', 'gruff', 'beep', 'sprite', 'elder'], 'by display name');
   // with no voice named, speech is the male announcer, as before the lists were sorted
   const d = await call(s, 'speak', { text: 'Attention, please.' });
@@ -125,7 +125,7 @@ test('speak checks its arguments and clamps values, saying so', async (t) => {
     assert.equal(r.data.code, code, JSON.stringify(r.data));
     if (re) assert.match(r.data.error, re);
   };
-  await bad({ text: 'Hi', voice: 'nobody' }, 'not_found', /Voices: announcer-female, announcer, deep, retro, small, whisper\./);
+  await bad({ text: 'Hi', voice: 'nobody' }, 'not_found', /Voices: announcer-female, announcer, deep, narrator-female, narrator, retro, small, guide, whisper\./);
   await bad({ text: 'Hi', mode: 'babble', voice: 'announcer-male' }, 'not_found', /cute, gruff, beep, sprite, elder/);
   await bad({ text: 'Hi', mode: 'babble', voice: 'announcer' }, 'not_found', /cute, gruff, beep, sprite, elder/);
   await bad({ text: 'Hi', mode: 'babble', rate: 1.2 }, 'bad_params', /rate applies to speech; babble takes pitch, speed, spread/);
@@ -156,7 +156,7 @@ test('voice sounds: choices show in get_sound, and get_copy takes a voice by nam
   assert.equal(g.isError, false);
   const voice = g.data.params.find((p) => p.name === 'voice');
   assert.equal(voice.control, 'choice');
-  assert.deepEqual(voice.choices, ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper'], 'by display name');
+  assert.deepEqual(voice.choices, ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper'], 'by display name');
   assert.equal(voice.default, 1, 'the default is still the announcer');
   const byName = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'deep' } });
   const byNumber = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 2 } });
@@ -172,12 +172,12 @@ test('voice sounds: choices show in get_sound, and get_copy takes a voice by nam
   assert.equal(male.code, (await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'announcer' } })).code);
   const wrong = await call(s, 'get_copy', { id: 'voice-access-denied', params: { voice: 'robot' } });
   assert.equal(wrong.isError, true);
-  assert.match(wrong.data.error, /or one of "announcer-female", "announcer", "deep", "retro", "small", "whisper"/);
+  assert.match(wrong.data.error, /or one of "announcer-female", "announcer", "deep", "narrator-female", "narrator", "retro", "small", "guide", "whisper"/);
   // info lists the voices with their names, each list by display name
   const inf = await call(s, 'info', {});
   const names = (l) => Object.values(l);
   const cmp = (a, b) => a.localeCompare(b, 'en');
-  assert.deepEqual(Object.keys(inf.data.voices.speech), ['announcer-female', 'announcer', 'deep', 'retro', 'small', 'whisper']);
+  assert.deepEqual(Object.keys(inf.data.voices.speech), ['announcer-female', 'announcer', 'deep', 'narrator-female', 'narrator', 'retro', 'small', 'guide', 'whisper']);
   assert.deepEqual(names(inf.data.voices.speech).slice(0, 2), ['Announcer (Female)', 'Announcer (Male)']);
   for (const l of [inf.data.voices.speech, inf.data.voices.babble]) assert.deepEqual(names(l), names(l).slice().sort(cmp));
   assert.deepEqual(inf.data.voices.aliases, { 'announcer-male': 'announcer' });
