@@ -912,6 +912,46 @@
    "pre": -25.7,
    "end": 0.337
   },
+  "dark-abyss-drone": {
+   "fingerprint": "6c496e1e6960",
+   "peak": -14.5,
+   "rms": -28,
+   "worstPeak": -14.5,
+   "worstRms": -26.3,
+   "lowestPeak": -19.4,
+   "pre": -19.4,
+   "end": 7.295
+  },
+  "dark-bell-knell": {
+   "fingerprint": "bb26939b1c74",
+   "peak": -20.3,
+   "rms": -37.1,
+   "worstPeak": -19.8,
+   "worstRms": -36.1,
+   "lowestPeak": -21.6,
+   "pre": -25.1,
+   "end": 0.553
+  },
+  "dark-bowed-metal": {
+   "fingerprint": "8621507208bb",
+   "peak": -16.6,
+   "rms": -31,
+   "worstPeak": -16.5,
+   "worstRms": -30.5,
+   "lowestPeak": -21.1,
+   "pre": -21.6,
+   "end": 6.155
+  },
+  "dark-candle-flicker": {
+   "fingerprint": "c076b9ffbf88",
+   "peak": -26.7,
+   "rms": -44.4,
+   "worstPeak": -22.4,
+   "worstRms": -39.9,
+   "lowestPeak": -29.8,
+   "pre": -27.8,
+   "end": 0.16
+  },
   "dark-cathedral-choir": {
    "fingerprint": "cc5f3877aac6",
    "peak": -15.5,
@@ -932,6 +972,46 @@
    "pre": -18.7,
    "end": 4.828
   },
+  "dark-cello-stab": {
+   "fingerprint": "1f9d2b30d5a9",
+   "peak": -20.9,
+   "rms": -36.5,
+   "worstPeak": -20.2,
+   "worstRms": -34.5,
+   "lowestPeak": -25.1,
+   "pre": -25.5,
+   "end": 0.357
+  },
+  "dark-choir-amen": {
+   "fingerprint": "dcc8bbd29b54",
+   "peak": -19.1,
+   "rms": -32.6,
+   "worstPeak": -18.9,
+   "worstRms": -31.4,
+   "lowestPeak": -19.9,
+   "pre": -24.2,
+   "end": 1.081
+  },
+  "dark-crypt-open": {
+   "fingerprint": "5c009038ecf2",
+   "peak": -21.5,
+   "rms": -37.5,
+   "worstPeak": -19.4,
+   "worstRms": -36.2,
+   "lowestPeak": -22.1,
+   "pre": -24.7,
+   "end": 0.427
+  },
+  "dark-doom-braam": {
+   "fingerprint": "d14ac4137c92",
+   "peak": -13.5,
+   "rms": -26,
+   "worstPeak": -13.5,
+   "worstRms": -23.5,
+   "lowestPeak": -17.1,
+   "pre": -18.3,
+   "end": 3.954
+  },
   "dark-doom-drum": {
    "fingerprint": "38ba0dfb5461",
    "peak": -14,
@@ -941,6 +1021,16 @@
    "lowestPeak": -15.3,
    "pre": -18.4,
    "end": 1.868
+  },
+  "dark-door-creak": {
+   "fingerprint": "f8b71ad25d04",
+   "peak": -22.5,
+   "rms": -42.1,
+   "worstPeak": -20.5,
+   "worstRms": -38.5,
+   "lowestPeak": -24.9,
+   "pre": -25.8,
+   "end": 2.396
   },
   "dark-dread-descent": {
    "fingerprint": "b06f9244f5f8",
@@ -952,6 +1042,76 @@
    "pre": -18.9,
    "end": 5.088
   },
+  "dark-funeral-bell": {
+   "fingerprint": "2f1938a94d9a",
+   "peak": -14.7,
+   "rms": -31.6,
+   "worstPeak": -13.2,
+   "worstRms": -29.9,
+   "lowestPeak": -16.6,
+   "pre": -18,
+   "end": 6.07
+  },
+  "dark-haunted-corridor": {
+   "fingerprint": "dd2b018f6643",
+   "peak": -21.6,
+   "rms": -37.3,
+   "worstPeak": -17.6,
+   "worstRms": -33.4,
+   "lowestPeak": -22.8,
+   "pre": -22.8,
+   "end": 6.438
+  },
+  "dark-heartbeat": {
+   "fingerprint": "47a7ab4d3044",
+   "peak": -16.3,
+   "rms": -29.7,
+   "worstPeak": -15.5,
+   "worstRms": -27.6,
+   "lowestPeak": -19.7,
+   "pre": -20.5,
+   "end": 7.201
+  },
+  "dark-horror-strings": {
+   "fingerprint": "801f95ce63e6",
+   "peak": -13.6,
+   "rms": -30.4,
+   "worstPeak": -13.6,
+   "worstRms": -29.6,
+   "lowestPeak": -15.2,
+   "pre": -18.4,
+   "end": 2.569
+  },
+  "dark-jump-scare": {
+   "fingerprint": "76fbc3e40b9a",
+   "peak": -15.5,
+   "rms": -32.5,
+   "worstPeak": -13.5,
+   "worstRms": -32,
+   "lowestPeak": -17.3,
+   "pre": -18.4,
+   "end": 1.535
+  },
+  "dark-monk-chant": {
+   "fingerprint": "a97424d4beb4",
+   "peak": -16,
+   "rms": -29.7,
+   "worstPeak": -14.7,
+   "worstRms": -28.6,
+   "lowestPeak": -18.2,
+   "pre": -19.7,
+   "end": 7.5
+  },
+  "dark-music-box": {
+   "fingerprint": "3e03d2452d2f",
+   "peak": -17.4,
+   "rms": -30.2,
+   "worstPeak": -14.8,
+   "worstRms": -28,
+   "lowestPeak": -18.1,
+   "pre": -19.8,
+   "end": 5.894
+  },
   "dark-organ-minor": {
    "fingerprint": "2d4fff6b5c9b",
    "peak": -15.7,
@@ -961,6 +1121,66 @@
    "lowestPeak": -18.4,
    "pre": -19.1,
    "end": 4.546
+  },
+  "dark-slow-clock": {
+   "fingerprint": "3726d89c2a4a",
+   "peak": -19.5,
+   "rms": -41.3,
+   "worstPeak": -18.6,
+   "worstRms": -38.3,
+   "lowestPeak": -22.9,
+   "pre": -23.9,
+   "end": 6.395
+  },
+  "dark-stone-click": {
+   "fingerprint": "f05b598d4c8d",
+   "peak": -23.1,
+   "rms": -34.9,
+   "worstPeak": -20.4,
+   "worstRms": -34,
+   "lowestPeak": -23.7,
+   "pre": -25.7,
+   "end": 0.087
+  },
+  "dark-sub-drop": {
+   "fingerprint": "ae07f9e758a6",
+   "peak": -13.6,
+   "rms": -21.8,
+   "worstPeak": -13.6,
+   "worstRms": -21.2,
+   "lowestPeak": -14.4,
+   "pre": -18.4,
+   "end": 2.969
+  },
+  "dark-tense-ostinato": {
+   "fingerprint": "53c089e1aa29",
+   "peak": -15.2,
+   "rms": -34.5,
+   "worstPeak": -14,
+   "worstRms": -31.4,
+   "lowestPeak": -21.3,
+   "pre": -18.9,
+   "end": 2.215
+  },
+  "dark-timpani-roll": {
+   "fingerprint": "23a7e8173ba8",
+   "peak": -15.1,
+   "rms": -35.3,
+   "worstPeak": -13.3,
+   "worstRms": -32,
+   "lowestPeak": -17.3,
+   "pre": -18.2,
+   "end": 4.609
+  },
+  "dark-whisper-swarm": {
+   "fingerprint": "1f3706a91b08",
+   "peak": -17.6,
+   "rms": -35.7,
+   "worstPeak": -16.7,
+   "worstRms": -34,
+   "lowestPeak": -19.1,
+   "pre": -21.9,
+   "end": 4.991
   },
   "data-bar-rise": {
    "fingerprint": "9cbbd50b7b81",

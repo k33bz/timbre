@@ -2,7 +2,7 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 337,
+  "count": 359,
   "sounds": [
     {
       "id": "ui-cascade",
@@ -6045,6 +6045,104 @@
       ]
     },
     {
+      "id": "dark-abyss-drone",
+      "name": "Abyss Drone",
+      "category": "dark",
+      "tags": [
+        "drone",
+        "abyss",
+        "bed",
+        "bass",
+        "low",
+        "sub",
+        "well",
+        "dark",
+        "ominous",
+        "ambience",
+        "tension"
+      ],
+      "desc": "A very low bowed drone with a cold shimmer far above it, swelling and sinking like the bottom of a well. For a menu that broods, a descent into the dark or a quiet threat under a scene.",
+      "dur": 8.5,
+      "family": "orchestral",
+      "moments": [
+        "ambience",
+        "tension"
+      ]
+    },
+    {
+      "id": "dark-bell-knell",
+      "name": "Knell",
+      "category": "dark",
+      "tags": [
+        "bell",
+        "knell",
+        "toll",
+        "chime",
+        "minor",
+        "gothic",
+        "dark",
+        "soft",
+        "alert"
+      ],
+      "desc": "One small, dark bell stroke with a mournful minor-third ring and a short room. For a notification, reminder or message that is softer than an alarm.",
+      "dur": 1.3,
+      "family": "orchestral",
+      "moments": [
+        "notify",
+        "reminder",
+        "message"
+      ]
+    },
+    {
+      "id": "dark-bowed-metal",
+      "name": "Bowed Metal",
+      "category": "dark",
+      "tags": [
+        "bowed",
+        "metal",
+        "cymbal",
+        "saw",
+        "eerie",
+        "cold",
+        "drone",
+        "bed",
+        "dark",
+        "ambience",
+        "tension"
+      ],
+      "desc": "A slow, singing swell of bowed metal, shimmering and beating against itself. For something wrong in the room, a cold ghostly presence or an unearthly menu.",
+      "dur": 7.2,
+      "family": "metal",
+      "moments": [
+        "ambience",
+        "tension"
+      ]
+    },
+    {
+      "id": "dark-candle-flicker",
+      "name": "Candle Flicker",
+      "category": "dark",
+      "tags": [
+        "hover",
+        "tooltip",
+        "candle",
+        "flame",
+        "breath",
+        "whisper",
+        "quiet",
+        "dark",
+        "gothic",
+        "soft"
+      ],
+      "desc": "A tiny soft breath of flame with a small flutter, very quiet. For hovering over a control or showing a tooltip in a candlelit interface.",
+      "dur": 0.26,
+      "family": "air",
+      "moments": [
+        "hover",
+        "tooltip"
+      ]
+    },
+    {
       "id": "dark-cathedral-choir",
       "name": "Cathedral Choir",
       "category": "dark",
@@ -6094,6 +6192,108 @@
       ]
     },
     {
+      "id": "dark-cello-stab",
+      "name": "Cello Stab",
+      "category": "dark",
+      "tags": [
+        "error",
+        "warning",
+        "denied",
+        "fail",
+        "stab",
+        "cello",
+        "strings",
+        "dissonant",
+        "dark",
+        "ominous",
+        "low"
+      ],
+      "desc": "A short, low, clashing cello stab with the bow digging in. For a rejected action, an error or a warning in a tense interface.",
+      "dur": 0.7,
+      "family": "orchestral",
+      "moments": [
+        "error",
+        "warning"
+      ]
+    },
+    {
+      "id": "dark-choir-amen",
+      "name": "Choir Amen",
+      "category": "dark",
+      "tags": [
+        "success",
+        "achievement",
+        "complete",
+        "confirm",
+        "choir",
+        "amen",
+        "cadence",
+        "vocal",
+        "gothic",
+        "dark",
+        "soft"
+      ],
+      "desc": "A short, soft two-chord choir cadence that settles like an amen. For a saved or completed action, an achievement, or a finished load in a gothic interface.",
+      "dur": 1.8,
+      "family": "voice",
+      "moments": [
+        "success",
+        "achievement",
+        "load-complete"
+      ]
+    },
+    {
+      "id": "dark-crypt-open",
+      "name": "Crypt Door",
+      "category": "dark",
+      "tags": [
+        "open",
+        "close",
+        "transition",
+        "stone",
+        "slab",
+        "door",
+        "grind",
+        "crypt",
+        "dark",
+        "gothic",
+        "low"
+      ],
+      "desc": "A heavy stone slab sliding aside with a low grind and settling with a soft thud, or sliding shut. For opening and closing panels and dialogs, and for moving between screens.",
+      "dur": 0.65,
+      "family": "impact",
+      "moments": [
+        "open",
+        "close",
+        "transition"
+      ]
+    },
+    {
+      "id": "dark-doom-braam",
+      "name": "Doom Braam",
+      "category": "dark",
+      "tags": [
+        "braam",
+        "brass",
+        "blast",
+        "cinematic",
+        "trailer",
+        "doom",
+        "low",
+        "dark",
+        "heavy",
+        "stinger"
+      ],
+      "desc": "A colossal low blast that swells into a roar and fades in a huge hall. For a title reveal, a monster rising or the moment a plan collapses.",
+      "dur": 4.95,
+      "family": "orchestral",
+      "moments": [
+        "reveal",
+        "scare",
+        "transition"
+      ]
+    },
+    {
       "id": "dark-doom-drum",
       "name": "Doom Drum",
       "category": "dark",
@@ -6116,6 +6316,30 @@
         "reveal",
         "scare",
         "transition"
+      ]
+    },
+    {
+      "id": "dark-door-creak",
+      "name": "Door Creak",
+      "category": "dark",
+      "tags": [
+        "door",
+        "creak",
+        "squeak",
+        "hinge",
+        "old",
+        "wood",
+        "haunted",
+        "dark",
+        "scare",
+        "slow"
+      ],
+      "desc": "A long, wandering creak of an old wooden door on dry hinges, optionally ending in a soft thud as it shuts. For opening a door into the dark.",
+      "dur": 4.6,
+      "family": "wood",
+      "moments": [
+        "door",
+        "scare"
       ]
     },
     {
@@ -6144,6 +6368,181 @@
       ]
     },
     {
+      "id": "dark-funeral-bell",
+      "name": "Funeral Bell",
+      "category": "dark",
+      "tags": [
+        "bell",
+        "funeral",
+        "toll",
+        "church",
+        "chime",
+        "mourning",
+        "gothic",
+        "dark",
+        "knell",
+        "game-over"
+      ],
+      "desc": "A great low church bell tolling slowly, its hum lingering after each stroke. For a funeral, a death, a game over or the dread of a clock striking an hour.",
+      "dur": 8.3,
+      "family": "metal",
+      "moments": [
+        "ambience",
+        "game-over",
+        "reveal"
+      ]
+    },
+    {
+      "id": "dark-haunted-corridor",
+      "name": "Haunted Corridor",
+      "category": "dark",
+      "tags": [
+        "haunted",
+        "corridor",
+        "wind",
+        "creak",
+        "whisper",
+        "ghost",
+        "bed",
+        "hall",
+        "dark",
+        "ambience",
+        "tension"
+      ],
+      "desc": "Wind drifting down a long empty hall, a creaking board and faint whispers somewhere behind you. For a haunted house, a walk through a ruin or a menu that watches back.",
+      "dur": 8,
+      "family": "air",
+      "moments": [
+        "ambience",
+        "tension"
+      ]
+    },
+    {
+      "id": "dark-heartbeat",
+      "name": "Heartbeat in the Dark",
+      "category": "dark",
+      "tags": [
+        "heartbeat",
+        "heart",
+        "pulse",
+        "thump",
+        "bed",
+        "dread",
+        "fear",
+        "panic",
+        "dark",
+        "tension",
+        "ambience"
+      ],
+      "desc": "A muffled heartbeat thudding over a low dread drone. Slow is held-breath stillness, fast is panic. For hiding, a monster nearby or a low-health warning.",
+      "dur": 7.5,
+      "family": "organic",
+      "moments": [
+        "tension",
+        "ambience"
+      ]
+    },
+    {
+      "id": "dark-horror-strings",
+      "name": "Horror Strings",
+      "category": "dark",
+      "tags": [
+        "strings",
+        "horror",
+        "screech",
+        "cluster",
+        "dissonant",
+        "violin",
+        "scare",
+        "dark",
+        "stinger",
+        "tremolo"
+      ],
+      "desc": "A shrieking cluster of high strings that slides upward and hangs in the air. For a nightmare, a creature in the doorway or a plan going wrong.",
+      "dur": 3.5,
+      "family": "orchestral",
+      "moments": [
+        "scare",
+        "reveal",
+        "critical"
+      ]
+    },
+    {
+      "id": "dark-jump-scare",
+      "name": "Jump Scare",
+      "category": "dark",
+      "tags": [
+        "jump",
+        "scare",
+        "stab",
+        "hit",
+        "shock",
+        "horror",
+        "sting",
+        "dark",
+        "stinger",
+        "sudden"
+      ],
+      "desc": "An instant, violent stab of strings and drum with a ringing tail. For something leaping out of the dark or a sudden shock.",
+      "dur": 2.3,
+      "family": "impact",
+      "moments": [
+        "scare",
+        "critical",
+        "reveal"
+      ]
+    },
+    {
+      "id": "dark-monk-chant",
+      "name": "Monk Chant",
+      "category": "dark",
+      "tags": [
+        "chant",
+        "monk",
+        "choir",
+        "gregorian",
+        "sacred",
+        "gothic",
+        "dark",
+        "drone",
+        "ritual",
+        "stone"
+      ],
+      "desc": "Low male voices chant a slow minor phrase over a held drone in a stone chapel. For a ritual, a crypt or the reveal of something old.",
+      "dur": 7.8,
+      "family": "voice",
+      "moments": [
+        "ambience",
+        "reveal",
+        "music"
+      ]
+    },
+    {
+      "id": "dark-music-box",
+      "name": "Music Box",
+      "category": "dark",
+      "tags": [
+        "music-box",
+        "lullaby",
+        "winding-down",
+        "creepy",
+        "toy",
+        "haunted",
+        "dark",
+        "minor",
+        "eerie",
+        "tension"
+      ],
+      "desc": "A small music box plays a faltering minor-key tune, slightly sour, slowing and sagging as its spring runs out. For a haunted nursery or a quiet scare.",
+      "dur": 6.8,
+      "family": "metal",
+      "moments": [
+        "scare",
+        "music",
+        "tension"
+      ]
+    },
+    {
       "id": "dark-organ-minor",
       "name": "Organ Minor Swell",
       "category": "dark",
@@ -6166,6 +6565,152 @@
         "scare",
         "reveal",
         "music"
+      ]
+    },
+    {
+      "id": "dark-slow-clock",
+      "name": "Slow Clock",
+      "category": "dark",
+      "tags": [
+        "clock",
+        "grandfather",
+        "tick",
+        "tock",
+        "wood",
+        "timer",
+        "slow",
+        "dark",
+        "tension",
+        "empty-room"
+      ],
+      "desc": "An old grandfather clock ticking slowly and heavily in an empty room, tick then lower tock, the wooden case humming. For waiting, a countdown or dread.",
+      "dur": 8.6,
+      "family": "wood",
+      "moments": [
+        "tension",
+        "timer"
+      ]
+    },
+    {
+      "id": "dark-stone-click",
+      "name": "Stone Click",
+      "category": "dark",
+      "tags": [
+        "click",
+        "select",
+        "stone",
+        "bone",
+        "knock",
+        "dull",
+        "low",
+        "dark",
+        "gothic",
+        "soft"
+      ],
+      "desc": "A dull tick on old stone with a low knock under it, never bright. For buttons and selections in a dark, gothic interface.",
+      "dur": 0.2,
+      "family": "soft",
+      "moments": [
+        "click",
+        "select"
+      ]
+    },
+    {
+      "id": "dark-sub-drop",
+      "name": "Sub Drop",
+      "category": "dark",
+      "tags": [
+        "sub",
+        "drop",
+        "boom",
+        "bass",
+        "fall",
+        "impact",
+        "cinematic",
+        "dark",
+        "low",
+        "stinger"
+      ],
+      "desc": "A deep boom that falls away beneath you, felt more than heard. For a floor giving way, a transition or the weight of bad news.",
+      "dur": 3.75,
+      "family": "impact",
+      "moments": [
+        "transition",
+        "scare",
+        "critical"
+      ]
+    },
+    {
+      "id": "dark-tense-ostinato",
+      "name": "Tense Ostinato",
+      "category": "dark",
+      "tags": [
+        "loop-cell",
+        "ostinato",
+        "cello",
+        "pulse",
+        "spiccato",
+        "chase",
+        "countdown",
+        "tension",
+        "dark",
+        "rhythm"
+      ],
+      "desc": "A driving low cello pulse of short bowed notes, 4 beats long: re-trigger every 2 s at the default tempo (240 / bpm seconds). For a chase or a countdown.",
+      "dur": 2.8,
+      "family": "orchestral",
+      "moments": [
+        "tension"
+      ]
+    },
+    {
+      "id": "dark-timpani-roll",
+      "name": "Timpani Roll",
+      "category": "dark",
+      "tags": [
+        "timpani",
+        "roll",
+        "drum",
+        "crescendo",
+        "build",
+        "suspense",
+        "dark",
+        "cinematic",
+        "orchestral",
+        "stinger"
+      ],
+      "desc": "A drum roll that builds from a murmur to a thundering final blow. For the moment before a reveal, a countdown to doom or a boss about to appear.",
+      "dur": 5.65,
+      "family": "orchestral",
+      "moments": [
+        "tension",
+        "reveal",
+        "transition"
+      ]
+    },
+    {
+      "id": "dark-whisper-swarm",
+      "name": "Whisper Swarm",
+      "category": "dark",
+      "tags": [
+        "whisper",
+        "whispers",
+        "voices",
+        "ghost",
+        "crowd",
+        "haunted",
+        "dark",
+        "eerie",
+        "surround",
+        "unintelligible"
+      ],
+      "desc": "A crowd of unintelligible whispers close around you from every side, rising and fading. For a haunted room, a bad idea or something watching.",
+      "dur": 6.8,
+      "family": "voice",
+      "moments": [
+        "scare",
+        "tension",
+        "ambience"
       ]
     },
     {
@@ -7369,6 +7914,56 @@
       ]
     },
     {
+      "id": "dread",
+      "name": "Dread",
+      "desc": "Strings, heartbeat and sub hits for horror games and anything that should feel watched: dull, close small sounds and a horror score for the big ones.",
+      "moments": [
+        "click",
+        "hover",
+        "select",
+        "tooltip",
+        "toggle-on",
+        "toggle-off",
+        "type",
+        "open",
+        "close",
+        "transition",
+        "scroll",
+        "drag",
+        "drop",
+        "delete",
+        "success",
+        "load-complete",
+        "achievement",
+        "error",
+        "warning",
+        "critical",
+        "notify",
+        "message",
+        "reminder",
+        "timer",
+        "loading",
+        "tension",
+        "scare",
+        "reveal",
+        "music",
+        "ambience",
+        "door",
+        "game-over",
+        "level-down",
+        "explosion",
+        "victory",
+        "hit",
+        "damage",
+        "attack",
+        "debuff",
+        "heal",
+        "pickup",
+        "footstep",
+        "step"
+      ]
+    },
+    {
       "id": "fantasy",
       "name": "Fantasy",
       "desc": "Spells, chimes and parchment for game menus and role-playing games: harps, bells, a quill and a fireball.",
@@ -7490,6 +8085,60 @@
         "pickup",
         "teleport",
         "music"
+      ]
+    },
+    {
+      "id": "gothic",
+      "name": "Gothic",
+      "desc": "Organ, choir, bells and stone for dark fantasy, cathedrals and candlelit menus: elegant and brooding, never cheap horror.",
+      "moments": [
+        "click",
+        "hover",
+        "select",
+        "tooltip",
+        "toggle-on",
+        "toggle-off",
+        "type",
+        "open",
+        "close",
+        "transition",
+        "scroll",
+        "drag",
+        "drop",
+        "delete",
+        "success",
+        "achievement",
+        "load-complete",
+        "error",
+        "warning",
+        "notify",
+        "message",
+        "reminder",
+        "timer",
+        "critical",
+        "reveal",
+        "scare",
+        "music",
+        "victory",
+        "game-over",
+        "ambience",
+        "tension",
+        "level-down",
+        "door",
+        "explosion",
+        "level-up",
+        "power-up",
+        "heal",
+        "spell",
+        "debuff",
+        "hit",
+        "attack",
+        "damage",
+        "pickup",
+        "coin",
+        "footstep",
+        "teleport",
+        "step"
       ]
     },
     {

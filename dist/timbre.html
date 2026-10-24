@@ -7743,6 +7743,73 @@ const SOUNDS = [
   T.osc(out, j, { f: p.pitch * 40, to: p.pitch * 3, dur: 0.25, peak: 0.04, a: 0.004 });
   T.osc(out, j, { f: 150, to: 30, dur: 0.5, peak: 0.02 + 0.09 * p.boom, a: 0.004 });
 }},
+{"id":"dark-abyss-drone","name":"Abyss Drone","category":"dark","tags":["drone","abyss","bed","bass","low","sub","well","dark","ominous","ambience","tension"],"desc":"A very low bowed drone with a cold shimmer far above it, swelling and sinking like the bottom of a well. For a menu that broods, a descent into the dark or a quiet threat under a scene.","dur":8.5,"family":"orchestral","moments":["ambience","tension"],"params":{"depth":{"min":33,"max":55,"def":41,"unit":"Hz","desc":"Pitch of the drone: low is a rumble you feel, high a heavy hum"},"darkness":{"min":0,"max":1,"def":0.5,"desc":"How much of the bow and the upper tone you hear: 0 gritty and open, 1 a closed black rumble"},"shimmer":{"min":0,"max":1,"def":0.5,"desc":"The faint cold glitter high above: 0 none, 1 a thin eerie halo"},"length":{"min":5,"max":8,"def":7,"unit":"s","desc":"How long the swell lasts"}},"play":function (T, out, t, p) {
+  const f = p.depth;
+  const L = p.length;
+  const room = T.reverb(out, t, { time: 2.4, mix: 0.28, tone: 0.25 });
+  const body = L - 0.4;
+  // the higher the note, the more of it the ear takes in: pull the level down above the default
+  const m = f > 41 ? Math.pow(41 / f, 1.3) : 1;
+  const swell = { a: L * 0.4, r: L * 0.35 };
+  // the section: players thicken it, the darkness knob closes a lowpass over it and eases the bow
+  const closed = T.filter(room, t, { type: 'lowpass', f: 220 + 2400 * Math.pow(1 - p.darkness, 2), q: 0.5 });
+  T.bow(closed, t, Object.assign({ f, dur: body, players: 5, body: 0.6, bright: 0.28 * (1 - p.darkness) + 0.04, pressure: 0.3 * (1 - p.darkness) + 0.05, vib: 4, vibRate: 3.6, peak: 0.1 * m }, swell));
+  // the pedal speaks an octave up and carries its own 16' underneath
+  T.organ(room, t, { notes: [f * 2], stops: 'flute', dur: body, a: L * 0.45, r: L * 0.35, celeste: 3, chiff: 0, peak: 0.05 * m });
+  T.osc(room, t, Object.assign({ f, dur: body, peak: 0.06 * m, s: 1, d: 0.02 }, swell, { a: L * 0.5 }));
+  // the cold shimmer: two thin sines a fifth apart, breathing slowly at different rates
+  if (p.shimmer > 0.01) {
+    const g = 0.008 * p.shimmer;
+    T.osc(room, t + 0.8, { f: f * 61, dur: body - 0.8, peak: g, a: 2.4, s: 1, d: 0.02, r: 2, trem: { rate: 0.31, depth: 0.7 } });
+    T.osc(room, t + 1.2, { f: f * 91.5, dur: body - 1.2, peak: g * 0.7, a: 2.2, s: 1, d: 0.02, r: 2, trem: { rate: 0.23, depth: 0.8 } });
+  }
+}},
+{"id":"dark-bell-knell","name":"Knell","category":"dark","tags":["bell","knell","toll","chime","minor","gothic","dark","soft","alert"],"desc":"One small, dark bell stroke with a mournful minor-third ring and a short room. For a notification, reminder or message that is softer than an alarm.","dur":1.3,"family":"orchestral","moments":["notify","reminder","message"],"params":{"pitch":{"min":196,"max":520,"def":294,"unit":"Hz","desc":"Pitch of the bell: a big low toll or a small chapel bell"},"ring":{"min":0,"max":1,"def":0.5,"desc":"How long the bell rings out"},"strike":{"min":0,"max":1,"def":0.4,"desc":"Hardness of the stroke: 0 a muffled, felted blow, 1 a clearer clang"},"room":{"min":0,"max":1,"def":0.4,"desc":"How much stone room surrounds the bell"}},"play":function (T, out, t, p) {
+  const space = T.reverb(out, t, { time: 0.3 + 0.4 * p.room, mix: 0.1 + 0.25 * p.room, tone: 0.35 });
+  const d = 0.5 + 0.45 * p.ring;
+  const s = 0.2 + 0.8 * p.strike;
+  T.bell(space, t, {
+    f: p.pitch,
+    partials: [[0.5, 0.5, 0.9], [1, 1, 1], [1.19, 0.8, 0.75], [1.5, 0.35, 0.55], [2, 0.4 * s + 0.1, 0.4], [2.38, 0.3 * s, 0.3], [3.2, 0.2 * s, 0.15]],
+    drift: 0.995, dur: d, peak: 0.04, a: 0.002,
+  });
+  T.noise(space, t, { filter: 'bandpass', f: 1500, q: 1, dur: 0.02, peak: 0.02 * s, a: 0.001 });
+}},
+{"id":"dark-bowed-metal","name":"Bowed Metal","category":"dark","tags":["bowed","metal","cymbal","saw","eerie","cold","drone","bed","dark","ambience","tension"],"desc":"A slow, singing swell of bowed metal, shimmering and beating against itself. For something wrong in the room, a cold ghostly presence or an unearthly menu.","dur":7.2,"family":"metal","moments":["ambience","tension"],"params":{"pitch":{"min":110,"max":440,"def":196,"unit":"Hz","desc":"Pitch of the lowest ring: a big gong to a small cold bell"},"strain":{"min":0,"max":1,"def":0.4,"desc":"How hard the bow digs: 0 few pure partials, 1 many partials and a gritty scrape"},"length":{"min":4,"max":7,"def":6,"unit":"s","desc":"How long the swell lasts"}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const room = T.reverb(out, t, { time: 2.4, mix: 0.3, tone: 0.45 });
+  const ratios = [1, 2.76, 5.4, 8.93, 13.34, 18.64];
+  const count = 3 + Math.round(3 * p.strain);
+  for (let k = 0; k < count; k++) {
+    const fk = p.pitch * ratios[k];
+    if (fk > 7500) continue;
+    const lvl = 0.05 / (1 + 0.75 * k);
+    // each partial wakes later and breathes at its own rate; the pair beats at 0.2 to 1.1 Hz
+    const late = k * 0.28;
+    const beatHz = 0.2 + 0.18 * k * (1 + p.strain);
+    for (let s = 0; s < 2; s++) {
+      T.osc(room, t + late, {
+        f: fk + s * beatHz, dur: L - late, peak: lvl * (s ? 0.8 : 1), a: L * 0.42, s: 1, d: 0.02, r: L * 0.3,
+        vib: { rate: 0.5 + 0.17 * k, depth: 5 },
+        trem: { rate: 0.18 + 0.07 * k, depth: 0.35 },
+      });
+    }
+  }
+  // the bow itself: a narrow band of noise riding on the first partials, louder as the strain rises
+  const rasp = 0.01 + 0.05 * p.strain * p.strain;
+  T.noise(room, t, { filter: 'bandpass', f: p.pitch * 2.76, q: 9, dur: L - 0.2, peak: rasp, a: L * 0.4, s: 1, d: 0.02, r: L * 0.3, curve: 'lin' });
+  T.noise(room, t, { filter: 'bandpass', f: p.pitch * 5.4, q: 7, dur: L - 0.2, peak: rasp * 0.7, a: L * 0.45, s: 1, d: 0.02, r: L * 0.3, curve: 'lin' });
+}},
+{"id":"dark-candle-flicker","name":"Candle Flicker","category":"dark","tags":["hover","tooltip","candle","flame","breath","whisper","quiet","dark","gothic","soft"],"desc":"A tiny soft breath of flame with a small flutter, very quiet. For hovering over a control or showing a tooltip in a candlelit interface.","dur":0.26,"family":"air","moments":["hover","tooltip"],"params":{"breath":{"min":0,"max":1,"def":0.5,"desc":"How much air you hear: 0 barely there, 1 a clear soft puff"},"flutter":{"min":0,"max":1,"def":0.5,"desc":"How much the flame wavers: 0 one smooth breath, 1 a restless flicker"},"warmth":{"min":0,"max":1,"def":0.4,"desc":"Tone of the air: 0 hushed and dark, 1 a little thinner and brighter"}},"play":function (T, out, t, p) {
+  const lvl = 0.036 + 0.05 * p.breath;
+  const f = 1100 + 1800 * p.warmth;
+  T.noise(out, t, { filter: 'bandpass', f, to: f * 0.7, q: 0.6, dur: 0.18, a: 0.04, peak: lvl, lp: 4200 });
+  const n = Math.round(1 + 3 * p.flutter);
+  for (let i = 0; i < n; i++) {
+    const at = 0.03 + 0.045 * i + 0.012 * T.rand();
+    T.noise(out, t + at, { filter: 'bandpass', f: f * (0.9 + 0.5 * T.rand()), q: 1.2, dur: 0.035, a: 0.006, peak: lvl * (0.3 + 0.5 * p.flutter) * 0.7, lp: 4500 });
+  }
+}},
 {"id":"dark-cathedral-choir","name":"Cathedral Choir","category":"dark","tags":["choir","cathedral","gothic","voices","pad","bed","dark","sacred","ominous","ambient"],"desc":"A hushed choir swelling on a minor chord under a stone vault, the vowel slowly opening. For a gothic menu, a crypt or a solemn reveal.","dur":6.3,"family":"voice","moments":["ambience","reveal","tension"],"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st","desc":"Transposes the chord"},"singers":{"min":3,"max":10,"def":8,"step":1,"desc":"How many voices: few is a lonely consort, many a full choir"},"vowel":{"min":0,"max":3,"def":0,"step":1,"choices":["oo-to-ah","mm-to-oo","ah","oh"],"desc":"What they sing: a hum or an oo opening out, or a held ah or oh"},"space":{"min":0.15,"max":0.6,"def":0.4,"desc":"How much of the stone vault you hear, from a chapel to a cathedral"}},"play":function (T, out, t, p) {
   const r = Math.pow(2, p.key / 12);
   const v = [['oo', 'ah'], ['mm', 'oo'], ['ah', 'ah'], ['oh', 'oh']][Math.round(p.vowel)];
@@ -7761,16 +7828,254 @@ const SOUNDS = [
   T.bow(room, t, Object.assign({ f, dur: 4.2, a: 1.4, r: 1.4, peak: 0.058 }, common));
   T.bow(room, t + 0.9, Object.assign({ f: f * 1.5, dur: 3.3, a: 1.2, r: 1.3, peak: 0.04 }, common));
 }},
+{"id":"dark-cello-stab","name":"Cello Stab","category":"dark","tags":["error","warning","denied","fail","stab","cello","strings","dissonant","dark","ominous","low"],"desc":"A short, low, clashing cello stab with the bow digging in. For a rejected action, an error or a warning in a tense interface.","dur":0.7,"family":"orchestral","moments":["error","warning"],"params":{"pitch":{"min":65,"max":170,"def":98,"unit":"Hz","desc":"How low the stab sits"},"clash":{"min":1,"max":6,"def":6,"step":1,"unit":"st","desc":"Distance between the two notes: 1 a grinding minor second, 6 a hollow tritone"},"grit":{"min":0,"max":1,"def":0.7,"desc":"Bow pressure: 0 a smooth sting, 1 a rough, scraping dig"},"length":{"min":0,"max":1,"def":0.4,"desc":"How long the stab rings before it is cut off"}},"play":function (T, out, t, p) {
+  const d = 0.22 + 0.22 * p.length;
+  const room = T.reverb(out, t, { time: 0.3, mix: 0.12, tone: 0.4 });
+  const o = { dur: d, a: 0.02, r: 0.14, players: 2, pressure: p.grit, bright: 0.45, vib: 4, peak: 0.042 };
+  T.bow(room, t, Object.assign({ f: p.pitch }, o));
+  T.bow(room, t, Object.assign({ f: p.pitch * Math.pow(2, Math.round(p.clash) / 12) }, o, { peak: 0.034 }));
+}},
+{"id":"dark-choir-amen","name":"Choir Amen","category":"dark","tags":["success","achievement","complete","confirm","choir","amen","cadence","vocal","gothic","dark","soft"],"desc":"A short, soft two-chord choir cadence that settles like an amen. For a saved or completed action, an achievement, or a finished load in a gothic interface.","dur":1.8,"family":"voice","moments":["success","achievement","load-complete"],"params":{"key":{"min":-5,"max":5,"def":0,"step":1,"unit":"st","desc":"Transposes the cadence"},"voices":{"min":3,"max":8,"def":5,"step":1,"desc":"Singers: a small group or a fuller chorus"},"light":{"min":0,"max":1,"def":0,"step":1,"desc":"1 ends on a bright major chord, 0 ends on the dark minor"},"length":{"min":0,"max":1,"def":0.5,"desc":"How long the final chord is held"}},"play":function (T, out, t, p) {
+  const k = Math.pow(2, p.key / 12);
+  const n = Math.round(p.voices);
+  const third = p.light >= 0.5 ? 'C#4' : 'C4';
+  const IV = ['D3', 'A3', 'D4', 'F4'].map((x) => T.note(x) * k);
+  const I = ['A2', 'E3', 'A3', third].map((x) => T.note(x) * k);
+  const hold = 0.3 + 0.3 * p.length;
+  T.choir(out, t, { notes: IV, voices: n, vowel: 'ah', dur: 0.6, a: 0.12, r: 0.25, peak: 0.1, room: { time: 0.4, mix: 0.25 } });
+  T.choir(out, t + 0.38, { notes: I, voices: n, vowel: 'ah', to: 'oh', dur: hold + 0.2, a: 0.1, r: 0.3 + 0.1 * p.length, peak: 0.1, room: { time: 0.5, mix: 0.25 } });
+}},
+{"id":"dark-crypt-open","name":"Crypt Door","category":"dark","tags":["open","close","transition","stone","slab","door","grind","crypt","dark","gothic","low"],"desc":"A heavy stone slab sliding aside with a low grind and settling with a soft thud, or sliding shut. For opening and closing panels and dialogs, and for moving between screens.","dur":0.65,"family":"impact","moments":["open","close","transition"],"params":{"open":{"min":0,"max":1,"def":1,"step":1,"role":"open","desc":"1 slides the slab open and lets it settle, 0 pushes it shut with a firmer knock"},"weight":{"min":0,"max":1,"def":0.5,"desc":"How massive the slab is: 0 a light stone lid, 1 a deep, heavy slab"},"length":{"min":0,"max":1,"def":0.5,"desc":"How long the slab travels before it settles"}},"play":function (T, out, t, p) {
+  const open = p.open >= 0.5;
+  const g = (open ? 0.22 : 0.15) + 0.2 * p.length;
+  const low = 55 + 30 * (1 - p.weight);
+  const gr = open ? [0, 1] : [1, 0];
+  T.noise(out, t, { filter: 'lowpass', f: 260 + 160 * gr[0], to: 200 + 160 * gr[1], q: 0.8, dur: g, a: 0.05, r: 0.04, peak: 0.07 + 0.04 * p.weight, hp: 60 });
+  T.noise(out, t, { filter: 'bandpass', f: 520, to: 380, q: 1.5, dur: g, a: 0.06, r: 0.05, peak: 0.03, lp: 1200 });
+  T.osc(out, t, { type: 'sawtooth', f: low * (open ? 0.9 : 1.1), to: low * (open ? 1.1 : 0.9), dur: g, a: 0.05, r: 0.05, peak: 0.03, lp: 160, vib: { rate: 9, depth: 25 } });
+  const s = t + g - 0.02;
+  T.osc(out, s, { f: low * 1.6, to: low * 0.8, dur: 0.18, a: 0.004, peak: (open ? 0.07 : 0.08) + 0.04 * p.weight });
+  T.noise(out, s, { filter: 'lowpass', f: 400, to: 150, q: 0.7, dur: 0.07, a: 0.002, peak: open ? 0.04 : 0.07 });
+}},
+{"id":"dark-doom-braam","name":"Doom Braam","category":"dark","tags":["braam","brass","blast","cinematic","trailer","doom","low","dark","heavy","stinger"],"desc":"A colossal low blast that swells into a roar and fades in a huge hall. For a title reveal, a monster rising or the moment a plan collapses.","dur":4.95,"family":"orchestral","moments":["reveal","scare","transition"],"params":{"pitch":{"min":32,"max":70,"def":46,"unit":"Hz","desc":"Root of the blast: a deep rumble to a heavy brassy note"},"weight":{"min":0,"max":1,"def":0.6,"desc":"How much sub and drive: 0 clean and brassy, 1 crushing and distorted"},"length":{"min":1.2,"max":2.6,"def":1.9,"unit":"s","desc":"How long the blast holds before it fades"}},"play":function (T, out, t, p) {
+  const f = p.pitch;
+  const L = p.length;
+  // trim: the stack is dense and would sit at the very top of the range
+  const room = T.reverb(T.dcblock(T.gain(out, 0.27)), t, { time: 2.2, mix: 0.3, tone: 0.3 });
+  const dr = T.drive(room, t, { amount: 0.35 + 0.5 * p.weight, ref: 0.2 });
+  // the brass opens as it swells: a lowpass sweeping up through the roar
+  const fl = T.filter(dr, t, { type: 'lowpass', f: 220, to: 1500 + 1500 * (1 - p.weight), dur: L * 0.6, q: 1.2 });
+  const env = { a: 0.28, dur: L, s: 0.7, d: L * 0.4, r: 0.9, curve: 'lin' };
+  // stacked saws: root, a fifth and an octave, each a little off
+  const saws = [[1, 0], [1, 9], [1.5, -7], [2, 6], [2, -10]];
+  for (const [m, c] of saws) {
+    T.osc(fl, t, Object.assign({ type: 'sawtooth', f: f * m, detune: c, peak: 0.075 / Math.sqrt(m) }, env));
+  }
+  // a low bowed section underneath, pressing hard
+  T.bow(fl, t, { f: f * 2, players: 4, pressure: 0.8, bright: 0.6, body: 0.6, vib: 5, dur: L + 0.6, a: 0.3, r: 0.9, peak: 0.1 });
+  // the sub
+  T.osc(dr, t, { f, to: f * 0.96, dur: L + 0.8, a: 0.25, s: 0.8, d: L * 0.5, r: 1, curve: 'lin', peak: 0.04 + 0.1 * p.weight });
+}},
 {"id":"dark-doom-drum","name":"Doom Drum","category":"dark","tags":["drum","taiko","timpani","boom","hit","doom","impact","cinematic","dark","heavy"],"desc":"A single enormous drum blow that booms through a hall. For a boss entrance, a title card or the moment everything goes wrong.","dur":2.6,"family":"impact","moments":["reveal","scare","transition"],"params":{"pitch":{"min":45,"max":110,"def":68,"unit":"Hz","desc":"Pitch of the big drum; the timpani sits a fifth under it"},"mallet":{"min":0,"max":1,"def":0.55,"desc":"How hard the stick: 0 a soft felt thud, 1 a cracking blow"},"space":{"min":0.1,"max":0.6,"def":0.35,"desc":"How big the hall answers"}},"play":function (T, out, t, p) {
   const room = T.reverb(out, t, { time: 2.4, mix: p.space, tone: 0.3 });
   T.membrane(room, t, { kind: 'taiko', f: p.pitch, dur: 1.5, peak: 0.18, stick: p.mallet, boom: 0.9 });
   T.membrane(room, t + 0.012, { kind: 'timpani', f: p.pitch * 0.667, dur: 1.1, peak: 0.072, stick: 0.2, boom: 0 });
+}},
+{"id":"dark-door-creak","name":"Door Creak","category":"dark","tags":["door","creak","squeak","hinge","old","wood","haunted","dark","scare","slow"],"desc":"A long, wandering creak of an old wooden door on dry hinges, optionally ending in a soft thud as it shuts. For opening a door into the dark.","dur":4.6,"family":"wood","moments":["door","scare"],"params":{"length":{"min":1,"max":3.5,"def":2.2,"unit":"s","desc":"How long the door takes to move"},"pitch":{"min":0.6,"max":1.8,"def":1,"unit":"x","desc":"Pitch of the hinge: low a heavy groan, high a thin squeal"},"close":{"min":0,"max":1,"def":0,"step":1,"desc":"1 ends with the door closing in a soft thud, 0 it just stops"}},"play":function (T, out, t, p) {
+  const len = p.length;
+  const room = T.reverb(out, t, { time: 1.4, mix: 0.2, tone: 0.4 });
+  // the door body: a low wooden resonance and a thinner board above it
+  const body = T.filter(room, t, { type: 'peaking', f: 230, q: 3, db: 9, dur: 0.1 });
+  const board = T.filter(body, t, { type: 'peaking', f: 640, q: 4, db: 6, dur: 0.1 });
+  // three slow wanders, drawn up front: click rate, resonance pitch, and how hard the door sticks
+  const w = [0, 1, 2].map(() => ({ ph: T.rand(0, 6.28), sp: T.rand(0.8, 1.7) }));
+  const wander = (i, x) => Math.sin(w[i].ph + x * w[i].sp * 6.28 * 0.5) * 0.6 + Math.sin(w[i].ph * 2 + x * w[i].sp * 6.28 * 1.3) * 0.4;
+  let x = 0;
+  while (x < len) {
+    const u = x / len;
+    const swell = Math.pow(Math.sin(Math.PI * Math.min(1, u * 1.05)), 0.7);
+    const rate = (34 + 26 * wander(0, u)) * (0.75 + 0.3 * p.pitch);
+    const f = p.pitch * (880 + 420 * wander(1, u));
+    const stick = 0.5 + 0.5 * wander(2, u);
+    const lvl = swell * (0.35 + 0.65 * stick);
+    if (lvl > 0.06) {
+      T.noise(board, t + x, { filter: 'bandpass', f, q: 14, dur: 0.02, a: 0.002, peak: 0.3 * lvl });
+      T.osc(board, t + x, { f: f * 0.5, to: f * 0.46, dur: 0.018, a: 0.002, peak: 0.06 * lvl });
+    }
+    x += (1 / rate) * T.rand(0.8, 1.25);
+  }
+  if (p.close > 0.5) {
+    const tt = t + len + 0.18;
+    T.osc(room, tt, { f: 95, to: 52, glide: 0.12, dur: 0.4, a: 0.004, peak: 0.07 });
+    T.noise(room, tt, { filter: 'lowpass', f: 420, q: 0.7, dur: 0.1, a: 0.002, peak: 0.05 });
+    T.osc(room, tt + 0.002, { f: 310, to: 250, dur: 0.07, a: 0.002, peak: 0.015 });
+  }
 }},
 {"id":"dark-dread-descent","name":"Dread Descent","category":"dark","tags":["shepard","descent","falling","dread","tension","endless","horror","dark","drone","ominous"],"desc":"A tone that keeps sinking and never reaches the bottom: pure, endless dread. For a fall into the dark, a nightmare or a slow loss of control.","dur":6.2,"family":"synthetic","moments":["tension","level-down","scare"],"params":{"speed":{"min":0.05,"max":0.5,"def":0.16,"unit":"oct/s","desc":"How fast it sinks: slow creeping dread to a steep plunge"},"rise":{"min":0,"max":1,"def":0,"step":1,"role":"up","desc":"1 climbs for ever instead (rising panic), 0 sinks"},"edge":{"min":0,"max":1,"def":0.3,"desc":"From pure sine tones to a reedy, organ-like buzz"},"length":{"min":2,"max":6,"def":5,"unit":"s","desc":"How long it goes on"}},"play":function (T, out, t, p) {
   const room = T.reverb(out, t, { time: 1.4, mix: 0.25, tone: 0.3 });
   const rate = (p.rise > 0.5 ? 1 : -1) * p.speed;
   T.shepard(room, t, { rate, center: 300, width: 1.3, edge: p.edge, dur: p.length - 0.4, a: 0.8, r: 0.9, peak: 0.085 });
   T.osc(room, t, { f: 55, dur: p.length - 0.4, peak: 0.016, a: 1, s: 1, d: 0.02, r: 1 });
+}},
+{"id":"dark-funeral-bell","name":"Funeral Bell","category":"dark","tags":["bell","funeral","toll","church","chime","mourning","gothic","dark","knell","game-over"],"desc":"A great low church bell tolling slowly, its hum lingering after each stroke. For a funeral, a death, a game over or the dread of a clock striking an hour.","dur":8.3,"family":"metal","moments":["ambience","game-over","reveal"],"params":{"tolls":{"min":2,"max":4,"def":3,"step":1,"desc":"How many times the bell strikes"},"pitch":{"min":82,"max":165,"def":110,"unit":"Hz","desc":"Pitch of the strike note: a vast tower bell to a village bell"},"room":{"min":0.1,"max":0.6,"def":0.35,"desc":"How much the stone hall rings with it"}},"play":function (T, out, t, p) {
+  const hall = T.reverb(out, t, { time: 2.6, mix: p.room, tone: 0.3 });
+  const gap = 1.5;
+  for (let k = 0; k < Math.round(p.tolls); k++) {
+    const at = t + 0.1 + k * gap;
+    const v = 1 - 0.1 * k;
+    // a bell's partials against its strike note: hum (0.5), prime, the minor third (1.2), fifth,
+    // nominal (2) and the higher clang; the hum decays slowest, the high ones die in a second
+    T.bell(hall, at, {
+      f: p.pitch, dur: 3.6, peak: 0.05 * v, a: 0.004, drift: 0.998,
+      partials: [[0.5, 1, 1], [1, 0.9, 0.62], [1.2, 0.6, 0.5], [1.5, 0.28, 0.34], [2, 0.4, 0.26], [2.5, 0.16, 0.14], [3, 0.14, 0.1], [4.1, 0.07, 0.07]],
+    });
+    // the hum beats slowly against its twin, as in a cast bell that is never quite round
+    T.osc(hall, at, { f: p.pitch * 0.5 + 0.7, dur: 3.6, peak: 0.025 * v, a: 0.006 });
+    // the clapper: a short dull knock and a bandpassed clang
+    T.noise(hall, at, { filter: 'bandpass', f: p.pitch * 3.2, q: 1.2, dur: 0.06, peak: 0.055 * v, a: 0.001 });
+    T.noise(hall, at, { filter: 'lowpass', f: 600, q: 0.7, dur: 0.1, peak: 0.08 * v, a: 0.002 });
+  }
+}},
+{"id":"dark-haunted-corridor","name":"Haunted Corridor","category":"dark","tags":["haunted","corridor","wind","creak","whisper","ghost","bed","hall","dark","ambience","tension"],"desc":"Wind drifting down a long empty hall, a creaking board and faint whispers somewhere behind you. For a haunted house, a walk through a ruin or a menu that watches back.","dur":8,"family":"air","moments":["ambience","tension"],"params":{"wind":{"min":0.15,"max":1,"def":0.55,"desc":"How strong the wind blows: low a faint draught, 1 a moaning gale"},"creaks":{"min":0,"max":1,"def":0.5,"desc":"How often old wood groans: 0 none, 1 a house settling all around"},"whispers":{"min":0,"max":1,"def":0.4,"desc":"How near the whispers come: 0 none, 1 just behind your ear"},"length":{"min":5,"max":7,"def":6,"unit":"s","desc":"How long it goes on"}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const hall = T.reverb(out, t, { time: 2.2, mix: 0.35, tone: 0.3 });
+  // the wind: a steady breath plus gusts, each a band of noise that rises and falls while the
+  // band itself slides, so the pitch of the moan wanders
+  const gusts = 3 + Math.round(L / 2);
+  const slot = (L - 1) / gusts;
+  const amp = 0.15 + 0.62 * p.wind * p.wind;
+  T.noise(hall, t, { filter: 'bandpass', f: 380, q: 1.4, dur: L - 0.3, peak: amp * 0.35, a: 1.5, s: 1, d: 0.02, r: 1.6, curve: 'lin' });
+  for (let k = 0; k < gusts; k++) {
+    const at = t + k * slot + T.rand(0, 0.4);
+    const len = Math.min(L - 0.3 - (at - t), slot * T.rand(1.5, 2.2));
+    const f0 = T.rand(260, 620);
+    const f1 = f0 * T.rand(0.6, 1.5);
+    const pk = amp * T.rand(0.6, 1);
+    if (len < 0.6) continue;
+    T.noise(hall, at, { filter: 'bandpass', f: f0, to: f1, q: 3 + 3 * p.wind, dur: len, peak: pk, a: len * 0.45, s: 0.05, d: len * 0.45, r: 0.05, curve: 'lin' });
+  }
+  // creaks: stick-slip, a run of tiny resonant ticks that speed up and slide in pitch
+  const n = Math.round(p.creaks * 4.4);
+  for (let k = 0; k < n; k++) {
+    const at = t + 0.9 + (k + T.rand(0.1, 0.9)) * ((L - 2.2) / Math.max(1, n));
+    const f0 = T.rand(180, 520);
+    const slip = Math.round(T.rand(7, 14));
+    const dir = T.rand() < 0.5 ? 1 : -1;
+    let x = 0;
+    for (let j = 0; j < slip; j++) {
+      const gap = 0.045 - 0.025 * (j / slip) + T.rand(0, 0.012);
+      const f = f0 * (1 + dir * 0.5 * (j / slip));
+      x += gap;
+      T.tick(hall, at + x, { f: f * 2, q: 14, dur: 0.02, peak: 0.6 * Math.sin(Math.PI * (j + 0.7) / (slip + 0.4)) * T.rand(0.7, 1), blip: f, blipPeak: 0.03, blipDur: 0.03 });
+    }
+  }
+  // whispers: unvoiced speech through a lowpass and a deeper, darker room of its own
+  if (p.whispers > 0.01) {
+    const w = T.reverb(T.filter(hall, t, { type: 'lowpass', f: 3200, q: 0.5 }), t, { time: 1.8, mix: 0.6, tone: 0.2 });
+    const g = 0.01 + 0.06 * p.whispers * p.whispers;
+    T.speak(w, t + 1.3, { text: 'stay with us', voice: 'whisper', pitch: -2, rate: 0.62, peak: g, fx: false });
+    T.speak(w, t + 1.3 + (L - 4) * 0.55, { text: 'turn around', voice: 'whisper', pitch: -4, rate: 0.55, peak: g * 0.7, fx: false });
+  }
+}},
+{"id":"dark-heartbeat","name":"Heartbeat in the Dark","category":"dark","tags":["heartbeat","heart","pulse","thump","bed","dread","fear","panic","dark","tension","ambience"],"desc":"A muffled heartbeat thudding over a low dread drone. Slow is held-breath stillness, fast is panic. For hiding, a monster nearby or a low-health warning.","dur":7.5,"family":"organic","moments":["tension","ambience"],"params":{"tempo":{"min":50,"max":120,"def":62,"unit":"bpm","desc":"Heart rate: slow and heavy up to a racing panic"},"dread":{"min":0,"max":1,"def":0.5,"desc":"The drone under it: 0 almost silent, 1 a looming, beating weight"},"thud":{"min":0,"max":1,"def":0.5,"desc":"How hard each beat lands: 0 far away and muffled, 1 right in your chest"}},"play":function (T, out, t, p) {
+  const L = 7.2;
+  const room = T.reverb(out, t, { time: 1.4, mix: 0.2, tone: 0.2 });
+  const period = 60 / p.tempo;
+  // the second thump follows sooner as the heart speeds up
+  const gap = Math.min(0.32, 0.12 + 0.25 * period);
+  const beat = (at, f, peak, len) => {
+    T.osc(room, at, { f: f * 1.5, to: f, glide: 0.05, dur: len, peak: peak, a: 0.008, lp: { f: 160 + 220 * p.thud, q: 0.7 } });
+    T.osc(room, at, { f: f * 3, to: f * 2, glide: 0.04, dur: len * 0.4, peak: peak * 0.3 * p.thud, a: 0.006, lp: 300 });
+    T.noise(room, at, { filter: 'lowpass', f: 120 + 200 * p.thud, q: 0.7, dur: 0.05, a: 0.004, peak: peak * 0.5 });
+  };
+  // the first beat sits at 0.35 s; stop when the next would overrun the bed
+  for (let at = 0.35; at + gap + 0.3 < L - 0.4; at += period) {
+    const v = T.rand(0.9, 1);
+    beat(t + at, 56, (0.07 + 0.03 * p.thud) * v, 0.2);
+    beat(t + at + gap, 48, (0.042 + 0.023 * p.thud) * v, 0.26);
+  }
+  // the drone: two close low notes that beat against each other, a bowed bass above them
+  const bed = { a: 2.2, s: 1, d: 0.02, r: 2 };
+  const g = 0.02 + 0.04 * p.dread;
+  T.osc(room, t, Object.assign({ f: 41.2, dur: L, peak: g, lp: 160 }, bed));
+  T.osc(room, t, Object.assign({ f: 41.2 * Math.pow(2, (0.5 + 2 * p.dread) / 12), dur: L, peak: g * 0.8, lp: 160, type: 'triangle' }, bed));
+  T.bow(room, t, { f: 55, dur: L, a: 2.5, r: 2, players: 3, body: 0.6, bright: 0.15, pressure: 0.1, vib: 3, peak: 0.04 * p.dread });
+}},
+{"id":"dark-horror-strings","name":"Horror Strings","category":"dark","tags":["strings","horror","screech","cluster","dissonant","violin","scare","dark","stinger","tremolo"],"desc":"A shrieking cluster of high strings that slides upward and hangs in the air. For a nightmare, a creature in the doorway or a plan going wrong.","dur":3.5,"family":"orchestral","moments":["scare","reveal","critical"],"params":{"pitch":{"min":330,"max":900,"def":560,"unit":"Hz","desc":"Where the cluster sits: a dark wail to a thin shriek"},"cluster":{"min":0,"max":1,"def":0.7,"desc":"How dissonant: 0 a tense minor chord, 1 notes crushed a semitone apart"},"shiver":{"min":0,"max":1,"def":0,"step":1,"desc":"1 bows tremolo (a nervous shudder), 0 long screeching bows"},"length":{"min":1.2,"max":2.6,"def":1.8,"unit":"s","desc":"How long the strings scream before they fade"}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const room = T.reverb(T.gain(out, 0.53), t, { time: 1.9, mix: 0.28, tone: 0.45 });
+  const trem = p.shiver > 0.5 ? 14 : 0;
+  // semitone offsets: a minor chord with a flat fifth, collapsing into a tight cluster
+  const chord = [0, 3, 6.5, 10];
+  const tight = [0, 0.8, 1.7, 2.6];
+  for (let k = 0; k < 4; k++) {
+    const st = chord[k] * (1 - p.cluster) + tight[k] * p.cluster;
+    const f = p.pitch * Math.pow(2, st / 12);
+    T.bow(room, t + 0.015 * k, {
+      f, to: f * Math.pow(2, (1.5 + k * 0.4) / 12), glide: L * 0.8, players: 3, body: 0.8, bright: 0.85, pressure: 0.9,
+      vib: trem ? 4 : 18, trem, dur: L, a: 0.05, r: Math.min(0.9, L * 0.45), peak: trem ? 0.135 : 0.1,
+    });
+  }
+}},
+{"id":"dark-jump-scare","name":"Jump Scare","category":"dark","tags":["jump","scare","stab","hit","shock","horror","sting","dark","stinger","sudden"],"desc":"An instant, violent stab of strings and drum with a ringing tail. For something leaping out of the dark or a sudden shock.","dur":2.3,"family":"impact","moments":["scare","critical","reveal"],"params":{"punch":{"min":0,"max":1,"def":0.6,"desc":"How hard it lands: 0 a dull thump under the strings, 1 a cracking blow"},"pitch":{"min":300,"max":900,"def":520,"unit":"Hz","desc":"Pitch of the string stab"},"tail":{"min":0.3,"max":1,"def":0.6,"desc":"How long the shock rings on in the room"}},"play":function (T, out, t, p) {
+  const room = T.reverb(T.gain(out, 0.43), t, { time: 0.8 + 1.2 * p.tail, mix: 0.2 + 0.25 * p.tail, tone: 0.5 });
+  const notes = [0, 1, 6, 7];
+  for (let k = 0; k < notes.length; k++) {
+    const f = p.pitch * Math.pow(2, notes[k] / 12);
+    T.bow(room, t, {
+      f, players: 3, body: 0.8, bright: 0.9, pressure: 0.95, vib: 10, dur: 0.5 + 0.7 * p.tail, a: 0.01,
+      r: 0.3 + 0.5 * p.tail, peak: 0.1,
+    });
+  }
+  T.membrane(room, t, { kind: 'taiko', f: 70, dur: 0.9, peak: 0.1 + 0.1 * p.punch, stick: p.punch, boom: 0.8 });
+  // the crack
+  T.noise(room, t, { filter: 'highpass', f: 1200, q: 0.7, dur: 0.12, a: 0.001, peak: 0.05 + 0.2 * p.punch });
+}},
+{"id":"dark-monk-chant","name":"Monk Chant","category":"dark","tags":["chant","monk","choir","gregorian","sacred","gothic","dark","drone","ritual","stone"],"desc":"Low male voices chant a slow minor phrase over a held drone in a stone chapel. For a ritual, a crypt or the reveal of something old.","dur":7.8,"family":"voice","moments":["ambience","reveal","music"],"params":{"key":{"min":-5,"max":5,"def":0,"step":1,"unit":"st","desc":"Transposes the chant"},"singers":{"min":2,"max":6,"def":4,"step":1,"desc":"How many monks: a lone cantor, or a choir"},"room":{"min":0.15,"max":0.7,"def":0.45,"desc":"How much stone around them, from a cell to a cathedral"}},"play":function (T, out, t, p) {
+  const r = Math.pow(2, p.key / 12);
+  const n = Math.round(p.singers);
+  const hall = T.reverb(out, t, { time: 2.4, mix: p.room, tone: 0.3, pre: 0.025 });
+  // the drone, a root and fifth hummed all the way through
+  T.choir(hall, t, {
+    notes: [T.note('D2') * r, T.note('A2') * r], voices: Math.max(2, Math.min(4, n)), vowel: 'mm', to: 'oh', dur: 6.2, a: 1.2, r: 1.6,
+    spread: 10, breath: 0.06, peak: 0.06, formant: 1, room: { time: 0.5, mix: 0.15 },
+  });
+  // the phrase: D F E C D, each note entering before the last has finished
+  const line = ['D3', 'F3', 'E3', 'C3', 'D3'];
+  const step = 0.95;
+  for (let k = 0; k < line.length; k++) {
+    const first = k === 0;
+    const lastN = k === line.length - 1;
+    T.choir(hall, t + 0.5 + k * step, {
+      f: T.note(line[k]) * r, voices: n, vowel: k % 2 ? 'oh' : 'mm', to: k % 2 ? 'mm' : 'oh', dur: lastN ? 1.9 : 1.5,
+      a: first ? 0.35 : 0.3, r: lastN ? 1.0 : 0.5, spread: 12, breath: 0.07, peak: 0.063, formant: 1, room: { time: 0.5, mix: 0.12 },
+    });
+  }
+}},
+{"id":"dark-music-box","name":"Music Box","category":"dark","tags":["music-box","lullaby","winding-down","creepy","toy","haunted","dark","minor","eerie","tension"],"desc":"A small music box plays a faltering minor-key tune, slightly sour, slowing and sagging as its spring runs out. For a haunted nursery or a quiet scare.","dur":6.8,"family":"metal","moments":["scare","music","tension"],"params":{"key":{"min":-5,"max":5,"def":0,"step":1,"unit":"st","desc":"Transposes the tune"},"wind":{"min":0,"max":1,"def":0.6,"desc":"How far it runs down: 0 steady, 1 a slow stall with the pitch sagging"},"detune":{"min":0,"max":1,"def":0.4,"desc":"How sour the tines are: 0 true, 1 clearly out of tune"},"room":{"min":0,"max":0.6,"def":0.3,"desc":"How much empty room rings around it"}},"play":function (T, out, t, p) {
+  // semitones above the root (A5 at key 0): an original phrase that climbs, hangs and sinks
+  const tune = [0, 3, 7, 12, 10, 7, 3, 5, 7, 3, 2, 0, -2, 0];
+  const n = tune.length;
+  const root = T.note('A5') * Math.pow(2, p.key / 12);
+  const room = T.reverb(out, t, { time: 1.8, mix: p.room, tone: 0.55 });
+  // each tine of the comb has its own fixed error, drawn first so the phrase never reshuffles
+  const tines = tune.map(() => T.rand(-1, 1));
+  const wobble = tune.map(() => T.rand(-1, 1));
+  let when = t;
+  for (let k = 0; k < n; k++) {
+    const u = k / (n - 1);
+    const run = p.wind * u * u;
+    const cents = tines[k] * 38 * p.detune + wobble[k] * 6 - 130 * run;
+    const f = root * Math.pow(2, tune[k] / 12) * Math.pow(2, cents / 1200);
+    const last = k === n - 1;
+    // a tine is a bar: stretched upper partials that die fast
+    T.bell(room, when, {
+      f, dur: last ? 1.5 : 0.95 + 0.7 * run, peak: 0.085,
+      partials: [[1, 1, 1], [2.02, 0.18, 0.35], [4.1, 0.1, 0.2], [6.3, 0.05, 0.12]], drift: 1 - 0.004 * run,
+    });
+    T.tick(room, when, { f: 5200, q: 1.2, dur: 0.008, peak: 0.02 });
+    when += 0.27 * (1 + 1.7 * p.wind * u * u * u + 0.25 * p.wind * u);
+  }
 }},
 {"id":"dark-organ-minor","name":"Organ Minor Swell","category":"dark","tags":["organ","gothic","minor","chord","sting","church","cathedral","dramatic","dark","vampire"],"desc":"A pipe organ swelling on a minor chord over a deep pedal note. For a gothic title, a haunted mansion or a dramatic reveal.","dur":5.1,"family":"orchestral","moments":["scare","reveal","music"],"params":{"key":{"min":-5,"max":7,"def":0,"step":1,"unit":"st","desc":"Transposes the chord"},"stops":{"min":0,"max":2,"def":1,"step":1,"choices":["flute","principal","full"],"desc":"Registration: soft flutes, the principal chorus, or full organ"},"tremulant":{"min":0,"max":1,"def":0.25,"desc":"The slow wobble of the wind: 0 steady, 1 deep and unsettling"},"space":{"min":0.15,"max":0.6,"def":0.38,"desc":"How much of the nave you hear"}},"play":function (T, out, t, p) {
   const r = Math.pow(2, p.key / 12);
@@ -7779,6 +8084,109 @@ const SOUNDS = [
   const shape = { dur: 2.9, a: 0.35, r: 0.6, stops, celeste: 5, chiff: 0.5, trem: 0.15 * p.tremulant, tremRate: 5.5 };
   T.organ(room, t, Object.assign({ notes: [T.note('D4') * r, T.note('F4') * r, T.note('A4') * r], peak: 0.06 }, shape));
   T.organ(room, t, Object.assign({ notes: [T.note('D2') * r], peak: 0.05 }, shape, { stops: 'flute' }));
+}},
+{"id":"dark-slow-clock","name":"Slow Clock","category":"dark","tags":["clock","grandfather","tick","tock","wood","timer","slow","dark","tension","empty-room"],"desc":"An old grandfather clock ticking slowly and heavily in an empty room, tick then lower tock, the wooden case humming. For waiting, a countdown or dread.","dur":8.6,"family":"wood","moments":["tension","timer"],"params":{"tempo":{"min":0.7,"max":1.4,"def":1,"unit":"x","desc":"How fast it ticks: 0.7 a funeral slowness, 1.4 steady"},"case":{"min":0,"max":1,"def":0.5,"desc":"How much the wooden case rings: 0 a dry click, 1 a hollow boom"},"room":{"min":0.05,"max":0.6,"def":0.3,"desc":"How big and empty the room sounds"}},"play":function (T, out, t, p) {
+  const room = T.reverb(out, t, { time: 2.2, mix: p.room, tone: 0.35 });
+  const gap = 1.25 / p.tempo;
+  for (let k = 0; k < 5; k++) {
+    const tock = k % 2 === 1;
+    const tt = t + 0.1 + k * gap;
+    const f = tock ? 640 : 900;
+    // the escapement: a dry wooden knock and a hard little pallet click
+    T.tick(room, tt, { f: f * 1.6, q: 2.5, dur: 0.014, peak: 0.1, jitter: 0.3, blip: f, blipDur: 0.05, blipPeak: 0.06 });
+    T.tick(room, tt + 0.002, { f: 3200, q: 3, dur: 0.006, peak: 0.04 });
+    // the case: a low hollow body and its upper mode, ringing a little after
+    if (p.case > 0) {
+      const cf = tock ? 118 : 138;
+      T.bell(room, tt, { f: cf, dur: 0.35 + 0.8 * p.case, peak: 0.075 * p.case, partials: [[1, 1, 1], [2.3, 0.4, 0.5], [3.7, 0.2, 0.3]] });
+    }
+  }
+}},
+{"id":"dark-stone-click","name":"Stone Click","category":"dark","tags":["click","select","stone","bone","knock","dull","low","dark","gothic","soft"],"desc":"A dull tick on old stone with a low knock under it, never bright. For buttons and selections in a dark, gothic interface.","dur":0.2,"family":"soft","moments":["click","select"],"params":{"pitch":{"min":70,"max":220,"def":120,"unit":"Hz","desc":"How low the knock under the tick sits: a deep slab or a lighter bone"},"weight":{"min":0,"max":1,"def":0.5,"desc":"How heavy it feels: 0 a dry tick, 1 a fuller knock that rings a little longer"}},"play":function (T, out, t, p) {
+  T.tick(out, t, { f: 900, q: 0.9, filter: 'lowpass', dur: 0.014, peak: 0.07, jitter: 0.3, lp: 1800 });
+  T.osc(out, t, { f: p.pitch * 1.5, to: p.pitch * 0.8, dur: 0.07 + 0.1 * p.weight, peak: 0.05 + 0.04 * p.weight, a: 0.002 });
+  T.osc(out, t, { f: p.pitch * 3.1, to: p.pitch * 1.9, dur: 0.035, peak: 0.016, a: 0.002 });
+}},
+{"id":"dark-sub-drop","name":"Sub Drop","category":"dark","tags":["sub","drop","boom","bass","fall","impact","cinematic","dark","low","stinger"],"desc":"A deep boom that falls away beneath you, felt more than heard. For a floor giving way, a transition or the weight of bad news.","dur":3.75,"family":"impact","moments":["transition","scare","critical"],"params":{"depth":{"min":0,"max":1,"def":0.6,"desc":"How low it falls: 0 stops in the low bass, 1 sinks to the deepest sub"},"length":{"min":0.8,"max":2,"def":1.4,"unit":"s","desc":"How long the fall takes"},"impact":{"min":0,"max":1,"def":0.5,"desc":"The thump at the start: 0 a smooth swell, 1 a hard hit"}},"play":function (T, out, t, p) {
+  const L = p.length;
+  const end = 46 - 20 * p.depth;
+  const room = T.reverb(T.gain(out, 0.4), t, { time: 1.4, mix: 0.15, tone: 0.2 });
+  const dr = T.drive(room, t, { amount: 0.3, ref: 0.25 });
+  const dc = T.dcblock(dr, t, { f: 20 });
+  const A = 0.004 + 0.05 * (1 - p.impact);
+  T.osc(dc, t, { f: 120, to: end, glide: L * 0.9, glideCurve: 'exp', dur: L + 0.7, a: A, tail: 0.1, peak: 0.3 });
+  // octave above: what small speakers can actually reproduce
+  T.osc(dc, t, { f: 240, to: end * 2, glide: L * 0.9, dur: L * 0.7, a: A, peak: 0.07 });
+  T.noise(room, t, { filter: 'lowpass', f: 900, to: 150, q: 0.7, dur: 0.3, a: 0.002, peak: 0.05 + 0.2 * p.impact });
+  T.noise(room, t + 0.1, { filter: 'lowpass', f: 90, q: 1.5, dur: L + 0.8, a: 0.3, peak: 0.08 });
+}},
+{"id":"dark-tense-ostinato","name":"Tense Ostinato","category":"dark","tags":["loop-cell","ostinato","cello","pulse","spiccato","chase","countdown","tension","dark","rhythm"],"desc":"A driving low cello pulse of short bowed notes, 4 beats long: re-trigger every 2 s at the default tempo (240 / bpm seconds). For a chase or a countdown.","dur":2.8,"family":"orchestral","moments":["tension"],"params":{"tempo":{"min":100,"max":150,"def":120,"unit":"bpm","desc":"Speed of the pulse; the cell is 4 beats, so it re-triggers every 240 / tempo seconds"},"pitch":{"min":-5,"max":5,"def":0,"step":1,"unit":"st","desc":"Transposes the pulse"},"intensity":{"min":0,"max":1,"def":0.5,"desc":"How hard it digs: 0 soft and distant, 1 a biting, busier chase"}},"play":function (T, out, t, p) {
+  const beat = 60 / p.tempo;
+  const eighth = beat / 2;
+  const root = T.note('C2') * Math.pow(2, p.pitch / 12);
+  const room = T.reverb(out, t, { time: 0.7, mix: 0.18, tone: 0.35 });
+  // 8 eighths = 4 beats; 1 hits the root, 2 the minor second, 0 rests. Intensity fills the gaps.
+  const cell = [1, 0, 1, 1, 0, 1, 1, 2];
+  const fill = [0, 1, 0, 0, 1, 0, 0, 0];
+  const x = p.intensity;
+  for (let k = 0; k < cell.length; k++) {
+    let kind = cell[k];
+    const half = fill[k];
+    if (!kind && half && x > 0.55) kind = 1;
+    if (!kind) continue;
+    const accent = (k === 0 ? 1.0 : k === 2 ? 0.8 : 0.65) * (0.7 + 0.5 * x);
+    T.bow(room, t + k * eighth, {
+      f: kind === 2 ? root * Math.pow(2, 1 / 12) : root, dur: 0.16 + 0.04 * (1 - x), a: 0.018 - 0.008 * x, r: 0.05,
+      players: 2, body: 0.9, bright: 0.25 + 0.5 * x, pressure: 0.2 + 0.5 * x, vib: 0, peak: 0.125 * accent,
+    });
+  }
+}},
+{"id":"dark-timpani-roll","name":"Timpani Roll","category":"dark","tags":["timpani","roll","drum","crescendo","build","suspense","dark","cinematic","orchestral","stinger"],"desc":"A drum roll that builds from a murmur to a thundering final blow. For the moment before a reveal, a countdown to doom or a boss about to appear.","dur":5.65,"family":"orchestral","moments":["tension","reveal","transition"],"params":{"length":{"min":1.5,"max":3,"def":2.2,"unit":"s","desc":"How long the roll builds before the final hit"},"pitch":{"min":65,"max":130,"def":87,"unit":"Hz","desc":"Pitch of the kettle drum"},"swell":{"min":0.2,"max":1,"def":0.7,"desc":"How big the crescendo: low a modest build, high from near silence to a roar"}},"play":function (T, out, t, p) {
+  const room = T.reverb(T.gain(out, 0.69), t, { time: 2.2, mix: 0.3, tone: 0.3 });
+  const L = p.length;
+  const modes = [[1, 1, 1], [1.5, 0.5, 0.8], [1.98, 0.3, 0.6]];
+  let x = 0;
+  let side = 0;
+  while (x < L - 0.05) {
+    const u = x / L;
+    // strokes quicken as the roll builds, with seeded jitter in time and weight
+    const gap = (0.1 - 0.04 * u) * T.rand(0.8, 1.2);
+    const lvl = (1 - p.swell) + p.swell * Math.pow(u, 1.6);
+    const w = lvl * T.rand(0.75, 1.1);
+    T.membrane(room, t + x, { kind: 'timpani', f: p.pitch * (side ? 1.003 : 1), dur: 0.5, peak: 0.075 * w + 0.004, stick: 0.25, boom: 0, modes });
+    side = 1 - side;
+    x += gap;
+  }
+  const h = t + L;
+  T.membrane(room, h, { kind: 'timpani', f: p.pitch, dur: 1.8, peak: 0.2, stick: 0.65, boom: 0.9 });
+  T.bow(room, h, { f: p.pitch, players: 3, body: 0.6, pressure: 0.5, bright: 0.3, vib: 6, dur: 1.9, a: 0.05, r: 1.2, peak: 0.06 });
+}},
+{"id":"dark-whisper-swarm","name":"Whisper Swarm","category":"dark","tags":["whisper","whispers","voices","ghost","crowd","haunted","dark","eerie","surround","unintelligible"],"desc":"A crowd of unintelligible whispers close around you from every side, rising and fading. For a haunted room, a bad idea or something watching.","dur":6.8,"family":"voice","moments":["scare","tension","ambience"],"params":{"voices":{"min":3,"max":10,"def":7,"step":1,"desc":"How many whisperers: a few is intimate, many a crowd"},"density":{"min":0,"max":1,"def":0.5,"desc":"How much they overlap: 0 short murmurs, 1 long whispers piled on each other"},"length":{"min":3,"max":6,"def":4.5,"unit":"s","desc":"How long the swell lasts before it fades"}},"play":function (T, out, t, p) {
+  const n = Math.round(p.voices);
+  const room = T.reverb(out, t, { time: 1.8, mix: 0.35, tone: 0.4 });
+  const cons = ['S', 'SH', 'F', 'TH', 'HH', 'S', 'SH', 'HH'];
+  const vows = ['IH0', 'AH0', 'UW1', 'EH1', 'AH1', 'IH1'];
+  for (let k = 0; k < n; k++) {
+    // each whisperer: a made-up run of syllables, a place around the head, a late start
+    const syl = 2 + Math.round(T.rand(0, 1) + p.density * 3);
+    const words = [];
+    for (let s = 0; s < syl; s++) {
+      words.push(cons[Math.floor(T.rand(0, cons.length))] + ' ' + vows[Math.floor(T.rand(0, vows.length))] + (T.rand(0, 1) > 0.6 ? ' ' + cons[Math.floor(T.rand(0, cons.length))] : ''));
+    }
+    const ph = words.join(' / ');
+    const rate = T.rand(0.7, 1.0);
+    const wl = T.speak(null, 0, { ph, voice: 'whisper', rate });
+    const x = T.rand(-1, 1);
+    const where = T.rand(0, 1);
+    // the first whisperer starts at once (a swarm that begins after a second of silence reads as
+    // broken); the rest land anywhere in the span
+    const start = k === 0 ? 0.03 : where * Math.max(0, p.length - wl);
+    // the crowd as a whole rises and falls: louder whispers near the middle of the span
+    const mid = Math.sin(Math.PI * Math.min(1, (start + wl / 2) / p.length));
+    const lvl = 0.35 + 0.65 * mid;
+    const place = T.pan(room, t + start, { x, to: -x * 0.6, dur: wl });
+    T.speak(place, t + start, { ph, voice: 'whisper', rate, pitch: T.rand(-3, 3), peak: (0.2 * lvl) / Math.sqrt(n) });
+  }
 }},
 {"id":"ambience-aurora-pad","name":"Aurora Pad","category":"ambience","tags":["aurora","pad","shimmer","ethereal","glow","northern-lights","wide","calm","bed"],"desc":"A slow, wide, glowing chord that swells and sways like curtains of light, with a thin glitter above. A dreamy bed for a night sky.","dur":8,"family":"synthetic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":110,"max":262,"def":165,"unit":"Hz","desc":"Root of the chord, the other notes follow it"},"glow":{"min":0,"max":1,"def":0.5,"desc":"How many bright upper notes and how much glitter join the chord: 0 plain and warm, 1 lit up"},"drift":{"min":0,"max":1,"def":0.5,"desc":"How far the chord sways and swells: 0 nearly still, 1 rolling slowly across the field"}},"play":function (T, out, t, p) {
   const L = p.length;
@@ -9855,6 +10263,355 @@ const THEMES = [
   }
  },
  {
+  "id": "dread",
+  "name": "Dread",
+  "desc": "Strings, heartbeat and sub hits for horror games and anything that should feel watched: dull, close small sounds and a horror score for the big ones.",
+  "moments": {
+   "click": {
+    "sound": "dark-stone-click",
+    "params": {
+     "pitch": 90,
+     "weight": 0.7
+    }
+   },
+   "hover": {
+    "sound": "dark-candle-flicker",
+    "params": {
+     "breath": 0.3,
+     "flutter": 0.7,
+     "warmth": 0.2
+    }
+   },
+   "select": {
+    "sound": "dark-stone-click",
+    "params": {
+     "pitch": 75,
+     "weight": 0.8
+    }
+   },
+   "tooltip": {
+    "sound": "dark-candle-flicker",
+    "params": {
+     "breath": 0.2,
+     "flutter": 0.5,
+     "warmth": 0.2
+    }
+   },
+   "toggle-on": {
+    "sound": "ui-checkbox",
+    "params": {
+     "on": 1,
+     "pitch": 523.25,
+     "bright": 0.1
+    }
+   },
+   "toggle-off": {
+    "sound": "ui-checkbox",
+    "params": {
+     "on": 0,
+     "pitch": 523.25,
+     "bright": 0.1
+    }
+   },
+   "type": {
+    "sound": "ui-key-light",
+    "params": {
+     "pitch": 196,
+     "bright": 0.15,
+     "size": 0
+    }
+   },
+   "open": {
+    "sound": "dark-crypt-open",
+    "params": {
+     "open": 1,
+     "weight": 0.8,
+     "length": 0.6
+    }
+   },
+   "close": {
+    "sound": "dark-crypt-open",
+    "params": {
+     "open": 0,
+     "weight": 0.8,
+     "length": 0.5
+    }
+   },
+   "transition": {
+    "sound": "dark-sub-drop",
+    "params": {
+     "depth": 0.4,
+     "length": 0.9,
+     "impact": 0.3
+    }
+   },
+   "scroll": {
+    "sound": "ui-scroll-detent",
+    "params": {
+     "pitch": 392,
+     "ticks": 1
+    }
+   },
+   "drag": {
+    "sound": "ui-drag-pickup",
+    "params": {
+     "pitch": 261.63,
+     "lift": 0.2,
+     "air": 0.2
+    }
+   },
+   "drop": {
+    "sound": "ui-drag-drop",
+    "params": {
+     "pitch": 98,
+     "bounce": 0.05,
+     "snap": 0.3
+    }
+   },
+   "delete": {
+    "sound": "ui-delete",
+    "params": {
+     "crunch": 5,
+     "pitch": 98,
+     "weight": 0.8
+    }
+   },
+   "success": {
+    "sound": "dark-choir-amen",
+    "params": {
+     "key": 3,
+     "voices": 4,
+     "light": 0,
+     "length": 0.3
+    }
+   },
+   "load-complete": {
+    "sound": "dark-choir-amen",
+    "params": {
+     "key": 3,
+     "voices": 3,
+     "light": 0,
+     "length": 0.15
+    }
+   },
+   "achievement": {
+    "sound": "dark-choir-amen",
+    "params": {
+     "key": 3,
+     "voices": 6,
+     "light": 1,
+     "length": 0.6
+    }
+   },
+   "error": {
+    "sound": "dark-cello-stab",
+    "params": {
+     "pitch": 65.41,
+     "clash": 1,
+     "grit": 0.9,
+     "length": 0.5
+    }
+   },
+   "warning": {
+    "sound": "dark-cello-stab",
+    "params": {
+     "pitch": 98,
+     "clash": 6,
+     "grit": 0.6,
+     "length": 0.3
+    }
+   },
+   "critical": {
+    "sound": "dark-horror-strings",
+    "params": {
+     "pitch": 620,
+     "cluster": 1,
+     "shiver": 1,
+     "length": 1.4
+    }
+   },
+   "notify": {
+    "sound": "dark-bell-knell",
+    "params": {
+     "pitch": 196,
+     "ring": 0.3,
+     "strike": 0.6,
+     "room": 0.3
+    }
+   },
+   "message": {
+    "sound": "dark-bell-knell",
+    "params": {
+     "pitch": 261.63,
+     "ring": 0.2,
+     "strike": 0.5,
+     "room": 0.25
+    }
+   },
+   "reminder": {
+    "sound": "dark-bell-knell",
+    "params": {
+     "pitch": 196,
+     "ring": 0.6,
+     "strike": 0.4,
+     "room": 0.4
+    }
+   },
+   "timer": {
+    "sound": "dark-slow-clock",
+    "params": {
+     "tempo": 1.2,
+     "case": 0.7,
+     "room": 0.2
+    }
+   },
+   "loading": {
+    "sound": "dark-tense-ostinato",
+    "params": {
+     "tempo": 110,
+     "pitch": 0,
+     "intensity": 0.3
+    }
+   },
+   "tension": {
+    "sound": "dark-heartbeat",
+    "params": {}
+   },
+   "scare": {
+    "sound": "dark-jump-scare",
+    "params": {
+     "punch": 0.8,
+     "pitch": 520,
+     "tail": 0.6
+    }
+   },
+   "reveal": {
+    "sound": "dark-doom-braam",
+    "params": {
+     "pitch": 41,
+     "weight": 0.7,
+     "length": 1.8
+    }
+   },
+   "music": {
+    "sound": "dark-music-box",
+    "params": {
+     "key": 0,
+     "wind": 0.8,
+     "detune": 0.6,
+     "room": 0.35
+    }
+   },
+   "ambience": {
+    "sound": "dark-haunted-corridor",
+    "params": {}
+   },
+   "door": {
+    "sound": "dark-door-creak",
+    "params": {
+     "length": 2.8,
+     "pitch": 0.7,
+     "close": 1
+    }
+   },
+   "game-over": {
+    "sound": "dark-dread-descent",
+    "params": {
+     "speed": 0.25,
+     "rise": 0,
+     "edge": 0.5,
+     "length": 4
+    }
+   },
+   "level-down": {
+    "sound": "dark-sub-drop",
+    "params": {
+     "depth": 0.8,
+     "length": 1.6,
+     "impact": 0.6
+    }
+   },
+   "explosion": {
+    "sound": "dark-doom-drum",
+    "params": {
+     "pitch": 55,
+     "mallet": 0.8,
+     "space": 0.4
+    }
+   },
+   "victory": {
+    "sound": "dark-choir-amen",
+    "params": {
+     "key": 3,
+     "voices": 8,
+     "light": 1,
+     "length": 1
+    }
+   },
+   "hit": {
+    "sound": "dark-doom-drum",
+    "params": {
+     "pitch": 90,
+     "mallet": 0.9,
+     "space": 0.15
+    }
+   },
+   "damage": {
+    "sound": "dark-cello-stab",
+    "params": {
+     "pitch": 82.41,
+     "clash": 1,
+     "grit": 0.8,
+     "length": 0.2
+    }
+   },
+   "attack": {
+    "sound": "game-sword-swing",
+    "params": {
+     "length": 0.22,
+     "pitch": 0.6,
+     "edge": 0.3
+    }
+   },
+   "debuff": {
+    "sound": "magic-curse-hex",
+    "params": {
+     "pitch": 98,
+     "dread": 0.9,
+     "whisper": 0.7,
+     "space": 0.3
+    }
+   },
+   "heal": {
+    "sound": "magic-healing-shimmer",
+    "params": {
+     "pitch": 261.63,
+     "swell": 0.3,
+     "sparkle": 0.2,
+     "space": 0.4
+    }
+   },
+   "pickup": {
+    "sound": "game-pickup-item",
+    "params": {}
+   },
+   "footstep": {
+    "sound": "game-footstep-soft",
+    "params": {
+     "weight": 0.7,
+     "surface": 0.6,
+     "length": 0.12
+    }
+   },
+   "step": {
+    "sound": "ui-step-advance",
+    "params": {
+     "pitch": 392
+    }
+   }
+  }
+ },
+ {
   "id": "fantasy",
   "name": "Fantasy",
   "desc": "Spells, chimes and parchment for game menus and role-playing games: harps, bells, a quill and a fireball.",
@@ -10756,6 +11513,402 @@ const THEMES = [
      "key": 0,
      "shine": 0.9,
      "space": 0.5
+    }
+   }
+  }
+ },
+ {
+  "id": "gothic",
+  "name": "Gothic",
+  "desc": "Organ, choir, bells and stone for dark fantasy, cathedrals and candlelit menus: elegant and brooding, never cheap horror.",
+  "moments": {
+   "click": {
+    "sound": "dark-stone-click",
+    "params": {
+     "pitch": 146.83,
+     "weight": 0.4
+    }
+   },
+   "hover": {
+    "sound": "dark-candle-flicker",
+    "params": {
+     "breath": 0.35,
+     "flutter": 0.4,
+     "warmth": 0.7
+    }
+   },
+   "select": {
+    "sound": "dark-stone-click",
+    "params": {
+     "pitch": 110,
+     "weight": 0.6
+    }
+   },
+   "tooltip": {
+    "sound": "dark-candle-flicker",
+    "params": {
+     "breath": 0.25,
+     "flutter": 0.2,
+     "warmth": 0.8
+    }
+   },
+   "toggle-on": {
+    "sound": "ui-checkbox",
+    "params": {
+     "on": 1,
+     "pitch": 587.33,
+     "bright": 0.25
+    }
+   },
+   "toggle-off": {
+    "sound": "ui-checkbox",
+    "params": {
+     "on": 0,
+     "pitch": 587.33,
+     "bright": 0.25
+    }
+   },
+   "type": {
+    "sound": "ui-key-light",
+    "params": {
+     "pitch": 146.83,
+     "bright": 0.2,
+     "size": 0
+    }
+   },
+   "open": {
+    "sound": "dark-crypt-open",
+    "params": {
+     "open": 1,
+     "weight": 0.4,
+     "length": 0.4
+    }
+   },
+   "close": {
+    "sound": "dark-crypt-open",
+    "params": {
+     "open": 0,
+     "weight": 0.4,
+     "length": 0.35
+    }
+   },
+   "transition": {
+    "sound": "game-whoosh",
+    "params": {
+     "length": 0.45,
+     "pitch": 0.6,
+     "q": 1.2
+    }
+   },
+   "scroll": {
+    "sound": "ui-scroll-detent",
+    "params": {
+     "pitch": 440,
+     "ticks": 1
+    }
+   },
+   "drag": {
+    "sound": "ui-drag-pickup",
+    "params": {
+     "pitch": 293.66,
+     "lift": 0.3,
+     "air": 0.3
+    }
+   },
+   "drop": {
+    "sound": "ui-drag-drop",
+    "params": {
+     "pitch": 146.83,
+     "bounce": 0.1,
+     "snap": 0.2
+    }
+   },
+   "delete": {
+    "sound": "ui-delete",
+    "params": {
+     "crunch": 4,
+     "pitch": 146.83,
+     "weight": 0.5
+    }
+   },
+   "success": {
+    "sound": "dark-choir-amen",
+    "params": {
+     "key": 5,
+     "voices": 5,
+     "light": 0,
+     "length": 0.4
+    }
+   },
+   "achievement": {
+    "sound": "dark-choir-amen",
+    "params": {
+     "key": 5,
+     "voices": 8,
+     "light": 1,
+     "length": 0.8
+    }
+   },
+   "load-complete": {
+    "sound": "dark-choir-amen",
+    "params": {
+     "key": 5,
+     "voices": 4,
+     "light": 0,
+     "length": 0.2
+    }
+   },
+   "error": {
+    "sound": "dark-cello-stab",
+    "params": {
+     "pitch": 73.42,
+     "clash": 1,
+     "grit": 0.5,
+     "length": 0.4
+    }
+   },
+   "warning": {
+    "sound": "dark-bell-knell",
+    "params": {
+     "pitch": 220,
+     "ring": 0.4,
+     "strike": 0.55,
+     "room": 0.3
+    }
+   },
+   "notify": {
+    "sound": "dark-bell-knell",
+    "params": {
+     "pitch": 293.66,
+     "ring": 0.5,
+     "strike": 0.4,
+     "room": 0.45
+    }
+   },
+   "message": {
+    "sound": "dark-bell-knell",
+    "params": {
+     "pitch": 440,
+     "ring": 0.3,
+     "strike": 0.3,
+     "room": 0.35
+    }
+   },
+   "reminder": {
+    "sound": "dark-bell-knell",
+    "params": {
+     "pitch": 220,
+     "ring": 0.7,
+     "strike": 0.3,
+     "room": 0.5
+    }
+   },
+   "timer": {
+    "sound": "dark-slow-clock",
+    "params": {
+     "tempo": 1,
+     "case": 0.6,
+     "room": 0.4
+    }
+   },
+   "critical": {
+    "sound": "dark-doom-drum",
+    "params": {
+     "pitch": 73.42,
+     "mallet": 0.5,
+     "space": 0.4
+    }
+   },
+   "reveal": {
+    "sound": "dark-cathedral-choir",
+    "params": {
+     "key": 0,
+     "singers": 8,
+     "vowel": 0,
+     "space": 0.45
+    }
+   },
+   "scare": {
+    "sound": "dark-organ-minor",
+    "params": {
+     "key": 0,
+     "stops": 2,
+     "tremulant": 0.5,
+     "space": 0.5
+    }
+   },
+   "music": {
+    "sound": "dark-organ-minor",
+    "params": {
+     "key": 0,
+     "stops": 1,
+     "tremulant": 0.2,
+     "space": 0.4
+    }
+   },
+   "victory": {
+    "sound": "dark-organ-minor",
+    "params": {
+     "key": 0,
+     "stops": 2,
+     "tremulant": 0,
+     "space": 0.45
+    }
+   },
+   "game-over": {
+    "sound": "dark-funeral-bell",
+    "params": {}
+   },
+   "ambience": {
+    "sound": "dark-monk-chant",
+    "params": {
+     "key": 0,
+     "singers": 4,
+     "room": 0.5
+    }
+   },
+   "tension": {
+    "sound": "dark-cello-drone",
+    "params": {
+     "key": 0,
+     "players": 4,
+     "grit": 0.3,
+     "shiver": 0
+    }
+   },
+   "level-down": {
+    "sound": "dark-dread-descent",
+    "params": {
+     "speed": 0.2,
+     "rise": 0,
+     "edge": 0.4,
+     "length": 3
+    }
+   },
+   "door": {
+    "sound": "dark-door-creak",
+    "params": {
+     "length": 2,
+     "pitch": 0.8,
+     "close": 1
+    }
+   },
+   "explosion": {
+    "sound": "dark-doom-drum",
+    "params": {
+     "pitch": 55,
+     "mallet": 0.7,
+     "space": 0.45
+    }
+   },
+   "level-up": {
+    "sound": "magic-enchant",
+    "params": {
+     "pitch": 293.66,
+     "notes": 7,
+     "speed": 0.07,
+     "glow": 0.5,
+     "space": 0.5
+    }
+   },
+   "power-up": {
+    "sound": "magic-charge-up",
+    "params": {
+     "length": 0.8,
+     "pitch": 293.66,
+     "shimmer": 0.4,
+     "space": 0.4
+    }
+   },
+   "heal": {
+    "sound": "magic-healing-shimmer",
+    "params": {
+     "pitch": 293.66,
+     "swell": 0.35,
+     "sparkle": 0.4,
+     "space": 0.5
+    }
+   },
+   "spell": {
+    "sound": "magic-spell-cast",
+    "params": {
+     "pitch": 587.33,
+     "gather": 0.4,
+     "bloom": 0.5,
+     "space": 0.5
+    }
+   },
+   "debuff": {
+    "sound": "magic-curse-hex",
+    "params": {
+     "pitch": 73.42,
+     "dread": 0.7,
+     "whisper": 0.5,
+     "space": 0.4
+    }
+   },
+   "hit": {
+    "sound": "game-sword-clash",
+    "params": {
+     "pitch": 1174.66,
+     "ring": 0.4,
+     "scrape": 0.4
+    }
+   },
+   "attack": {
+    "sound": "game-sword-swing",
+    "params": {
+     "length": 0.2,
+     "pitch": 0.8,
+     "edge": 0.4
+    }
+   },
+   "damage": {
+    "sound": "game-punch",
+    "params": {
+     "hits": 1,
+     "pitch": 110,
+     "snap": 0.3
+    }
+   },
+   "pickup": {
+    "sound": "game-gem-collect",
+    "params": {
+     "pitch": 1174.66,
+     "ring": 0.5,
+     "gap": 0.09,
+     "sparkle": 0.3
+    }
+   },
+   "coin": {
+    "sound": "game-coin-flip",
+    "params": {
+     "spins": 3,
+     "pitch": 1174.66,
+     "ring": 0.4
+    }
+   },
+   "footstep": {
+    "sound": "game-footstep-soft",
+    "params": {
+     "weight": 0.6,
+     "surface": 0.2,
+     "length": 0.12
+    }
+   },
+   "teleport": {
+    "sound": "magic-teleport",
+    "params": {
+     "pitch": 587.33,
+     "gap": 0.18,
+     "reach": 1.5,
+     "space": 0.5
+    }
+   },
+   "step": {
+    "sound": "ui-step-advance",
+    "params": {
+     "pitch": 293.66
     }
    }
   }

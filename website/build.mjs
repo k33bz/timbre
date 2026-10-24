@@ -23,7 +23,7 @@ const HERO = [
   { id: 'notify-success-chime', label: 'Success' },
   { id: 'game-gem-collect', label: 'Gem collect' },
 ];
-const CARDS = ['ui-cascade', 'notify-success-chime', 'data-split-flap', 'ai-token-stream', 'game-power-up', 'cards-riffle', 'magic-spell-cast', 'scifi-warp-jump'];
+const CARDS = ['ui-cascade', 'notify-success-chime', 'data-split-flap', 'ai-token-stream', 'game-power-up', 'dark-doom-drum', 'magic-spell-cast', 'scifi-warp-jump'];
 // The theme desk's pads: moments every theme maps.
 const PADS = [
   { m: 'click', label: 'Click' }, { m: 'toggle-on', label: 'Toggle on' }, { m: 'type', label: 'Type' }, { m: 'open', label: 'Open' },

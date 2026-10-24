@@ -4,7 +4,7 @@ export default {
   id: 'dark-bell-knell',
   name: 'Knell',
   category: 'dark',
-  tags: ['notify', 'reminder', 'message', 'bell', 'knell', 'toll', 'minor', 'gothic', 'dark', 'soft'],
+  tags: ['bell', 'knell', 'toll', 'chime', 'minor', 'gothic', 'dark', 'soft', 'alert'],
   desc: 'One small, dark bell stroke with a mournful minor-third ring and a short room. For a notification, reminder or message that is softer than an alarm.',
   dur: 1.3,
   family: 'orchestral',

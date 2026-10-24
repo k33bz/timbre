@@ -4,9 +4,9 @@
 
 **Every sound, synthesized. Nothing downloaded.**
 
-A single-file gallery of **332** offline, synthesized sound effects, built to be auditioned by humans *and* driven by AI agents. Every sound is a small WebAudio recipe, not a sample, so anything you copy out of Timbre plays anywhere, forever, including fully offline. Ships with a **zero-dependency MCP server** so Claude (Desktop, Code, or the API) can pick sounds for an app and hand back ready-to-paste code.
+A single-file gallery of **359** offline, synthesized sound effects, built to be auditioned by humans *and* driven by AI agents. Every sound is a small WebAudio recipe, not a sample, so anything you copy out of Timbre plays anywhere, forever, including fully offline. Ships with a **zero-dependency MCP server** so Claude (Desktop, Code, or the API) can pick sounds for an app and hand back ready-to-paste code.
 
-![Sounds](https://img.shields.io/badge/sounds-332-ff9900) ![Categories](https://img.shields.io/badge/categories-14-4493f8) ![Themes](https://img.shields.io/badge/themes-8-e0a52b) ![Dependencies](https://img.shields.io/badge/dependencies-0-3fb950) ![Offline](https://img.shields.io/badge/offline-100%25-3fb950) ![MCP](https://img.shields.io/badge/MCP-server%20included-c879ff) ![Single file](https://img.shields.io/badge/single%20file-HTML-e0a52b)
+![Sounds](https://img.shields.io/badge/sounds-359-ff9900) ![Categories](https://img.shields.io/badge/categories-15-4493f8) ![Themes](https://img.shields.io/badge/themes-10-e0a52b) ![Dependencies](https://img.shields.io/badge/dependencies-0-3fb950) ![Offline](https://img.shields.io/badge/offline-100%25-3fb950) ![MCP](https://img.shields.io/badge/MCP-server%20included-c879ff) ![Single file](https://img.shields.io/badge/single%20file-HTML-e0a52b)
 
 </div>
 
@@ -48,11 +48,14 @@ Every card shows a waveform rendered offline, the sound's duration, peak and RMS
 | Magic | 12 | Arcane Charge, Enchant, Fire Spell, Ice Spell, Healing Shimmer, Curse Hex |
 | Screen effects | 19 | Glitch Burst, Neon Strike, CRT Power, Hologram On, Scramble Decode, Confetti Pop, Firework |
 | Sci-fi | 13 | Facility Klaxon, Laser Zap, Blaster Bolt, Data Stream, Hologram Flicker |
+| Dark | 27 | Cathedral Choir, Organ Minor Swell, Cello Drone, Doom Braam, Horror Strings, Funeral Bell, Music Box, Heartbeat in the Dark |
 | Ambience | 19 | Aurora Pad, Cave Drips, Distant Thunder, Night Crickets, Storm Roar, Grid Hum (8 s fading beds) |
 | Music | 9 | Short Fanfare, Level Complete, Defeat Jingle, Intro Logo Sting, Menu Confirm Melody |
 | Voice | 20 | Warning, Access Denied, Countdown, Containment Breach, Your Turn Call, robot lines, five babble voices |
 
 Battle and Ink Duel are fan-made, unbranded sounds for the generic mechanics of creature-battle and ink-and-lore trading card games: no game, card or character names anywhere.
+
+Dark is built on five sustained instruments in `src/core/instruments.js`: a bowed string section (`bow`), a choir on the formant engine (`choir`), a pipe organ (`organ`), timpani, taiko and toms (`membrane`) and the endless Shepard glissando (`shepard`). Any sound can use them, and Copy carries them like every other helper.
 
 Loaders, thinking states and live-data sounds are **loop cells**: one short cell meant to be re-triggered on an interval, which each one's description names.
 
@@ -62,7 +65,7 @@ Loaders, thinking states and live-data sounds are **loop cells**: one short cell
 
 A theme maps app moments (`click`, `toggle-on`, `success`, `error`, `loading`, `critical`, `select`, `thinking`, `score`, ...) to a sound and parameter overrides in the theme's own key, register and loudness, so a whole set can be swapped at once.
 
-**Soft UI** (the default), **Glass**, **Wood and Paper**, **Mechanical**, **8-bit**, **Arcade**, **Sci-fi Console** and **Fantasy**. One shared list of 101 moment names (`src/vocabulary.js`) is used by the themes, the build and the MCP server.
+**Soft UI** (the default), **Glass**, **Wood and Paper**, **Mechanical**, **8-bit**, **Arcade**, **Sci-fi Console**, **Fantasy**, **Gothic** (organ, choir, bells and stone) and **Dread** (strings, heartbeat and sub hits). One shared list of 102 moment names (`src/vocabulary.js`) is used by the themes, the build and the MCP server.
 
 ---
 
