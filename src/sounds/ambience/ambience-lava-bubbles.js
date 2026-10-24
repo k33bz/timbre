@@ -8,6 +8,7 @@ export default {
   tags: ['lava', 'bubbles', 'bubbling', 'lamp', 'viscous', 'warm', 'molten', 'gurgle', 'bed'],
   desc: 'Thick warm bubbles rising slowly and popping softly over a low simmer of heat, like a lava lamp. Fades in and out.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

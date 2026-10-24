@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { T } from '../src/core/t.js';
-import { build, loadDir, validateAll, validateSound, validateTheme, buildManifest, buildIndex, buildHtml, ROOT, SCHEMA, fingerprint, levelsFor, writeAtomic } from '../build.mjs';
+import { build, loadDir, validateAll, validateSound, validateTheme, validateScape, buildManifest, buildIndex, buildHtml, ROOT, SCHEMA, fingerprint, levelsFor, writeAtomic } from '../build.mjs';
 import { levelEntry, updateLevels, steady } from './check_levels.mjs';
 import { MOMENTS, FAMILIES, ROLES } from '../src/vocabulary.js';
 import { PREROLL, MASTER_CHAIN } from '../src/core/render.js';
@@ -135,7 +135,7 @@ test('manifest carries play sources and helper lists; index carries search field
     for (const h of s.helpers) assert.ok(m.helpers[h], `${s.id}: helper ${h} missing from the helper table`);
   }
   const ix = buildIndex(v.sounds, v.themes);
-  for (const s of ix.sounds) assert.deepEqual(Object.keys(s).filter((k) => k !== 'family' && k !== 'moments').sort(), ['category', 'desc', 'dur', 'id', 'name', 'tags']);
+  for (const s of ix.sounds) assert.deepEqual(Object.keys(s).filter((k) => k !== 'family' && k !== 'moments' && k !== 'loop').sort(), ['category', 'desc', 'dur', 'id', 'name', 'tags']);
 });
 
 test('the bundle is one page whose script compiles and holds every sound', async () => {
@@ -154,7 +154,7 @@ test('the build is deterministic', async () => {
   const a = await build();
   const b = await build();
   for (const k of Object.keys(a.outputs)) assert.equal(a.outputs[k], b.outputs[k], k);
-  assert.equal(buildHtml(a.sounds, a.themes, T), a.outputs['dist/timbre.html']);
+  assert.equal(buildHtml(a.sounds, a.themes, T, a.scapes), a.outputs['dist/timbre.html']);
 });
 
 // ---- catalog fields (schema 2)
@@ -329,4 +329,25 @@ test('writeAtomic replaces a file whole and leaves no temporary file', () => {
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test('soundscapes: beds must loop, events need an interval, params and vary stay in range', () => {
+  const bed = { ...good(), id: 'ambience-test-bed', category: 'ambience', loop: true, params: { length: { min: 3, max: 8, def: 8, unit: 's' }, rate: { min: 0, max: 1, def: 0.5 } } };
+  const hit = { ...good(), id: 'ambience-test-hit', category: 'ambience', params: { distance: { min: 0, max: 1, def: 0.5 } } };
+  const byId = new Map([[bed.id, bed], [hit.id, hit]]);
+  const check = (layers, extra) => validateScape({ file: 'src/scapes/test-scape.js', def: { id: 'test-scape', name: 'Test', desc: 'A soundscape for the tests.', layers, ...extra } }, byId);
+  assert.deepEqual(check([{ sound: bed.id, params: { rate: 0.7 }, level: 0.8 }, { sound: hit.id, every: [6, 12], vary: { distance: [0.2, 0.9] } }]), []);
+  const has = (errs, re) => assert.ok(errs.some((e) => re.test(e)), errs.join(' | ') || 'no errors');
+  has(check([{ sound: hit.id }]), /does not loop; give it every/);
+  has(check([{ sound: hit.id, every: [6, 12] }]), /needs at least one bed/);
+  has(check([{ sound: bed.id }, { sound: hit.id, every: [1, 12] }]), /every must be \[lo, hi\]/);
+  has(check([{ sound: bed.id, params: { rate: 2 } }]), /rate = 2 is outside/);
+  has(check([{ sound: bed.id }, { sound: hit.id, every: [6, 12], vary: { distance: [0.5, 1.5] } }]), /vary distance must be/);
+  has(check([{ sound: bed.id, vary: { rate: [0, 1] } }]), /vary only applies to an event/);
+  has(check([{ sound: 'ambience-nope' }]), /unknown sound/);
+  has(check([]), /1 to 6 layers/);
+  // loop: true is for beds only
+  assert.deepEqual(check([{ sound: bed.id }]), []);
+  const notBed = { ...good(), loop: true };
+  assert.ok(check.length && validateSound({ file: `src/sounds/ui/${notBed.id}.js`, def: notBed }).some((e) => /only ambience and dark beds can loop/.test(e)));
 });

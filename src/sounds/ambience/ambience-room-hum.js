@@ -7,6 +7,7 @@ export default {
   tags: ['room-tone', 'hum', 'electrical', 'mains', 'hvac', 'indoor', 'office', 'bed'],
   desc: 'A quiet indoor bed: electrical hum with its buzzing harmonics over a breath of ventilation hiss.',
   dur: 8,
+  loop: true,
   family: 'mechanical',
   moments: ['ambience'],
   params: {

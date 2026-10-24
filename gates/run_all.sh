@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Run every Timbre gate: the build check, the unit tests, the MCP server's tests, then the browser
 # gates one at a time (each launches one headless browser and closes its whole process tree when
-# done): levels, page, copy, and the MCP kit check (a generated kit renders what Copy renders).
+# done): levels, loops (every bed's seamless loop), page, copy, and the MCP kit check (a generated kit
+# renders what Copy renders).
 #
 #   bash gates/run_all.sh
 #
@@ -20,7 +21,7 @@ step() {
 step node build.mjs --check
 step node --test --test-reporter=spec gates/build.test.mjs gates/copy.test.mjs gates/core.test.mjs gates/wav.test.mjs gates/voice.test.mjs gates/website.test.mjs
 step npm test --prefix mcp-server
-for g in gates/check_levels.mjs gates/check_page.mjs gates/check_copy.mjs mcp-server/scripts/check_kit.mjs; do
+for g in gates/check_levels.mjs gates/check_loops.mjs gates/check_page.mjs gates/check_copy.mjs mcp-server/scripts/check_kit.mjs; do
   # shellcheck disable=SC2086  # WRAP is a command prefix and must split into words
   step $WRAP node "$g"
 done

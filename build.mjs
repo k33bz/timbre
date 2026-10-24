@@ -31,7 +31,9 @@ import { MockContext } from './gates/lib/mockaudio.mjs';
 export const ROOT = path.dirname(fileURLToPath(import.meta.url));
 export const CATEGORIES = ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'dark', 'ambience', 'music', 'voice'];
 const SOUND_KEYS = ['id', 'name', 'category', 'tags', 'desc', 'dur', 'params', 'play'];
-const OPTIONAL_KEYS = ['family', 'moments'];
+const OPTIONAL_KEYS = ['family', 'moments', 'loop'];
+const SCAPE_KEYS = ['id', 'name', 'desc', 'layers'];
+const LAYER_KEYS = ['sound', 'params', 'level', 'every', 'vary'];
 const PARAM_KEYS = ['min', 'max', 'def', 'unit', 'step', 'desc', 'role', 'choices'];
 // U+2013 and U+2014, built from code points so this file never contains one
 const DASH = new RegExp('[' + String.fromCharCode(0x2013, 0x2014) + ']');
@@ -135,6 +137,8 @@ export function validateSound(entry, kit = T) {
   if (s.name != null && (typeof s.name !== 'string' || !s.name.trim() || s.name.length > 40)) E('name must be a string of 1 to 40 characters');
   if (s.desc != null && (typeof s.desc !== 'string' || s.desc.length < 10 || s.desc.length > 200)) E('desc must be a string of 10 to 200 characters');
   for (const k of ['name', 'desc']) if (typeof s[k] === 'string' && DASH.test(s[k])) E(`${k} has an en or em dash: use a comma, a colon or "to"`);
+  if (s.loop != null && s.loop !== true) E('loop must be true (a bed that can be looped seamlessly) or left out');
+  if (s.loop === true && !['ambience', 'dark'].includes(s.category)) E('only ambience and dark beds can loop');
   if (s.family != null && !Object.hasOwn(FAMILIES, s.family)) E(`family "${s.family}" must be one of: ${Object.keys(FAMILIES).join(', ')} (src/vocabulary.js)`);
   if (s.moments != null) {
     if (!Array.isArray(s.moments) || !s.moments.length) E('moments must be a non-empty array of moment names (src/vocabulary.js), or left out');
@@ -256,7 +260,7 @@ export function validateTheme(entry, soundsById) {
 }
 
 /** Validate everything. Resolves to { errors, sounds, themes } with sounds in catalog order. */
-export function validateAll(soundEntries, themeEntries, kit = T) {
+export function validateAll(soundEntries, themeEntries, kit = T, scapeEntries = []) {
   const errors = [];
   const ids = new Map();
   for (const e of soundEntries) {
@@ -282,10 +286,62 @@ export function validateAll(soundEntries, themeEntries, kit = T) {
   // the default theme leads (the gallery opens on the first one); the rest by id
   const themes = themeEntries.map((e) => Object.assign({ file: e.file }, e.def))
     .sort((a, b) => (b.id === DEFAULT_THEME) - (a.id === DEFAULT_THEME) || String(a.id).localeCompare(String(b.id)));
-  return { errors, sounds, themes };
+  const sids = new Set();
+  for (const e of scapeEntries) {
+    errors.push(...validateScape(e, byId));
+    const id = e.def && e.def.id;
+    if (sids.has(id)) errors.push(`${e.file}: duplicate soundscape id "${id}"`);
+    sids.add(id);
+  }
+  const scapes = scapeEntries.map((e) => Object.assign({ file: e.file }, e.def)).sort((a, b) => String(a.id).localeCompare(String(b.id)));
+  return { errors, sounds, themes, scapes };
 }
 
-const optional = (s) => ({ ...(s.family != null ? { family: s.family } : {}), ...(s.moments != null ? { moments: s.moments } : {}) });
+/**
+ * Validate one soundscape: 1 to 6 layers, each a sound with optional params (in range) and level
+ * (0..1.5). A layer without `every` is a bed and its sound must loop; a layer with `every: [lo, hi]`
+ * is an event fired every lo..hi seconds (2 <= lo <= hi <= 120), and `vary` draws params afresh
+ * each time from sub-ranges of their own.
+ */
+export function validateScape(entry, soundsById) {
+  const { file, def: sc } = entry;
+  const errs = [];
+  const E = (m) => errs.push(`${file}: ${m}`);
+  if (!sc || typeof sc !== 'object') { E('must `export default` a soundscape object'); return errs; }
+  for (const k of Object.keys(sc)) if (!SCAPE_KEYS.includes(k)) E(`unknown field "${k}" (allowed: ${SCAPE_KEYS.join(', ')})`);
+  if (typeof sc.id !== 'string' || !KEBAB.test(sc.id)) E(`id "${sc.id}" must be kebab-case`);
+  else if (file && file.startsWith('src/scapes/') && file !== `src/scapes/${sc.id}.js`) E(`must live at src/scapes/${sc.id}.js`);
+  if (typeof sc.name !== 'string' || !sc.name.trim() || sc.name.length > 40) E('name must be a string of 1 to 40 characters');
+  if (typeof sc.desc !== 'string' || sc.desc.length < 10 || sc.desc.length > 200) E('desc must be a string of 10 to 200 characters');
+  for (const k of ['name', 'desc']) if (typeof sc[k] === 'string' && DASH.test(sc[k])) E(`${k} has an en or em dash`);
+  if (!Array.isArray(sc.layers) || sc.layers.length < 1 || sc.layers.length > 6) { E('layers must be a list of 1 to 6 layers'); return errs; }
+  if (!sc.layers.some((L) => L && !L.every)) E('a soundscape needs at least one bed (a layer without every)');
+  sc.layers.forEach((L, i) => {
+    const at = `layer ${i + 1}`;
+    if (!L || typeof L.sound !== 'string') { E(`${at} needs { sound: '<id>' }`); return; }
+    for (const k of Object.keys(L)) if (!LAYER_KEYS.includes(k)) E(`${at} has unknown field "${k}"`);
+    const s = soundsById.get(L.sound);
+    if (!s) { E(`${at} uses unknown sound "${L.sound}"`); return; }
+    if (!L.every && !s.loop) E(`${at}: "${s.id}" does not loop; give it every: [lo, hi] to fire it as an event`);
+    if (L.every != null && !(Array.isArray(L.every) && L.every.length === 2 && L.every[0] >= 2 && L.every[0] <= L.every[1] && L.every[1] <= 120)) E(`${at}: every must be [lo, hi] seconds with 2 <= lo <= hi <= 120`);
+    if (L.level != null && !(typeof L.level === 'number' && L.level >= 0 && L.level <= 1.5)) E(`${at}: level must be 0..1.5`);
+    for (const [k, v] of Object.entries(L.params || {})) {
+      const d = s.params[k];
+      if (!d) E(`${at}: sound "${s.id}" has no param "${k}"`);
+      else if (typeof v !== 'number' || v < d.min || v > d.max) E(`${at}: ${k} = ${v} is outside [${d.min}, ${d.max}]`);
+    }
+    for (const [k, r] of Object.entries(L.vary || {})) {
+      const d = s.params[k];
+      if (!L.every) E(`${at}: vary only applies to an event`);
+      if (!d) E(`${at}: sound "${s.id}" has no param "${k}" to vary`);
+      else if (!(Array.isArray(r) && r.length === 2 && r[0] >= d.min && r[0] <= r[1] && r[1] <= d.max)) E(`${at}: vary ${k} must be [lo, hi] inside [${d.min}, ${d.max}]`);
+    }
+  });
+  return errs;
+}
+
+const optional = (s) => ({ ...(s.family != null ? { family: s.family } : {}), ...(s.moments != null ? { moments: s.moments } : {}), ...(s.loop ? { loop: true } : {}) });
+const scapeMeta = (sc) => ({ id: sc.id, name: sc.name, desc: sc.desc, layers: sc.layers });
 const meta = (s) => ({ id: s.id, name: s.name, category: s.category, tags: s.tags, desc: s.desc, dur: s.dur, ...optional(s), params: s.params });
 const themeMeta = (th) => ({ id: th.id, name: th.name, desc: th.desc, moments: th.moments });
 
@@ -334,7 +390,7 @@ export function levelsFor(s, report, kit = T) {
  * contract, the shared vocabulary and, for sounds the level gate measured as they are now, their
  * measured levels.
  */
-export function buildManifest(sounds, themes, kit = T, report = null) {
+export function buildManifest(sounds, themes, kit = T, report = null, scapes = []) {
   const helpers = {};
   for (const name of Object.keys(kit).sort()) helpers[name] = { deps: helperDeps(name, kit), src: dedent(kit[name].toString()) };
   let measured = 0;
@@ -370,6 +426,7 @@ export function buildManifest(sounds, themes, kit = T, report = null) {
     },
     sounds: list,
     themes: themes.map((th) => ({ ...themeMeta(th), file: th.file })),
+    scapes: scapes.map((sc) => ({ ...scapeMeta(sc), file: sc.file })),
     helpers,
   };
 }
@@ -397,7 +454,7 @@ export function moduleText(file) {
 export const safeScript = (js) => js.replace(/<\/script/gi, '<\\/script').replace(/<!--/g, '<\\!--');
 
 /** The single page: core + sounds + themes + shell, inline. */
-export function buildHtml(sounds, themes, kit = T) {
+export function buildHtml(sounds, themes, kit = T, scapes = []) {
   const core = HELPER_MODULES.map((f) => moduleText('src/core/' + f)).join('\n');
   const soundJs = (s) => '{' + JSON.stringify(meta(s)).slice(1, -1) + ',"play":' + playSource(s.play) + '}';
   const script = [
@@ -410,10 +467,12 @@ export function buildHtml(sounds, themes, kit = T) {
     'const SOUNDS = [\n' + sounds.map(soundJs).join(',\n') + '\n];',
     '// ---- themes (src/themes) ----',
     'const THEMES = ' + JSON.stringify(themes.map(themeMeta), null, 1) + ';',
+    '// ---- soundscapes (src/scapes) ----',
+    'const SCAPES = ' + JSON.stringify(scapes.map(scapeMeta), null, 1) + ';',
     '// ---- version (package.json) ----',
     'const VERSION = ' + JSON.stringify(version()) + ';',
     '// ---- runtime (src/core) ----',
-    ['render.js', 'wav.js', 'copy.js'].map((f) => moduleText('src/core/' + f)).join('\n'),
+    ['render.js', 'wav.js', 'loop.js', 'copy.js'].map((f) => moduleText('src/core/' + f)).join('\n'),
     '// ---- gallery (src/shell/app.js) ----',
     fs.readFileSync(path.join(ROOT, 'src/shell/app.js'), 'utf8'),
     '})();',
@@ -428,14 +487,15 @@ export function buildHtml(sounds, themes, kit = T) {
 export async function build() {
   const soundEntries = await loadDir(path.join(ROOT, 'src/sounds'));
   const themeEntries = await loadDir(path.join(ROOT, 'src/themes'));
-  const { errors, sounds, themes } = validateAll(soundEntries, themeEntries, T);
-  if (errors.length) return { errors, outputs: {}, sounds, themes };
+  const scapeEntries = await loadDir(path.join(ROOT, 'src/scapes'));
+  const { errors, sounds, themes, scapes } = validateAll(soundEntries, themeEntries, T, scapeEntries);
+  if (errors.length) return { errors, outputs: {}, sounds, themes, scapes };
   const outputs = {
-    'catalog/manifest.json': JSON.stringify(buildManifest(sounds, themes, T, readLevels()), null, 2) + '\n',
+    'catalog/manifest.json': JSON.stringify(buildManifest(sounds, themes, T, readLevels(), scapes), null, 2) + '\n',
     'catalog/index.json': JSON.stringify(buildIndex(sounds, themes), null, 2) + '\n',
-    'dist/timbre.html': buildHtml(sounds, themes, T),
+    'dist/timbre.html': buildHtml(sounds, themes, T, scapes),
   };
-  return { errors, outputs, sounds, themes };
+  return { errors, outputs, sounds, themes, scapes };
 }
 
 /**

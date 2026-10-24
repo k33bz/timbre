@@ -7,6 +7,7 @@ export default {
   tags: ['rain', 'drizzle', 'downpour', 'weather', 'water', 'outdoor', 'bed'],
   desc: 'Rain on leaves and puddles, from a drizzle to a steady downpour. Fades in and out.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

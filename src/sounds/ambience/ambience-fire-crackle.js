@@ -7,6 +7,7 @@ export default {
   tags: ['fire', 'crackle', 'campfire', 'fireplace', 'flame', 'wood', 'cozy', 'bed'],
   desc: 'A hearth or campfire: a soft roar of flame with random snaps, pops and the odd log settling.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

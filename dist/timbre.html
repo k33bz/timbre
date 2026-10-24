@@ -322,6 +322,23 @@ main:focus { outline: none; }
   background: radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--rc, var(--accent)) 10%, transparent), transparent 55%), var(--panel);
 }
 .rack.speak { --rc: var(--cat-voice); }
+.rack.scape { --rc: var(--cat-ambience); }
+.sc-layers { display: grid; gap: 8px; }
+.sc-layer {
+  display: grid; grid-template-columns: 62px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) 34px; align-items: center; gap: 12px;
+  padding: 10px 12px; border: 1px solid var(--line); border-left: 3px solid var(--c, var(--accent)); border-radius: 11px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--c, var(--accent)) 8%, transparent), transparent 60%), var(--panel-2);
+}
+.sc-kind { font: 600 10.5px/1 var(--mono); letter-spacing: 0.1em; color: var(--c, var(--accent)); }
+.sc-layer select { height: 32px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--panel); padding: 0 8px; min-width: 0; width: 100%; }
+.sc-layer label { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; font: 500 11.5px/1 var(--mono); color: var(--muted); }
+.sc-layer output { font: 500 11.5px/1 var(--mono); color: var(--ink); min-width: 38px; text-align: right; }
+.sc-layer .sc-every[hidden] { display: none; }
+.sc-layer .sc-del { width: 32px; height: 32px; }
+.sc-note { font-size: 12.5px; color: var(--muted); }
+.scape.playing .play .on, .strip .loop[aria-pressed="true"] .on { background: var(--signal); box-shadow: 0 0 8px var(--signal); }
+.loop .on { width: 7px; height: 7px; border-radius: 50%; background: var(--line-2); }
+.loop[aria-pressed="true"] { border-color: var(--signal); color: var(--ink); }
 .rack-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 12px; }
 .rack-head h2 { font-size: 13px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
 .rack select {
@@ -540,6 +557,9 @@ input[type="range"]:focus-visible::-moz-range-thumb { outline: 2px solid var(--f
   .rack { padding: 12px; }
   .pads { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sp-body { grid-template-columns: minmax(0, 1fr); }
+  .sc-layer { grid-template-columns: 54px minmax(0, 1fr) 34px; }
+  .sc-layer label { grid-column: 1 / -1; }
+  .sc-note { display: none; }
   .grid-head { margin-top: 32px; }
   .sec-head { margin-top: 30px; }
   .intro { padding-top: 14px; }
@@ -628,8 +648,24 @@ input[type="range"]:focus-visible::-moz-range-thumb { outline: 2px solid var(--f
       </div>
     </div>
   </section>
+  <div class="sec-head"><p class="eyebrow">03 / SOUNDSCAPES<span class="sep">·</span><span class="meta">SEAMLESS LOOPS AND LAYERS</span></p><h2 class="big">Build a place.</h2></div>
+  <section class="rack scape" id="scape" aria-labelledby="scape-h">
+    <div class="rack-head">
+      <h2 id="scape-h">Soundscape</h2>
+      <select id="sc-preset" aria-label="Soundscape preset"></select>
+      <p class="rack-desc" id="sc-desc"></p>
+    </div>
+    <div class="sc-layers" id="sc-layers" role="group" aria-label="Layers"></div>
+    <div class="transport">
+      <button class="btn play" type="button" id="sc-play"><span class="on" aria-hidden="true"></span>Play</button>
+      <button class="btn ghost" type="button" id="sc-add">Add layer</button>
+      <span class="spacer"></span>
+      <span class="sc-note" id="sc-note">Beds loop seamlessly; events fire at random, each a little different.</span>
+      <button class="btn ghost copy" type="button" id="sc-copy">Copy</button>
+    </div>
+  </section>
   <div class="grid-head">
-    <div><p class="eyebrow">03 / THE LIBRARY<span class="sep">·</span><span class="meta">PLAY, TWEAK, COPY</span></p>
+    <div><p class="eyebrow">04 / THE LIBRARY<span class="sep">·</span><span class="meta">PLAY, TWEAK, COPY</span></p>
     <h2 class="big" id="sounds-h">Every sound <span class="count" id="count"></span></h2></div>
     <p class="hint">Waveforms are rendered offline through the master chain. Level scale in dBFS; the dashed line is the house ceiling, -12.</p>
   </div>
@@ -7743,20 +7779,22 @@ const SOUNDS = [
   T.osc(out, j, { f: p.pitch * 40, to: p.pitch * 3, dur: 0.25, peak: 0.04, a: 0.004 });
   T.osc(out, j, { f: 150, to: 30, dur: 0.5, peak: 0.02 + 0.09 * p.boom, a: 0.004 });
 }},
-{"id":"dark-abyss-drone","name":"Abyss Drone","category":"dark","tags":["drone","abyss","bed","bass","low","sub","well","dark","ominous","ambience","tension"],"desc":"A very low bowed drone with a cold shimmer far above it, swelling and sinking like the bottom of a well. For a menu that broods, a descent into the dark or a quiet threat under a scene.","dur":8.5,"family":"orchestral","moments":["ambience","tension"],"params":{"depth":{"min":33,"max":55,"def":41,"unit":"Hz","desc":"Pitch of the drone: low is a rumble you feel, high a heavy hum"},"darkness":{"min":0,"max":1,"def":0.5,"desc":"How much of the bow and the upper tone you hear: 0 gritty and open, 1 a closed black rumble"},"shimmer":{"min":0,"max":1,"def":0.5,"desc":"The faint cold glitter high above: 0 none, 1 a thin eerie halo"},"length":{"min":5,"max":8,"def":7,"unit":"s","desc":"How long the swell lasts"}},"play":function (T, out, t, p) {
+{"id":"dark-abyss-drone","name":"Abyss Drone","category":"dark","tags":["drone","abyss","bed","bass","low","sub","well","dark","ominous","ambience","tension"],"desc":"A very low bowed drone with a cold shimmer far above it, swelling and sinking like the bottom of a well. For a menu that broods, a descent into the dark or a quiet threat under a scene.","dur":8.5,"family":"orchestral","moments":["ambience","tension"],"loop":true,"params":{"depth":{"min":33,"max":55,"def":41,"unit":"Hz","desc":"Pitch of the drone: low is a rumble you feel, high a heavy hum"},"darkness":{"min":0,"max":1,"def":0.5,"desc":"How much of the bow and the upper tone you hear: 0 gritty and open, 1 a closed black rumble"},"shimmer":{"min":0,"max":1,"def":0.5,"desc":"The faint cold glitter high above: 0 none, 1 a thin eerie halo"},"length":{"min":5,"max":8,"def":7,"unit":"s","desc":"How long the swell lasts"}},"play":function (T, out, t, p) {
   const f = p.depth;
   const L = p.length;
   const room = T.reverb(out, t, { time: 2.4, mix: 0.28, tone: 0.25 });
   const body = L - 0.4;
   // the higher the note, the more of it the ear takes in: pull the level down above the default
   const m = f > 41 ? Math.pow(41 / f, 1.3) : 1;
-  const swell = { a: L * 0.4, r: L * 0.35 };
+  // the swells scale with the length up to its 8 s maximum, then stop growing, so a long render
+  // (a seamless loop is cut from one) has a long steady middle
+  const swell = { a: Math.min(L * 0.4, 3.2), r: Math.min(L * 0.35, 2.8) };
   // the section: players thicken it, the darkness knob closes a lowpass over it and eases the bow
   const closed = T.filter(room, t, { type: 'lowpass', f: 220 + 2400 * Math.pow(1 - p.darkness, 2), q: 0.5 });
   T.bow(closed, t, Object.assign({ f, dur: body, players: 5, body: 0.6, bright: 0.28 * (1 - p.darkness) + 0.04, pressure: 0.3 * (1 - p.darkness) + 0.05, vib: 4, vibRate: 3.6, peak: 0.1 * m }, swell));
   // the pedal speaks an octave up and carries its own 16' underneath
-  T.organ(room, t, { notes: [f * 2], stops: 'flute', dur: body, a: L * 0.45, r: L * 0.35, celeste: 3, chiff: 0, peak: 0.05 * m });
-  T.osc(room, t, Object.assign({ f, dur: body, peak: 0.06 * m, s: 1, d: 0.02 }, swell, { a: L * 0.5 }));
+  T.organ(room, t, { notes: [f * 2], stops: 'flute', dur: body, a: Math.min(L * 0.45, 3.6), r: Math.min(L * 0.35, 2.8), celeste: 3, chiff: 0, peak: 0.05 * m });
+  T.osc(room, t, Object.assign({ f, dur: body, peak: 0.06 * m, s: 1, d: 0.02 }, swell, { a: Math.min(L * 0.5, 4) }));
   // the cold shimmer: two thin sines a fifth apart, breathing slowly at different rates
   if (p.shimmer > 0.01) {
     const g = 0.008 * p.shimmer;
@@ -7936,7 +7974,7 @@ const SOUNDS = [
     T.noise(hall, at, { filter: 'lowpass', f: 600, q: 0.7, dur: 0.1, peak: 0.08 * v, a: 0.002 });
   }
 }},
-{"id":"dark-haunted-corridor","name":"Haunted Corridor","category":"dark","tags":["haunted","corridor","wind","creak","whisper","ghost","bed","hall","dark","ambience","tension"],"desc":"Wind drifting down a long empty hall, a creaking board and faint whispers somewhere behind you. For a haunted house, a walk through a ruin or a menu that watches back.","dur":8,"family":"air","moments":["ambience","tension"],"params":{"wind":{"min":0.15,"max":1,"def":0.55,"desc":"How strong the wind blows: low a faint draught, 1 a moaning gale"},"creaks":{"min":0,"max":1,"def":0.5,"desc":"How often old wood groans: 0 none, 1 a house settling all around"},"whispers":{"min":0,"max":1,"def":0.4,"desc":"How near the whispers come: 0 none, 1 just behind your ear"},"length":{"min":5,"max":7,"def":6,"unit":"s","desc":"How long it goes on"}},"play":function (T, out, t, p) {
+{"id":"dark-haunted-corridor","name":"Haunted Corridor","category":"dark","tags":["haunted","corridor","wind","creak","whisper","ghost","bed","hall","dark","ambience","tension"],"desc":"Wind drifting down a long empty hall, a creaking board and faint whispers somewhere behind you. For a haunted house, a walk through a ruin or a menu that watches back.","dur":8,"family":"air","moments":["ambience","tension"],"loop":true,"params":{"wind":{"min":0.15,"max":1,"def":0.55,"desc":"How strong the wind blows: low a faint draught, 1 a moaning gale"},"creaks":{"min":0,"max":1,"def":0.5,"desc":"How often old wood groans: 0 none, 1 a house settling all around"},"whispers":{"min":0,"max":1,"def":0.4,"desc":"How near the whispers come: 0 none, 1 just behind your ear"},"length":{"min":5,"max":7,"def":6,"unit":"s","desc":"How long it goes on"}},"play":function (T, out, t, p) {
   const L = p.length;
   const hall = T.reverb(out, t, { time: 2.2, mix: 0.35, tone: 0.3 });
   // the wind: a steady breath plus gusts, each a band of noise that rises and falls while the
@@ -8188,7 +8226,7 @@ const SOUNDS = [
     T.speak(place, t + start, { ph, voice: 'whisper', rate, pitch: T.rand(-3, 3), peak: (0.2 * lvl) / Math.sqrt(n) });
   }
 }},
-{"id":"ambience-aurora-pad","name":"Aurora Pad","category":"ambience","tags":["aurora","pad","shimmer","ethereal","glow","northern-lights","wide","calm","bed"],"desc":"A slow, wide, glowing chord that swells and sways like curtains of light, with a thin glitter above. A dreamy bed for a night sky.","dur":8,"family":"synthetic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":110,"max":262,"def":165,"unit":"Hz","desc":"Root of the chord, the other notes follow it"},"glow":{"min":0,"max":1,"def":0.5,"desc":"How many bright upper notes and how much glitter join the chord: 0 plain and warm, 1 lit up"},"drift":{"min":0,"max":1,"def":0.5,"desc":"How far the chord sways and swells: 0 nearly still, 1 rolling slowly across the field"}},"play":function (T, out, t, p) {
+{"id":"ambience-aurora-pad","name":"Aurora Pad","category":"ambience","tags":["aurora","pad","shimmer","ethereal","glow","northern-lights","wide","calm","bed"],"desc":"A slow, wide, glowing chord that swells and sways like curtains of light, with a thin glitter above. A dreamy bed for a night sky.","dur":8,"family":"synthetic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":110,"max":262,"def":165,"unit":"Hz","desc":"Root of the chord, the other notes follow it"},"glow":{"min":0,"max":1,"def":0.5,"desc":"How many bright upper notes and how much glitter join the chord: 0 plain and warm, 1 lit up"},"drift":{"min":0,"max":1,"def":0.5,"desc":"How far the chord sways and swells: 0 nearly still, 1 rolling slowly across the field"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.8, L * 0.3);
   const f0 = p.pitch;
@@ -8225,7 +8263,7 @@ const SOUNDS = [
     });
   });
 }},
-{"id":"ambience-cave-drips","name":"Cave Drips","category":"ambience","tags":["cave","drip","water","dungeon","echo","underground","damp","bed"],"desc":"Slow drips falling in a damp stone chamber, each one ringing in the echo, over a low draft of air.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"drips":{"min":2,"max":10,"def":5,"step":1,"desc":"How many drips fall during the bed"},"pitch":{"min":0.6,"max":1.6,"def":1,"unit":"x","desc":"Scales drip pitch: low heavy drops, high small bright ones"},"cave":{"min":0,"max":1,"def":0.5,"desc":"Chamber echo: 0 shorter and drier, 1 longer and wetter"}},"play":function (T, out, t, p) {
+{"id":"ambience-cave-drips","name":"Cave Drips","category":"ambience","tags":["cave","drip","water","dungeon","echo","underground","damp","bed"],"desc":"Slow drips falling in a damp stone chamber, each one ringing in the echo, over a low draft of air.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"drips":{"min":2,"max":10,"def":5,"step":1,"desc":"How many drips fall during the bed"},"pitch":{"min":0.6,"max":1.6,"def":1,"unit":"x","desc":"Scales drip pitch: low heavy drops, high small bright ones"},"cave":{"min":0,"max":1,"def":0.5,"desc":"Chamber echo: 0 shorter and drier, 1 longer and wetter"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.2, L * 0.3);
   const cave = T.reverb(out, t, { time: 1 + 1 * p.cave, mix: 0.35 + 0.45 * p.cave, tone: 0.4, pre: 0.02 });
@@ -8244,7 +8282,7 @@ const SOUNDS = [
     }
   }
 }},
-{"id":"ambience-distant-thunder","name":"Distant Thunder","category":"ambience","tags":["thunder","storm","rumble","weather","low","distant","rolling"],"desc":"A storm miles away: a muffled crack and a long low rumble that rolls and fades out.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the rumble and its rolls"},"distance":{"min":0,"max":1,"def":0.55,"desc":"How far the storm is: 0 near with a loud crack, 1 far, darker, no crack"},"rolls":{"min":0,"max":3,"def":2,"step":1,"desc":"How many later rolls re-light the rumble after the first"}},"play":function (T, out, t, p) {
+{"id":"ambience-distant-thunder","name":"Distant Thunder","category":"ambience","tags":["thunder","storm","rumble","weather","low","distant","rolling"],"desc":"A storm miles away: a muffled crack and a long low rumble that rolls and fades out.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the rumble and its rolls"},"distance":{"min":0,"max":1,"def":0.55,"desc":"How far the storm is: 0 near with a loud crack, 1 far, darker, no crack"},"rolls":{"min":0,"max":3,"def":2,"step":1,"desc":"How many later rolls re-light the rumble after the first"}},"play":function (T, out, t, p) {
   const L = p.length;
   const far = p.distance;
   const dark = 1 - 0.55 * far;
@@ -8270,7 +8308,7 @@ const SOUNDS = [
     });
   }
 }},
-{"id":"ambience-fire-crackle","name":"Fire Crackle","category":"ambience","tags":["fire","crackle","campfire","fireplace","flame","wood","cozy","bed"],"desc":"A hearth or campfire: a soft roar of flame with random snaps, pops and the odd log settling.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"crackle":{"min":0,"max":1,"def":0.5,"desc":"Density of snaps and pops, and how often a log settles"},"roar":{"min":0,"max":1,"def":0.4,"desc":"Level of the flame roar and its flicker swells: 0 nearly silent, 1 full"},"tone":{"min":0,"max":1,"def":0.5,"desc":"Crackle brightness: 0 dull and woody, 1 bright and sharp"}},"play":function (T, out, t, p) {
+{"id":"ambience-fire-crackle","name":"Fire Crackle","category":"ambience","tags":["fire","crackle","campfire","fireplace","flame","wood","cozy","bed"],"desc":"A hearth or campfire: a soft roar of flame with random snaps, pops and the odd log settling.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"crackle":{"min":0,"max":1,"def":0.5,"desc":"Density of snaps and pops, and how often a log settles"},"roar":{"min":0,"max":1,"def":0.4,"desc":"Level of the flame roar and its flicker swells: 0 nearly silent, 1 full"},"tone":{"min":0,"max":1,"def":0.5,"desc":"Crackle brightness: 0 dull and woody, 1 bright and sharp"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1, L * 0.25);
   const win = (x) => Math.min(1, x / 0.6, (L - x) / 0.8);
@@ -8306,7 +8344,7 @@ const SOUNDS = [
     T.noise(out, t + at, { filter: 'lowpass', f: 500, q: 0.8, dur: 0.06, peak: 0.12 * win(at), a: 0.003 });
   }
 }},
-{"id":"ambience-forest-birds","name":"Forest Birds","category":"ambience","tags":["birds","birdsong","chirp","tweet","forest","morning","nature","bed"],"desc":"Morning birdsong in the trees: tweets, trills and whistles from near and far over a faint breeze.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"activity":{"min":0,"max":1,"def":0.5,"desc":"How many bird phrases sing: 0 sparse, 1 busy"},"pitch":{"min":0.7,"max":1.4,"def":1,"unit":"x","desc":"Scales all the birdsong pitch: low deeper, high shriller"},"trill":{"min":0,"max":1,"def":0.4,"desc":"Share of phrases that are fast warbling trills rather than tweets or whistles"}},"play":function (T, out, t, p) {
+{"id":"ambience-forest-birds","name":"Forest Birds","category":"ambience","tags":["birds","birdsong","chirp","tweet","forest","morning","nature","bed"],"desc":"Morning birdsong in the trees: tweets, trills and whistles from near and far over a faint breeze.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"activity":{"min":0,"max":1,"def":0.5,"desc":"How many bird phrases sing: 0 sparse, 1 busy"},"pitch":{"min":0.7,"max":1.4,"def":1,"unit":"x","desc":"Scales all the birdsong pitch: low deeper, high shriller"},"trill":{"min":0,"max":1,"def":0.4,"desc":"Share of phrases that are fast warbling trills rather than tweets or whistles"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1, L * 0.25);
   const room = T.reverb(out, t, { time: 1.1, mix: 0.22, tone: 0.8 });
@@ -8342,7 +8380,7 @@ const SOUNDS = [
     }
   }
 }},
-{"id":"ambience-grid-hum","name":"Grid Hum","category":"ambience","tags":["grid","hum","electric","digital","neon","data","power","wide","bed"],"desc":"The clean electric hum of a vast digital grid: a pure throbbing tone with a glassy sheen and tiny data ticks crossing it. For cyber scenes.","dur":8,"family":"synthetic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":55,"max":220,"def":110,"unit":"Hz","desc":"Fundamental of the hum, the harmonics follow it"},"sheen":{"min":0,"max":1,"def":0.4,"desc":"Level of the glassy resonant sheen above the hum: 0 none, 1 clear"},"traffic":{"min":0,"max":1,"def":0.4,"desc":"How many tiny data ticks cross the grid: 0 none, 1 busy"}},"play":function (T, out, t, p) {
+{"id":"ambience-grid-hum","name":"Grid Hum","category":"ambience","tags":["grid","hum","electric","digital","neon","data","power","wide","bed"],"desc":"The clean electric hum of a vast digital grid: a pure throbbing tone with a glassy sheen and tiny data ticks crossing it. For cyber scenes.","dur":8,"family":"synthetic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":55,"max":220,"def":110,"unit":"Hz","desc":"Fundamental of the hum, the harmonics follow it"},"sheen":{"min":0,"max":1,"def":0.4,"desc":"Level of the glassy resonant sheen above the hum: 0 none, 1 clear"},"traffic":{"min":0,"max":1,"def":0.4,"desc":"How many tiny data ticks cross the grid: 0 none, 1 busy"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.2, L * 0.3);
   const win = (x) => Math.min(1, x / 0.6, (L - x) / 0.8);
@@ -8375,7 +8413,7 @@ const SOUNDS = [
     });
   }
 }},
-{"id":"ambience-lava-bubbles","name":"Lava Bubbles","category":"ambience","tags":["lava","bubbles","bubbling","lamp","viscous","warm","molten","gurgle","bed"],"desc":"Thick warm bubbles rising slowly and popping softly over a low simmer of heat, like a lava lamp. Fades in and out.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"bubbles":{"min":2,"max":14,"def":6,"step":1,"desc":"How many big slow bubbles rise during the bed"},"depth":{"min":0.6,"max":1.6,"def":1,"unit":"x","desc":"Scales bubble pitch: low thick slow ones, high small light ones"},"heat":{"min":0,"max":1,"def":0.5,"desc":"Level of the warm simmer under the bubbles: 0 faint, 1 full"}},"play":function (T, out, t, p) {
+{"id":"ambience-lava-bubbles","name":"Lava Bubbles","category":"ambience","tags":["lava","bubbles","bubbling","lamp","viscous","warm","molten","gurgle","bed"],"desc":"Thick warm bubbles rising slowly and popping softly over a low simmer of heat, like a lava lamp. Fades in and out.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"bubbles":{"min":2,"max":14,"def":6,"step":1,"desc":"How many big slow bubbles rise during the bed"},"depth":{"min":0.6,"max":1.6,"def":1,"unit":"x","desc":"Scales bubble pitch: low thick slow ones, high small light ones"},"heat":{"min":0,"max":1,"def":0.5,"desc":"Level of the warm simmer under the bubbles: 0 faint, 1 full"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.2, L * 0.3);
   const win = (x) => Math.min(1, x / 0.7, (L - x) / 1.3);
@@ -8406,7 +8444,7 @@ const SOUNDS = [
     T.noise(side, t + at + len * 0.8, { filter: 'lowpass', f: 340, q: 0.8, dur: 0.09, peak: 0.045 * w, a: 0.012 });
   }
 }},
-{"id":"ambience-night-crickets","name":"Night Crickets","category":"ambience","tags":["crickets","night","summer","insects","chirp","evening","nature","wide","bed"],"desc":"A warm summer night: a few crickets chirping in runs from different places in the dark, over cool still air.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"crickets":{"min":1,"max":6,"def":3,"step":1,"desc":"How many crickets are chirping, spread across the field"},"pitch":{"min":0.8,"max":1.25,"def":1,"unit":"x","desc":"Scales every cricket pitch: low and mellow, high and thin"},"pace":{"min":0.6,"max":1.5,"def":1,"unit":"x","desc":"How fast the chirps repeat: slow and cool to quick and warm"}},"play":function (T, out, t, p) {
+{"id":"ambience-night-crickets","name":"Night Crickets","category":"ambience","tags":["crickets","night","summer","insects","chirp","evening","nature","wide","bed"],"desc":"A warm summer night: a few crickets chirping in runs from different places in the dark, over cool still air.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"crickets":{"min":1,"max":6,"def":3,"step":1,"desc":"How many crickets are chirping, spread across the field"},"pitch":{"min":0.8,"max":1.25,"def":1,"unit":"x","desc":"Scales every cricket pitch: low and mellow, high and thin"},"pace":{"min":0.6,"max":1.5,"def":1,"unit":"x","desc":"How fast the chirps repeat: slow and cool to quick and warm"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.2, L * 0.3);
   const win = (x) => Math.min(1, x / 0.8, (L - x) / 1);
@@ -8443,7 +8481,7 @@ const SOUNDS = [
     }
   }
 }},
-{"id":"ambience-ocean-surf","name":"Ocean Surf","category":"ambience","tags":["ocean","sea","surf","waves","beach","shore","water","bed"],"desc":"Waves building and breaking on a beach, each with a hiss of foam, over a low swell. Fades in and out.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"period":{"min":2.5,"max":6,"def":4,"unit":"s","desc":"Time between waves, longer also makes each wave build slower"},"foam":{"min":0,"max":1,"def":0.5,"desc":"Level of the foam hiss after each crest: 0 none, 1 full"},"depth":{"min":0,"max":1,"def":0.5,"desc":"Low sea swell under the waves: 0 nearly gone, 1 heavy"}},"play":function (T, out, t, p) {
+{"id":"ambience-ocean-surf","name":"Ocean Surf","category":"ambience","tags":["ocean","sea","surf","waves","beach","shore","water","bed"],"desc":"Waves building and breaking on a beach, each with a hiss of foam, over a low swell. Fades in and out.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"period":{"min":2.5,"max":6,"def":4,"unit":"s","desc":"Time between waves, longer also makes each wave build slower"},"foam":{"min":0,"max":1,"def":0.5,"desc":"Level of the foam hiss after each crest: 0 none, 1 full"},"depth":{"min":0,"max":1,"def":0.5,"desc":"Low sea swell under the waves: 0 nearly gone, 1 heavy"}},"play":function (T, out, t, p) {
   const L = p.length;
   const P = p.period;
   const fade = Math.min(1.2, L * 0.3);
@@ -8466,7 +8504,7 @@ const SOUNDS = [
     });
   }
 }},
-{"id":"ambience-rain","name":"Rain","category":"ambience","tags":["rain","drizzle","downpour","weather","water","outdoor","bed"],"desc":"Rain on leaves and puddles, from a drizzle to a steady downpour. Fades in and out.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"rate":{"min":0,"max":1,"def":0.5,"desc":"Rain intensity: 0 light drizzle to 1 steady downpour, more drops and plinks"},"tone":{"min":0,"max":1,"def":0.5,"desc":"Brightness of the hiss, drops and plinks: 0 dull, 1 bright"}},"play":function (T, out, t, p) {
+{"id":"ambience-rain","name":"Rain","category":"ambience","tags":["rain","drizzle","downpour","weather","water","outdoor","bed"],"desc":"Rain on leaves and puddles, from a drizzle to a steady downpour. Fades in and out.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"rate":{"min":0,"max":1,"def":0.5,"desc":"Rain intensity: 0 light drizzle to 1 steady downpour, more drops and plinks"},"tone":{"min":0,"max":1,"def":0.5,"desc":"Brightness of the hiss, drops and plinks: 0 dull, 1 bright"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1, L * 0.25);
   const win = (x) => Math.min(1, x / fade, (L - x) / fade);
@@ -8492,7 +8530,7 @@ const SOUNDS = [
     T.osc(out, t + at, { f, to: f * 1.6, glide: 0.04, dur: 0.08, peak: 0.016 * T.rand(0.5, 1) * win(at), a: 0.003 });
   }
 }},
-{"id":"ambience-room-hum","name":"Room Tone Hum","category":"ambience","tags":["room-tone","hum","electrical","mains","hvac","indoor","office","bed"],"desc":"A quiet indoor bed: electrical hum with its buzzing harmonics over a breath of ventilation hiss.","dur":8,"family":"mechanical","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":50,"max":120,"def":60,"unit":"Hz","desc":"Mains hum frequency, with a soft sine an octave above it"},"buzz":{"min":0,"max":1,"def":0.4,"desc":"Brightness of the sawtooth buzz: 0 dull hum, 1 bright buzzy harmonics"},"air":{"min":0,"max":1,"def":0.5,"desc":"Ventilation hiss: 0 none, 1 full"}},"play":function (T, out, t, p) {
+{"id":"ambience-room-hum","name":"Room Tone Hum","category":"ambience","tags":["room-tone","hum","electrical","mains","hvac","indoor","office","bed"],"desc":"A quiet indoor bed: electrical hum with its buzzing harmonics over a breath of ventilation hiss.","dur":8,"family":"mechanical","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":50,"max":120,"def":60,"unit":"Hz","desc":"Mains hum frequency, with a soft sine an octave above it"},"buzz":{"min":0,"max":1,"def":0.4,"desc":"Brightness of the sawtooth buzz: 0 dull hum, 1 bright buzzy harmonics"},"air":{"min":0,"max":1,"def":0.5,"desc":"Ventilation hiss: 0 none, 1 full"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1, L * 0.25);
   const body = T.filter(out, t, { type: 'lowpass', f: 250 + 1400 * p.buzz, q: 0.7, dur: 0.1 });
@@ -8506,7 +8544,7 @@ const SOUNDS = [
     filter: 'lowpass', f: 900, q: 0.7, dur: L, peak: 0.07 * p.air, a: fade, s: 1, d: 0.02, r: fade,
   });
 }},
-{"id":"ambience-sand-pour","name":"Sand Pour","category":"ambience","tags":["sand","pour","hourglass","grains","timer","desert","hiss","bed"],"desc":"Fine sand pouring in a soft steady hiss, thinning to a last few grains and a quiet settle. Good under an hourglass or a timer running down.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, settle included"},"flow":{"min":0,"max":1,"def":0.6,"desc":"Thickness of the stream: 0 a thin trickle, 1 a full pour"},"grain":{"min":0,"max":1,"def":0.4,"desc":"Size of the grains: 0 fine and airy, 1 coarse and gritty"},"settle":{"min":0,"max":1,"def":0.5,"desc":"Level of the soft shush as the pile settles at the end: 0 none"}},"play":function (T, out, t, p) {
+{"id":"ambience-sand-pour","name":"Sand Pour","category":"ambience","tags":["sand","pour","hourglass","grains","timer","desert","hiss","bed"],"desc":"Fine sand pouring in a soft steady hiss, thinning to a last few grains and a quiet settle. Good under an hourglass or a timer running down.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, settle included"},"flow":{"min":0,"max":1,"def":0.6,"desc":"Thickness of the stream: 0 a thin trickle, 1 a full pour"},"grain":{"min":0,"max":1,"def":0.4,"desc":"Size of the grains: 0 fine and airy, 1 coarse and gritty"},"settle":{"min":0,"max":1,"def":0.5,"desc":"Level of the soft shush as the pile settles at the end: 0 none"}},"play":function (T, out, t, p) {
   const L = p.length;
   const end = L - 0.55;
   const fade = Math.min(1.1, L * 0.22);
@@ -8526,7 +8564,7 @@ const SOUNDS = [
   T.crackle(out, t + end - 0.6, { dur: 1, rate: 14, f: 2800, spread: 0.7, q: 1.2, len: 0.004, peak: 0.06, vary: 0.6 });
   T.noise(out, t + end + 0.03, { filter: 'lowpass', f: 900, to: 260, q: 0.7, dur: 0.5, peak: 0.13 * p.settle, a: 0.12 });
 }},
-{"id":"ambience-snow-hush","name":"Snow Hush","category":"ambience","tags":["snow","winter","cold","hush","quiet","frost","calm","wide","bed"],"desc":"Snow falling on a windless night: a soft muffled hush, clumps sliding off branches and faint ice glints. A calm winter-scene bed.","dur":8,"family":"air","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"hush":{"min":0,"max":1,"def":0.5,"desc":"Level of the muffled blanket of air: 0 barely there, 1 full"},"slides":{"min":0,"max":6,"def":2,"step":1,"desc":"How many soft clumps of snow slide off a branch"},"glints":{"min":0,"max":8,"def":3,"step":1,"desc":"How many faint ice glints sparkle in the cold air"}},"play":function (T, out, t, p) {
+{"id":"ambience-snow-hush","name":"Snow Hush","category":"ambience","tags":["snow","winter","cold","hush","quiet","frost","calm","wide","bed"],"desc":"Snow falling on a windless night: a soft muffled hush, clumps sliding off branches and faint ice glints. A calm winter-scene bed.","dur":8,"family":"air","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"hush":{"min":0,"max":1,"def":0.5,"desc":"Level of the muffled blanket of air: 0 barely there, 1 full"},"slides":{"min":0,"max":6,"def":2,"step":1,"desc":"How many soft clumps of snow slide off a branch"},"glints":{"min":0,"max":8,"def":3,"step":1,"desc":"How many faint ice glints sparkle in the cold air"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.2, L * 0.3);
   const win = (x) => Math.min(1, x / 0.6, (L - x) / 0.8);
@@ -8566,7 +8604,7 @@ const SOUNDS = [
     });
   }
 }},
-{"id":"ambience-space-drone","name":"Space Drone","category":"ambience","tags":["space","drone","pad","ambient","sci-fi","dark","deep","bed"],"desc":"A slow, deep drone for a ship or a void: a dark pad that opens up, with a faint shimmer far above.","dur":8,"family":"synthetic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":36,"max":110,"def":55,"unit":"Hz","desc":"Root frequency of the drone, harmonics and shimmer follow it"},"tone":{"min":0,"max":1,"def":0.4,"desc":"How far the slowly opening filter reaches: 0 dark, 1 brighter"},"shimmer":{"min":0,"max":1,"def":0.4,"desc":"Level of the high trembling shimmer: 0 none, 1 full"}},"play":function (T, out, t, p) {
+{"id":"ambience-space-drone","name":"Space Drone","category":"ambience","tags":["space","drone","pad","ambient","sci-fi","dark","deep","bed"],"desc":"A slow, deep drone for a ship or a void: a dark pad that opens up, with a faint shimmer far above.","dur":8,"family":"synthetic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"pitch":{"min":36,"max":110,"def":55,"unit":"Hz","desc":"Root frequency of the drone, harmonics and shimmer follow it"},"tone":{"min":0,"max":1,"def":0.4,"desc":"How far the slowly opening filter reaches: 0 dark, 1 brighter"},"shimmer":{"min":0,"max":1,"def":0.4,"desc":"Level of the high trembling shimmer: 0 none, 1 full"}},"play":function (T, out, t, p) {
   const L = p.length;
   const f = p.pitch;
   const fade = Math.min(1.8, L * 0.3);
@@ -8586,7 +8624,7 @@ const SOUNDS = [
     });
   }
 }},
-{"id":"ambience-starfield-pad","name":"Starfield Pad","category":"ambience","tags":["stars","starfield","space","night-sky","twinkle","pad","airy","wide","bed"],"desc":"A thin airy pad under a sky of stars: soft twinkling notes ring out across a wide, quiet field. For space and night scenes.","dur":8,"family":"synthetic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"stars":{"min":2,"max":16,"def":8,"step":1,"desc":"How many stars twinkle during the bed"},"pitch":{"min":0.7,"max":1.5,"def":1,"unit":"x","desc":"Scales the whole sky: low calm and round, high thin and bright"},"glow":{"min":0,"max":1,"def":0.5,"desc":"Level of the airy pad under the stars: 0 faint, 1 full"}},"play":function (T, out, t, p) {
+{"id":"ambience-starfield-pad","name":"Starfield Pad","category":"ambience","tags":["stars","starfield","space","night-sky","twinkle","pad","airy","wide","bed"],"desc":"A thin airy pad under a sky of stars: soft twinkling notes ring out across a wide, quiet field. For space and night scenes.","dur":8,"family":"synthetic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":7,"unit":"s","desc":"Total duration of the bed, fades included"},"stars":{"min":2,"max":16,"def":8,"step":1,"desc":"How many stars twinkle during the bed"},"pitch":{"min":0.7,"max":1.5,"def":1,"unit":"x","desc":"Scales the whole sky: low calm and round, high thin and bright"},"glow":{"min":0,"max":1,"def":0.5,"desc":"Level of the airy pad under the stars: 0 faint, 1 full"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.5, L * 0.3);
   const win = (x) => Math.min(1, x / 0.6, (L - x) / 0.8);
@@ -8625,7 +8663,7 @@ const SOUNDS = [
     T.osc(place, t + at, { f: f * 2.01, dur: 0.45, peak: pk * 0.25, a: 0.012 });
   }
 }},
-{"id":"ambience-storm-roar","name":"Storm Roar","category":"ambience","tags":["storm","roar","gale","hurricane","tornado","downpour","weather","wind","heavy","bed"],"desc":"Being inside a big storm: a deep wide roar of wind and sheeting rain with a low wail running through it. For a gale, tornado or downpour.","dur":8,"family":"organic","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"fury":{"min":0,"max":1,"def":0.55,"desc":"Size of the storm: 0 a hard blow, 1 a full gale with a heavier, brighter roar"},"rain":{"min":0,"max":1,"def":0.5,"desc":"Level of the steady sheet of rain hiss: 0 none, 1 heavy"},"howl":{"min":0,"max":1,"def":0.35,"desc":"Level of the wail through the roar: 0 none, 1 clearly audible"}},"play":function (T, out, t, p) {
+{"id":"ambience-storm-roar","name":"Storm Roar","category":"ambience","tags":["storm","roar","gale","hurricane","tornado","downpour","weather","wind","heavy","bed"],"desc":"Being inside a big storm: a deep wide roar of wind and sheeting rain with a low wail running through it. For a gale, tornado or downpour.","dur":8,"family":"organic","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"fury":{"min":0,"max":1,"def":0.55,"desc":"Size of the storm: 0 a hard blow, 1 a full gale with a heavier, brighter roar"},"rain":{"min":0,"max":1,"def":0.5,"desc":"Level of the steady sheet of rain hiss: 0 none, 1 heavy"},"howl":{"min":0,"max":1,"def":0.35,"desc":"Level of the wail through the roar: 0 none, 1 clearly audible"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.2, L * 0.3);
   const f = p.fury;
@@ -8710,7 +8748,37 @@ const SOUNDS = [
     });
   });
 }},
-{"id":"ambience-wind-gusts","name":"Wind Gusts","category":"ambience","tags":["wind","gust","breeze","storm","outdoor","bed","loop"],"desc":"An open-air wind bed: steady air with slow gusts rolling through and a faint whistle. Fades in and out.","dur":8,"family":"air","moments":["ambience"],"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"gust":{"min":0,"max":1,"def":0.55,"desc":"Strength of the slow passing gusts: 0 steady air only, 1 strong gusts"},"pitch":{"min":0.6,"max":1.6,"def":1,"unit":"x","desc":"Scales air, gust and whistle pitch at even level: low deep, high thin"},"whistle":{"min":0,"max":1,"def":0.25,"desc":"Thin whistle through a gap: 0 none, 1 clearly audible"}},"play":function (T, out, t, p) {
+{"id":"ambience-thunder-strike","name":"Thunder Strike","category":"ambience","tags":["thunder","lightning","storm","weather","crack","rumble","rain","nature","event"],"desc":"A single thunderclap: a close tearing crack rolling into thunder, or a far rumble that arrives late. Fire it now and then over rain or sea for a storm.","dur":9.4,"family":"organic","moments":["ambience","explosion"],"params":{"distance":{"min":0,"max":1,"def":0.35,"desc":"How far the strike is: 0 a crack right overhead, 1 a low rumble from miles away"},"roll":{"min":0,"max":1,"def":0.6,"desc":"How long and how many times the thunder rolls on after the strike"},"size":{"min":0,"max":1,"def":0.5,"desc":"How big the storm is: a thin crack and a short grumble up to a deep, heavy roar"}},"play":function (T, out, t, p) {
+  const near = 1 - p.distance;
+  // sound arrives after the flash: about 3 s per kilometre, kept short so the event stays usable
+  const late = 0.05 + 0.9 * p.distance;
+  const at = t + late;
+  const room = T.reverb(T.gain(out, 1.4), t, { time: 2.2, mix: 0.25, tone: 0.25 });
+  // the crack: a tearing burst of crackle and a wideband slap, only when it is close
+  if (near > 0.15) {
+    const k = (near - 0.15) / 0.85;
+    T.noise(room, at, { filter: 'highpass', f: 1800, q: 0.7, dur: 0.18 + 0.12 * k, peak: 0.11 * k, a: 0.002 });
+    T.crackle(room, at, { dur: 0.35 + 0.25 * k, rate: 90, f: 3200, to: 900, spread: 0.8, len: 0.012, peak: 0.12 * k, vary: 0.6 });
+    T.noise(room, at, { filter: 'lowpass', f: 900 + 1500 * k, q: 0.6, dur: 0.5, peak: 0.14 * k, a: 0.003 });
+  }
+  // the roll: three to five swells, each later, lower and darker than the last
+  const swells = 3 + Math.round(2 * p.roll);
+  const span = 2 + 2.4 * p.roll;
+  const lp = 260 + 700 * near * (0.5 + 0.5 * p.size);
+  for (let i = 0; i < swells; i++) {
+    const u = i / Math.max(1, swells - 1);
+    const s0 = at + 0.08 + u * span * T.rand(0.75, 1);
+    const len = 0.8 + 1.0 * T.rand(0.6, 1) * (0.6 + 0.4 * p.size);
+    const lvl = (0.13 + 0.07 * p.size) * Math.pow(0.72, i) * (0.55 + 0.45 * near) * T.rand(0.8, 1);
+    T.noise(room, s0, {
+      filter: 'lowpass', f: lp * Math.pow(0.85, i), to: lp * 0.55 * Math.pow(0.85, i), q: 0.8, dur: len,
+      peak: lvl, a: 0.12 + 0.2 * u, tail: 0.05, fade: 0.3,
+    });
+  }
+  // the body under it all, felt more than heard
+  T.osc(room, at, { f: 42 + 10 * p.size, to: 34, dur: 1.4 + 1.6 * p.roll, peak: 0.05 * (0.5 + 0.5 * p.size), a: 0.04 });
+}},
+{"id":"ambience-wind-gusts","name":"Wind Gusts","category":"ambience","tags":["wind","gust","breeze","storm","outdoor","bed","loop"],"desc":"An open-air wind bed: steady air with slow gusts rolling through and a faint whistle. Fades in and out.","dur":8,"family":"air","moments":["ambience"],"loop":true,"params":{"length":{"min":3,"max":8,"def":6,"unit":"s","desc":"Total duration of the bed, fades included"},"gust":{"min":0,"max":1,"def":0.55,"desc":"Strength of the slow passing gusts: 0 steady air only, 1 strong gusts"},"pitch":{"min":0.6,"max":1.6,"def":1,"unit":"x","desc":"Scales air, gust and whistle pitch at even level: low deep, high thin"},"whistle":{"min":0,"max":1,"def":0.25,"desc":"Thin whistle through a gap: 0 none, 1 clearly audible"}},"play":function (T, out, t, p) {
   const L = p.length;
   const fade = Math.min(1.3, L * 0.3);
   // a higher band passes more of the noise: trim it so the level holds as pitch moves
@@ -13192,6 +13260,332 @@ const THEMES = [
   }
  }
 ];
+// ---- soundscapes (src/scapes) ----
+const SCAPES = [
+ {
+  "id": "campfire-night",
+  "name": "Campfire Night",
+  "desc": "A crackling fire under the stars, crickets in the grass and a light breeze through the trees.",
+  "layers": [
+   {
+    "sound": "ambience-fire-crackle",
+    "params": {
+     "crackle": 0.6,
+     "roar": 0.35,
+     "tone": 0.45
+    },
+    "level": 1
+   },
+   {
+    "sound": "ambience-night-crickets",
+    "params": {
+     "crickets": 4,
+     "pitch": 1,
+     "pace": 1
+    },
+    "level": 0.6
+   },
+   {
+    "sound": "ambience-wind-gusts",
+    "params": {
+     "gust": 0.2,
+     "pitch": 0.7,
+     "whistle": 0
+    },
+    "level": 0.35
+   }
+  ]
+ },
+ {
+  "id": "cozy-cabin",
+  "name": "Cozy Cabin",
+  "desc": "Rain on the roof, a fire in the hearth and the quiet hum of an old room. For reading, writing or doing nothing.",
+  "layers": [
+   {
+    "sound": "ambience-rain",
+    "params": {
+     "rate": 0.45,
+     "tone": 0.2
+    },
+    "level": 0.8
+   },
+   {
+    "sound": "ambience-fire-crackle",
+    "params": {
+     "crackle": 0.45,
+     "roar": 0.25,
+     "tone": 0.3
+    },
+    "level": 0.85
+   },
+   {
+    "sound": "ambience-room-hum",
+    "params": {
+     "pitch": 60,
+     "buzz": 0.1,
+     "air": 0.4
+    },
+    "level": 0.4
+   }
+  ]
+ },
+ {
+  "id": "deep-cave",
+  "name": "Deep Cave",
+  "desc": "Water dripping into pools in a deep cave, a cold draught and something rumbling far below.",
+  "layers": [
+   {
+    "sound": "ambience-cave-drips",
+    "params": {
+     "drips": 6,
+     "pitch": 1,
+     "cave": 0.8
+    },
+    "level": 1
+   },
+   {
+    "sound": "ambience-wind-gusts",
+    "params": {
+     "gust": 0.2,
+     "pitch": 0.6,
+     "whistle": 0.2
+    },
+    "level": 0.35
+   },
+   {
+    "sound": "dark-abyss-drone",
+    "params": {
+     "depth": 41,
+     "darkness": 0.6,
+     "shimmer": 0.2
+    },
+    "level": 0.45
+   }
+  ]
+ },
+ {
+  "id": "deep-space",
+  "name": "Deep Space",
+  "desc": "The hum of a ship drifting through a starfield: a deep drone, distant twinkling and the low buzz of the hull.",
+  "layers": [
+   {
+    "sound": "ambience-space-drone",
+    "params": {
+     "pitch": 55,
+     "tone": 0.35,
+     "shimmer": 0.4
+    },
+    "level": 1
+   },
+   {
+    "sound": "ambience-starfield-pad",
+    "params": {
+     "stars": 8,
+     "pitch": 1,
+     "glow": 0.5
+    },
+    "level": 0.6
+   },
+   {
+    "sound": "ambience-grid-hum",
+    "params": {
+     "pitch": 60,
+     "sheen": 0.2,
+     "traffic": 0.1
+    },
+    "level": 0.35
+   }
+  ]
+ },
+ {
+  "id": "forest-dawn",
+  "name": "Forest Dawn",
+  "desc": "Birds waking in the trees with a soft wind moving through the leaves.",
+  "layers": [
+   {
+    "sound": "ambience-forest-birds",
+    "params": {
+     "activity": 0.7,
+     "pitch": 1,
+     "trill": 0.5
+    },
+    "level": 1
+   },
+   {
+    "sound": "ambience-wind-gusts",
+    "params": {
+     "gust": 0.25,
+     "pitch": 1.1,
+     "whistle": 0
+    },
+    "level": 0.4
+   }
+  ]
+ },
+ {
+  "id": "haunted-house",
+  "name": "Haunted House",
+  "desc": "Wind in an empty corridor, a drone you feel more than hear, and now and then a door creaking somewhere upstairs.",
+  "layers": [
+   {
+    "sound": "dark-haunted-corridor",
+    "params": {
+     "wind": 0.5,
+     "creaks": 0.4,
+     "whispers": 0.3
+    },
+    "level": 1
+   },
+   {
+    "sound": "dark-abyss-drone",
+    "params": {
+     "depth": 36,
+     "darkness": 0.7,
+     "shimmer": 0.3
+    },
+    "level": 0.5
+   },
+   {
+    "sound": "dark-door-creak",
+    "params": {
+     "close": 0
+    },
+    "level": 0.7,
+    "every": [
+     12,
+     28
+    ],
+    "vary": {
+     "length": [
+      1.5,
+      3
+     ],
+     "pitch": [
+      0.7,
+      1.3
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "ocean-rain",
+  "name": "Ocean and Rain",
+  "desc": "Gentle waves on a beach under soft, steady rain. Calm and wide.",
+  "layers": [
+   {
+    "sound": "ambience-ocean-surf",
+    "params": {
+     "period": 5.5,
+     "foam": 0.5,
+     "depth": 0.5
+    },
+    "level": 1
+   },
+   {
+    "sound": "ambience-rain",
+    "params": {
+     "rate": 0.35,
+     "tone": 0.35
+    },
+    "level": 0.75
+   }
+  ]
+ },
+ {
+  "id": "rain-and-thunder",
+  "name": "Rain and Thunder",
+  "desc": "Steady rain with a little wind, and thunder now and then: sometimes a crack close overhead, sometimes a low roll far off.",
+  "layers": [
+   {
+    "sound": "ambience-rain",
+    "params": {
+     "rate": 0.6,
+     "tone": 0.45
+    },
+    "level": 1
+   },
+   {
+    "sound": "ambience-wind-gusts",
+    "params": {
+     "gust": 0.3,
+     "pitch": 0.8,
+     "whistle": 0.1
+    },
+    "level": 0.45
+   },
+   {
+    "sound": "ambience-thunder-strike",
+    "params": {
+     "roll": 0.7,
+     "size": 0.6
+    },
+    "level": 1,
+    "every": [
+     8,
+     18
+    ],
+    "vary": {
+     "distance": [
+      0.15,
+      0.95
+     ],
+     "roll": [
+      0.4,
+      1
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "id": "storm-at-sea",
+  "name": "Storm at Sea",
+  "desc": "Heavy surf under a roaring gale, rain lashing, and thunder rolling over the water.",
+  "layers": [
+   {
+    "sound": "ambience-ocean-surf",
+    "params": {
+     "period": 4.5,
+     "foam": 0.85,
+     "depth": 0.8
+    },
+    "level": 1
+   },
+   {
+    "sound": "ambience-storm-roar",
+    "params": {
+     "fury": 0.55,
+     "rain": 0.6,
+     "howl": 0.5
+    },
+    "level": 0.7
+   },
+   {
+    "sound": "ambience-thunder-strike",
+    "params": {
+     "roll": 0.8,
+     "size": 0.8
+    },
+    "level": 0.9,
+    "every": [
+     10,
+     22
+    ],
+    "vary": {
+     "distance": [
+      0.4,
+      1
+     ],
+     "roll": [
+      0.5,
+      1
+     ]
+    }
+   }
+  ]
+ }
+];
 // ---- version (package.json) ----
 const VERSION = "0.1.0";
 // ---- runtime (src/core) ----
@@ -13384,6 +13778,217 @@ function wavChannels(r) {
   }
   for (let i = 0; i < n; i++) if (L[i] !== R[i]) return [L, R];
   return [L];
+}
+
+// Loops and soundscapes. A bed (an ambience sound marked loop: true) is written as one swell with a
+// fade at each end, so it cannot be looped as it is. seamless() cuts a loop out of a long render of
+// it: it finds the steady span between the fades by its short-term level, then crossfades the span's
+// continuation into its head with an equal-power curve, so the last sample of the loop flows into
+// the first. A soundscape layers such loops with events: one-shot sounds fired at random intervals
+// (thunder, a creak, a bell), each with a fresh seed so no two are alike.
+//
+// Browser only (OfflineAudioContext). Every function here is self-contained, like the helpers, so
+// Copy can carry them by their source text: constants are defaults inside each function.
+
+/**
+ * Cut a seamless loop out of a rendered bed. channels: Float32Array per channel (same length), sr:
+ * the sample rate. o: max (longest loop kept, s, default 12), xfade (crossfade s, default 2),
+ * margin (s kept clear inside the steady span, default 0.25), range (dB under the median level a
+ * half-second window may sit and still count as steady, default 4: the windows are long enough
+ * that a fade never passes for steady).
+ * Returns { channels, start, length, xfade } (seconds), or null when the render has no steady span
+ * long enough for a 3 s loop.
+ */
+function seamless(channels, sr, o) {
+  o = o || {};
+  const max = o.max == null ? 12 : o.max;
+  const xf = o.xfade == null ? 2 : o.xfade;
+  const margin = o.margin == null ? 0.25 : o.margin;
+  const range = o.range == null ? 4 : o.range;
+  const n = channels[0].length;
+  const win = Math.max(1, Math.round(0.5 * sr));
+  const nw = Math.floor(n / win);
+  const lv = new Float64Array(nw);
+  for (let w = 0; w < nw; w++) {
+    let e = 0;
+    for (const ch of channels) for (let i = w * win; i < (w + 1) * win; i++) e += ch[i] * ch[i];
+    lv[w] = e / (win * channels.length);
+  }
+  const sorted = Array.from(lv).filter((v) => v > 1e-12).sort((a, b) => a - b);
+  if (!sorted.length) return null;
+  const floor = sorted[Math.floor(sorted.length / 2)] * Math.pow(10, -range / 10);
+  let a = 0;
+  while (a < nw && lv[a] < floor) a++;
+  let b = nw - 1;
+  while (b > a && lv[b] < floor) b--;
+  const start = (a + 1) * win + Math.round(margin * sr);
+  const end = b * win - Math.round(margin * sr);
+  const avail = end - start;
+  if (avail < 3 * sr) return null;
+  const X = Math.round(Math.min(xf, (avail / sr) * 0.2) * sr);
+  const N0 = Math.min(Math.round(max * sr), avail - X);
+  // The loop point. A noise bed joins anywhere, but a sustained tone crossfaded against itself out
+  // of phase cancels (a drone dipped 3 dB). So search the last half second of lengths for the one
+  // whose continuation best matches the head (normalized cross-correlation over 50 ms, coarse in
+  // steps of 4 samples, then refined), and keep the longest loop on a tie.
+  const look = Math.round(0.05 * sr);
+  const corr = (N, step) => {
+    let ab = 0, aa = 0, bb = 0;
+    for (const ch of channels) {
+      for (let i = 0; i < look; i += step) {
+        const x = ch[start + i];
+        const y = ch[start + N + i];
+        ab += x * y; aa += x * x; bb += y * y;
+      }
+    }
+    return aa > 0 && bb > 0 ? ab / Math.sqrt(aa * bb) : 0;
+  };
+  const lo = Math.max(Math.round(3 * sr), N0 - Math.round(0.5 * sr));
+  let N = N0;
+  let best = corr(N0, 2);
+  for (let c = N0 - 4; c >= lo; c -= 4) { const r = corr(c, 2); if (r > best + 1e-3) { best = r; N = c; } }
+  for (let c = N + 3; c >= N - 3; c--) { if (c >= lo && c <= N0) { const r = corr(c, 1); if (r > best) { best = r; N = c; } } }
+  // How alike the two passages are across the whole crossfade decides its curve: equal power for
+  // unrelated material (noise), closer to equal gain as they correlate, so the sum keeps its power
+  let ab = 0, aa = 0, bb = 0;
+  for (const ch of channels) {
+    for (let i = 0; i < X; i += 2) { const x = ch[start + i]; const y = ch[start + N + i]; ab += x * y; aa += x * x; bb += y * y; }
+  }
+  const rho = Math.min(1, Math.max(-0.5, aa > 0 && bb > 0 ? ab / Math.sqrt(aa * bb) : 0));
+  const out = channels.map((ch) => {
+    const y = new Float32Array(N);
+    for (let i = 0; i < N; i++) y[i] = ch[start + i];
+    // the head blends in from the span's own continuation past N: at i = 0 it is that
+    // continuation alone (so sample N - 1 flows into it), at i = X the head alone
+    for (let i = 0; i < X; i++) {
+      const th = (Math.PI / 2) * (i / X);
+      const gi = Math.sin(th);
+      const go = Math.cos(th);
+      const k = 1 / Math.sqrt(1 + rho * Math.sin(2 * th));
+      y[i] = (ch[start + i] * gi + ch[start + N + i] * go) * k;
+    }
+    return y;
+  });
+  return { channels: out, start: start / sr, length: N / sr, xfade: X / sr, match: rho };
+}
+
+/**
+ * Render a loopable sound offline, before the master chain (the live chain applies it), and cut a
+ * seamless loop from it. play is the sound's play(T, out, t, p); p its parameter values (a sound
+ * with a length parameter gets it raised to o.render, default 18 s, so the steady span is long);
+ * seedValue seeds the render. Resolves to an AudioBuffer for context c, or null (see seamless).
+ */
+function loopBuffer(c, T, play, p, seedValue, o) {
+  o = o || {};
+  const sr = c.sampleRate;
+  const render = o.render == null ? 18 : o.render;
+  const q = Object.assign({}, p);
+  if (q.length != null) q.length = render;
+  const oc = new OfflineAudioContext(2, Math.ceil((render + 1) * sr), sr);
+  const g = oc.createGain();
+  g.channelCount = 2;
+  g.channelCountMode = 'explicit';
+  g.channelInterpretation = 'speakers';
+  g.connect(oc.destination);
+  T.seed(seedValue == null ? 1 : seedValue);
+  play(T, g, 0, q);
+  return oc.startRendering().then((b) => {
+    const cut = seamless([b.getChannelData(0), b.getChannelData(1)], sr, o);
+    if (!cut) return null;
+    const out = c.createBuffer(2, cut.channels[0].length, sr);
+    out.getChannelData(0).set(cut.channels[0]);
+    out.getChannelData(1).set(cut.channels[1]);
+    out.xfade = cut.xfade;
+    return out;
+  });
+}
+
+/**
+ * Play a soundscape into dest (a master chain's input): layers of
+ *   { kind: 'bed', play, p, seed, level }                  looped for as long as it plays
+ *   { kind: 'event', play, p, seed, level, every: [lo, hi], vary: { param: [lo, hi] } }
+ *                                                          fired every lo..hi seconds, each time
+ *                                                          with a new seed and the vary params drawn
+ * o: level (overall, default 1), fade (fade in s, default 2), when (earliest start, s).
+ * Returns { ready (a Promise: every bed rendered and playing), stop(fade), setLevel(i, v), layers }.
+ * Events schedule themselves a few seconds ahead with timers; stop() ends them and fades the beds.
+ */
+function soundscape(c, dest, layers, T, o) {
+  o = o || {};
+  const fade = o.fade == null ? 2 : o.fade;
+  const bus = c.createGain();
+  bus.gain.value = 0;
+  bus.connect(dest);
+  const t0 = Math.max(c.currentTime + 0.05, o.when || 0);
+  bus.gain.setValueAtTime(0, t0);
+  bus.gain.linearRampToValueAtTime(o.level == null ? 1 : o.level, t0 + fade);
+  let live = true;
+  const timers = [];
+  const sources = [];
+  // the schedule's own generator, so firing times never disturb the sounds' seeded noise
+  let st = ((o.seed == null ? 7 : o.seed) * 2654435761) >>> 0;
+  const r = () => {
+    st = (st + 0x6d2b79f5) | 0;
+    let a = Math.imul(st ^ (st >>> 15), st | 1);
+    a ^= a + Math.imul(a ^ (a >>> 7), a | 61);
+    return ((a ^ (a >>> 14)) >>> 0) / 4294967296;
+  };
+  const gains = layers.map((L) => {
+    const g = c.createGain();
+    g.gain.value = L.level == null ? 1 : L.level;
+    g.connect(bus);
+    return g;
+  });
+  const beds = [];
+  layers.forEach((L, i) => {
+    if (L.kind === 'event') {
+      const lo = (L.every && L.every[0]) || 6;
+      const hi = (L.every && L.every[1]) || lo * 2;
+      let count = 0;
+      let next = t0 + 0.5 + r() * (lo + hi) * 0.5;
+      const tick = () => {
+        if (!live) return;
+        // keep about 4 s of events scheduled ahead of the clock
+        while (next < c.currentTime + 4) {
+          const q = Object.assign({}, L.p);
+          for (const k in L.vary || {}) q[k] = L.vary[k][0] + (L.vary[k][1] - L.vary[k][0]) * r();
+          T.seed((L.seed || 1) + 7919 * ++count);
+          L.play(T, gains[i], Math.max(next, c.currentTime + 0.02), q);
+          next += lo + (hi - lo) * r();
+        }
+        timers.push(setTimeout(tick, 1000));
+      };
+      tick();
+    } else {
+      beds.push(loopBuffer(c, T, L.play, L.p, L.seed, L.loop).then((buf) => {
+        if (!buf || !live) return;
+        const s = c.createBufferSource();
+        s.buffer = buf;
+        s.loop = true;
+        s.connect(gains[i]);
+        // start each bed at its own point in the loop, so beds of one length never pulse together
+        s.start(Math.max(t0, c.currentTime + 0.02), r() * buf.duration);
+        sources.push(s);
+      }));
+    }
+  });
+  return {
+    ready: Promise.all(beds),
+    layers: gains,
+    setLevel(i, v) { if (gains[i]) gains[i].gain.setTargetAtTime(Math.max(0, v), c.currentTime, 0.05); },
+    stop(f) {
+      if (!live) return;
+      live = false;
+      timers.forEach(clearTimeout);
+      const now = c.currentTime;
+      const d = f == null ? 1.5 : Math.max(0.02, f);
+      bus.gain.cancelScheduledValues(now);
+      bus.gain.setValueAtTime(bus.gain.value, now);
+      bus.gain.linearRampToValueAtTime(0, now + d);
+      sources.forEach((s) => s.stop(now + d + 0.05));
+      setTimeout(() => bus.disconnect(), (d + 0.5) * 1000);
+    },
+  };
 }
 
 // Copy: one self-contained JavaScript function per sound, carrying only the helpers it uses.
@@ -13617,6 +14222,61 @@ function buildSpeechCopy(T, cfg) {
   return lines.join('\n') + '\n';
 }
 
+/**
+ * Copy for a soundscape: one self-contained function that starts it. scape: { id, name, layers }
+ * (a preset from src/scapes, or a mix made in the gallery); byId maps sound ids to sounds. Each
+ * layer carries its sound's play and parameter values; beds are rendered in the page, cut into
+ * seamless loops (loopBuffer) and looped, events fire at random. The function,
+ * fn(ac, opts, dest), plays through the shared master chain and returns the soundscape's controller
+ * { ready, stop(fade), setLevel(i, v), layers }. opts: level, fade (fade in, s), seed (the event
+ * schedule).
+ */
+function buildScapeCopy(scape, byId, T) {
+  const fname = camel(scape.id || 'soundscape');
+  const layers = scape.layers.map((L) => ({ L, s: byId.get(L.sound) })).filter((x) => x.s);
+  const uses = [];
+  const want = ['seed', 'master'];
+  for (const { s } of layers) {
+    const h = copyHelpers(s, T);
+    for (const u of h.uses) if (!uses.includes(u)) uses.push(u);
+    for (const n of h.helpers) if (!want.includes(n)) want.push(n);
+  }
+  if (!uses.includes('seed')) uses.push('seed');
+  const lit = (x) => JSON.stringify(x).replace(/</g, '\u003c');
+  const lines = [];
+  const names = layers.map(({ s, L }) => s.name + (L.every ? ' (every ' + L.every[0] + ' to ' + L.every[1] + ' s)' : '')).join(', ');
+  lines.push('// Usage: const ac = new AudioContext(); const scape = ' + fname + '(ac); ... scape.stop(); // ' + (scape.name || 'Soundscape') +
+    ', a synthesized soundscape (Timbre): ' + names + '. Beds loop seamlessly, events fire at random. Optional: opts { level, fade, seed }, dest node. Returns { ready, stop(fade), setLevel(layer, level), layers }.');
+  lines.push('function ' + fname + '(ac, opts, dest) {');
+  for (const h of helperClosure(want, T)) lines.push(indent(dedent(T[h].toString()), '  '));
+  for (const f of [seamless, loopBuffer, soundscape]) lines.push(indent(dedent(f.toString()), '  '));
+  lines.push('  const T = { ' + uses.join(', ') + ' };');
+  lines.push('  const layers = [');
+  for (const { L, s } of layers) {
+    const parts = [
+      'kind: ' + lit(L.every ? 'event' : 'bed'),
+      'play: ' + indent(playSource(s.play), '    ').trim(),
+      'p: ' + lit(paramsFor(s, L.params)),
+      'seed: ' + ((Number(L.seed == null ? 1 : L.seed) || 0) >>> 0),
+      'level: ' + fmtNum(L.level == null ? 1 : L.level),
+    ];
+    if (L.every) parts.push('every: ' + lit(L.every));
+    if (L.vary) parts.push('vary: ' + lit(L.vary));
+    lines.push('    { // ' + s.name);
+    for (const part of parts) lines.push('      ' + part + ',');
+    lines.push('    },');
+  }
+  lines.push('  ];');
+  lines.push('  // one master chain per destination, kept on the context; a new one needs ' + PREROLL + ' s to warm up');
+  lines.push('  const chains = ac.timbreChains || (ac.timbreChains = new Map());');
+  lines.push('  const to = dest || ac.destination;');
+  lines.push('  if (!chains.has(to)) chains.set(to, { out: master(ac, to), ready: ac.currentTime + ' + PREROLL + ' });');
+  lines.push('  const chain = chains.get(to);');
+  lines.push('  return soundscape(ac, chain.out, layers, T, Object.assign({ when: chain.ready }, opts));');
+  lines.push('}');
+  return lines.join('\n') + '\n';
+}
+
 // ---- gallery (src/shell/app.js) ----
 // The gallery page. Bundled by build.mjs into the same scope as the core helpers (T, seed, master),
 // the runtime (renderSound, measure, paramsFor, encodeWav, wavChannels, buildCopy), SOUNDS and
@@ -13846,6 +14506,7 @@ function buildStrip(s) {
     '</div>' +
     '<div class="transport">' +
       '<button class="btn play" type="button"><span class="on" aria-hidden="true"></span>' + ICON.play + 'Play</button>' +
+      (s.loop ? '<button class="btn ghost loop" type="button" aria-pressed="false" title="Loop it seamlessly until you stop it"><span class="on" aria-hidden="true"></span>Loop</button>' : '') +
       '<label class="vary" title="Draw a new noise seed for every play"><input type="checkbox"><span class="sw" aria-hidden="true"></span>Vary</label>' +
       '<span class="spacer"></span>' +
       '<button class="btn ghost copy" type="button">' + ICON.copy + 'Copy</button>' +
@@ -13864,6 +14525,10 @@ function buildStrip(s) {
   qs('.wav', el).setAttribute('aria-label', 'Save ' + name + ' as a WAV file');
   qs('.vary input', el).setAttribute('aria-label', 'Vary the noise seed of ' + name + ' on every play');
   qs('.play', el).addEventListener('click', () => onPlay(st));
+  if (s.loop) {
+    qs('.loop', el).setAttribute('aria-label', 'Loop ' + name + ' seamlessly');
+    qs('.loop', el).addEventListener('click', () => toggleLoop(st));
+  }
   qs('.copy', el).addEventListener('click', () => onCopy(st));
   qs('.wav', el).addEventListener('click', (e) => onWav(st, e.currentTarget));
   qs('.vary input', el).addEventListener('change', (e) => {
@@ -13955,6 +14620,174 @@ async function onCopy(st) {
   if (await copyToClipboard(text)) toast('Copied ' + fname + '(): one function, ' + (text.length / 1024).toFixed(1) + ' KB, no dependencies.');
   else showCode(text, st.el.querySelector('.copy'));
 }
+
+// ---------------------------------------------------------------- loops and soundscapes
+// A bed's Loop button and the Soundscape rack both play soundscapes (src/core/loop.js) into the live
+// master chain. Any number can run at once; the output meter keeps running while one does.
+let looping = 0;
+function scapeStarted() {
+  looping++;
+  meterUntil(actx.currentTime + 36000);
+}
+function scapeStopped() {
+  looping = Math.max(0, looping - 1);
+  if (!looping) meterEnd = actx.currentTime + 2;
+}
+function toggleLoop(st) {
+  const btn = qs('.loop', st.el);
+  if (st.loopCtl) {
+    st.loopCtl.stop(1);
+    st.loopCtl = null;
+    btn.setAttribute('aria-pressed', 'false');
+    scapeStopped();
+    return;
+  }
+  const c = audio();
+  if (!c) { toast('This browser has no WebAudio, so sounds cannot play.'); return; }
+  btn.setAttribute('aria-pressed', 'true');
+  const ctl = soundscape(c, chainIn, [{ kind: 'bed', play: st.s.play, p: st.params, seed: st.seed, level: 1 }], T, { fade: 1, when: chainReady });
+  st.loopCtl = ctl;
+  scapeStarted();
+  const slow = setTimeout(() => toast('Cutting a seamless loop from ' + st.s.name + '...'), 400);
+  ctl.ready.then(() => clearTimeout(slow));
+}
+
+// the Soundscape rack: a preset, or layers of your own
+/** Paint a range input's track filled up to its value. */
+function fillRange(inp) {
+  const lo = Number(inp.min);
+  const hi = Number(inp.max);
+  inp.style.setProperty('--fill', ((100 * (Number(inp.value) - lo)) / (hi - lo)).toFixed(1) + '%');
+}
+const EVENT_IDS = ['ambience-thunder-strike', 'dark-door-creak', 'dark-bell-knell', 'dark-funeral-bell', 'dark-whisper-swarm', 'dark-slow-clock', 'magic-sparkle', 'scifi-robot-chirp'];
+const sc = { layers: [], preset: null, ctl: null };
+function scLayer(sound, from) {
+  const s = byId.get(sound);
+  const L = { sound, params: from && from.params ? Object.assign({}, from.params) : {}, level: from && from.level != null ? from.level : 0.8 };
+  if (!s.loop) {
+    L.every = from && from.every ? from.every.slice() : [10, 25];
+    if (from && from.vary) L.vary = from.vary;
+  }
+  return L;
+}
+function scBuild() {
+  const sel = qs('#sc-preset');
+  if (!SCAPES.length) { qs('#scape').hidden = true; return; }
+  for (const x of SCAPES) {
+    const o = document.createElement('option');
+    o.value = x.id;
+    o.textContent = x.name;
+    sel.appendChild(o);
+  }
+  const mine = document.createElement('option');
+  mine.value = '';
+  mine.textContent = 'Your mix';
+  sel.appendChild(mine);
+  sel.addEventListener('change', () => { if (sel.value) scPreset(sel.value); });
+  qs('#sc-play').addEventListener('click', () => (sc.ctl ? scStop() : scStart()));
+  qs('#sc-add').addEventListener('click', () => {
+    if (sc.layers.length >= 6) { toast('Six layers at most.'); return; }
+    const used = new Set(sc.layers.map((L) => L.sound));
+    const bed = SOUNDS.find((s) => s.loop && !used.has(s.id));
+    sc.layers.push(scLayer(bed ? bed.id : SOUNDS.find((s) => s.loop).id));
+    scMine();
+  });
+  qs('#sc-copy').addEventListener('click', async () => {
+    const x = scCurrent();
+    const text = buildScapeCopy(x, byId, T);
+    if (await copyToClipboard(text)) toast('Copied ' + camel(x.id) + '(): the whole soundscape as one function, ' + (text.length / 1024).toFixed(1) + ' KB.');
+    else showCode(text, qs('#sc-copy'));
+  });
+  const first = SCAPES.some((x) => x.id === 'rain-and-thunder') ? 'rain-and-thunder' : SCAPES[0].id;
+  scPreset(store.get('timbre.scape') && SCAPES.some((x) => x.id === store.get('timbre.scape')) ? store.get('timbre.scape') : first);
+}
+function scCurrent() {
+  const p = sc.preset && SCAPES.find((x) => x.id === sc.preset);
+  return { id: p ? p.id : 'my-soundscape', name: p ? p.name : 'Your mix', layers: sc.layers };
+}
+function scPreset(id) {
+  const x = SCAPES.find((y) => y.id === id);
+  sc.preset = id;
+  sc.layers = x.layers.map((L) => scLayer(L.sound, L));
+  qs('#sc-preset').value = id;
+  qs('#sc-desc').textContent = x.desc;
+  store.set('timbre.scape', id);
+  scRows();
+  scRestart();
+}
+// any edit but a level makes the mix your own
+function scMine() {
+  sc.preset = null;
+  qs('#sc-preset').value = '';
+  qs('#sc-desc').textContent = 'Your own mix: change a layer, add one, or start again from a preset.';
+  scRows();
+  scRestart();
+}
+function scRows() {
+  const box = qs('#sc-layers');
+  box.textContent = '';
+  const beds = SOUNDS.filter((s) => s.loop);
+  const events = EVENT_IDS.map((id) => byId.get(id)).filter(Boolean);
+  sc.layers.forEach((L, i) => {
+    const s = byId.get(L.sound);
+    const row = document.createElement('div');
+    row.className = 'sc-layer';
+    row.style.setProperty('--c', 'var(--cat-' + s.category + ', var(--accent))');
+    const opt = (x) => '<option value="' + esc(x.id) + '"' + (x.id === L.sound ? ' selected' : '') + '>' + esc(x.name) + '</option>';
+    const avg = L.every ? Math.round((L.every[0] + L.every[1]) / 2) : 15;
+    row.innerHTML =
+      '<span class="sc-kind">' + (L.every ? 'EVENT' : 'BED') + '</span>' +
+      '<select class="sc-sound" aria-label="Layer ' + (i + 1) + ' sound"><optgroup label="Beds (loop)">' + beds.map(opt).join('') +
+        '</optgroup><optgroup label="Events (fire at random)">' + events.map(opt).join('') + '</optgroup></select>' +
+      '<label><span>LEVEL</span><input class="sc-lvl" type="range" min="0" max="1.5" step="0.01" value="' + L.level + '" aria-label="Layer ' + (i + 1) + ' level"><output>' + Math.round(L.level * 100) + '%</output></label>' +
+      '<label class="sc-every"' + (L.every ? '' : ' hidden') + '><span>EVERY</span><input class="sc-ev" type="range" min="4" max="60" step="1" value="' + avg + '" aria-label="Layer ' + (i + 1) + ' average interval"><output>~' + avg + ' s</output></label>' +
+      '<button class="btn ghost icon sc-del" type="button" aria-label="Remove layer ' + (i + 1) + '">&times;</button>';
+    if (!L.every) row.appendChild(document.createElement('span'));
+    qs('.sc-sound', row).addEventListener('change', (e) => { sc.layers[i] = scLayer(e.currentTarget.value); scMine(); });
+    const lv = qs('.sc-lvl', row);
+    lv.addEventListener('input', () => {
+      L.level = Number(lv.value);
+      qs('output', lv.parentNode).textContent = Math.round(L.level * 100) + '%';
+      if (sc.ctl) sc.ctl.setLevel(i, L.level);
+      fillRange(lv);
+    });
+    fillRange(lv);
+    const ev = qs('.sc-ev', row);
+    ev.addEventListener('input', () => { qs('output', ev.parentNode).textContent = '~' + ev.value + ' s'; fillRange(ev); });
+    ev.addEventListener('change', () => { const a = Number(ev.value); L.every = [Math.max(2, Math.round(a * 0.6)), Math.round(a * 1.4)]; scMine(); });
+    fillRange(ev);
+    qs('.sc-del', row).addEventListener('click', () => {
+      if (sc.layers.length <= 1) { toast('A soundscape needs at least one layer.'); return; }
+      sc.layers.splice(i, 1);
+      scMine();
+    });
+    box.appendChild(row);
+  });
+}
+function scStart() {
+  if (!sc.layers.some((L) => !L.every)) { toast('Add a bed (a looping layer) first: events need something to sit on.'); return; }
+  const c = audio();
+  if (!c) { toast('This browser has no WebAudio, so sounds cannot play.'); return; }
+  const layers = sc.layers.map((L) => {
+    const s = byId.get(L.sound);
+    return { kind: L.every ? 'event' : 'bed', play: s.play, p: paramsFor(s, L.params), seed: 1, level: L.level, every: L.every, vary: L.vary };
+  });
+  sc.ctl = soundscape(c, chainIn, layers, T, { fade: 2, when: chainReady, seed: Date.now() >>> 0 });
+  qs('#scape').classList.add('playing');
+  qs('#sc-play').lastChild.textContent = 'Stop';
+  scapeStarted();
+  const slow = setTimeout(() => toast('Cutting seamless loops...'), 400);
+  sc.ctl.ready.then(() => clearTimeout(slow));
+}
+function scStop() {
+  if (!sc.ctl) return;
+  sc.ctl.stop(1.2);
+  sc.ctl = null;
+  qs('#scape').classList.remove('playing');
+  qs('#sc-play').lastChild.textContent = 'Play';
+  scapeStopped();
+}
+function scRestart() { if (sc.ctl) { scStop(); scStart(); } }
 
 function showCode(text, back) {
   const dlg = qs('#code');
@@ -14459,6 +15292,7 @@ function boot() {
   buildCats();
   buildThemes();
   spBuild();
+  scBuild();
   wire();
   applyFilter();
   followHash();
@@ -14492,6 +15326,29 @@ window.Timbre = Object.freeze({
   audio: () => actx,
   stats: () => Object.assign({}, stats),
   // the Speak rack: a line (cfg: mode, text, voice and the SPEAK_PARAMS values) as a sound, a render, a Copy
+  // a loopable bed's seamless loop, as raw channels (the loop gate measures its seam)
+  loop: (id, over, seedValue) => {
+    const s = byId.get(id);
+    const c = new OfflineAudioContext(2, 1, SAMPLE_RATE);
+    return loopBuffer(c, T, s.play, paramsFor(s, over), seedValue).then((b) => (b ? { sr: b.sampleRate, xfade: b.xfade, channels: [b.getChannelData(0), b.getChannelData(1)] } : null));
+  },
+  scapes: SCAPES,
+  // the live output's peak right now, dBFS (-120 before anything has played)
+  level: () => {
+    if (!analyser) return -120;
+    const buf = new Float32Array(analyser.fftSize);
+    analyser.getFloatTimeDomainData(buf);
+    let pk = 0;
+    for (let i = 0; i < buf.length; i++) pk = Math.max(pk, Math.abs(buf[i]));
+    return pk > 0 ? Math.round(200 * Math.log10(pk)) / 10 : -120;
+  },
+  scape: Object.freeze({
+    preset: (id) => scPreset(id),
+    play: () => scStart(),
+    stop: () => scStop(),
+    playing: () => !!sc.ctl,
+    copy: () => buildScapeCopy(scCurrent(), byId, T),
+  }),
   speak: Object.freeze({
     params: SPEAK_PARAMS,
     voices: () => ({ speak: T.speechVoices(), babble: T.babbleVoices() }),

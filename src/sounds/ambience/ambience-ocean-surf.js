@@ -7,6 +7,7 @@ export default {
   tags: ['ocean', 'sea', 'surf', 'waves', 'beach', 'shore', 'water', 'bed'],
   desc: 'Waves building and breaking on a beach, each with a hiss of foam, over a low swell. Fades in and out.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

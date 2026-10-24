@@ -7,6 +7,7 @@ export default {
   tags: ['birds', 'birdsong', 'chirp', 'tweet', 'forest', 'morning', 'nature', 'bed'],
   desc: 'Morning birdsong in the trees: tweets, trills and whistles from near and far over a faint breeze.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

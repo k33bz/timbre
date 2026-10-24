@@ -226,6 +226,7 @@ function buildStrip(s) {
     '</div>' +
     '<div class="transport">' +
       '<button class="btn play" type="button"><span class="on" aria-hidden="true"></span>' + ICON.play + 'Play</button>' +
+      (s.loop ? '<button class="btn ghost loop" type="button" aria-pressed="false" title="Loop it seamlessly until you stop it"><span class="on" aria-hidden="true"></span>Loop</button>' : '') +
       '<label class="vary" title="Draw a new noise seed for every play"><input type="checkbox"><span class="sw" aria-hidden="true"></span>Vary</label>' +
       '<span class="spacer"></span>' +
       '<button class="btn ghost copy" type="button">' + ICON.copy + 'Copy</button>' +
@@ -244,6 +245,10 @@ function buildStrip(s) {
   qs('.wav', el).setAttribute('aria-label', 'Save ' + name + ' as a WAV file');
   qs('.vary input', el).setAttribute('aria-label', 'Vary the noise seed of ' + name + ' on every play');
   qs('.play', el).addEventListener('click', () => onPlay(st));
+  if (s.loop) {
+    qs('.loop', el).setAttribute('aria-label', 'Loop ' + name + ' seamlessly');
+    qs('.loop', el).addEventListener('click', () => toggleLoop(st));
+  }
   qs('.copy', el).addEventListener('click', () => onCopy(st));
   qs('.wav', el).addEventListener('click', (e) => onWav(st, e.currentTarget));
   qs('.vary input', el).addEventListener('change', (e) => {
@@ -335,6 +340,174 @@ async function onCopy(st) {
   if (await copyToClipboard(text)) toast('Copied ' + fname + '(): one function, ' + (text.length / 1024).toFixed(1) + ' KB, no dependencies.');
   else showCode(text, st.el.querySelector('.copy'));
 }
+
+// ---------------------------------------------------------------- loops and soundscapes
+// A bed's Loop button and the Soundscape rack both play soundscapes (src/core/loop.js) into the live
+// master chain. Any number can run at once; the output meter keeps running while one does.
+let looping = 0;
+function scapeStarted() {
+  looping++;
+  meterUntil(actx.currentTime + 36000);
+}
+function scapeStopped() {
+  looping = Math.max(0, looping - 1);
+  if (!looping) meterEnd = actx.currentTime + 2;
+}
+function toggleLoop(st) {
+  const btn = qs('.loop', st.el);
+  if (st.loopCtl) {
+    st.loopCtl.stop(1);
+    st.loopCtl = null;
+    btn.setAttribute('aria-pressed', 'false');
+    scapeStopped();
+    return;
+  }
+  const c = audio();
+  if (!c) { toast('This browser has no WebAudio, so sounds cannot play.'); return; }
+  btn.setAttribute('aria-pressed', 'true');
+  const ctl = soundscape(c, chainIn, [{ kind: 'bed', play: st.s.play, p: st.params, seed: st.seed, level: 1 }], T, { fade: 1, when: chainReady });
+  st.loopCtl = ctl;
+  scapeStarted();
+  const slow = setTimeout(() => toast('Cutting a seamless loop from ' + st.s.name + '...'), 400);
+  ctl.ready.then(() => clearTimeout(slow));
+}
+
+// the Soundscape rack: a preset, or layers of your own
+/** Paint a range input's track filled up to its value. */
+function fillRange(inp) {
+  const lo = Number(inp.min);
+  const hi = Number(inp.max);
+  inp.style.setProperty('--fill', ((100 * (Number(inp.value) - lo)) / (hi - lo)).toFixed(1) + '%');
+}
+const EVENT_IDS = ['ambience-thunder-strike', 'dark-door-creak', 'dark-bell-knell', 'dark-funeral-bell', 'dark-whisper-swarm', 'dark-slow-clock', 'magic-sparkle', 'scifi-robot-chirp'];
+const sc = { layers: [], preset: null, ctl: null };
+function scLayer(sound, from) {
+  const s = byId.get(sound);
+  const L = { sound, params: from && from.params ? Object.assign({}, from.params) : {}, level: from && from.level != null ? from.level : 0.8 };
+  if (!s.loop) {
+    L.every = from && from.every ? from.every.slice() : [10, 25];
+    if (from && from.vary) L.vary = from.vary;
+  }
+  return L;
+}
+function scBuild() {
+  const sel = qs('#sc-preset');
+  if (!SCAPES.length) { qs('#scape').hidden = true; return; }
+  for (const x of SCAPES) {
+    const o = document.createElement('option');
+    o.value = x.id;
+    o.textContent = x.name;
+    sel.appendChild(o);
+  }
+  const mine = document.createElement('option');
+  mine.value = '';
+  mine.textContent = 'Your mix';
+  sel.appendChild(mine);
+  sel.addEventListener('change', () => { if (sel.value) scPreset(sel.value); });
+  qs('#sc-play').addEventListener('click', () => (sc.ctl ? scStop() : scStart()));
+  qs('#sc-add').addEventListener('click', () => {
+    if (sc.layers.length >= 6) { toast('Six layers at most.'); return; }
+    const used = new Set(sc.layers.map((L) => L.sound));
+    const bed = SOUNDS.find((s) => s.loop && !used.has(s.id));
+    sc.layers.push(scLayer(bed ? bed.id : SOUNDS.find((s) => s.loop).id));
+    scMine();
+  });
+  qs('#sc-copy').addEventListener('click', async () => {
+    const x = scCurrent();
+    const text = buildScapeCopy(x, byId, T);
+    if (await copyToClipboard(text)) toast('Copied ' + camel(x.id) + '(): the whole soundscape as one function, ' + (text.length / 1024).toFixed(1) + ' KB.');
+    else showCode(text, qs('#sc-copy'));
+  });
+  const first = SCAPES.some((x) => x.id === 'rain-and-thunder') ? 'rain-and-thunder' : SCAPES[0].id;
+  scPreset(store.get('timbre.scape') && SCAPES.some((x) => x.id === store.get('timbre.scape')) ? store.get('timbre.scape') : first);
+}
+function scCurrent() {
+  const p = sc.preset && SCAPES.find((x) => x.id === sc.preset);
+  return { id: p ? p.id : 'my-soundscape', name: p ? p.name : 'Your mix', layers: sc.layers };
+}
+function scPreset(id) {
+  const x = SCAPES.find((y) => y.id === id);
+  sc.preset = id;
+  sc.layers = x.layers.map((L) => scLayer(L.sound, L));
+  qs('#sc-preset').value = id;
+  qs('#sc-desc').textContent = x.desc;
+  store.set('timbre.scape', id);
+  scRows();
+  scRestart();
+}
+// any edit but a level makes the mix your own
+function scMine() {
+  sc.preset = null;
+  qs('#sc-preset').value = '';
+  qs('#sc-desc').textContent = 'Your own mix: change a layer, add one, or start again from a preset.';
+  scRows();
+  scRestart();
+}
+function scRows() {
+  const box = qs('#sc-layers');
+  box.textContent = '';
+  const beds = SOUNDS.filter((s) => s.loop);
+  const events = EVENT_IDS.map((id) => byId.get(id)).filter(Boolean);
+  sc.layers.forEach((L, i) => {
+    const s = byId.get(L.sound);
+    const row = document.createElement('div');
+    row.className = 'sc-layer';
+    row.style.setProperty('--c', 'var(--cat-' + s.category + ', var(--accent))');
+    const opt = (x) => '<option value="' + esc(x.id) + '"' + (x.id === L.sound ? ' selected' : '') + '>' + esc(x.name) + '</option>';
+    const avg = L.every ? Math.round((L.every[0] + L.every[1]) / 2) : 15;
+    row.innerHTML =
+      '<span class="sc-kind">' + (L.every ? 'EVENT' : 'BED') + '</span>' +
+      '<select class="sc-sound" aria-label="Layer ' + (i + 1) + ' sound"><optgroup label="Beds (loop)">' + beds.map(opt).join('') +
+        '</optgroup><optgroup label="Events (fire at random)">' + events.map(opt).join('') + '</optgroup></select>' +
+      '<label><span>LEVEL</span><input class="sc-lvl" type="range" min="0" max="1.5" step="0.01" value="' + L.level + '" aria-label="Layer ' + (i + 1) + ' level"><output>' + Math.round(L.level * 100) + '%</output></label>' +
+      '<label class="sc-every"' + (L.every ? '' : ' hidden') + '><span>EVERY</span><input class="sc-ev" type="range" min="4" max="60" step="1" value="' + avg + '" aria-label="Layer ' + (i + 1) + ' average interval"><output>~' + avg + ' s</output></label>' +
+      '<button class="btn ghost icon sc-del" type="button" aria-label="Remove layer ' + (i + 1) + '">&times;</button>';
+    if (!L.every) row.appendChild(document.createElement('span'));
+    qs('.sc-sound', row).addEventListener('change', (e) => { sc.layers[i] = scLayer(e.currentTarget.value); scMine(); });
+    const lv = qs('.sc-lvl', row);
+    lv.addEventListener('input', () => {
+      L.level = Number(lv.value);
+      qs('output', lv.parentNode).textContent = Math.round(L.level * 100) + '%';
+      if (sc.ctl) sc.ctl.setLevel(i, L.level);
+      fillRange(lv);
+    });
+    fillRange(lv);
+    const ev = qs('.sc-ev', row);
+    ev.addEventListener('input', () => { qs('output', ev.parentNode).textContent = '~' + ev.value + ' s'; fillRange(ev); });
+    ev.addEventListener('change', () => { const a = Number(ev.value); L.every = [Math.max(2, Math.round(a * 0.6)), Math.round(a * 1.4)]; scMine(); });
+    fillRange(ev);
+    qs('.sc-del', row).addEventListener('click', () => {
+      if (sc.layers.length <= 1) { toast('A soundscape needs at least one layer.'); return; }
+      sc.layers.splice(i, 1);
+      scMine();
+    });
+    box.appendChild(row);
+  });
+}
+function scStart() {
+  if (!sc.layers.some((L) => !L.every)) { toast('Add a bed (a looping layer) first: events need something to sit on.'); return; }
+  const c = audio();
+  if (!c) { toast('This browser has no WebAudio, so sounds cannot play.'); return; }
+  const layers = sc.layers.map((L) => {
+    const s = byId.get(L.sound);
+    return { kind: L.every ? 'event' : 'bed', play: s.play, p: paramsFor(s, L.params), seed: 1, level: L.level, every: L.every, vary: L.vary };
+  });
+  sc.ctl = soundscape(c, chainIn, layers, T, { fade: 2, when: chainReady, seed: Date.now() >>> 0 });
+  qs('#scape').classList.add('playing');
+  qs('#sc-play').lastChild.textContent = 'Stop';
+  scapeStarted();
+  const slow = setTimeout(() => toast('Cutting seamless loops...'), 400);
+  sc.ctl.ready.then(() => clearTimeout(slow));
+}
+function scStop() {
+  if (!sc.ctl) return;
+  sc.ctl.stop(1.2);
+  sc.ctl = null;
+  qs('#scape').classList.remove('playing');
+  qs('#sc-play').lastChild.textContent = 'Play';
+  scapeStopped();
+}
+function scRestart() { if (sc.ctl) { scStop(); scStart(); } }
 
 function showCode(text, back) {
   const dlg = qs('#code');
@@ -839,6 +1012,7 @@ function boot() {
   buildCats();
   buildThemes();
   spBuild();
+  scBuild();
   wire();
   applyFilter();
   followHash();
@@ -872,6 +1046,29 @@ window.Timbre = Object.freeze({
   audio: () => actx,
   stats: () => Object.assign({}, stats),
   // the Speak rack: a line (cfg: mode, text, voice and the SPEAK_PARAMS values) as a sound, a render, a Copy
+  // a loopable bed's seamless loop, as raw channels (the loop gate measures its seam)
+  loop: (id, over, seedValue) => {
+    const s = byId.get(id);
+    const c = new OfflineAudioContext(2, 1, SAMPLE_RATE);
+    return loopBuffer(c, T, s.play, paramsFor(s, over), seedValue).then((b) => (b ? { sr: b.sampleRate, xfade: b.xfade, channels: [b.getChannelData(0), b.getChannelData(1)] } : null));
+  },
+  scapes: SCAPES,
+  // the live output's peak right now, dBFS (-120 before anything has played)
+  level: () => {
+    if (!analyser) return -120;
+    const buf = new Float32Array(analyser.fftSize);
+    analyser.getFloatTimeDomainData(buf);
+    let pk = 0;
+    for (let i = 0; i < buf.length; i++) pk = Math.max(pk, Math.abs(buf[i]));
+    return pk > 0 ? Math.round(200 * Math.log10(pk)) / 10 : -120;
+  },
+  scape: Object.freeze({
+    preset: (id) => scPreset(id),
+    play: () => scStart(),
+    stop: () => scStop(),
+    playing: () => !!sc.ctl,
+    copy: () => buildScapeCopy(scCurrent(), byId, T),
+  }),
   speak: Object.freeze({
     params: SPEAK_PARAMS,
     voices: () => ({ speak: T.speechVoices(), babble: T.babbleVoices() }),

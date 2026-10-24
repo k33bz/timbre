@@ -272,6 +272,16 @@
    "pre": -27.1,
    "end": 5.443
   },
+  "ambience-thunder-strike": {
+   "fingerprint": "9cca9727ee51",
+   "peak": -15.6,
+   "rms": -38.3,
+   "worstPeak": -14.6,
+   "worstRms": -36.7,
+   "lowestPeak": -26.4,
+   "pre": -19.5,
+   "end": 4.954
+  },
   "ambience-wind-gusts": {
    "fingerprint": "e7a5373484f8",
    "peak": -29.3,

@@ -396,3 +396,36 @@ test('the drum skin rings its modes down with a sagging pitch; the organ stacks 
   const pipes = g.c.nodes.filter((n) => n.frequency && n.started != null && !n.buffer);
   assert.equal(pipes.length, 6, 'two ranks per note');
 });
+
+test('seamless cuts a loop from a faded bed that wraps without a jump, and keeps a drone level through the crossfade', async () => {
+  const { seamless } = await import('../src/core/loop.js');
+  const sr = 8000;
+  const n = 16 * sr;
+  // a noise bed with 1.5 s fades at both ends, and a pure 55 Hz drone with the same fades
+  T.seed(9);
+  const fade = (i) => Math.min(1, i / (1.5 * sr), (n - 1 - i) / (1.5 * sr));
+  const noiseBed = [new Float32Array(n), new Float32Array(n)];
+  const drone = [new Float32Array(n), new Float32Array(n)];
+  for (let i = 0; i < n; i++) {
+    noiseBed[0][i] = (T.rand() * 2 - 1) * 0.2 * fade(i);
+    noiseBed[1][i] = (T.rand() * 2 - 1) * 0.2 * fade(i);
+    drone[0][i] = drone[1][i] = 0.3 * Math.sin((2 * Math.PI * 55 * i) / sr) * fade(i);
+  }
+  for (const [name, chs] of [['noise', noiseBed], ['drone', drone]]) {
+    const cut = seamless(chs, sr, { max: 10 });
+    assert.ok(cut && cut.length >= 6 && cut.length <= 10, `${name} loop length ${cut && cut.length}`);
+    assert.ok(cut.start >= 1.5, `${name} starts after the fade in (${cut.start})`);
+    const y = cut.channels[0];
+    const N = y.length;
+    // the wrap is as smooth as the signal's own steps
+    let step = 0;
+    for (let i = 1; i < N; i++) step = Math.max(step, Math.abs(y[i] - y[i - 1]));
+    assert.ok(Math.abs(y[0] - y[N - 1]) <= step * 1.01, `${name} wraps without a jump`);
+    // the crossfade keeps the level: RMS over the crossfade is within 1 dB of the body's
+    const rms = (a, b) => { let e = 0; for (let i = a; i < b; i++) e += y[i] * y[i]; return Math.sqrt(e / (b - a)); };
+    const X = Math.round(cut.xfade * sr);
+    const dB = 20 * Math.log10(rms(0, X) / rms(X, N));
+    assert.ok(Math.abs(dB) < 1, `${name} crossfade level ${dB.toFixed(2)} dB`);
+  }
+  assert.equal(seamless([new Float32Array(2 * sr)], sr), null, 'too short to loop');
+});

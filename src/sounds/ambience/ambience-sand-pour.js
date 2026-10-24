@@ -10,6 +10,7 @@ export default {
   tags: ['sand', 'pour', 'hourglass', 'grains', 'timer', 'desert', 'hiss', 'bed'],
   desc: 'Fine sand pouring in a soft steady hiss, thinning to a last few grains and a quiet settle. Good under an hourglass or a timer running down.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

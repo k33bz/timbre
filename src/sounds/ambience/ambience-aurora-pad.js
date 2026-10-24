@@ -9,6 +9,7 @@ export default {
   tags: ['aurora', 'pad', 'shimmer', 'ethereal', 'glow', 'northern-lights', 'wide', 'calm', 'bed'],
   desc: 'A slow, wide, glowing chord that swells and sways like curtains of light, with a thin glitter above. A dreamy bed for a night sky.',
   dur: 8,
+  loop: true,
   family: 'synthetic',
   moments: ['ambience'],
   params: {

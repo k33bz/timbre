@@ -9,6 +9,7 @@ export default {
   tags: ['stars', 'starfield', 'space', 'night-sky', 'twinkle', 'pad', 'airy', 'wide', 'bed'],
   desc: 'A thin airy pad under a sky of stars: soft twinkling notes ring out across a wide, quiet field. For space and night scenes.',
   dur: 8,
+  loop: true,
   family: 'synthetic',
   moments: ['ambience'],
   params: {

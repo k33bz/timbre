@@ -8,6 +8,7 @@ export default {
   tags: ['snow', 'winter', 'cold', 'hush', 'quiet', 'frost', 'calm', 'wide', 'bed'],
   desc: 'Snow falling on a windless night: a soft muffled hush, clumps sliding off branches and faint ice glints. A calm winter-scene bed.',
   dur: 8,
+  loop: true,
   family: 'air',
   moments: ['ambience'],
   params: {

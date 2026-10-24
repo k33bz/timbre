@@ -90,6 +90,30 @@ re-triggers on an interval for as long as the wait lasts. The cell falls to sile
 ("re-trigger every 1.2 s"; the build checks a time is named). The `loading` and `thinking` moments
 ask for loop cells.
 
+## Seamless loops and soundscapes
+A bed (an ambience or dark sound with `loop: true`) is still written as one swell with a fade at each
+end, but it can also play for ever. `src/core/loop.js`:
+- `seamless(channels, sr)` cuts a loop out of a long render: it finds the steady span between the
+  fades from half-second levels (within 4 dB of the median), searches the last half second of loop
+  lengths for the one whose continuation best matches the head in phase (a drone crossfaded against
+  itself out of phase cancels), then crossfades that continuation into the head over up to 2 s. The
+  curve follows how alike the two passages are: equal power for noise, closer to equal gain as they
+  correlate, so the join keeps its level either way. The last sample of the loop flows into the first.
+- `loopBuffer` renders the bed before the master chain (the live chain applies it), with its
+  `length` raised to 18 s so the steady span is long, and returns the loop as an AudioBuffer. A bed
+  whose swell scales with its length must cap it at its longest setting (Abyss Drone does).
+- `soundscape(c, dest, layers, T)` plays layers into a master chain: beds loop (each starting at its
+  own point, so beds of one length never pulse together), events (any sound, `every: [lo, hi]` s)
+  fire at random with a fresh seed each time and `vary` drawing params afresh. It returns
+  `{ ready, stop(fade), setLevel(i, v), layers }`.
+
+Presets live in `src/scapes/<id>.js` (`id`, `name`, `desc`, `layers`); the build checks every bed
+loops, every event has an interval, and params and `vary` stay in range. Soundscape Copy
+(`buildScapeCopy`) is one function that carries the layers' plays, their helpers and the loop
+runtime: `rainAndThunder(ac, opts, dest)` returns the controller. `gates/check_loops.mjs` cuts every
+bed's loop at 3 seeds and fails a loop under 6 s, a join that leaves the bed's own level range, or a
+wrap whose jump exceeds twice the bed's own 99.9th percentile step.
+
 Purely decorative animations stay silent by design: decorative glow, borders and gradient text,
 foil and holo shimmer, and static diagrams (nodes, boundaries, org charts). Timbre makes no sounds
 for them, and a gallery that pairs sounds with animations leaves them unpaired.

@@ -9,6 +9,7 @@ export default {
   tags: ['storm', 'roar', 'gale', 'hurricane', 'tornado', 'downpour', 'weather', 'wind', 'heavy', 'bed'],
   desc: 'Being inside a big storm: a deep wide roar of wind and sheeting rain with a low wail running through it. For a gale, tornado or downpour.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

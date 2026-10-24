@@ -8,6 +8,7 @@ export default {
   tags: ['crickets', 'night', 'summer', 'insects', 'chirp', 'evening', 'nature', 'wide', 'bed'],
   desc: 'A warm summer night: a few crickets chirping in runs from different places in the dark, over cool still air.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

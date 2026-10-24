@@ -127,7 +127,7 @@ async function main() {
     'const THEMES = ' + JSON.stringify(themeList.map((th) => ({ id: th.id, name: th.name, desc: th.desc, moments: th.moments }))) + ';',
     'const INDEX = ' + JSON.stringify(index) + ';',
     'const CAT_NAMES = ' + JSON.stringify(CAT_NAMES) + ';',
-    ['render.js', 'copy.js'].map((f) => moduleText('src/core/' + f)).join('\n'),
+    ['render.js', 'loop.js', 'copy.js'].map((f) => moduleText('src/core/' + f)).join('\n'),
     fs.readFileSync(path.join(HERE, 'site.js'), 'utf8'),
     '})();',
   ].join('\n');

@@ -7,6 +7,7 @@ export default {
   tags: ['haunted', 'corridor', 'wind', 'creak', 'whisper', 'ghost', 'bed', 'hall', 'dark', 'ambience', 'tension'],
   desc: 'Wind drifting down a long empty hall, a creaking board and faint whispers somewhere behind you. For a haunted house, a walk through a ruin or a menu that watches back.',
   dur: 8.0,
+  loop: true,
   family: 'air',
   moments: ['ambience', 'tension'],
   params: {

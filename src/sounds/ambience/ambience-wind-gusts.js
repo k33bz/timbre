@@ -7,6 +7,7 @@ export default {
   tags: ['wind', 'gust', 'breeze', 'storm', 'outdoor', 'bed', 'loop'],
   desc: 'An open-air wind bed: steady air with slow gusts rolling through and a faint whistle. Fades in and out.',
   dur: 8,
+  loop: true,
   family: 'air',
   moments: ['ambience'],
   params: {

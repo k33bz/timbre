@@ -7,6 +7,7 @@ export default {
   tags: ['cave', 'drip', 'water', 'dungeon', 'echo', 'underground', 'damp', 'bed'],
   desc: 'Slow drips falling in a damp stone chamber, each one ringing in the echo, over a low draft of air.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

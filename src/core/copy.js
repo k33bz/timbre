@@ -6,6 +6,7 @@
 // a helper named in a comment or a string is never pulled in. build.mjs uses the same functions to
 // write each sound's helper list into the catalog, and the unit tests check the result.
 import { paramsFor, PREROLL } from './render.js';
+import { seamless, loopBuffer, soundscape } from './loop.js';
 
 /** Remove comments and the contents of string and template literals, keeping the code. */
 export function stripCode(src) {
@@ -226,6 +227,61 @@ export function buildSpeechCopy(T, cfg) {
   lines.push('  const t = Math.max(when == null ? 0 : when, ac.currentTime + 0.02, chain.ready);');
   lines.push('  seed(p.seed);');
   lines.push('  return ' + engine + '(out, t, Object.assign({}, LINE, { voice: VOICE, ' + Object.keys(vals).map((k) => k + ': p.' + k).join(', ') + ' }));');
+  lines.push('}');
+  return lines.join('\n') + '\n';
+}
+
+/**
+ * Copy for a soundscape: one self-contained function that starts it. scape: { id, name, layers }
+ * (a preset from src/scapes, or a mix made in the gallery); byId maps sound ids to sounds. Each
+ * layer carries its sound's play and parameter values; beds are rendered in the page, cut into
+ * seamless loops (loopBuffer) and looped, events fire at random. The function,
+ * fn(ac, opts, dest), plays through the shared master chain and returns the soundscape's controller
+ * { ready, stop(fade), setLevel(i, v), layers }. opts: level, fade (fade in, s), seed (the event
+ * schedule).
+ */
+export function buildScapeCopy(scape, byId, T) {
+  const fname = camel(scape.id || 'soundscape');
+  const layers = scape.layers.map((L) => ({ L, s: byId.get(L.sound) })).filter((x) => x.s);
+  const uses = [];
+  const want = ['seed', 'master'];
+  for (const { s } of layers) {
+    const h = copyHelpers(s, T);
+    for (const u of h.uses) if (!uses.includes(u)) uses.push(u);
+    for (const n of h.helpers) if (!want.includes(n)) want.push(n);
+  }
+  if (!uses.includes('seed')) uses.push('seed');
+  const lit = (x) => JSON.stringify(x).replace(/</g, '\u003c');
+  const lines = [];
+  const names = layers.map(({ s, L }) => s.name + (L.every ? ' (every ' + L.every[0] + ' to ' + L.every[1] + ' s)' : '')).join(', ');
+  lines.push('// Usage: const ac = new AudioContext(); const scape = ' + fname + '(ac); ... scape.stop(); // ' + (scape.name || 'Soundscape') +
+    ', a synthesized soundscape (Timbre): ' + names + '. Beds loop seamlessly, events fire at random. Optional: opts { level, fade, seed }, dest node. Returns { ready, stop(fade), setLevel(layer, level), layers }.');
+  lines.push('function ' + fname + '(ac, opts, dest) {');
+  for (const h of helperClosure(want, T)) lines.push(indent(dedent(T[h].toString()), '  '));
+  for (const f of [seamless, loopBuffer, soundscape]) lines.push(indent(dedent(f.toString()), '  '));
+  lines.push('  const T = { ' + uses.join(', ') + ' };');
+  lines.push('  const layers = [');
+  for (const { L, s } of layers) {
+    const parts = [
+      'kind: ' + lit(L.every ? 'event' : 'bed'),
+      'play: ' + indent(playSource(s.play), '    ').trim(),
+      'p: ' + lit(paramsFor(s, L.params)),
+      'seed: ' + ((Number(L.seed == null ? 1 : L.seed) || 0) >>> 0),
+      'level: ' + fmtNum(L.level == null ? 1 : L.level),
+    ];
+    if (L.every) parts.push('every: ' + lit(L.every));
+    if (L.vary) parts.push('vary: ' + lit(L.vary));
+    lines.push('    { // ' + s.name);
+    for (const part of parts) lines.push('      ' + part + ',');
+    lines.push('    },');
+  }
+  lines.push('  ];');
+  lines.push('  // one master chain per destination, kept on the context; a new one needs ' + PREROLL + ' s to warm up');
+  lines.push('  const chains = ac.timbreChains || (ac.timbreChains = new Map());');
+  lines.push('  const to = dest || ac.destination;');
+  lines.push('  if (!chains.has(to)) chains.set(to, { out: master(ac, to), ready: ac.currentTime + ' + PREROLL + ' });');
+  lines.push('  const chain = chains.get(to);');
+  lines.push('  return soundscape(ac, chain.out, layers, T, Object.assign({ when: chain.ready }, opts));');
   lines.push('}');
   return lines.join('\n') + '\n';
 }

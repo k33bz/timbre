@@ -7,6 +7,7 @@ export default {
   tags: ['thunder', 'storm', 'rumble', 'weather', 'low', 'distant', 'rolling'],
   desc: 'A storm miles away: a muffled crack and a long low rumble that rolls and fades out.',
   dur: 8,
+  loop: true,
   family: 'organic',
   moments: ['ambience'],
   params: {

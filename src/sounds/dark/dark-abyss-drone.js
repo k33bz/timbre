@@ -8,6 +8,7 @@ export default {
   tags: ['drone', 'abyss', 'bed', 'bass', 'low', 'sub', 'well', 'dark', 'ominous', 'ambience', 'tension'],
   desc: 'A very low bowed drone with a cold shimmer far above it, swelling and sinking like the bottom of a well. For a menu that broods, a descent into the dark or a quiet threat under a scene.',
   dur: 8.5,
+  loop: true,
   family: 'orchestral',
   moments: ['ambience', 'tension'],
   params: {
@@ -23,13 +24,15 @@ export default {
     const body = L - 0.4;
     // the higher the note, the more of it the ear takes in: pull the level down above the default
     const m = f > 41 ? Math.pow(41 / f, 1.3) : 1;
-    const swell = { a: L * 0.4, r: L * 0.35 };
+    // the swells scale with the length up to its 8 s maximum, then stop growing, so a long render
+    // (a seamless loop is cut from one) has a long steady middle
+    const swell = { a: Math.min(L * 0.4, 3.2), r: Math.min(L * 0.35, 2.8) };
     // the section: players thicken it, the darkness knob closes a lowpass over it and eases the bow
     const closed = T.filter(room, t, { type: 'lowpass', f: 220 + 2400 * Math.pow(1 - p.darkness, 2), q: 0.5 });
     T.bow(closed, t, Object.assign({ f, dur: body, players: 5, body: 0.6, bright: 0.28 * (1 - p.darkness) + 0.04, pressure: 0.3 * (1 - p.darkness) + 0.05, vib: 4, vibRate: 3.6, peak: 0.1 * m }, swell));
     // the pedal speaks an octave up and carries its own 16' underneath
-    T.organ(room, t, { notes: [f * 2], stops: 'flute', dur: body, a: L * 0.45, r: L * 0.35, celeste: 3, chiff: 0, peak: 0.05 * m });
-    T.osc(room, t, Object.assign({ f, dur: body, peak: 0.06 * m, s: 1, d: 0.02 }, swell, { a: L * 0.5 }));
+    T.organ(room, t, { notes: [f * 2], stops: 'flute', dur: body, a: Math.min(L * 0.45, 3.6), r: Math.min(L * 0.35, 2.8), celeste: 3, chiff: 0, peak: 0.05 * m });
+    T.osc(room, t, Object.assign({ f, dur: body, peak: 0.06 * m, s: 1, d: 0.02 }, swell, { a: Math.min(L * 0.5, 4) }));
     // the cold shimmer: two thin sines a fifth apart, breathing slowly at different rates
     if (p.shimmer > 0.01) {
       const g = 0.008 * p.shimmer;

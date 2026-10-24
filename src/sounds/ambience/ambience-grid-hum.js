@@ -9,6 +9,7 @@ export default {
   tags: ['grid', 'hum', 'electric', 'digital', 'neon', 'data', 'power', 'wide', 'bed'],
   desc: 'The clean electric hum of a vast digital grid: a pure throbbing tone with a glassy sheen and tiny data ticks crossing it. For cyber scenes.',
   dur: 8,
+  loop: true,
   family: 'synthetic',
   moments: ['ambience'],
   params: {

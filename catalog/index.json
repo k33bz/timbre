@@ -2,7 +2,7 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 359,
+  "count": 360,
   "sounds": [
     {
       "id": "ui-cascade",
@@ -6067,7 +6067,8 @@
       "moments": [
         "ambience",
         "tension"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "dark-bell-knell",
@@ -6415,7 +6416,8 @@
       "moments": [
         "ambience",
         "tension"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "dark-heartbeat",
@@ -6733,7 +6735,8 @@
       "family": "synthetic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-cave-drips",
@@ -6754,7 +6757,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-distant-thunder",
@@ -6774,7 +6778,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-fire-crackle",
@@ -6795,7 +6800,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-forest-birds",
@@ -6816,7 +6822,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-grid-hum",
@@ -6838,7 +6845,8 @@
       "family": "synthetic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-lava-bubbles",
@@ -6860,7 +6868,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-night-crickets",
@@ -6882,7 +6891,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-ocean-surf",
@@ -6903,7 +6913,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-rain",
@@ -6923,7 +6934,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-room-hum",
@@ -6944,7 +6956,8 @@
       "family": "mechanical",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-sand-pour",
@@ -6965,7 +6978,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-snow-hush",
@@ -6987,7 +7001,8 @@
       "family": "air",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-space-drone",
@@ -7008,7 +7023,8 @@
       "family": "synthetic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-starfield-pad",
@@ -7030,7 +7046,8 @@
       "family": "synthetic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-storm-roar",
@@ -7053,7 +7070,8 @@
       "family": "organic",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-synthwave-drive",
@@ -7079,6 +7097,29 @@
       ]
     },
     {
+      "id": "ambience-thunder-strike",
+      "name": "Thunder Strike",
+      "category": "ambience",
+      "tags": [
+        "thunder",
+        "lightning",
+        "storm",
+        "weather",
+        "crack",
+        "rumble",
+        "rain",
+        "nature",
+        "event"
+      ],
+      "desc": "A single thunderclap: a close tearing crack rolling into thunder, or a far rumble that arrives late. Fire it now and then over rain or sea for a storm.",
+      "dur": 9.4,
+      "family": "organic",
+      "moments": [
+        "ambience",
+        "explosion"
+      ]
+    },
+    {
       "id": "ambience-wind-gusts",
       "name": "Wind Gusts",
       "category": "ambience",
@@ -7096,7 +7137,8 @@
       "family": "air",
       "moments": [
         "ambience"
-      ]
+      ],
+      "loop": true
     },
     {
       "id": "ambience-zen-breath",

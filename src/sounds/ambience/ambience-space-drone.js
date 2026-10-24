@@ -8,6 +8,7 @@ export default {
   tags: ['space', 'drone', 'pad', 'ambient', 'sci-fi', 'dark', 'deep', 'bed'],
   desc: 'A slow, deep drone for a ship or a void: a dark pad that opens up, with a faint shimmer far above.',
   dur: 8,
+  loop: true,
   family: 'synthetic',
   moments: ['ambience'],
   params: {
