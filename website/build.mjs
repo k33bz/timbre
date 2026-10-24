@@ -29,7 +29,7 @@ const PADS = [
   { m: 'click', label: 'Click' }, { m: 'toggle-on', label: 'Toggle on' }, { m: 'type', label: 'Type' }, { m: 'open', label: 'Open' },
   { m: 'success', label: 'Success' }, { m: 'notify', label: 'Notify' }, { m: 'warning', label: 'Warning' }, { m: 'error', label: 'Error' },
 ];
-const CAT_NAMES = { ui: 'UI', notify: 'Notify', data: 'Data', ai: 'AI', game: 'Game', battle: 'Battle', cards: 'Cards', duel: 'Ink Duel', magic: 'Magic', fx: 'FX', scifi: 'Sci-fi', ambience: 'Ambience', music: 'Music', voice: 'Voice' };
+const CAT_NAMES = { ui: 'UI', notify: 'Notify', data: 'Data', ai: 'AI', game: 'Game', battle: 'Battle', cards: 'Cards', duel: 'Ink Duel', magic: 'Magic', fx: 'FX', scifi: 'Sci-fi', dark: 'Dark', ambience: 'Ambience', music: 'Music', voice: 'Voice' };
 const CAT_BLURBS = {
   ui: 'Clicks, toggles, keys, sheets and sliders',
   notify: 'Chimes, badges, alerts and incoming calls',
@@ -42,6 +42,7 @@ const CAT_BLURBS = {
   magic: 'Spells, portals, potions and curses',
   fx: 'Glitches, confetti, shatters and neon',
   scifi: 'Lasers, warp jumps, scanners and klaxons',
+  dark: 'Choirs, organ, low strings and dread',
   ambience: 'Rain, surf, fire and space, eight-second beds',
   music: 'Fanfares, stings and jingles',
   voice: 'Announcers, robots and babble, spoken live',

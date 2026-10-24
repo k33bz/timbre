@@ -122,6 +122,14 @@ export const MOODS = {
     families: ['impact'],
     boost: { game: 1 }, loud: ['loud', 'medium'],
   },
+  dark: {
+    about: 'Brooding, gothic or horror: choirs, organ, low strings, drones and dread.',
+    words: ['dark', 'brooding', 'gothic', 'horror', 'spooky', 'creepy', 'eerie', 'ominous', 'sinister', 'haunted', 'dread', 'grim', 'noir', 'moody', 'somber', 'doom', 'occult', 'vampire', 'cathedral'],
+    tags: ['dark', 'gothic', 'horror', 'ominous', 'dread', 'choir', 'organ', 'cello'],
+    families: ['orchestral', 'voice'],
+    boost: { dark: 3, ambience: 1, music: 1, magic: 0.5 }, loud: ['quiet', 'medium'], dislike: ['cheerful'],
+    penalty: { ui: 0.5, cards: 1, duel: 1 },
+  },
   wooden: {
     about: 'Warm, natural, wooden knocks.',
     words: ['wood', 'wooden', 'natural', 'organic', 'warm', 'analog', 'handmade', 'craft'],

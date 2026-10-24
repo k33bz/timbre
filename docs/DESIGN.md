@@ -41,7 +41,7 @@ export default {
   id: 'ui-click-soft',            // kebab-case, unique, category prefix
   name: 'Soft Click',
   category: 'ui',                 // ui, notify, data, ai, game, battle, cards, duel, magic, fx,
-                                  // scifi, ambience, music, voice
+                                  // scifi, dark, ambience, music, voice
   tags: ['click', 'button', 'tap'],
   desc: 'A short muted tick for button presses.',
   dur: 0.08,                      // seconds the render needs, tail included, at ANY parameter values
@@ -73,7 +73,7 @@ server imports it, so a theme's moment, a sound's `moments` and a suggestion's m
 the same names. A new name is added there once.
 
 Categories are the other shared list, in gallery order: ui, notify, data, ai, game, battle, cards,
-duel, magic, fx, scifi, ambience, music, voice. `battle` is generic creature-battle card game moments
+duel, magic, fx, scifi, dark, ambience, music, voice. `battle` is generic creature-battle card game moments
 (elements, status conditions, knockouts); `duel`, labelled Ink Duel, is a fan-made, unbranded family
 of ink-and-lore card game mechanics. A category is listed in `build.mjs` (CATEGORIES), the gallery
 (`src/shell/app.js`: label and order; `src/shell/style.css`: a color per theme), and the MCP server

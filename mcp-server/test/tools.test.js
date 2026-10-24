@@ -45,7 +45,7 @@ test('info: the version, the categories (empty ones too), themes, moments and th
   assert.equal(d.catalog.sounds, 18);
   assert.equal(d.catalog.themes, 2);
   assert.equal(d.catalog.mode, 'manifest');
-  assert.deepEqual(d.categories.map((c) => c.category), ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'ambience', 'music', 'voice']);
+  assert.deepEqual(d.categories.map((c) => c.category), ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'dark', 'ambience', 'music', 'voice']);
   assert.equal(d.categories.reduce((n, c) => n + c.count, 0), 18);
   assert.deepEqual(d.themes.map((x) => x.id).sort(), ['arcade', 'soft-ui']);
   assert.ok(d.themes.find((x) => x.id === 'soft-ui').moments.includes('toggle-on'));
@@ -80,7 +80,7 @@ test('info works with no catalog, and says what is wrong', async () => {
   assert.equal(r.isError, false);
   assert.match(r.data.catalog.error, /No Timbre catalog/);
   assert.equal(r.data.catalog.sounds, 0);
-  assert.equal(r.data.categories.length, 14);
+  assert.equal(r.data.categories.length, 15);
 });
 
 test('every other tool says plainly when there is no catalog', async () => {

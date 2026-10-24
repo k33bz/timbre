@@ -20,7 +20,7 @@ export default {
   id: 'game-laser-zap',                 // kebab-case, unique, starts with its category
   name: 'Laser Zap',                    // 1 to 40 characters, Title Case
   category: 'game',                     // ui, notify, data, ai, game, battle, cards, duel, magic, fx,
-                                        // scifi, ambience, music, voice
+                                        // scifi, dark, ambience, music, voice
   tags: ['laser', 'zap', 'shoot'],      // lowercase kebab-case words people would search for
   desc: 'A bright falling zap for a shot fired.',  // 10 to 200 characters, one or two sentences
   dur: 0.4,                             // seconds, tail included, at ANY parameter values

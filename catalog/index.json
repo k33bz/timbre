@@ -2,7 +2,7 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 332,
+  "count": 337,
   "sounds": [
     {
       "id": "ui-cascade",
@@ -6042,6 +6042,130 @@
       "moments": [
         "teleport",
         "transition"
+      ]
+    },
+    {
+      "id": "dark-cathedral-choir",
+      "name": "Cathedral Choir",
+      "category": "dark",
+      "tags": [
+        "choir",
+        "cathedral",
+        "gothic",
+        "voices",
+        "pad",
+        "bed",
+        "dark",
+        "sacred",
+        "ominous",
+        "ambient"
+      ],
+      "desc": "A hushed choir swelling on a minor chord under a stone vault, the vowel slowly opening. For a gothic menu, a crypt or a solemn reveal.",
+      "dur": 6.3,
+      "family": "voice",
+      "moments": [
+        "ambience",
+        "reveal",
+        "tension"
+      ]
+    },
+    {
+      "id": "dark-cello-drone",
+      "name": "Cello Drone",
+      "category": "dark",
+      "tags": [
+        "cello",
+        "strings",
+        "drone",
+        "bowed",
+        "low",
+        "tension",
+        "dark",
+        "brooding",
+        "bed",
+        "ominous"
+      ],
+      "desc": "Low cellos holding a bare fifth, swelling in and out of the dark. For a quiet threat, a long walk down a corridor, or a menu that broods.",
+      "dur": 5.6,
+      "family": "orchestral",
+      "moments": [
+        "tension",
+        "ambience"
+      ]
+    },
+    {
+      "id": "dark-doom-drum",
+      "name": "Doom Drum",
+      "category": "dark",
+      "tags": [
+        "drum",
+        "taiko",
+        "timpani",
+        "boom",
+        "hit",
+        "doom",
+        "impact",
+        "cinematic",
+        "dark",
+        "heavy"
+      ],
+      "desc": "A single enormous drum blow that booms through a hall. For a boss entrance, a title card or the moment everything goes wrong.",
+      "dur": 2.6,
+      "family": "impact",
+      "moments": [
+        "reveal",
+        "scare",
+        "transition"
+      ]
+    },
+    {
+      "id": "dark-dread-descent",
+      "name": "Dread Descent",
+      "category": "dark",
+      "tags": [
+        "shepard",
+        "descent",
+        "falling",
+        "dread",
+        "tension",
+        "endless",
+        "horror",
+        "dark",
+        "drone",
+        "ominous"
+      ],
+      "desc": "A tone that keeps sinking and never reaches the bottom: pure, endless dread. For a fall into the dark, a nightmare or a slow loss of control.",
+      "dur": 6.2,
+      "family": "synthetic",
+      "moments": [
+        "tension",
+        "level-down",
+        "scare"
+      ]
+    },
+    {
+      "id": "dark-organ-minor",
+      "name": "Organ Minor Swell",
+      "category": "dark",
+      "tags": [
+        "organ",
+        "gothic",
+        "minor",
+        "chord",
+        "sting",
+        "church",
+        "cathedral",
+        "dramatic",
+        "dark",
+        "vampire"
+      ],
+      "desc": "A pipe organ swelling on a minor chord over a deep pedal note. For a gothic title, a haunted mansion or a dramatic reveal.",
+      "dur": 5.1,
+      "family": "orchestral",
+      "moments": [
+        "scare",
+        "reveal",
+        "music"
       ]
     },
     {

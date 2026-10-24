@@ -55,7 +55,7 @@ function startServer(args, env) {
 
 /** The calls made, one per tool, with what each reply must show. */
 export const TOOL_CALLS = [
-  { name: 'info', args: {}, check: (d) => d.name === 'Timbre' && d.catalog.sounds > 0 && d.categories.length === 14, show: (d) => `${d.catalog.sounds} sounds, ${d.catalog.themes} theme(s), Timbre ${d.version}` },
+  { name: 'info', args: {}, check: (d) => d.name === 'Timbre' && d.catalog.sounds > 0 && d.categories.length === 15, show: (d) => `${d.catalog.sounds} sounds, ${d.catalog.themes} theme(s), Timbre ${d.version}` },
   { name: 'search_sounds', args: { query: 'click', limit: 3 }, check: (d) => d.items.length > 0 && d.items[0].matched.length > 0, show: (d) => d.items.map((x) => x.id).join(', ') },
   { name: 'get_sound', args: { id: '$firstSound' }, check: (d, code) => d.params.length >= 0 && typeof code === 'string' && code.includes('function '), show: (d, code) => `${d.id}, ${d.params.length} params, ${code.length} bytes of code` },
   { name: 'get_copy', args: { id: '$firstSound' }, check: (d, code) => /^\/\/ Usage:/.test(code) && d.functionName && d.bytes === Buffer.byteLength(code), show: (d) => `${d.functionName}(), ${d.bytes} bytes` },

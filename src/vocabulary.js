@@ -67,7 +67,7 @@ export const MOMENTS = {
   transition: {
     about: 'A screen, page or scene changes; something sweeps past.',
     tags: ['whoosh', 'swoosh', 'swipe', 'transition', 'slide', 'swing', 'dash'], terms: ['navigate', 'navigation', 'page', 'scene', 'wipe', 'screen change'],
-    categories: ['game', 'ui'], avoid: ['error'], maxDur: 1.0, loud: ['quiet', 'medium'],
+    categories: ['game', 'ui', 'dark'], avoid: ['error'], maxDur: 1.0, loud: ['quiet', 'medium'],
   },
   scroll: {
     about: 'A scroll wheel, picker or slider passes a notch.',
@@ -132,7 +132,7 @@ export const MOMENTS = {
   reveal: {
     about: 'Content is uncovered: a wipe, an iris, a shutter, a curtain.',
     tags: ['reveal', 'wipe', 'iris', 'shutter', 'curtain', 'uncover', 'unfold'], terms: ['unveil', 'uncover', 'curtain', 'iris', 'shutter', 'spoiler'],
-    categories: ['ui', 'fx', 'magic'], avoid: ['error'], maxDur: 1.2, loud: ['quiet', 'medium'],
+    categories: ['ui', 'fx', 'magic', 'dark'], avoid: ['error'], maxDur: 1.2, loud: ['quiet', 'medium'],
   },
   stamp: {
     about: 'A rubber stamp lands: approved, paid, verified, a label slapped on.',
@@ -198,7 +198,7 @@ export const MOMENTS = {
   critical: {
     about: 'A critical alert, a severity above error: an incident, a breach, an outage.',
     tags: ['critical', 'severe', 'incident', 'emergency', 'alarm', 'urgent'], terms: ['incident', 'breach', 'outage', 'emergency', 'severity', 'pager'],
-    categories: ['notify', 'scifi'], avoid: ['success', 'positive'], maxDur: 1.5, loud: ['loud', 'medium'],
+    categories: ['notify', 'scifi', 'dark'], avoid: ['success', 'positive'], maxDur: 1.5, loud: ['loud', 'medium'],
   },
   presence: {
     about: 'Someone comes online or goes offline: a sound for it carries an on switch, 1 online, 0 offline.',
@@ -356,7 +356,7 @@ export const MOMENTS = {
   'game-over': {
     about: 'The player loses or the run ends.',
     tags: ['game-over', 'defeat', 'lose', 'sad', 'trombone', 'death'], terms: ['game over', 'you lose', 'lost', 'died', 'run ended'],
-    categories: ['music', 'game'], avoid: ['success', 'positive', 'win'], minDur: 0.5, maxDur: 4.0, loud: ['medium', 'loud'],
+    categories: ['music', 'game', 'dark'], avoid: ['success', 'positive', 'win'], minDur: 0.5, maxDur: 4.0, loud: ['medium', 'loud'],
   },
   jump: {
     about: 'A character jumps or bounces.',
@@ -386,7 +386,7 @@ export const MOMENTS = {
   'level-down': {
     about: 'A demotion, the mirror of level-up: a rank drops, a streak is lost, a level is taken away.',
     tags: ['level-down', 'demote', 'rank-down', 'streak-lost', 'defeat', 'sad', 'lose'], terms: ['level down', 'rank down', 'demoted', 'demotion', 'lost streak', 'downgrade'],
-    categories: ['game', 'music', 'notify'], avoid: ['level-up', 'win', 'success'], minDur: 0.3, maxDur: 3.0, loud: ['medium', 'quiet'],
+    categories: ['game', 'music', 'notify', 'dark'], avoid: ['level-up', 'win', 'success'], minDur: 0.3, maxDur: 3.0, loud: ['medium', 'quiet'],
   },
   // ---- cards and tabletop
   'card-draw': {
@@ -438,7 +438,7 @@ export const MOMENTS = {
   debuff: {
     about: 'A status condition or debuff lands (poison, burn, sleep, paralysis, confusion) or ticks at the turn checkup: a sound for it may carry a tick switch, 0 the application, 1 the recurring tick.',
     tags: ['debuff', 'status', 'poison', 'burn', 'sleep', 'paralysis', 'confusion', 'curse'], terms: ['status condition', 'poisoned', 'burned', 'asleep', 'paralyzed', 'confused', 'weakened'],
-    categories: ['battle', 'game', 'magic'], avoid: ['heal'], maxDur: 2.0, loud: ['medium', 'quiet'],
+    categories: ['battle', 'game', 'magic', 'dark'], avoid: ['heal'], maxDur: 2.0, loud: ['medium', 'quiet'],
   },
   crit: {
     about: 'A critical or super effective hit: a weakness doubles the damage.',
@@ -474,7 +474,7 @@ export const MOMENTS = {
   door: {
     about: 'A door, hatch or chest opens or latches.',
     tags: ['door', 'creak', 'hinge', 'latch', 'squeak', 'entrance', 'lock', 'chest'], terms: ['hatch', 'gate', 'creaks', 'unlock door'],
-    categories: ['game'], avoid: ['error'], maxDur: 2.0, loud: ['quiet', 'medium'],
+    categories: ['game', 'dark'], avoid: ['error'], maxDur: 2.0, loud: ['quiet', 'medium'],
   },
   shield: {
     about: 'A shield or force field goes up or takes a hit.',
@@ -496,10 +496,15 @@ export const MOMENTS = {
     tags: ['chip', 'chips', 'casino', 'bet', 'poker', 'stack', 'pot'], terms: ['betting', 'ante', 'raise', 'all in'],
     categories: ['cards'], avoid: [], maxDur: 1.5, loud: ['quiet', 'medium'],
   },
+  tension: {
+    about: 'Suspense under a scene: a pulse, a slow rise or a held breath before something happens.',
+    tags: ['tension', 'suspense', 'dread', 'ominous', 'build', 'creeping'], terms: ['suspense', 'tense', 'something is coming', 'stalking', 'unease', 'creeping dread', 'build up'],
+    categories: ['dark', 'music', 'ambience'], avoid: ['cheerful', 'win'], minDur: 0.5, maxDur: 10, loud: ['quiet', 'medium'],
+  },
   scare: {
     about: 'A sting for a scare, a twist or a mystery.',
     tags: ['scare', 'spooky', 'eerie', 'suspense', 'mystery', 'stinger', 'sting', 'clue'], terms: ['jump scare', 'horror', 'creepy', 'twist', 'dread'],
-    categories: ['music'], avoid: ['cheerful', 'win'], minDur: 0.5, maxDur: 6, loud: ['medium'],
+    categories: ['music', 'dark'], avoid: ['cheerful', 'win'], minDur: 0.5, maxDur: 6, loud: ['medium'],
   },
   // ---- screen effects
   transform: {
@@ -537,12 +542,12 @@ export const MOMENTS = {
   ambience: {
     about: 'A bed of sound under a scene.',
     tags: ['ambience', 'ambient', 'bed', 'drone', 'loop', 'nature', 'room-tone'], terms: ['background', 'atmosphere', 'backdrop', 'soundscape'],
-    categories: ['ambience'], avoid: [], minDur: 1.0, maxDur: 10, loud: ['quiet'],
+    categories: ['ambience', 'dark'], avoid: [], minDur: 1.0, maxDur: 10, loud: ['quiet'],
   },
   music: {
     about: 'A short musical phrase, sting or jingle.',
     tags: ['music', 'melody', 'jingle', 'fanfare', 'stinger', 'arpeggio', 'intro', 'logo'], terms: ['tune', 'phrase', 'musical', 'sting'],
-    categories: ['music'], avoid: [], minDur: 0.5, maxDur: 8, loud: ['medium'],
+    categories: ['music', 'dark'], avoid: [], minDur: 0.5, maxDur: 8, loud: ['medium'],
   },
 };
 
@@ -562,9 +567,9 @@ export const FAMILIES = {
   chip: '8-bit square and pulse voices: chiptune, arcade and retro computer beeps',
   synthetic: 'Electronic tones: buzzes, lasers, FM, sweeps, pads, drones and sci-fi machines',
   organic: 'Natural sources: water, fire, weather, birds, bubbles, footsteps, a bowstring',
-  orchestral: 'Tuned instruments in a phrase: bells, plucks, mallets, harp and brass',
+  orchestral: 'Tuned and acoustic instruments: bells, plucks, mallets, harp, brass, bowed strings, organ and timpani',
   impact: 'Blows, thuds and booms: punches, heavy hits, landings and explosions',
-  voice: 'Speech and talk: synthesized announcers and robots, whispers, character babble',
+  voice: 'Speech, talk and song: synthesized announcers and robots, whispers, character babble, choirs',
 };
 
 /**

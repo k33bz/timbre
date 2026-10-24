@@ -352,3 +352,47 @@ test('MASTER_CHAIN, the catalog copy of the chain, says what master() builds', (
   assert.equal(sat.oversample, MASTER_CHAIN.ceiling.oversample);
   assert.ok(Math.abs(20 * Math.log10(sat.curve[sat.curve.length - 1] / Math.tanh(2)) - MASTER_CHAIN.ceiling.maxDbfs) < 0.03);
 });
+
+test('the instruments run with no options, start at t, stop within 50 ms of their end, and Copy can carry them', () => {
+  for (const v of ['bow', 'choir', 'organ', 'membrane', 'shepard']) {
+    const { c, out } = ctx();
+    T.seed(1);
+    const end = T[v](out, 0.5);
+    assert.ok(Number.isFinite(end) && end > 0.5, `${v} -> ${end}`);
+    assert.ok(c.nodes.some((n) => n.started >= 0.5 && n.started < 0.6), `${v} starts a source at t`);
+    assert.ok(c.nodes.filter((n) => n.started != null).every((n) => n.stopped === undefined || n.stopped <= end + 0.05 + 1e-9), `${v} stops by end + 50 ms`);
+    // a helper travels in Copy as its own source text: nothing it needs may live at module level
+    const src = T[v].toString();
+    for (const name of ['clamp', 'VOWELS', 'RANKS', 'STOPS', 'SKINS']) {
+      if (new RegExp('\b' + name + '\b').test(src)) assert.match(src, new RegExp('const ' + name + ' ='), `${v} defines ${name} itself`);
+    }
+  }
+});
+
+test('choir and shepard buffers are seeded, normalized to their peak and free of DC', () => {
+  const render = (v, o, seed) => { const { c, out } = ctx(); T.seed(seed); T[v](out, 0, o); return c.nodes.find((n) => n.buffer).buffer.getChannelData(0); };
+  for (const [v, o] of [['choir', { dur: 1, voices: 3, notes: [110, 165] }], ['shepard', { dur: 1 }]]) {
+    const a = render(v, o, 3);
+    const b = render(v, o, 3);
+    assert.deepEqual(Array.from(a.slice(2000, 2100)), Array.from(b.slice(2000, 2100)), `${v} reproducible`);
+    let pk = 0;
+    let sum = 0;
+    for (const x of a) { pk = Math.max(pk, Math.abs(x)); sum += x; }
+    assert.ok(pk > 0.1 && pk <= 1.0001, `${v} peak ${pk}`);
+    assert.ok(Math.abs(sum / a.length) < 0.002, `${v} DC ${sum / a.length}`);
+  }
+  const c1 = render('choir', { dur: 1, voices: 3 }, 3);
+  const c2 = render('choir', { dur: 1, voices: 3 }, 4);
+  assert.notDeepEqual(Array.from(c1.slice(4000, 4100)), Array.from(c2.slice(4000, 4100)), 'another seed, other singers');
+});
+
+test('the drum skin rings its modes down with a sagging pitch; the organ stacks its ranks', () => {
+  const { c, out } = ctx();
+  T.membrane(out, 0, { kind: 'taiko', f: 80 });
+  const tones = c.nodes.filter((n) => n.frequency && n.type === 'sine');
+  assert.ok(tones.length >= 4, 'modes plus the boom');
+  const g = ctx();
+  T.organ(g.out, 0, { notes: [130.81, 155.56, 196], celeste: 4 });
+  const pipes = g.c.nodes.filter((n) => n.frequency && n.started != null && !n.buffer);
+  assert.equal(pipes.length, 6, 'two ranks per note');
+});

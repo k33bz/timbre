@@ -2,7 +2,7 @@
   "name": "Timbre",
   "version": "0.1.0",
   "schema": 2,
-  "count": 332,
+  "count": 337,
   "categories": [
     "ui",
     "notify",
@@ -15,6 +15,7 @@
     "magic",
     "fx",
     "scifi",
+    "dark",
     "ambience",
     "music",
     "voice"
@@ -44,7 +45,7 @@
   },
   "levels": {
     "source": "catalog/levels.json",
-    "measured": 332,
+    "measured": 337,
     "about": "Measured by gates/check_levels.mjs in dBFS after the master chain on a warm chain. peak and rms: at the defaults (the worst peak and the mean RMS of 3 seeds). worstPeak, worstRms and lowestPeak: over all 12 renders (the defaults and 3 random parameter sets, 3 seeds each). pre: the highest peak before the limiter over all renders. end: where the default render falls below -60 dBFS, in seconds."
   },
   "vocabulary": {
@@ -59,9 +60,9 @@
       "chip": "8-bit square and pulse voices: chiptune, arcade and retro computer beeps",
       "synthetic": "Electronic tones: buzzes, lasers, FM, sweeps, pads, drones and sci-fi machines",
       "organic": "Natural sources: water, fire, weather, birds, bubbles, footsteps, a bowstring",
-      "orchestral": "Tuned instruments in a phrase: bells, plucks, mallets, harp and brass",
+      "orchestral": "Tuned and acoustic instruments: bells, plucks, mallets, harp, brass, bowed strings, organ and timpani",
       "impact": "Blows, thuds and booms: punches, heavy hits, landings and explosions",
-      "voice": "Speech and talk: synthesized announcers and robots, whispers, character babble"
+      "voice": "Speech, talk and song: synthesized announcers and robots, whispers, character babble, choirs"
     },
     "roles": {
       "on": "Switch: 1 plays the on direction (check, enable, switch on), 0 the off direction",
@@ -165,6 +166,7 @@
       "readout": "A console or HUD prints a readout or acknowledges.",
       "scan": "A scanner, radar or sensor sweeps.",
       "chips": "Poker chips are clicked, stacked or pushed.",
+      "tension": "Suspense under a scene: a pulse, a slow rise or a held breath before something happens.",
       "scare": "A sting for a scare, a twist or a mystery.",
       "transform": "Something morphs, evolves or devolves: a sound for it carries an up switch, 1 evolves or grows, 0 devolves or shrinks.",
       "glitch": "A digital glitch or corruption burst: an RGB split, a datamosh, a VHS tear.",
@@ -21593,6 +21595,424 @@
       }
     },
     {
+      "id": "dark-cathedral-choir",
+      "name": "Cathedral Choir",
+      "category": "dark",
+      "tags": [
+        "choir",
+        "cathedral",
+        "gothic",
+        "voices",
+        "pad",
+        "bed",
+        "dark",
+        "sacred",
+        "ominous",
+        "ambient"
+      ],
+      "desc": "A hushed choir swelling on a minor chord under a stone vault, the vowel slowly opening. For a gothic menu, a crypt or a solemn reveal.",
+      "dur": 6.3,
+      "family": "voice",
+      "moments": [
+        "ambience",
+        "reveal",
+        "tension"
+      ],
+      "params": {
+        "key": {
+          "min": -5,
+          "max": 7,
+          "def": 0,
+          "step": 1,
+          "unit": "st",
+          "desc": "Transposes the chord"
+        },
+        "singers": {
+          "min": 3,
+          "max": 10,
+          "def": 8,
+          "step": 1,
+          "desc": "How many voices: few is a lonely consort, many a full choir"
+        },
+        "vowel": {
+          "min": 0,
+          "max": 3,
+          "def": 0,
+          "step": 1,
+          "choices": [
+            "oo-to-ah",
+            "mm-to-oo",
+            "ah",
+            "oh"
+          ],
+          "desc": "What they sing: a hum or an oo opening out, or a held ah or oh"
+        },
+        "space": {
+          "min": 0.15,
+          "max": 0.6,
+          "def": 0.4,
+          "desc": "How much of the stone vault you hear, from a chapel to a cathedral"
+        }
+      },
+      "file": "src/sounds/dark/dark-cathedral-choir.js",
+      "play": "function (T, out, t, p) {\n  const r = Math.pow(2, p.key / 12);\n  const v = [['oo', 'ah'], ['mm', 'oo'], ['ah', 'ah'], ['oh', 'oh']][Math.round(p.vowel)];\n  const room = T.reverb(out, t, { time: 3.2, mix: p.space, tone: 0.3, pre: 0.03 });\n  T.choir(room, t, {\n    notes: [T.note('D3') * r, T.note('F3') * r, T.note('A3') * r, T.note('D4') * r],\n    voices: Math.round(p.singers), vowel: v[0], to: v[1], dur: 4.2, a: 1.4, r: 1.6, spread: 16,\n    breath: 0.1, peak: 0.13, room: { time: 0.6, mix: 0.2 },\n  });\n}",
+      "uses": [
+        "reverb",
+        "choir",
+        "note"
+      ],
+      "helpers": [
+        "rand",
+        "reverb",
+        "klatt",
+        "voiceOut",
+        "choir",
+        "note",
+        "seed",
+        "master"
+      ],
+      "fingerprint": "cc5f3877aac6",
+      "levels": {
+        "peak": -15.5,
+        "rms": -31.5,
+        "worstPeak": -13.6,
+        "worstRms": -28.8,
+        "lowestPeak": -17.4,
+        "pre": -18.5,
+        "end": 5.774
+      }
+    },
+    {
+      "id": "dark-cello-drone",
+      "name": "Cello Drone",
+      "category": "dark",
+      "tags": [
+        "cello",
+        "strings",
+        "drone",
+        "bowed",
+        "low",
+        "tension",
+        "dark",
+        "brooding",
+        "bed",
+        "ominous"
+      ],
+      "desc": "Low cellos holding a bare fifth, swelling in and out of the dark. For a quiet threat, a long walk down a corridor, or a menu that broods.",
+      "dur": 5.6,
+      "family": "orchestral",
+      "moments": [
+        "tension",
+        "ambience"
+      ],
+      "params": {
+        "key": {
+          "min": -5,
+          "max": 5,
+          "def": 0,
+          "step": 1,
+          "unit": "st",
+          "desc": "Transposes the drone"
+        },
+        "players": {
+          "min": 1,
+          "max": 6,
+          "def": 4,
+          "step": 1,
+          "desc": "Players per note: one cello, or a section"
+        },
+        "grit": {
+          "min": 0,
+          "max": 1,
+          "def": 0.35,
+          "desc": "Bow pressure: 0 a smooth glassy tone, 1 a rough, digging scrape"
+        },
+        "shiver": {
+          "min": 0,
+          "max": 1,
+          "def": 0,
+          "step": 1,
+          "desc": "1 bows tremolo (the nervous shiver), 0 long smooth bows"
+        }
+      },
+      "file": "src/sounds/dark/dark-cello-drone.js",
+      "play": "function (T, out, t, p) {\n  const f = T.note('D2') * Math.pow(2, p.key / 12);\n  const room = T.reverb(out, t, { time: 2.2, mix: 0.3, tone: 0.35 });\n  const trem = p.shiver > 0.5 ? 13 : 0;\n  const common = { players: Math.round(p.players), pressure: p.grit, bright: 0.3, vib: trem ? 4 : 9, trem };\n  T.bow(room, t, Object.assign({ f, dur: 4.2, a: 1.4, r: 1.4, peak: 0.058 }, common));\n  T.bow(room, t + 0.9, Object.assign({ f: f * 1.5, dur: 3.3, a: 1.2, r: 1.3, peak: 0.04 }, common));\n}",
+      "uses": [
+        "note",
+        "reverb",
+        "bow"
+      ],
+      "helpers": [
+        "note",
+        "rand",
+        "reverb",
+        "env",
+        "noiseBuffer",
+        "glide",
+        "noise",
+        "osc",
+        "bow",
+        "seed",
+        "master"
+      ],
+      "fingerprint": "b99702f968ce",
+      "levels": {
+        "peak": -17.6,
+        "rms": -34,
+        "worstPeak": -13.8,
+        "worstRms": -31.2,
+        "lowestPeak": -22.2,
+        "pre": -18.7,
+        "end": 4.828
+      }
+    },
+    {
+      "id": "dark-doom-drum",
+      "name": "Doom Drum",
+      "category": "dark",
+      "tags": [
+        "drum",
+        "taiko",
+        "timpani",
+        "boom",
+        "hit",
+        "doom",
+        "impact",
+        "cinematic",
+        "dark",
+        "heavy"
+      ],
+      "desc": "A single enormous drum blow that booms through a hall. For a boss entrance, a title card or the moment everything goes wrong.",
+      "dur": 2.6,
+      "family": "impact",
+      "moments": [
+        "reveal",
+        "scare",
+        "transition"
+      ],
+      "params": {
+        "pitch": {
+          "min": 45,
+          "max": 110,
+          "def": 68,
+          "unit": "Hz",
+          "desc": "Pitch of the big drum; the timpani sits a fifth under it"
+        },
+        "mallet": {
+          "min": 0,
+          "max": 1,
+          "def": 0.55,
+          "desc": "How hard the stick: 0 a soft felt thud, 1 a cracking blow"
+        },
+        "space": {
+          "min": 0.1,
+          "max": 0.6,
+          "def": 0.35,
+          "desc": "How big the hall answers"
+        }
+      },
+      "file": "src/sounds/dark/dark-doom-drum.js",
+      "play": "function (T, out, t, p) {\n  const room = T.reverb(out, t, { time: 2.4, mix: p.space, tone: 0.3 });\n  T.membrane(room, t, { kind: 'taiko', f: p.pitch, dur: 1.5, peak: 0.18, stick: p.mallet, boom: 0.9 });\n  T.membrane(room, t + 0.012, { kind: 'timpani', f: p.pitch * 0.667, dur: 1.1, peak: 0.072, stick: 0.2, boom: 0 });\n}",
+      "uses": [
+        "reverb",
+        "membrane"
+      ],
+      "helpers": [
+        "rand",
+        "reverb",
+        "env",
+        "glide",
+        "fm",
+        "noiseBuffer",
+        "noise",
+        "osc",
+        "membrane",
+        "seed",
+        "master"
+      ],
+      "fingerprint": "38ba0dfb5461",
+      "levels": {
+        "peak": -14,
+        "rms": -31.7,
+        "worstPeak": -13.5,
+        "worstRms": -29.3,
+        "lowestPeak": -15.3,
+        "pre": -18.4,
+        "end": 1.868
+      }
+    },
+    {
+      "id": "dark-dread-descent",
+      "name": "Dread Descent",
+      "category": "dark",
+      "tags": [
+        "shepard",
+        "descent",
+        "falling",
+        "dread",
+        "tension",
+        "endless",
+        "horror",
+        "dark",
+        "drone",
+        "ominous"
+      ],
+      "desc": "A tone that keeps sinking and never reaches the bottom: pure, endless dread. For a fall into the dark, a nightmare or a slow loss of control.",
+      "dur": 6.2,
+      "family": "synthetic",
+      "moments": [
+        "tension",
+        "level-down",
+        "scare"
+      ],
+      "params": {
+        "speed": {
+          "min": 0.05,
+          "max": 0.5,
+          "def": 0.16,
+          "unit": "oct/s",
+          "desc": "How fast it sinks: slow creeping dread to a steep plunge"
+        },
+        "rise": {
+          "min": 0,
+          "max": 1,
+          "def": 0,
+          "step": 1,
+          "role": "up",
+          "desc": "1 climbs for ever instead (rising panic), 0 sinks"
+        },
+        "edge": {
+          "min": 0,
+          "max": 1,
+          "def": 0.3,
+          "desc": "From pure sine tones to a reedy, organ-like buzz"
+        },
+        "length": {
+          "min": 2,
+          "max": 6,
+          "def": 5,
+          "unit": "s",
+          "desc": "How long it goes on"
+        }
+      },
+      "file": "src/sounds/dark/dark-dread-descent.js",
+      "play": "function (T, out, t, p) {\n  const room = T.reverb(out, t, { time: 1.4, mix: 0.25, tone: 0.3 });\n  const rate = (p.rise > 0.5 ? 1 : -1) * p.speed;\n  T.shepard(room, t, { rate, center: 300, width: 1.3, edge: p.edge, dur: p.length - 0.4, a: 0.8, r: 0.9, peak: 0.085 });\n  T.osc(room, t, { f: 55, dur: p.length - 0.4, peak: 0.016, a: 1, s: 1, d: 0.02, r: 1 });\n}",
+      "uses": [
+        "reverb",
+        "shepard",
+        "osc"
+      ],
+      "helpers": [
+        "rand",
+        "reverb",
+        "glide",
+        "shepard",
+        "env",
+        "osc",
+        "seed",
+        "master"
+      ],
+      "fingerprint": "b06f9244f5f8",
+      "levels": {
+        "peak": -14.5,
+        "rms": -26.4,
+        "worstPeak": -14,
+        "worstRms": -26.1,
+        "lowestPeak": -16.1,
+        "pre": -18.9,
+        "end": 5.088
+      }
+    },
+    {
+      "id": "dark-organ-minor",
+      "name": "Organ Minor Swell",
+      "category": "dark",
+      "tags": [
+        "organ",
+        "gothic",
+        "minor",
+        "chord",
+        "sting",
+        "church",
+        "cathedral",
+        "dramatic",
+        "dark",
+        "vampire"
+      ],
+      "desc": "A pipe organ swelling on a minor chord over a deep pedal note. For a gothic title, a haunted mansion or a dramatic reveal.",
+      "dur": 5.1,
+      "family": "orchestral",
+      "moments": [
+        "scare",
+        "reveal",
+        "music"
+      ],
+      "params": {
+        "key": {
+          "min": -5,
+          "max": 7,
+          "def": 0,
+          "step": 1,
+          "unit": "st",
+          "desc": "Transposes the chord"
+        },
+        "stops": {
+          "min": 0,
+          "max": 2,
+          "def": 1,
+          "step": 1,
+          "choices": [
+            "flute",
+            "principal",
+            "full"
+          ],
+          "desc": "Registration: soft flutes, the principal chorus, or full organ"
+        },
+        "tremulant": {
+          "min": 0,
+          "max": 1,
+          "def": 0.25,
+          "desc": "The slow wobble of the wind: 0 steady, 1 deep and unsettling"
+        },
+        "space": {
+          "min": 0.15,
+          "max": 0.6,
+          "def": 0.38,
+          "desc": "How much of the nave you hear"
+        }
+      },
+      "file": "src/sounds/dark/dark-organ-minor.js",
+      "play": "function (T, out, t, p) {\n  const r = Math.pow(2, p.key / 12);\n  const stops = ['flute', 'principal', 'full'][Math.round(p.stops)];\n  const room = T.reverb(out, t, { time: 3, mix: p.space, tone: 0.35, pre: 0.02 });\n  const shape = { dur: 2.9, a: 0.35, r: 0.6, stops, celeste: 5, chiff: 0.5, trem: 0.15 * p.tremulant, tremRate: 5.5 };\n  T.organ(room, t, Object.assign({ notes: [T.note('D4') * r, T.note('F4') * r, T.note('A4') * r], peak: 0.06 }, shape));\n  T.organ(room, t, Object.assign({ notes: [T.note('D2') * r], peak: 0.05 }, shape, { stops: 'flute' }));\n}",
+      "uses": [
+        "reverb",
+        "organ",
+        "note"
+      ],
+      "helpers": [
+        "rand",
+        "reverb",
+        "noiseBuffer",
+        "env",
+        "glide",
+        "noise",
+        "osc",
+        "organ",
+        "note",
+        "seed",
+        "master"
+      ],
+      "fingerprint": "2d4fff6b5c9b",
+      "levels": {
+        "peak": -15.7,
+        "rms": -30.5,
+        "worstPeak": -14.2,
+        "worstRms": -28.5,
+        "lowestPeak": -18.4,
+        "pre": -19.1,
+        "end": 4.546
+      }
+    },
+    {
       "id": "ambience-aurora-pad",
       "name": "Aurora Pad",
       "category": "ambience",
@@ -28949,6 +29369,15 @@
       ],
       "src": "function bell(out, t, o) {\n  o = o || {};\n  const f = o.f || 880;\n  const dur = o.dur == null ? 1 : o.dur;\n  const peak = o.peak == null ? 0.15 : o.peak;\n  const drift = o.drift == null ? 1 : o.drift;\n  const parts = o.partials || [[1, 1, 1], [2.76, 0.5, 0.6], [5.4, 0.25, 0.4], [8.93, 0.12, 0.25]];\n  let end = t;\n  for (let k = 0; k < parts.length; k++) {\n    const pr = parts[k];\n    const e = osc(out, t, {\n      type: o.type || 'sine', f: f * pr[0], to: f * pr[0] * drift,\n      dur: Math.max(0.03, dur * (pr[2] == null ? 1 : pr[2])), peak: peak * (pr[1] == null ? 1 : pr[1]),\n      a: o.a == null ? 0.002 : o.a, curve: o.curve,\n    });\n    if (e > end) end = e;\n  }\n  return end;\n}"
     },
+    "bow": {
+      "deps": [
+        "rand",
+        "env",
+        "noise",
+        "osc"
+      ],
+      "src": "function bow(out, t, o) {\n  o = o || {};\n  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));\n  const c = out.context;\n  const f = Math.max(30, o.f || 130.81);\n  const dur = Math.max(0.12, o.dur == null ? 2 : o.dur);\n  const a = Math.max(0.01, o.a == null ? Math.min(0.35, dur * 0.3) : o.a);\n  const r = Math.max(0.02, o.r == null ? Math.min(0.4, dur * 0.3) : o.r);\n  const players = Math.round(clamp(o.players || 1, 1, 8));\n  const body = clamp(o.body || 1, 0.3, 3);\n  const bright = clamp(o.bright == null ? 0.5 : o.bright, 0, 1);\n  const press = clamp(o.pressure == null ? 0.4 : o.pressure, 0, 1);\n  const vib = o.vib == null ? 12 : Math.max(0, o.vib);\n  const vibRate = o.vibRate || 5.2;\n  // the body: highpass under the string, three body modes, the bridge hill, then the top rolled off\n  let node = c.createGain();\n  node.gain.value = 0;\n  const end = env(node.gain, t, { peak: o.peak == null ? 0.12 : o.peak, a, dur, s: 1, d: 0.01, r, curve: 'lin' });\n  node.connect(out);\n  const stages = [\n    { type: 'lowpass', f: 1400 + 6000 * bright * bright, q: 0.6 },\n    { type: 'peaking', f: 2600, q: 0.9, db: 2 + 3 * bright },\n    { type: 'peaking', f: 580 * body, q: 3, db: 4 },\n    { type: 'peaking', f: 400 * body, q: 2.5, db: 5 },\n    { type: 'peaking', f: 190 * body, q: 3, db: 6 },\n    { type: 'highpass', f: Math.max(30, f * 0.7), q: 0.5 },\n  ];\n  for (const s of stages) {\n    const b = c.createBiquadFilter();\n    b.type = s.type;\n    b.frequency.value = Math.min(c.sampleRate * 0.45, s.f);\n    b.Q.value = s.q;\n    if (s.db) b.gain.value = s.db;\n    b.connect(node);\n    node = b;\n  }\n  const lvl = 0.5 / Math.sqrt(players);\n  for (let k = 0; k < players; k++) {\n    // each player: its own few cents, vibrato speed and a slightly late entry (always drawn, so the\n    // player count never reshuffles the others)\n    const cents = players > 1 ? (rand() * 2 - 1) * 9 : 0;\n    const rate = vibRate * (0.9 + 0.2 * rand());\n    const late = players > 1 ? rand() * Math.min(0.06, a * 0.5) : 0;\n    const fk = f * Math.pow(2, cents / 1200);\n    osc(node, t + late, {\n      type: 'sawtooth', f: fk, to: o.to ? o.to * Math.pow(2, cents / 1200) : fk, glide: o.glide,\n      dur: Math.max(0.05, end - t - late), peak: lvl, a: 0.01, s: 1, d: 0.01, r: 0.01, curve: 'lin',\n      vib: vib > 0 ? { rate, depth: vib } : null,\n      trem: o.trem > 0 ? { rate: o.trem * (0.97 + 0.06 * rand()), depth: 0.85 } : null,\n    });\n  }\n  // the bow on the string: band-passed noise a few octaves up, louder as the bow digs in\n  if (press > 0) {\n    noise(node, t, {\n      filter: 'bandpass', f: clamp(f * 9, 1200, 6000), q: 0.8, dur: end - t, peak: 0.25 * press * press + 0.04 * press,\n      a: Math.min(a, 0.1), s: 0.6, d: 0.1, r: 0.01, curve: 'lin',\n    });\n  }\n  return end;\n}"
+    },
     "bus": {
       "deps": [
         "env"
@@ -28962,6 +29391,14 @@
         "voiceOut"
       ],
       "src": "function chatter(out, t, o) {\n  o = o || {};\n  const v = o.voice || {};\n  const cfg = Object.assign({}, v, {\n    f0: (v.f0 || 300) * Math.pow(2, (o.pitch || 0) / 12),\n    speed: (v.speed || 12) * (o.speed == null ? 1 : o.speed),\n    random: (v.random == null ? 3 : v.random) * (o.spread == null ? 1 : o.spread),\n  });\n  const fx = o.fx === false ? null : v.fx;\n  if (!out) return t + babblePlan(o.text, cfg, true).dur + (fx && fx.room ? (fx.room.time || 1) + (fx.room.pre || 0) : 0);\n  return voiceOut(out, t, klatt(out.context.sampleRate, babblePlan(o.text, cfg), cfg), { fx, peak: o.peak });\n}"
+    },
+    "choir": {
+      "deps": [
+        "rand",
+        "klatt",
+        "voiceOut"
+      ],
+      "src": "function choir(out, t, o) {\n  o = o || {};\n  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));\n  // Choir vowels: F1, F2, F3 (Peterson and Barney) and how dark the source is (tilt). 'mm' is a closed\n  // hum: a low first formant, the rest damped.\n  const VOWELS = {\n    oo: [300, 870, 2240, 0.55], oh: [497, 910, 2459, 0.45], ah: [730, 1090, 2440, 0.35],\n    eh: [530, 1840, 2480, 0.4], ee: [270, 2290, 3010, 0.45], mm: [250, 1050, 2300, 0.85],\n  };\n  const sr = out.context.sampleRate;\n  const notes = [].concat(o.notes || o.f || 220).map((x) => clamp(x, 40, 1200));\n  const n = Math.round(clamp(o.voices || 6, 1, 12));\n  const dur = Math.max(0.2, o.dur == null ? 3 : o.dur);\n  const a = clamp(o.a == null ? 0.6 : o.a, 0.02, dur * 0.8);\n  const r = clamp(o.r == null ? 0.8 : o.r, 0.02, dur - a);\n  const spread = o.spread == null ? 14 : o.spread;\n  const v0 = VOWELS[o.vowel] || VOWELS.oo;\n  const v1 = VOWELS[o.to] || v0;\n  const breath = clamp(o.breath == null ? 0.08 : o.breath, 0, 1);\n  const len = Math.ceil((dur + 0.1) * sr);\n  const sum = new Float32Array(len);\n  for (let k = 0; k < n; k++) {\n    const base = notes[k % notes.length];\n    const fs = o.formant || (base > 260 ? 1.15 : 1);\n    const f0 = base * Math.pow(2, ((rand() * 2 - 1) * spread) / 1200);\n    const late = rand() * 0.08;\n    const rate = 4.4 + 1.4 * rand();\n    const d = dur - late;\n    const sing = 0.75 + 0.25 * rand();\n    const F = (v, s) => [s, v[0] * fs, v[1] * fs, v[2] * fs, 3500 * fs, 4500 * fs, 50 + 0.04 * v[0], 60 + 0.025 * v[1], 100 + 0.02 * v[2], 250, 300, 270 * fs, 6000 * fs];\n    const plan = {\n      dur: d,\n      f0: [0, f0, d, f0],\n      amp: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, a, sing, breath, 0, 0, 0, 0, 0, 0, 0, Math.max(a, d - r), sing, breath, 0, 0, 0, 0, 0, 0, 0, d, 0, 0, 0, 0, 0, 0, 0, 0, 0],\n      form: [...F(v0, 0), ...F(v1, d)],\n    };\n    const y = klatt(sr, plan, { oq: 0.7, tilt: (v0[3] + v1[3]) / 2, jitter: 0.002, shimmer: 0.012, vib: { rate, depth: o.vib == null ? 0.12 : o.vib } });\n    const off = Math.round(late * sr);\n    for (let i = 0; i < y.length && i + off < len; i++) sum[i + off] += y[i];\n  }\n  return voiceOut(out, t, sum, { peak: o.peak == null ? 0.16 : o.peak, fx: Object.assign({ hp: 70 }, o.fx || {}, o.room ? { room: o.room } : {}) });\n}"
     },
     "chord": {
       "deps": [
@@ -29040,6 +29477,14 @@
       "deps": [],
       "src": "function master(c, dest) {\n  const g = c.createGain();\n  const lim = c.createDynamicsCompressor();\n  const sat = c.createWaveShaper();\n  g.gain.value = 0.55;\n  lim.threshold.value = -12;\n  lim.knee.value = 6;\n  lim.ratio.value = 12;\n  lim.attack.value = 0.003;\n  lim.release.value = 0.12;\n  const n = 2048;\n  const cur = new Float32Array(n);\n  for (let k = 0; k < n; k++) {\n    const x = (k * 2) / (n - 1) - 1;\n    cur[k] = 0.5 * Math.tanh(2 * x);\n  }\n  sat.curve = cur;\n  sat.oversample = '2x';\n  g.connect(lim);\n  lim.connect(sat);\n  sat.connect(dest || c.destination);\n  return g;\n}"
     },
+    "membrane": {
+      "deps": [
+        "fm",
+        "noise",
+        "osc"
+      ],
+      "src": "function membrane(out, t, o) {\n  o = o || {};\n  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));\n  // Drum skins: [ratio, level, decay share] per mode. A timpani's modes sit close to a harmonic\n  // series (that is why it has a pitch); a taiko's are rougher and die quicker.\n  const SKINS = {\n    timpani: { modes: [[1, 1, 1], [1.5, 0.55, 0.8], [1.98, 0.4, 0.65], [2.44, 0.25, 0.5], [2.94, 0.15, 0.4], [3.42, 0.08, 0.3]], drop: 0.985, dur: 2.5, stick: 1200 },\n    taiko: { modes: [[1, 1, 1], [1.59, 0.45, 0.5], [2.14, 0.25, 0.35], [2.65, 0.15, 0.25]], drop: 0.82, dur: 1.2, stick: 700 },\n    tom: { modes: [[1, 1, 1], [1.59, 0.35, 0.4], [2.14, 0.15, 0.3]], drop: 0.9, dur: 0.6, stick: 2200 },\n  };\n  const kind = SKINS[o.kind] || SKINS.timpani;\n  const f = clamp(o.f || 98, 25, 1000);\n  const dur = Math.max(0.08, o.dur == null ? kind.dur : o.dur);\n  const peak = o.peak == null ? 0.22 : o.peak;\n  const drop = o.drop || kind.drop;\n  const stick = clamp(o.stick == null ? 0.5 : o.stick, 0, 1);\n  const boom = clamp(o.boom == null ? (o.kind === 'taiko' ? 0.6 : 0.3) : o.boom, 0, 1);\n  let end = t;\n  for (const m of o.modes || kind.modes) {\n    const fm = f * m[0];\n    if (fm > out.context.sampleRate * 0.45) continue;\n    end = Math.max(end, osc(out, t, {\n      f: fm, to: fm * drop, glide: Math.min(0.4, dur * 0.3), dur: Math.max(0.05, dur * m[2]), peak: peak * m[1] * 0.5, a: 0.003,\n    }));\n  }\n  if (boom > 0) {\n    end = Math.max(end, osc(out, t, { f: f * 0.75, to: f * 0.5, glide: 0.2, dur: Math.min(dur, 0.35), peak: peak * 0.6 * boom, a: 0.004 }));\n  }\n  if (stick > 0) {\n    noise(out, t, { filter: 'lowpass', f: kind.stick * (0.5 + stick), q: 0.7, dur: 0.012 + 0.03 * (1 - stick), a: 0.001, peak: peak * (0.15 + 0.5 * stick) });\n  }\n  return end;\n}"
+    },
     "noise": {
       "deps": [
         "noiseBuffer",
@@ -29057,6 +29502,13 @@
     "note": {
       "deps": [],
       "src": "function note(n) {\n  if (typeof n === 'number') return 440 * Math.pow(2, n / 12);\n  const s = String(n);\n  const base = { C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 }[s.charAt(0).toUpperCase()];\n  if (base == null) return 440;\n  let i = 1;\n  let acc = 0;\n  if (s.charAt(1) === '#') { acc = 1; i = 2; } else if (s.charAt(1) === 'b') { acc = -1; i = 2; }\n  const oct = parseInt(s.slice(i), 10);\n  return 440 * Math.pow(2, (base + acc + ((isNaN(oct) ? 4 : oct) - 4) * 12) / 12);\n}"
+    },
+    "organ": {
+      "deps": [
+        "noise",
+        "osc"
+      ],
+      "src": "function organ(out, t, o) {\n  o = o || {};\n  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));\n  // Organ stops as footages, by harmonic of the 16' pitch: 16', 8', 4', 2 2/3', 2', 1 3/5', 1'\n  const RANKS = [1, 2, 4, 6, 8, 10, 16];\n  const STOPS = {\n    principal: [0.35, 1, 0.55, 0.2, 0.3, 0.08, 0.12],\n    flute: [0.5, 1, 0.35, 0, 0.1, 0, 0],\n    full: [0.7, 1, 0.8, 0.45, 0.6, 0.3, 0.4],\n    reed: [0.3, 1, 0.7, 0.5, 0.45, 0.35, 0.3],\n  };\n  const c = out.context;\n  const notes = [].concat(o.notes || o.f || 130.81).map((x) => clamp(x, 30, 2000));\n  const dur = Math.max(0.1, o.dur == null ? 2 : o.dur);\n  const lv = typeof o.stops === 'string' || !o.stops ? STOPS[o.stops] || STOPS.principal : o.stops;\n  const re = new Float32Array(33);\n  const im = new Float32Array(33);\n  for (let k = 0; k < RANKS.length; k++) {\n    const h = RANKS[k];\n    im[h] += lv[k] || 0;\n    // a flue pipe is not a pure sine: a little of its own octave\n    if (h * 2 <= 32) im[h * 2] += 0.12 * (lv[k] || 0);\n  }\n  const wave = c.createPeriodicWave(re, im);\n  const peak = (o.peak == null ? 0.12 : o.peak) / Math.sqrt(notes.length);\n  const cel = o.celeste == null ? 4 : clamp(o.celeste, 0, 20);\n  const chiff = clamp(o.chiff == null ? 0.5 : o.chiff, 0, 1);\n  const a = Math.max(0.01, o.a == null ? 0.07 : o.a);\n  const r = Math.max(0.02, o.r == null ? 0.25 : o.r);\n  const trem = o.trem > 0 ? { rate: o.tremRate || 6, depth: clamp(o.trem, 0, 1) } : null;\n  let end = t;\n  for (const f of notes) {\n    const shape = { wave, f: f / 2, dur, a, s: 1, d: 0.02, r, curve: 'lin', trem };\n    end = Math.max(end, osc(out, t, Object.assign({}, shape, { peak: cel > 0 ? peak * 0.62 : peak })));\n    if (cel > 0) osc(out, t, Object.assign({}, shape, { detune: cel, peak: peak * 0.38 }));\n    if (chiff > 0) {\n      noise(out, t, { filter: 'bandpass', f: clamp(f * 4, 400, 9000), q: 3, dur: 0.09, a: 0.004, peak: peak * 0.5 * chiff });\n    }\n  }\n  return end;\n}"
     },
     "osc": {
       "deps": [
@@ -29105,6 +29557,12 @@
         "rand"
       ],
       "src": "function seed(s) {\n  rand.s = (Number(s) || 0) >>> 0;\n}"
+    },
+    "shepard": {
+      "deps": [
+        "glide"
+      ],
+      "src": "function shepard(out, t, o) {\n  o = o || {};\n  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));\n  const c = out.context;\n  const sr = c.sampleRate;\n  const dur = Math.max(0.2, o.dur == null ? 4 : o.dur);\n  const rate = o.rate == null ? -0.15 : o.rate;\n  const tones = Math.round(clamp(o.tones || 8, 3, 10));\n  const center = clamp(o.center || 330, 60, 4000);\n  const width = Math.max(0.3, o.width || 1.3);\n  const edge = clamp(o.edge || 0, 0, 1);\n  const a = clamp(o.a == null ? 0.5 : o.a, 0.005, dur / 2);\n  const r = clamp(o.r == null ? 0.6 : o.r, 0.005, dur / 2);\n  const len = Math.ceil(dur * sr);\n  const buf = c.createBuffer(1, len, sr);\n  const y = buf.getChannelData(0);\n  const fmin = center * Math.pow(2, -tones / 2);\n  const ph = new Float64Array(tones);\n  const tw = (2 * Math.PI) / sr;\n  const mid = tones / 2;\n  let pk = 0;\n  for (let i = 0; i < len; i++) {\n    const tt = i / sr;\n    let v = 0;\n    for (let k = 0; k < tones; k++) {\n      let p = (k + rate * tt) % tones;\n      if (p < 0) p += tones;\n      const fk = fmin * Math.pow(2, p);\n      const g = Math.exp(-((p - mid) * (p - mid)) / (2 * width * width));\n      ph[k] += tw * fk;\n      if (ph[k] > 1e6) ph[k] -= 2 * Math.PI * Math.floor(ph[k] / (2 * Math.PI));\n      let s = Math.sin(ph[k]);\n      if (edge > 0) s += edge * (0.35 * Math.sin(2 * ph[k]) + 0.2 * Math.sin(3 * ph[k]));\n      v += g * s;\n    }\n    y[i] = v;\n    const m = v < 0 ? -v : v;\n    if (m > pk) pk = m;\n  }\n  const k = pk > 0 ? 1 / pk : 0;\n  const ia = a * sr;\n  const ir = r * sr;\n  for (let i = 0; i < len; i++) y[i] *= k * Math.min(1, i / ia, (len - 1 - i) / ir);\n  const s = c.createBufferSource();\n  const gn = c.createGain();\n  s.buffer = buf;\n  gn.gain.value = 0;\n  gn.gain.setValueAtTime(o.peak == null ? 0.16 : o.peak, t);\n  s.connect(gn);\n  gn.connect(out);\n  s.start(t);\n  s.stop(t + dur + 0.05);\n  glide(gn.gain, t + dur, o.peak == null ? 0.16 : o.peak, 0, 0.001, 'lin');\n  return t + dur;\n}"
     },
     "speak": {
       "deps": [

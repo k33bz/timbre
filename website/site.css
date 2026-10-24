@@ -36,6 +36,7 @@
   --cat-ambience: #7ccf6e;
   --cat-music: #d8b44a;
   --cat-voice: #ff9a5c;
+  --cat-dark: #d24a66;
   --spectrum: linear-gradient(90deg, #ffb648, #ff7468 28%, #f07ac8 52%, #8c9cff 74%, #4fe0a6);
   color-scheme: dark;
 }
@@ -71,6 +72,7 @@
   --cat-ambience: #3b8436;
   --cat-music: #8a6a12;
   --cat-voice: #a8501c;
+  --cat-dark: #7d1830;
   --spectrum: linear-gradient(90deg, #985700, #c2433a 30%, #b2408a 55%, #3d55b5 78%, #0b7350);
   color-scheme: light;
 }

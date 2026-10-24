@@ -26,6 +26,7 @@ export const CATEGORY_WORDS = {
   cards: ['card', 'cards', 'deck', 'tabletop'],
   magic: ['magic', 'fantasy', 'spell'],
   scifi: ['scifi', 'sci fi', 'science fiction', 'space', 'futuristic'],
+  dark: ['dark', 'horror', 'gothic', 'dread', 'ominous', 'brooding', 'spooky'],
   ambience: ['ambience', 'ambient', 'atmosphere', 'background'],
   music: ['music', 'musical', 'melody'],
 };

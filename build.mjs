@@ -29,7 +29,7 @@ import { MOMENTS, FAMILIES, ROLES } from './src/vocabulary.js';
 import { MockContext } from './gates/lib/mockaudio.mjs';
 
 export const ROOT = path.dirname(fileURLToPath(import.meta.url));
-export const CATEGORIES = ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'ambience', 'music', 'voice'];
+export const CATEGORIES = ['ui', 'notify', 'data', 'ai', 'game', 'battle', 'cards', 'duel', 'magic', 'fx', 'scifi', 'dark', 'ambience', 'music', 'voice'];
 const SOUND_KEYS = ['id', 'name', 'category', 'tags', 'desc', 'dur', 'params', 'play'];
 const OPTIONAL_KEYS = ['family', 'moments'];
 const PARAM_KEYS = ['min', 'max', 'def', 'unit', 'step', 'desc', 'role', 'choices'];
