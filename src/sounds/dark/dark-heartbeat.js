@@ -28,8 +28,8 @@ export default {
     // the first beat sits at 0.35 s; stop when the next would overrun the bed
     for (let at = 0.35; at + gap + 0.3 < L - 0.4; at += period) {
       const v = T.rand(0.9, 1);
-      beat(t + at, 56, (0.083 + 0.036 * p.thud) * v, 0.2);
-      beat(t + at + gap, 48, (0.05 + 0.027 * p.thud) * v, 0.26);
+      beat(t + at, 56, (0.07 + 0.03 * p.thud) * v, 0.2);
+      beat(t + at + gap, 48, (0.042 + 0.023 * p.thud) * v, 0.26);
     }
     // the drone: two close low notes that beat against each other, a bowed bass above them
     const bed = { a: 2.2, s: 1, d: 0.02, r: 2 };

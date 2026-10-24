@@ -32,11 +32,13 @@ export default {
       const wl = T.speak(null, 0, { ph, voice: 'whisper', rate });
       const x = T.rand(-1, 1);
       const where = T.rand(0, 1);
-      const start = where * Math.max(0, p.length - wl);
+      // the first whisperer starts at once (a swarm that begins after a second of silence reads as
+      // broken); the rest land anywhere in the span
+      const start = k === 0 ? 0.03 : where * Math.max(0, p.length - wl);
       // the crowd as a whole rises and falls: louder whispers near the middle of the span
       const mid = Math.sin(Math.PI * Math.min(1, (start + wl / 2) / p.length));
       const lvl = 0.35 + 0.65 * mid;
-      const place = T.pan(room, t, { x, to: -x * 0.6, dur: wl });
+      const place = T.pan(room, t + start, { x, to: -x * 0.6, dur: wl });
       T.speak(place, t + start, { ph, voice: 'whisper', rate, pitch: T.rand(-3, 3), peak: (0.2 * lvl) / Math.sqrt(n) });
     }
   },
