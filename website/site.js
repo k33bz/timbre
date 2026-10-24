@@ -334,14 +334,52 @@ const restLen = (i, t, still) => (0.5 + 0.5 / (1 + i * 0.22)) * (still ? 1 : 0.8
 // the incoming tone's height at u (0 at the figure's left margin, 1 at the resonator), as in frame()
 const toneY = (u, t, still, h) => Math.sin(u * 14 - (still ? 0 : t * TONE_SPEED)) * h * 0.035 * (0.6 + 0.4 * Math.min(1, Math.max(0, u)));
 const TONE_SPEED = 4.5;
-// The resonator is a speaker: each crest that reaches it (the tone at u = 1) pushes it out, with a
-// small rebound on the trough; the outer rings follow a beat later, so the push ripples outward.
-// Returns the scale for ring k (1 inner .. 3 outer); 1 when still.
-const CONE_AMP = [0, 0.09, 0.065, 0.045];
-function cone(t, still, k) {
-  if (still) return 1;
-  const s = Math.sin(14 - t * TONE_SPEED - k * 0.35);
-  return 1 + CONE_AMP[k] * (s > 0 ? s * s : -0.3 * s * s);
+// The resonator is a speaker. Each crest of the tone that reaches it (the tone at u = 1) is a
+// thump: a sharp push out and a quick rebound (a damped spring), the outer rings a beat behind so
+// it ripples outward. The same thump flares the rainbow and sends a pulse racing out along every
+// ray, so the energy visibly goes from the wave, through the speaker, into the spectrum.
+const TAU = Math.PI * 2;
+const RING_AMP = [0, 0.18, 0.13, 0.1];
+const RING_LAG = 0.045;
+const SPARK_S = 0.55;
+/** Seconds since the last crest reached the resonator. */
+const sinceCrest = (t) => ((((Math.PI / 2 - (14 - t * TONE_SPEED)) % TAU) + TAU) % TAU) / TONE_SPEED;
+/** The thump's shape tau seconds after a crest: peaks at 1 near 65 ms, rebounds to about -0.18. */
+const punch = (tau) => (tau <= 0 ? 0 : (Math.exp(-tau * 9) * Math.sin(TAU * 2.6 * tau)) / 0.486);
+const ringScale = (tau, k) => 1 + RING_AMP[k] * punch(tau - (k - 1) * RING_LAG);
+/** One rainbow ray, flared by the thump, with its pulse; px is one CSS pixel in canvas units. */
+function drawRay(g, cx, cy, ang, from, L, col, width, tau, u, px) {
+  const flare = Math.max(0, punch(tau - 0.03 - u * 0.04));
+  const len = L * (1 + 0.22 * flare);
+  const gr = g.createLinearGradient(cx, cy, cx + Math.cos(ang) * len, cy + Math.sin(ang) * len);
+  gr.addColorStop(0, 'transparent');
+  gr.addColorStop(0.18, col);
+  gr.addColorStop(1, 'transparent');
+  g.strokeStyle = gr;
+  g.lineWidth = width * (1 + 0.6 * flare);
+  g.beginPath();
+  g.moveTo(cx + Math.cos(ang) * from, cy + Math.sin(ang) * from);
+  g.lineTo(cx + Math.cos(ang) * len, cy + Math.sin(ang) * len);
+  g.stroke();
+  const s = (tau - 0.02) / SPARK_S;
+  if (s > 0 && s < 1 && len > from) {
+    const d = from + (len - from) * (1 - (1 - s) * (1 - s));
+    g.globalAlpha = (1 - s) * 0.9;
+    g.fillStyle = col;
+    g.beginPath(); g.arc(cx + Math.cos(ang) * d, cy + Math.sin(ang) * d, (1.4 + 1.4 * (1 - s)) * px, 0, TAU); g.fill();
+    g.globalAlpha = 1;
+  }
+}
+/** The thump's shock ring and the cap's glow swell, drawn over the resonator. */
+function drawThump(g, cx, cy, rr, tau, accent, px) {
+  const s = tau / 0.6;
+  if (s > 0 && s < 1) {
+    g.strokeStyle = accent;
+    g.globalAlpha = (1 - s) * 0.4;
+    g.lineWidth = 1.5 * px;
+    g.beginPath(); g.ellipse(cx, cy, rr * (0.9 + 1.6 * s), rr * (1.3 + 2.0 * s), 0, 0, TAU); g.stroke();
+    g.globalAlpha = 1;
+  }
 }
 let freq = null;
 let wave = null;
@@ -372,6 +410,8 @@ function frame(now) {
   }
   const cx = w * 0.46;
   const cy = h * 0.47;
+  const tau = still ? 9 : sinceCrest(t);
+  const p1 = Math.max(0, punch(tau));
   const accent = css('--accent');
   const ink = css('--muted');
   // the incoming tone
@@ -392,7 +432,7 @@ function frame(now) {
   const rr = Math.min(w, h) * 0.11;
   for (let k = 3; k >= 1; k--) {
     g.beginPath();
-    const sc = cone(t, still, k) * (1 + level * 0.08);
+    const sc = ringScale(tau, k) * (1 + level * 0.08);
     g.ellipse(cx, cy, rr * (0.55 + k * 0.22) * sc, rr * (0.9 + k * 0.32) * sc, 0, 0, Math.PI * 2);
     g.strokeStyle = ink;
     g.globalAlpha = 0.18 + 0.1 * (3 - k) + level * 0.3;
@@ -404,10 +444,10 @@ function frame(now) {
   glow.addColorStop(0, accent);
   glow.addColorStop(1, 'transparent');
   g.fillStyle = glow;
-  const push = Math.max(0, cone(t, still, 1) - 1) / CONE_AMP[1];
-  g.globalAlpha = Math.min(1, 0.35 + 0.18 * push + level * 0.5);
-  g.beginPath(); g.arc(cx, cy, rr * 1.2 * (1 + 0.06 * push), 0, Math.PI * 2); g.fill();
+  g.globalAlpha = Math.min(1, 0.35 + 0.4 * p1 + level * 0.5);
+  g.beginPath(); g.arc(cx, cy, rr * 1.2 * (1 + 0.3 * p1), 0, Math.PI * 2); g.fill();
   g.globalAlpha = 1;
+  drawThump(g, cx, cy, rr, tau, accent, dpr);
   // the fan out: harmonics at rest, the live spectrum while a sound plays
   const live = level > 0.02 && freq;
   if (live) {
@@ -435,16 +475,7 @@ function frame(now) {
     const len = Math.max(rest * (live ? 0.3 : 1 - Math.min(1, hold[i] * 1.5)), 0.14 + 0.86 * hold[i]);
     const L = (w - cx) * 0.9 * len;
     const col = hold[i] > 0.05 && lastColor ? lastColor : rayColor(u);
-    const gr = g.createLinearGradient(cx, cy, cx + Math.cos(ang) * L, cy + Math.sin(ang) * L);
-    gr.addColorStop(0, 'transparent');
-    gr.addColorStop(0.18, col);
-    gr.addColorStop(1, 'transparent');
-    g.strokeStyle = gr;
-    g.lineWidth = (2.2 - u) * dpr;
-    g.beginPath();
-    g.moveTo(cx + Math.cos(ang) * rr * 0.9, cy + Math.sin(ang) * rr * 0.9);
-    g.lineTo(cx + Math.cos(ang) * L, cy + Math.sin(ang) * L);
-    g.stroke();
+    drawRay(g, cx, cy, ang, rr * 0.9, L, col, (2.2 - u) * dpr, live ? 9 : tau, u, dpr);
   }
   // the speak scope draws the live waveform while a line plays
   if (analyser && spLive) drawScope(qs('#sp-scope'), css('--cat-voice'));
@@ -570,7 +601,7 @@ function firstSound() {
       const x = Math.max(0, ms - k0) / 1000;
       for (let i = 3; i >= 1; i--) {
         const kick = 1 + 0.36 * Math.exp(-x * 6) * Math.sin(2 * Math.PI * 2.6 * Math.max(0, x - i * 0.03)) * (1.2 - i * 0.2);
-        const sc = open * kick * cone(tFig, false, i);
+        const sc = open * kick * ringScale(sinceCrest(tFig), i);
         g.beginPath();
         g.ellipse(cx, cy, rr * (0.55 + i * 0.22) * sc, rr * (0.9 + i * 0.32) * sc, 0, 0, Math.PI * 2);
         g.strokeStyle = css('--muted');
@@ -581,6 +612,8 @@ function firstSound() {
       g.globalAlpha = 1;
     }
     if (mode !== 'full') return;
+    const hitTau = ms - FS.impact < 600 ? (ms - FS.impact) / 1000 : sinceCrest(tFig);
+    drawThump(g, cx, cy, rr, hitTau, accent, 1);
     // the fan: rays grow out to a touch past their resting length and settle onto it
     const f = (ms - FS.fan0) / (FS.fan1 - FS.fan0);
     if (f <= 0) return;
@@ -591,16 +624,7 @@ function firstSound() {
       const ang = -FAN_SPAN / 2 + u * FAN_SPAN;
       const L = (box.right - cx) * 0.9 * restLen(i, tFig, false) * grow * ease(lag);
       if (L <= rr) continue;
-      const gr = g.createLinearGradient(cx, cy, cx + Math.cos(ang) * L, cy + Math.sin(ang) * L);
-      gr.addColorStop(0, 'transparent');
-      gr.addColorStop(0.18, rayColor(u));
-      gr.addColorStop(1, 'transparent');
-      g.strokeStyle = gr;
-      g.lineWidth = 2.2 - u;
-      g.beginPath();
-      g.moveTo(cx + Math.cos(ang) * rr * 0.9, cy + Math.sin(ang) * rr * 0.9);
-      g.lineTo(cx + Math.cos(ang) * L, cy + Math.sin(ang) * L);
-      g.stroke();
+      drawRay(g, cx, cy, ang, rr * 0.9, L, rayColor(u), 2.2 - u, hitTau, u, 1);
     }
   }
 
